@@ -1165,6 +1165,14 @@ footer { background:#1e0e02; padding:72px 8vw 32px; border-top:1px solid rgba(17
   footer{ padding:56px 6vw 28px; }
   .footer-main{ grid-template-columns:1fr 1fr; gap:32px; margin-bottom:28px; padding-bottom:40px; }
   .f-brand-desc{ max-width:100%; }
+
+  /* carousel — tablet fixes */
+  .c-slide-content{ left:5vw; max-width:75vw; }
+  .c-playpause{ left:5vw; top:16px; opacity:.7; }
+  .c-counter{ right:5vw; top:20px; }
+  .c-ig-badge{ top:50px; right:5vw; }
+  .c-ctrl-prev{ left:12px; } .c-ctrl-next{ right:12px; }
+  .form-row{ grid-template-columns:1fr; }
 }
 
 /* ═══════════════════════════════════════
@@ -1303,6 +1311,8 @@ footer { background:#1e0e02; padding:72px 8vw 32px; border-top:1px solid rgba(17
   .c-progress-row{ padding:0 5vw 22px; }
   .c-thumb{ flex-basis:calc(100%/3); height:64px; }
   .c-ctrl{ width:36px; height:36px; font-size:14px; }
+  .c-ctrl-prev{ left:10px; } .c-ctrl-next{ right:10px; }
+  .c-playpause{ opacity:.7; }
   .lb-nav{ width:36px; height:36px; font-size:16px; }
 
   /* contacto */
@@ -1329,16 +1339,172 @@ footer { background:#1e0e02; padding:72px 8vw 32px; border-top:1px solid rgba(17
    RESPONSIVE — SMALL MOBILE 390px
 ═══════════════════════════════════════ */
 @media(max-width:390px){
+  /* nav */
+  nav{ padding:0 12px; }
   .nav-wordmark b{ font-size:10.5px; }
   .nav-seal{ width:30px; height:30px; font-size:12px; }
-  .hero-left{ padding:64px 4vw 160px; }
-  .hero-headline{ font-size:38px; }
-  .valores-grid{ grid-template-columns:1fr 1fr; }
-  .quiz-card{ padding:20px 14px; }
-  .galeria-mosaic{ grid-auto-rows:120px; }
+  .btn-nav-solid{ padding:6px 10px; font-size:11px; }
+
+  /* HUD */
   #game-hud{ padding:10px 12px 18px; }
   .hud-title{ font-size:10px; }
   .hud-score{ font-size:18px; }
+  .hud-badges{ gap:5px; }
+  .hud-badge{ width:26px; height:26px; font-size:13px; }
+
+  /* hero */
+  .hero-left{ padding:64px 4vw 160px; }
+  .hero-headline{ font-size:36px; }
+  .hero-headline .line3{ font-size:.5em; }
+  .hero-desc{ font-size:13px; margin-bottom:24px; }
+  .hero-founding-text{ font-size:10px; padding:4px 10px; }
+  .btn-cta-main{ padding:13px 20px; font-size:13px; }
+  .btn-cta-ghost{ padding:12px 18px; font-size:13px; }
+  .hero-counters{ padding-top:20px; margin-top:24px; }
+  .counter-num{ font-size:22px; }
+  .counter-label{ font-size:9px; }
+
+  /* marquee */
+  .marquee-item{ font-size:9px; padding:0 14px; }
+
+  /* historia */
+  .historia{ padding:48px 4vw; }
+  .historia-text h2{ font-size:clamp(24px,7vw,36px); }
+  .historia-text p{ font-size:13px; }
+  .timeline-text{ font-size:12px; }
+  .timeline-year{ font-size:10px; }
+  .float-card-num{ font-size:28px; }
+
+  /* niveles */
+  .niveles{ padding:48px 4vw; }
+  .niveles-intro h2{ font-size:clamp(24px,7vw,36px); }
+  .nivel-card{ min-height:240px; }
+  .nivel-name{ font-size:24px; }
+
+  /* mision */
+  .mision-half{ padding:40px 4vw; }
+  .mision-title{ font-size:clamp(22px,6vw,30px); }
+  .mision-text{ font-size:13px; }
+
+  /* valores */
+  .valores{ padding:48px 4vw; }
+  .valores-header h2{ font-size:clamp(24px,7vw,36px); }
+  .valores-grid{ grid-template-columns:1fr 1fr; gap:6px; }
+  .valor-card{ padding:14px 10px; }
+  .valor-emoji{ font-size:20px; margin-bottom:6px; }
+  .valor-name{ font-size:11px; }
+  .valor-desc{ font-size:10.5px; }
+
+  /* quiz */
+  .quiz-section{ padding:48px 4vw; }
+  .quiz-header h2{ font-size:clamp(22px,7vw,34px); }
+  .quiz-card{ padding:20px 14px; }
+  .quiz-question{ font-size:clamp(16px,4.5vw,22px); margin-bottom:20px; }
+  .quiz-opt{ padding:12px 14px; font-size:13px; }
+  .quiz-result-title{ font-size:22px; }
+  .quiz-result-subtitle{ font-size:13px; }
+
+  /* admisiones */
+  .admisiones{ padding:48px 4vw; }
+  .admisiones-top h2{ font-size:clamp(24px,7vw,36px); }
+  .admisiones-top p{ font-size:13px; }
+  .step-box{ padding:16px 0; }
+  .step-circle{ width:48px; height:48px; }
+  .step-num-inner{ font-size:16px; }
+  .step-title{ font-size:13px; }
+  .step-desc{ font-size:12px; }
+  .admisiones-cta-block{ padding:24px 16px; margin-top:32px; }
+  .admisiones-cta-block h3{ font-size:20px; }
+  .admisiones-cta-block p{ font-size:12px; }
+  .admission-level{ padding:14px 12px; gap:10px; }
+  .al-icon{ width:34px; height:34px; font-size:15px; }
+  .al-name{ font-size:13px; }
+  .al-grades{ font-size:11px; }
+
+  /* testimonios */
+  .testimonios{ padding:48px 4vw; }
+  .testimonios-left h2{ font-size:clamp(24px,7vw,36px); }
+  .testi-card{ padding:20px 16px; }
+  .testi-text{ font-size:13px; }
+  .testi-card:nth-child(1) .testi-text{ font-size:13.5px; }
+  .quote{ font-size:40px; }
+  .testi-author{ font-size:12px; }
+
+  /* galería / carousel */
+  .galeria{ padding:48px 0 0; }
+  .galeria-inner-wrap{ padding:0 4vw; }
+  .galeria-top h2{ font-size:clamp(24px,7vw,36px); }
+  .galeria-filters{ gap:4px; }
+  .gal-filter{ padding:6px 12px; font-size:11px; }
+  .carousel-stage{ height:55vw; min-height:220px; max-height:360px; }
+  .c-slide-content{ left:4vw; padding:0 0 64px; max-width:90vw; }
+  .c-slide-title{ font-size:clamp(16px,5vw,28px); }
+  .c-slide-sub{ font-size:12px; }
+  .c-ctrl{ width:30px; height:30px; font-size:12px; }
+  .c-ctrl-prev{ left:6px; } .c-ctrl-next{ right:6px; }
+  .c-thumb{ min-width:72px; height:56px; }
+  .c-counter{ font-size:11px; }
+  .c-progress-row{ padding:0 4vw 18px; }
+  .galeria-mosaic{ grid-auto-rows:120px; }
+
+  /* contacto */
+  .contacto{ padding:48px 4vw; gap:32px; }
+  .contacto-left h2{ font-size:clamp(24px,7vw,36px); }
+  .contacto-desc{ font-size:13px; }
+  .contacto-form{ padding:20px 16px; }
+  .f-input, .f-select, .f-textarea{ padding:12px 14px; font-size:13px; }
+  .f-label{ font-size:11px; }
+  .f-submit{ padding:14px; font-size:13px; }
+  .ci-item{ gap:10px; }
+  .ci-icon{ width:34px; height:34px; font-size:13px; }
+  .ci-text strong{ font-size:13px; }
+  .ci-text span{ font-size:12px; }
+
+  /* footer */
+  footer{ padding:40px 4vw 80px; }
+  .f-brand-name{ font-size:18px; }
+  .f-brand-desc{ font-size:12px; }
+  .footer-main{ gap:24px; padding-bottom:28px; }
+  .f-col h4{ font-size:12px; }
+  .f-col ul li a{ font-size:12px; }
+  .f-col ul{ gap:6px 12px; }
+  .footer-bottom{ gap:6px; }
+  .footer-bottom span,.footer-bottom a{ font-size:11px; }
+
+  /* padres band */
+  .padres-band{ padding:36px 4vw; }
+  .padres-band-text h3{ font-size:clamp(20px,5.5vw,28px); }
+  .padres-band-text p{ font-size:12px; }
+  .padres-band-btns{ gap:8px; }
+  .btn-padres-primary,.btn-padres-secondary{ padding:11px 16px; font-size:12px; }
+
+  /* FAQ */
+  .faq-section{ padding:56px 4vw; }
+  .faq-left h2{ font-size:clamp(22px,6vw,32px); }
+  .faq-left p{ font-size:13px; }
+  .faq-q{ padding:14px 16px; }
+  .faq-q-text{ font-size:13px; }
+  .faq-icon{ width:22px; height:22px; font-size:14px; }
+  .faq-a-inner{ padding:12px 16px 16px; font-size:13px; }
+
+  /* WhatsApp FAB */
+  #wa-fab{ bottom:96px; left:12px; width:42px; height:42px; }
+  #wa-fab svg{ width:22px; height:22px; }
+
+  /* toast */
+  #toast{ font-size:12px; }
+  .toast-text strong{ font-size:12px; }
+  .toast-text span{ font-size:11px; }
+
+  /* section labels */
+  .section-label span{ font-size:10px; letter-spacing:.1em; }
+  .section-label::before{ width:22px; }
+
+  /* lightbox */
+  .lb-close{ width:34px; height:34px; font-size:16px; top:14px; right:14px; }
+  .lb-nav{ width:32px; height:32px; font-size:14px; }
+  .lb-prev{ left:8px; } .lb-next{ right:8px; }
+  .lb-info-title{ font-size:16px; }
 }
 /* hamburger + drawer */
 .nav-hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:38px;height:38px;background:transparent;border:1px solid rgba(171,100,35,.3);border-radius:8px;cursor:pointer;padding:0;flex-shrink:0;}
