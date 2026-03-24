@@ -125,7 +125,9 @@ body:hover #cursor { opacity:1; }
 .hud-score-label { font-size:10px; color:rgba(255,255,255,0.35); }
 
 /* toast */
-#toast { position:fixed; bottom:120px; right:24px; z-index:600; background:var(--forest); border:1px solid var(--gold); border-radius:var(--r); padding:12px 18px; transform:translateX(110%); transition:transform .35s cubic-bezier(.34,1.56,.64,1); max-width:260px; cursor:pointer; }
+#toast { position:fixed; bottom:120px; right:24px; z-index:600; background:var(--forest); border:1px solid var(--gold); border-radius:var(--r); padding:12px 18px; transform:translateX(110%); transition:transform .35s cubic-bezier(.34,1.56,.64,1); max-width:260px; cursor:pointer; user-select:none; -webkit-tap-highlight-color:transparent; }
+.toast-particle { position:fixed; pointer-events:none; z-index:700; font-size:14px; animation:toast-burst .65s ease-out forwards; }
+@keyframes toast-burst { 0%{transform:translate(0,0) scale(1);opacity:1} 100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0} }
 #toast.show { transform:translateX(0); }
 .toast-inner { display:flex; gap:10px; align-items:center; }
 .toast-icon { font-size:20px; }
@@ -1512,9 +1514,9 @@ footer { background:#1e0e02; padding:72px 8vw 32px; border-top:1px solid rgba(17
 .nav-hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4.5px,4.5px);}
 .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
 .nav-hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(4.5px,-4.5px);}
-#mobile-menu{position:fixed;inset:0;z-index:350;background:rgba(25,10,1,.93);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s;}
+#mobile-menu{position:fixed;inset:0;z-index:450;background:rgba(25,10,1,.93);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s;}
 #mobile-menu.open{opacity:1;pointer-events:all;}
-.mm-inner{position:absolute;top:0;right:0;bottom:0;width:min(320px,88vw);background:var(--forest);border-left:1px solid rgba(171,100,35,.2);display:flex;flex-direction:column;padding:24px 24px 32px;transform:translateX(100%);transition:transform .35s cubic-bezier(.25,.8,.25,1);overflow-y:auto;}
+.mm-inner{position:absolute;top:0;right:0;bottom:0;width:min(300px,92vw);background:var(--forest);border-left:1px solid rgba(171,100,35,.2);display:flex;flex-direction:column;padding:20px 20px 28px;transform:translateX(100%);transition:transform .35s cubic-bezier(.25,.8,.25,1);overflow-y:auto;}
 #mobile-menu.open .mm-inner{transform:translateX(0);}
 .mm-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;}
 .mm-logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:#fff;}
@@ -1702,7 +1704,7 @@ footer { background:#1e0e02; padding:72px 8vw 32px; border-top:1px solid rgba(17
 </div>
 
 <!-- Toast notification -->
-<div id="toast">
+<div id="toast" onclick="dismissToast()" ontouchstart="dismissToast()">
   <div class="toast-inner">
     <span class="toast-icon" id="toast-icon">🏆</span>
     <div class="toast-text">
@@ -2876,14 +2878,46 @@ function showToast(icon,title,desc){
   document.getElementById('toast-title').textContent=title;
   document.getElementById('toast-desc').textContent=desc;
   clearTimeout(t._timer);
+  t._dismissed = false;
   t.classList.add('show');
   const delay = window.innerWidth <= 900 ? 1800 : 3000;
-  t._timer = setTimeout(()=>t.classList.remove('show'), delay);
+  t._timer = setTimeout(()=>{ if(!t._dismissed) t.classList.remove('show'); }, delay);
 }
-document.getElementById('toast').addEventListener('click', function(){
-  clearTimeout(this._timer);
-  this.classList.remove('show');
-});
+
+function dismissToast(){
+  const t = document.getElementById('toast');
+  if(!t.classList.contains('show')) return;
+  t._dismissed = true;
+  clearTimeout(t._timer);
+  // burst particles from toast position
+  const r = t.getBoundingClientRect();
+  const cx = r.left + r.width/2;
+  const cy = r.top  + r.height/2;
+  const symbols = ['✦','★','·','✸','◆','✺','⬡','✦','★','·','✸','◆'];
+  const colors  = ['#d4882e','#f0b95a','#ab6423','#fdf6ec','#f0b95a','#d4882e'];
+  for(let i=0;i<14;i++){
+    const p = document.createElement('span');
+    p.className = 'toast-particle';
+    const angle  = (i/14)*Math.PI*2;
+    const dist   = 60 + Math.random()*80;
+    const tx = Math.cos(angle)*dist;
+    const ty = Math.sin(angle)*dist - 20;
+    p.style.cssText = `left:${cx}px;top:${cy}px;color:${colors[i%colors.length]};--tx:${tx}px;--ty:${ty}px;animation-duration:${.45+Math.random()*.3}s;`;
+    p.textContent = symbols[i%symbols.length];
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 800);
+  }
+  // shake + shrink out
+  t.style.transition = 'transform .25s cubic-bezier(.6,-0.28,.74,.05), opacity .2s';
+  t.style.transform  = 'translateX(0) scale(.85)';
+  t.style.opacity    = '0';
+  setTimeout(()=>{
+    t.classList.remove('show');
+    t.style.transition = '';
+    t.style.transform  = '';
+    t.style.opacity    = '';
+  }, 250);
+}
 
 function toggleHUD(){
   hudMinimized = !hudMinimized;
