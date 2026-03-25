@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l \"c:/Users/jguil/Downloads/PROYECTO PARA EL VIRGINIA SAPP/ceevs-v2 \\(3\\).html\")",
+      "Bash(python transform.py)",
+      "Bash(awk 'NR>=1888 && NR<=1928' \"c:/Users/jguil/Downloads/PROYECTO PARA EL VIRGINIA SAPP/ceevs-v2 \\(3\\).html\")",
+      "Bash(sed -n '1883,1893p' \"c:/Users/jguil/Downloads/PROYECTO PARA EL VIRGINIA SAPP/ceevs-v2 \\(3\\).html\")",
+      "Bash(sed -n '1893,1896p' \"c:/Users/jguil/Downloads/PROYECTO PARA EL VIRGINIA SAPP/ceevs-v2 \\(3\\).html\")",
+      "Bash(sed -n '1915,1928p' \"c:/Users/jguil/Downloads/PROYECTO PARA EL VIRGINIA SAPP/ceevs-v2 \\(3\\).html\")",
+      "Bash(diff \"c:/Users/jguil/Downloads/PROYECTO PARA EL VIRGINIA SAPP/ceevs-v2 \\(3\\).html\" \"c:/Users/jguil/Downloads/PROYECTO PARA EL VIRGINIA SAPP/index.html\")"
+    ]
+  }
+}
