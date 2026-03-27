@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuerdos | Instituto Evangélico Virginia Sapp · CEEVS</title>
+  <meta name="description" content="Álbumes de fotos y recuerdos del Instituto Evangélico Virginia Sapp. Graduaciones, eventos, celebraciones y más.">
+  <meta name="theme-color" content="#412404">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    html { scroll-behavior: smooth; }
+
+    .recuerdos-back {
+      display:inline-flex;align-items:center;gap:6px;
+      color:var(--gold2);text-decoration:none;font-size:14px;font-weight:500;
+      margin-bottom:32px;transition:color .2s;
+    }
+    .recuerdos-back:hover { color:#fff; }
+
+    .albums-wrap {
+      max-width:1100px;margin:0 auto;
+      padding:0 5vw 60px;
+    }
+
+    .album-block {
+      margin-bottom:56px;
+      scroll-margin-top:100px;
+    }
+    .album-header {
+      display:flex;align-items:flex-end;justify-content:space-between;
+      margin-bottom:18px;padding-bottom:14px;
+      border-bottom:2px solid rgba(171,100,35,.2);
+    }
+    .album-title {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(20px,3vw,28px);font-weight:700;
+      color:var(--forest);line-height:1.2;
+    }
+    .album-title em { color:var(--gold); font-style:italic; }
+    .album-date {
+      font-size:13px;color:#8a7a6a;white-space:nowrap;
+      display:flex;align-items:center;gap:6px;
+    }
+    .album-date-dot {
+      width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;
+    }
+
+    .album-photos {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      grid-template-rows:auto auto;
+      gap:10px;
+    }
+    .album-photo {
+      border-radius:10px;overflow:hidden;cursor:pointer;
+      position:relative;
+    }
+    .album-photo img {
+      width:100%;height:220px;object-fit:cover;display:block;
+      transition:transform .4s;
+    }
+    .album-photo:hover img { transform:scale(1.05); }
+    .album-photo:first-child {
+      grid-column:span 2;grid-row:span 2;
+    }
+    .album-photo:first-child img {
+      height:100%;min-height:450px;
+    }
+    .album-photo::after {
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(to top,rgba(0,0,0,.25) 0%,transparent 40%);
+      opacity:0;transition:opacity .3s;pointer-events:none;
+    }
+    .album-photo:hover::after { opacity:1; }
+
+    @media(max-width:768px) {
+      .album-photos {
+        grid-template-columns:repeat(2,1fr);
+      }
+      .album-photo:first-child img { min-height:280px; }
+      .album-header { flex-direction:column; align-items:flex-start; gap:6px; }
+    }
+    @media(max-width:500px) {
+      .album-photos { grid-template-columns:1fr; gap:8px; }
+      .album-photo:first-child { grid-column:span 1; grid-row:span 1; }
+      .album-photo:first-child img { min-height:220px; }
+      .album-photo img { height:200px; }
+      .albums-wrap { padding:0 4vw 40px; }
+    }
+
+    /* Lightbox */
+    .rec-lb {
+      display:none;position:fixed;inset:0;z-index:9999;
+      background:rgba(0,0,0,.92);
+      align-items:center;justify-content:center;
+      cursor:pointer;
+    }
+    .rec-lb.open { display:flex; }
+    .rec-lb img {
+      max-width:92vw;max-height:90vh;object-fit:contain;
+      border-radius:8px;cursor:default;
+    }
+    .rec-lb-close {
+      position:absolute;top:20px;right:20px;
+      background:rgba(255,255,255,.12);border:none;
+      color:#fff;font-size:22px;width:44px;height:44px;
+      border-radius:50%;cursor:pointer;transition:background .2s;
+    }
+    .rec-lb-close:hover { background:rgba(255,255,255,.25); }
+    .rec-lb-nav {
+      position:absolute;top:50%;transform:translateY(-50%);
+      background:rgba(255,255,255,.1);border:none;
+      color:#fff;font-size:28px;width:48px;height:48px;
+      border-radius:50%;cursor:pointer;transition:background .2s;
+    }
+    .rec-lb-nav:hover { background:rgba(255,255,255,.25); }
+    .rec-lb-prev { left:16px; }
+    .rec-lb-next { right:16px; }
+  </style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Game HUD -->
+<div id="game-hud">
+  <div class="hud-header">
+    <span class="hud-title">✦ Mi perfil CEEVS</span>
+    <button id="hud-toggle" onclick="toggleHUD()">−</button>
+  </div>
+  <div id="hud-main-content">
+    <div class="hud-xp-bar-wrap">
+      <div class="hud-xp-label">
+        <span id="hud-pts-label">0 puntos explorador</span>
+        <span id="hud-pts-max">100 pts</span>
+      </div>
+      <div class="hud-xp-track"><div class="hud-xp-fill" id="hud-fill" style="width:0%"></div></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+      <div>
+        <div class="hud-score" id="hud-score">0</div>
+        <div class="hud-score-label">XP ganados</div>
+      </div>
+      <div class="hud-badges" id="hud-badges">
+        <div class="hud-badge" title="Explorador" data-id="explorer">🗺️</div>
+        <div class="hud-badge" title="Conocedor" data-id="knower">📖</div>
+        <div class="hud-badge" title="Interesado" data-id="quiz">🎯</div>
+        <div class="hud-badge" title="Familia CEEVS" data-id="contact">🏫</div>
+        <div class="hud-badge" title="Fan de historia" data-id="history">⏳</div>
+        <div class="hud-badge" title="Sabio Cristiano" data-id="trivia">🧠</div>
+        <div class="hud-badge" title="Explorador de Palabras" data-id="sopaletras">📝</div>
+        <div class="hud-badge" title="Memorista" data-id="memoria">🃏</div>
+      </div>
+    </div>
+  </div>
+  <div id="hud-min-content">
+    <div class="hud-score" id="hud-score-min">0 XP</div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" onclick="dismissToast(event)">
+  <div class="toast-inner">
+    <span class="toast-icon" id="toast-icon">🏆</span>
+    <div class="toast-text">
+      <strong id="toast-title">¡Logro desbloqueado!</strong>
+      <span id="toast-desc">+10 puntos</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-img">
+      <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(171,100,35,.55);background:#fff;flex-shrink:0;box-shadow:0 0 0 3px rgba(171,100,35,.15);">
+        <img src="assets/logo.png" alt="CEEVS Logo" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+      </div>
+    </div>
+    <div class="nav-wordmark">
+      <b>Instituto Evangélico Virginia Sapp</b>
+      <small>Centro Educativo CEEVS · Tegucigalpa</small>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li class="nav-dropdown">
+      <a href="quienes-somos.html">Quiénes Somos ▾</a>
+      <div class="dropdown-menu">
+        <a href="quienes-somos.html#historia">Reseña Histórica</a>
+        <a href="quienes-somos.html#filosofia">Filosofía Educativa</a>
+        <a href="quienes-somos.html#declaracion-fe">Declaración de Fe</a>
+        <a href="quienes-somos.html#mision-vision">Misión y Visión</a>
+        <a href="quienes-somos.html#valores">Valores</a>
+        <a href="quienes-somos.html#perfil-egresado">Perfil del Egresado</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <a href="admisiones.html">Admisiones ▾</a>
+      <div class="dropdown-menu">
+        <a href="admisiones.html#niveles">Niveles Educativos</a>
+        <a href="admisiones.html#quiz-section">Quiz de Admisión</a>
+        <a href="admisiones.html#admisiones">Proceso de Admisión</a>
+        <a href="admisiones.html#portal-educativo">Portal Educativo</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <a href="contactenos.html">Contáctenos ▾</a>
+      <div class="dropdown-menu">
+        <a href="contactenos.html#contacto">Ubicación y Contacto</a>
+        <a href="contactenos.html#exalumnos">Exalumnos</a>
+        <a href="contactenos.html#empleos">Empleos</a>
+      </div>
+    </li>
+    <li><a href="index.html#galeria" class="nav-active">Galería</a></li>
+    <li><a href="interactivo.html">Actividades</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="admisiones.html#portal-educativo" class="btn-nav-ghost">🖥 Portal</a>
+    <a href="admisiones.html#admisiones" class="btn-nav-solid">Solicitar admisión</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div id="mobile-menu">
+  <div class="mm-inner">
+    <div class="mm-header">
+      <div class="mm-logo">Virginia <span>Sapp</span></div>
+      <button class="mm-close" onclick="toggleMobileMenu()">✕</button>
+    </div>
+    <nav class="mm-links">
+      <a href="index.html" onclick="toggleMobileMenu()"><span class="mm-num">01</span>Inicio</a>
+      <a href="quienes-somos.html#historia" onclick="toggleMobileMenu()"><span class="mm-num">02</span>Historia</a>
+      <a href="quienes-somos.html#filosofia" onclick="toggleMobileMenu()"><span class="mm-num">03</span>Filosofía</a>
+      <a href="quienes-somos.html#valores" onclick="toggleMobileMenu()"><span class="mm-num">04</span>Valores</a>
+      <a href="admisiones.html#niveles" onclick="toggleMobileMenu()"><span class="mm-num">05</span>Niveles educativos</a>
+      <a href="admisiones.html#quiz-section" onclick="toggleMobileMenu()"><span class="mm-num">06</span>Quiz interactivo 🎯</a>
+      <a href="admisiones.html#admisiones" onclick="toggleMobileMenu()"><span class="mm-num">07</span>Admisiones</a>
+      <a href="index.html#galeria" onclick="toggleMobileMenu()"><span class="mm-num">08</span>Galería</a>
+      <a href="contactenos.html#contacto" onclick="toggleMobileMenu()"><span class="mm-num">09</span>Contacto</a>
+      <a href="interactivo.html" onclick="toggleMobileMenu()"><span class="mm-num">10</span>Actividades 🎮</a>
+    </nav>
+    <div class="mm-actions">
+      <a href="admisiones.html#portal-educativo" class="mm-btn-ghost" onclick="toggleMobileMenu()">🖥 Portal educativo</a>
+      <a href="admisiones.html#admisiones" class="mm-btn-solid" onclick="toggleMobileMenu()">Solicitar admisión 2026–2027 →</a>
+    </div>
+    <div class="mm-footer">✦ Instituto Evangélico Virginia Sapp · Fundado 1962 · Tegucigalpa, Honduras</div>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-content">
+    <div class="section-label" style="--lc:rgba(171,100,35,.8)"><span style="color:var(--gold2)">Galería de fotos</span></div>
+    <h1 class="page-hero-title">Nuestros <em>Recuerdos</em></h1>
+    <p class="page-hero-desc">Los momentos que nos definen como familia CEEVS. Graduaciones, celebraciones, logros y vida escolar capturados para siempre.</p>
+  </div>
+</section>
+
+<!-- ALBUMS -->
+<section style="background:var(--cream);padding-top:48px;">
+  <div class="albums-wrap">
+
+    <a href="index.html#galeria" class="recuerdos-back">← Volver a la galería principal</a>
+
+    <!-- ALBUM 1 -->
+    <div class="album-block" id="album-1">
+      <div class="album-header">
+        <h2 class="album-title">Graduación 2023 — <em>11vo B y C Bilingüe</em></h2>
+        <div class="album-date"><div class="album-date-dot"></div>28 de noviembre, 2023</div>
+      </div>
+      <div class="album-photos">
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?w=800&q=75&auto=format" alt="Graduación" data-img-key="album-1-1" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=500&q=70&auto=format" alt="Graduación" data-img-key="album-1-2" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1559223607-a43c990c692c?w=500&q=70&auto=format" alt="Graduación" data-img-key="album-1-3" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=500&q=70&auto=format" alt="Graduación" data-img-key="album-1-4" loading="lazy"></div>
+      </div>
+    </div>
+
+    <!-- ALBUM 2 -->
+    <div class="album-block" id="album-2">
+      <div class="album-header">
+        <h2 class="album-title">Graduación 2023 — <em>Promoción Dr. Juan Almendares</em></h2>
+        <div class="album-date"><div class="album-date-dot"></div>28 de noviembre, 2023</div>
+      </div>
+      <div class="album-photos">
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1627556704302-624286467c65?w=800&q=75&auto=format" alt="Graduación" data-img-key="album-2-1" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1607453998774-d533f65dac99?w=500&q=70&auto=format" alt="Graduación" data-img-key="album-2-2" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1525921429824-6b2f5e936ebc?w=500&q=70&auto=format" alt="Graduación" data-img-key="album-2-3" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=500&q=70&auto=format" alt="Graduación" data-img-key="album-2-4" loading="lazy"></div>
+      </div>
+    </div>
+
+    <!-- ALBUM 3 -->
+    <div class="album-block" id="album-3">
+      <div class="album-header">
+        <h2 class="album-title">Honor Roll 2023 — <em>Primaria 1ro a 6to</em></h2>
+        <div class="album-date"><div class="album-date-dot"></div>27 de noviembre, 2023</div>
+      </div>
+      <div class="album-photos">
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&q=75&auto=format" alt="Honor Roll" data-img-key="album-3-1" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&q=70&auto=format" alt="Honor Roll" data-img-key="album-3-2" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500&q=70&auto=format" alt="Honor Roll" data-img-key="album-3-3" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=500&q=70&auto=format" alt="Honor Roll" data-img-key="album-3-4" loading="lazy"></div>
+      </div>
+    </div>
+
+    <!-- ALBUM 4 -->
+    <div class="album-block" id="album-4">
+      <div class="album-header">
+        <h2 class="album-title">Clausura <em>Noveno Grado</em> 2023</h2>
+        <div class="album-date"><div class="album-date-dot"></div>27 de noviembre, 2023</div>
+      </div>
+      <div class="album-photos">
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&q=75&auto=format" alt="Clausura" data-img-key="album-4-1" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=500&q=70&auto=format" alt="Clausura" data-img-key="album-4-2" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=500&q=70&auto=format" alt="Clausura" data-img-key="album-4-3" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=500&q=70&auto=format" alt="Clausura" data-img-key="album-4-4" loading="lazy"></div>
+      </div>
+    </div>
+
+    <!-- ALBUM 5 -->
+    <div class="album-block" id="album-5">
+      <div class="album-header">
+        <h2 class="album-title">Día del <em>Estudiante</em></h2>
+        <div class="album-date"><div class="album-date-dot"></div>15 de septiembre, 2023</div>
+      </div>
+      <div class="album-photos">
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=75&auto=format" alt="Día del Estudiante" data-img-key="album-5-1" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=500&q=70&auto=format" alt="Día del Estudiante" data-img-key="album-5-2" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1590650153855-d9e808231d41?w=500&q=70&auto=format" alt="Día del Estudiante" data-img-key="album-5-3" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1588072432836-e10032774350?w=500&q=70&auto=format" alt="Día del Estudiante" data-img-key="album-5-4" loading="lazy"></div>
+      </div>
+    </div>
+
+    <!-- ALBUM 6 -->
+    <div class="album-block" id="album-6">
+      <div class="album-header">
+        <h2 class="album-title">Festival <em>Cultural</em></h2>
+        <div class="album-date"><div class="album-date-dot"></div>20 de octubre, 2023</div>
+      </div>
+      <div class="album-photos">
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=75&auto=format" alt="Festival Cultural" data-img-key="album-6-1" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=500&q=70&auto=format" alt="Festival Cultural" data-img-key="album-6-2" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=500&q=70&auto=format" alt="Festival Cultural" data-img-key="album-6-3" loading="lazy"></div>
+        <div class="album-photo" onclick="openRecLB(this)"><img src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=500&q=70&auto=format" alt="Festival Cultural" data-img-key="album-6-4" loading="lazy"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="rec-lb" id="rec-lb" onclick="closeRecLB()">
+  <button class="rec-lb-close" onclick="event.stopPropagation();closeRecLB()">✕</button>
+  <button class="rec-lb-nav rec-lb-prev" onclick="event.stopPropagation();stepRecLB(-1)">&#8592;</button>
+  <img id="rec-lb-img" alt="Foto ampliada" onclick="event.stopPropagation()">
+  <button class="rec-lb-nav rec-lb-next" onclick="event.stopPropagation();stepRecLB(1)">&#8594;</button>
+</div>
+
+<!-- WhatsApp FAB -->
+<a href="https://wa.me/50422000000" target="_blank" rel="noopener" class="whatsapp-fab" title="Escríbenos por WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.116.553 4.1 1.519 5.828L.037 23.585a.5.5 0 0 0 .613.613l5.757-1.482A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.94 0-3.751-.562-5.283-1.533l-.368-.224-3.413.879.879-3.413-.224-.368A9.96 9.96 0 0 1 2 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+</a>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-main">
+    <div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+        <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;border:2px solid rgba(171,100,35,.5);background:#fff;flex-shrink:0;">
+          <img src="assets/logo.png" alt="CEEVS" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;">Virginia Sapp</div>
+      </div>
+      <p class="f-desc">Más de seis décadas formando líderes con fe, excelencia académica y valores eternos.</p>
+    </div>
+    <div>
+      <h4 class="f-heading">Enlaces</h4>
+      <ul class="f-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="quienes-somos.html">Quiénes Somos</a></li>
+        <li><a href="admisiones.html">Admisiones</a></li>
+        <li><a href="index.html#galeria">Galería</a></li>
+        <li><a href="contactenos.html">Contacto</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="f-heading">Contacto</h4>
+      <ul class="f-links">
+        <li>+504 2200-0000</li>
+        <li>admisiones@virginiasapp.edu.hn</li>
+        <li>Tegucigalpa, Honduras</li>
+        <li>Lun–Vie · 7:00am – 4:00pm</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="f-copy">© 2026 Instituto Evangélico Virginia Sapp — CEEVS. Todos los derechos reservados.</p>
+    <div class="f-adieeds">Miembro certificado de <span>ADIEEDS</span></div>
+  </div>
+  <div style="text-align:center;padding:18px 0 10px;border-top:1px solid rgba(171,100,35,.12)">
+    <a href="admin.html" style="display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:rgba(171,100,35,.1);color:var(--gold);border:1px solid rgba(171,100,35,.25);border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(171,100,35,.2)';this.style.borderColor='rgba(171,100,35,.5)'" onmouseout="this.style.background='rgba(171,100,35,.1)';this.style.borderColor='rgba(171,100,35,.25)'">⚙ Administrador</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/gamification.js"></script>
+<script src="js/image-manager.js"></script>
+<script>
+/* Lightbox para recuerdos */
+var recLBPhotos = [];
+var recLBIndex = 0;
+
+function openRecLB(photoDiv) {
+  var albumBlock = photoDiv.closest('.album-photos');
+  recLBPhotos = [];
+  albumBlock.querySelectorAll('.album-photo img').forEach(function(img) {
+    recLBPhotos.push(img.src);
+  });
+  recLBIndex = recLBPhotos.indexOf(photoDiv.querySelector('img').src);
+  if (recLBIndex < 0) recLBIndex = 0;
+  document.getElementById('rec-lb-img').src = recLBPhotos[recLBIndex];
+  document.getElementById('rec-lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRecLB() {
+  document.getElementById('rec-lb').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function stepRecLB(dir) {
+  recLBIndex = (recLBIndex + dir + recLBPhotos.length) % recLBPhotos.length;
+  document.getElementById('rec-lb-img').src = recLBPhotos[recLBIndex];
+}
+
+document.addEventListener('keydown', function(e) {
+  var lb = document.getElementById('rec-lb');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeRecLB();
+  if (e.key === 'ArrowLeft') stepRecLB(-1);
+  if (e.key === 'ArrowRight') stepRecLB(1);
+});
+
+/* Scroll to album on load if hash */
+if (window.location.hash) {
+  setTimeout(function() {
+    var el = document.querySelector(window.location.hash);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
+}
+</script>
+</body>
+</html>

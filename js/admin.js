@@ -1,15 +1,13 @@
 /**
  * admin.js — Panel de administración CEEVS
- * Gestión de imágenes del sitio por URL (hipervínculo)
+ * Gestión de imágenes con controles de posición, ajuste y zoom.
  */
 
 (function () {
   'use strict';
 
-  /* ─── Contraseña provisional ─── */
   var ADMIN_PASS = 'ceevs2026';
 
-  /* ─── Catálogo de imágenes editables ─── */
   var IMAGE_CATALOG = [
     {
       page: 'Inicio (index.html)',
@@ -76,11 +74,47 @@
     document.getElementById('login-screen').style.display = 'flex';
   }
 
-  /* ─── Dashboard ─── */
+  /* ─── Helpers ─── */
+  function mgr() { return window.ceevsImageManager || {}; }
+
+  function getSettingFor(key) {
+    var all = mgr().getSettings ? mgr().getSettings() : {};
+    return all[key] || { posX: 50, posY: 50, fit: 'cover', zoom: 100 };
+  }
+
+  /** Actualiza la vista previa en vivo mientras se mueven los controles */
+  function livePreview(key) {
+    var previewImg = document.getElementById('preview-' + key);
+    if (!previewImg) return;
+
+    var posX = parseInt(document.getElementById('posX-' + key).value, 10);
+    var posY = parseInt(document.getElementById('posY-' + key).value, 10);
+    var fit = document.getElementById('fit-' + key).value;
+    var zoom = parseInt(document.getElementById('zoom-' + key).value, 10);
+
+    previewImg.style.objectPosition = posX + '% ' + posY + '%';
+    previewImg.style.objectFit = fit;
+    if (zoom !== 100) {
+      previewImg.style.transform = 'scale(' + (zoom / 100) + ')';
+      previewImg.style.transformOrigin = posX + '% ' + posY + '%';
+    } else {
+      previewImg.style.transform = 'none';
+    }
+
+    // Update labels
+    var lx = document.getElementById('posX-val-' + key);
+    var ly = document.getElementById('posY-val-' + key);
+    var lz = document.getElementById('zoom-val-' + key);
+    if (lx) lx.textContent = posX + '%';
+    if (ly) ly.textContent = posY + '%';
+    if (lz) lz.textContent = zoom + '%';
+  }
+
+  /* ─── Render ─── */
   function renderDashboard() {
     var container = document.getElementById('images-grid');
     container.innerHTML = '';
-    var saved = window.ceevsImageManager ? window.ceevsImageManager.getSavedImages() : {};
+    var saved = mgr().getSavedImages ? mgr().getSavedImages() : {};
 
     IMAGE_CATALOG.forEach(function (section) {
       var sectionEl = document.createElement('div');
@@ -94,26 +128,87 @@
       section.images.forEach(function (img) {
         var currentUrl = saved[img.key] || img.defaultUrl;
         var isCustom = !!saved[img.key];
+        var s = getSettingFor(img.key);
 
         var card = document.createElement('div');
         card.className = 'admin-card';
 
         card.innerHTML =
+          /* Header */
           '<div class="admin-card-header">' +
             '<span class="admin-card-label">' + img.label + '</span>' +
             (isCustom ? '<span class="admin-badge-custom">Personalizada</span>' : '<span class="admin-badge-default">Por defecto</span>') +
           '</div>' +
+
+          /* Preview */
           '<div class="admin-preview-wrap">' +
-            (currentUrl ? '<img class="admin-preview" src="' + currentUrl + '" alt="Vista previa" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">' : '') +
+            (currentUrl
+              ? '<img class="admin-preview" id="preview-' + img.key + '" src="' + currentUrl + '" alt="Vista previa"' +
+                ' style="object-position:' + s.posX + '% ' + s.posY + '%;object-fit:' + s.fit + ';' +
+                (s.zoom !== 100 ? 'transform:scale(' + (s.zoom / 100) + ');transform-origin:' + s.posX + '% ' + s.posY + '%' : '') + '"' +
+                ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+              : '') +
             '<div class="admin-preview-empty" style="' + (currentUrl ? 'display:none' : 'display:flex') + '">Sin imagen</div>' +
           '</div>' +
+
+          /* URL input */
           '<div class="admin-input-group">' +
             '<label class="admin-input-label">URL de la imagen (hipervínculo)</label>' +
             '<input type="url" class="admin-input" id="input-' + img.key + '" value="' + (saved[img.key] || '') + '" placeholder="https://ejemplo.com/foto.jpg">' +
           '</div>' +
+
+          /* Position controls */
+          '<div class="admin-controls">' +
+            '<div class="admin-control-row">' +
+              '<div class="admin-control-item">' +
+                '<label class="admin-control-label">↕ Vertical <span id="posY-val-' + img.key + '">' + s.posY + '%</span></label>' +
+                '<div class="admin-slider-wrap">' +
+                  '<span class="admin-slider-hint">Arriba</span>' +
+                  '<input type="range" class="admin-slider" id="posY-' + img.key + '" min="0" max="100" value="' + s.posY + '" data-key="' + img.key + '">' +
+                  '<span class="admin-slider-hint">Abajo</span>' +
+                '</div>' +
+              '</div>' +
+              '<div class="admin-control-item">' +
+                '<label class="admin-control-label">↔ Horizontal <span id="posX-val-' + img.key + '">' + s.posX + '%</span></label>' +
+                '<div class="admin-slider-wrap">' +
+                  '<span class="admin-slider-hint">Izq</span>' +
+                  '<input type="range" class="admin-slider" id="posX-' + img.key + '" min="0" max="100" value="' + s.posX + '" data-key="' + img.key + '">' +
+                  '<span class="admin-slider-hint">Der</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="admin-control-row">' +
+              '<div class="admin-control-item">' +
+                '<label class="admin-control-label">Ajuste</label>' +
+                '<select class="admin-select" id="fit-' + img.key + '" data-key="' + img.key + '">' +
+                  '<option value="cover"' + (s.fit === 'cover' ? ' selected' : '') + '>Cubrir (recorta para llenar)</option>' +
+                  '<option value="contain"' + (s.fit === 'contain' ? ' selected' : '') + '>Contener (muestra toda la foto)</option>' +
+                  '<option value="fill"' + (s.fit === 'fill' ? ' selected' : '') + '>Estirar (deforma para llenar)</option>' +
+                '</select>' +
+              '</div>' +
+              '<div class="admin-control-item">' +
+                '<label class="admin-control-label">Zoom <span id="zoom-val-' + img.key + '">' + s.zoom + '%</span></label>' +
+                '<div class="admin-slider-wrap">' +
+                  '<span class="admin-slider-hint">50%</span>' +
+                  '<input type="range" class="admin-slider" id="zoom-' + img.key + '" min="50" max="200" value="' + s.zoom + '" data-key="' + img.key + '">' +
+                  '<span class="admin-slider-hint">200%</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="display:flex;gap:8px;margin-top:6px">' +
+              '<button class="admin-btn-quick" data-key="' + img.key + '" data-pos="top" title="Enfocar arriba">↑ Arriba</button>' +
+              '<button class="admin-btn-quick" data-key="' + img.key + '" data-pos="center" title="Centrar">◎ Centro</button>' +
+              '<button class="admin-btn-quick" data-key="' + img.key + '" data-pos="bottom" title="Enfocar abajo">↓ Abajo</button>' +
+              '<button class="admin-btn-quick" data-key="' + img.key + '" data-pos="left" title="Enfocar izquierda">← Izq</button>' +
+              '<button class="admin-btn-quick" data-key="' + img.key + '" data-pos="right" title="Enfocar derecha">→ Der</button>' +
+              '<button class="admin-btn-quick" data-key="' + img.key + '" data-pos="reset-zoom" title="Zoom 100%">1:1</button>' +
+            '</div>' +
+          '</div>' +
+
+          /* Actions */
           '<div class="admin-card-actions">' +
-            '<button class="admin-btn-save" data-key="' + img.key + '">Guardar</button>' +
-            '<button class="admin-btn-reset" data-key="' + img.key + '" ' + (!isCustom ? 'disabled' : '') + '>Restaurar original</button>' +
+            '<button class="admin-btn-save" data-key="' + img.key + '">Guardar todo</button>' +
+            '<button class="admin-btn-reset" data-key="' + img.key + '" ' + (!isCustom && s.posX === 50 && s.posY === 50 && s.zoom === 100 ? 'disabled' : '') + '>Restaurar original</button>' +
           '</div>';
 
         sectionEl.appendChild(card);
@@ -122,25 +217,68 @@
       container.appendChild(sectionEl);
     });
 
-    // Event delegation para botones
+    // ─── Event delegation ───
+    container.addEventListener('input', function (e) {
+      var el = e.target;
+      if (el.classList.contains('admin-slider') || el.tagName === 'SELECT') {
+        var k = el.getAttribute('data-key');
+        if (k) livePreview(k);
+      }
+    });
+
+    container.addEventListener('change', function (e) {
+      var el = e.target;
+      if (el.classList.contains('admin-select')) {
+        var k = el.getAttribute('data-key');
+        if (k) livePreview(k);
+      }
+    });
+
     container.addEventListener('click', function (e) {
       var btn = e.target;
+
+      // Quick position buttons
+      if (btn.classList.contains('admin-btn-quick')) {
+        var k = btn.getAttribute('data-key');
+        var pos = btn.getAttribute('data-pos');
+        var slX = document.getElementById('posX-' + k);
+        var slY = document.getElementById('posY-' + k);
+        var slZ = document.getElementById('zoom-' + k);
+        if (pos === 'top') { slY.value = 0; }
+        else if (pos === 'bottom') { slY.value = 100; }
+        else if (pos === 'center') { slX.value = 50; slY.value = 50; }
+        else if (pos === 'left') { slX.value = 0; }
+        else if (pos === 'right') { slX.value = 100; }
+        else if (pos === 'reset-zoom') { slZ.value = 100; }
+        livePreview(k);
+        return;
+      }
+
+      // Save
       if (btn.classList.contains('admin-btn-save')) {
         var key = btn.getAttribute('data-key');
         var input = document.getElementById('input-' + key);
         var url = input.value.trim();
-        if (window.ceevsImageManager) {
-          window.ceevsImageManager.saveImage(key, url);
-        }
-        showToast(url ? 'Imagen guardada correctamente' : 'Imagen eliminada');
+
+        if (mgr().saveImage) mgr().saveImage(key, url);
+
+        var setting = {
+          posX: parseInt(document.getElementById('posX-' + key).value, 10),
+          posY: parseInt(document.getElementById('posY-' + key).value, 10),
+          fit: document.getElementById('fit-' + key).value,
+          zoom: parseInt(document.getElementById('zoom-' + key).value, 10)
+        };
+        if (mgr().saveSetting) mgr().saveSetting(key, setting);
+
+        showToast('Imagen y ajustes guardados');
         renderDashboard();
       }
+
+      // Reset
       if (btn.classList.contains('admin-btn-reset')) {
         var key2 = btn.getAttribute('data-key');
-        if (window.ceevsImageManager) {
-          window.ceevsImageManager.resetImage(key2);
-        }
-        showToast('Imagen restaurada al valor original');
+        if (mgr().resetImage) mgr().resetImage(key2);
+        showToast('Imagen restaurada al original');
         renderDashboard();
       }
     });
@@ -168,17 +306,13 @@
     if (!toast) return;
     toast.textContent = msg;
     toast.classList.add('show');
-    setTimeout(function () {
-      toast.classList.remove('show');
-    }, 2500);
+    setTimeout(function () { toast.classList.remove('show'); }, 2500);
   }
 
   function resetAllImages() {
-    if (confirm('¿Estás seguro? Esto restaurará TODAS las imágenes a sus valores originales (stock).')) {
-      if (window.ceevsImageManager) {
-        window.ceevsImageManager.resetAll();
-      }
-      showToast('Todas las imágenes han sido restauradas');
+    if (confirm('¿Estás seguro? Esto restaurará TODAS las imágenes y ajustes a sus valores originales.')) {
+      if (mgr().resetAll) mgr().resetAll();
+      showToast('Todo restaurado');
       renderDashboard();
     }
   }
