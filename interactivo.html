@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zona Interactiva | Instituto Evangélico Virginia Sapp · CEEVS</title>
+  <meta name="description" content="Aprende y diviértete con trivia bíblica, sopa de letras, juego de memoria y versículos diarios. Para padres, alumnos y docentes de CEEVS.">
+  <meta name="theme-color" content="#412404">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Zona Interactiva | Instituto Evangélico Virginia Sapp · CEEVS">
+  <meta property="og:description" content="Mini-juegos y actividades de educación cristiana para toda la familia CEEVS.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_HN">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Game HUD -->
+<div id="game-hud">
+  <div class="hud-header">
+    <span class="hud-title">✦ Mi perfil CEEVS</span>
+    <button id="hud-toggle" onclick="toggleHUD()">−</button>
+  </div>
+  <div id="hud-main-content">
+    <div class="hud-xp-bar-wrap">
+      <div class="hud-xp-label">
+        <span id="hud-pts-label">0 puntos explorador</span>
+        <span id="hud-pts-max">100 pts</span>
+      </div>
+      <div class="hud-xp-track"><div class="hud-xp-fill" id="hud-fill" style="width:0%"></div></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+      <div>
+        <div class="hud-score" id="hud-score">0</div>
+        <div class="hud-score-label">XP ganados</div>
+      </div>
+      <div class="hud-badges" id="hud-badges">
+        <div class="hud-badge" title="Explorador" data-id="explorer">🗺️</div>
+        <div class="hud-badge" title="Conocedor" data-id="knower">📖</div>
+        <div class="hud-badge" title="Interesado" data-id="quiz">🎯</div>
+        <div class="hud-badge" title="Familia CEEVS" data-id="contact">🏫</div>
+        <div class="hud-badge" title="Fan de historia" data-id="history">⏳</div>
+        <div class="hud-badge" title="Sabio Cristiano" data-id="trivia">🧠</div>
+        <div class="hud-badge" title="Explorador de Palabras" data-id="sopaletras">📝</div>
+        <div class="hud-badge" title="Memorista" data-id="memoria">🃏</div>
+      </div>
+    </div>
+  </div>
+  <div id="hud-min-content">
+    <div class="hud-score" id="hud-score-min">0 XP</div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" onclick="dismissToast(event)">
+  <div class="toast-inner">
+    <span class="toast-icon" id="toast-icon">🏆</span>
+    <div class="toast-text">
+      <strong id="toast-title">¡Logro desbloqueado!</strong>
+      <span id="toast-desc">+10 puntos</span>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-img">
+      <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(171,100,35,.55);background:#fff;flex-shrink:0;box-shadow:0 0 0 3px rgba(171,100,35,.15);">
+        <img src="assets/logo.png" alt="CEEVS Logo" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+      </div>
+    </div>
+    <div class="nav-wordmark">
+      <b>Instituto Evangélico Virginia Sapp</b>
+      <small>Centro Educativo CEEVS · Tegucigalpa</small>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li class="nav-dropdown">
+      <a href="quienes-somos.html" class="">Quiénes Somos ▾</a>
+      <div class="dropdown-menu">
+        <a href="quienes-somos.html#historia">Reseña Histórica</a>
+        <a href="quienes-somos.html#filosofia">Filosofía Educativa</a>
+        <a href="quienes-somos.html#declaracion-fe">Declaración de Fe</a>
+        <a href="quienes-somos.html#mision-vision">Misión y Visión</a>
+        <a href="quienes-somos.html#valores">Valores</a>
+        <a href="quienes-somos.html#perfil-egresado">Perfil del Egresado</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <a href="admisiones.html" class="">Admisiones ▾</a>
+      <div class="dropdown-menu">
+        <a href="admisiones.html#niveles">Niveles Educativos</a>
+        <a href="admisiones.html#quiz-section">Quiz de Admisión</a>
+        <a href="admisiones.html#admisiones">Proceso de Admisión</a>
+        <a href="admisiones.html#portal-educativo">Portal Educativo</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <a href="contactenos.html" class="">Contáctenos ▾</a>
+      <div class="dropdown-menu">
+        <a href="contactenos.html#contacto">Ubicación y Contacto</a>
+        <a href="contactenos.html#exalumnos">Exalumnos</a>
+        <a href="contactenos.html#empleos">Empleos</a>
+      </div>
+    </li>
+    <li><a href="index.html#galeria">Galería</a></li>
+    <li><a href="interactivo.html" class="nav-active">Actividades</a></li>
+  </ul>
+
+  <div class="nav-cta">
+    <a href="admisiones.html#portal-educativo" class="btn-nav-ghost">🖥 Portal</a>
+    <a href="admisiones.html#admisiones" class="btn-nav-solid">Solicitar admisión</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu drawer -->
+<div id="mobile-menu">
+  <div class="mm-inner">
+    <div class="mm-header">
+      <div class="mm-logo">Virginia <span>Sapp</span></div>
+      <button class="mm-close" onclick="toggleMobileMenu()">✕</button>
+    </div>
+    <nav class="mm-links">
+      <a href="index.html" onclick="toggleMobileMenu()"><span class="mm-num">01</span>Inicio</a>
+      <a href="quienes-somos.html#historia" onclick="toggleMobileMenu()"><span class="mm-num">02</span>Historia</a>
+      <a href="quienes-somos.html#filosofia" onclick="toggleMobileMenu()"><span class="mm-num">03</span>Filosofía</a>
+      <a href="quienes-somos.html#valores" onclick="toggleMobileMenu()"><span class="mm-num">04</span>Valores</a>
+      <a href="admisiones.html#niveles" onclick="toggleMobileMenu()"><span class="mm-num">05</span>Niveles educativos</a>
+      <a href="admisiones.html#quiz-section" onclick="toggleMobileMenu()"><span class="mm-num">06</span>Quiz interactivo 🎯</a>
+      <a href="admisiones.html#admisiones" onclick="toggleMobileMenu()"><span class="mm-num">07</span>Admisiones</a>
+      <a href="index.html#galeria" onclick="toggleMobileMenu()"><span class="mm-num">08</span>Galería</a>
+      <a href="contactenos.html#contacto" onclick="toggleMobileMenu()"><span class="mm-num">09</span>Contacto</a>
+      <a href="interactivo.html" onclick="toggleMobileMenu()"><span class="mm-num">10</span>Actividades 🎮</a>
+    </nav>
+    <div class="mm-actions">
+      <a href="admisiones.html#portal-educativo" class="mm-btn-ghost" onclick="toggleMobileMenu()">🖥 Portal educativo</a>
+      <a href="admisiones.html#admisiones" class="mm-btn-solid" onclick="toggleMobileMenu()">Solicitar admisión 2025–2026 →</a>
+    </div>
+    <div class="mm-footer">✦ Instituto Evangélico Virginia Sapp · Fundado 1962 · Tegucigalpa, Honduras</div>
+  </div>
+</div>
+
+<!-- ─── PAGE HERO ─── -->
+<section class="page-hero">
+  <div class="page-hero-content">
+    <div class="section-label"><span>Zona Interactiva</span></div>
+    <h1 class="page-hero-title">Aprende y juega<br><em>con fe</em></h1>
+    <p class="page-hero-desc">Actividades educativas y entretenidas para padres, alumnos y docentes de la familia CEEVS. Gana XP con cada juego.</p>
+    <div class="hero-trust-badges">
+      <span class="trust-badge">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        Para toda la familia
+      </span>
+      <span class="trust-badge">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        Educación cristiana
+      </span>
+      <span class="trust-badge">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        Gana puntos XP
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ZONA INTERACTIVA ─── -->
+<section class="zona-interactiva" id="interactivo">
+  <div class="zona-header reveal">
+    <h2 class="zona-title">¿Quién quiere <em>jugar</em>?</h2>
+    <p class="zona-desc">Filtra por audiencia o explora todos los juegos disponibles. Cada actividad completada suma XP a tu perfil CEEVS.</p>
+
+    <!-- Selector de audiencia -->
+    <div class="audience-tabs" role="group" aria-label="Filtrar por audiencia">
+      <button class="audience-tab active" data-audience="todos" onclick="filterGames('todos')">🌟 Todos</button>
+      <button class="audience-tab" data-audience="padres" onclick="filterGames('padres')">👨‍👩‍👧 Padres</button>
+      <button class="audience-tab" data-audience="alumnos" onclick="filterGames('alumnos')">🎒 Alumnos</button>
+      <button class="audience-tab" data-audience="docentes" onclick="filterGames('docentes')">📚 Docentes</button>
+    </div>
+  </div>
+
+  <!-- Grid de juegos -->
+  <div class="games-grid" id="games-grid">
+
+    <!-- Trivia -->
+    <div class="game-card reveal" data-audiences="todos,alumnos,padres,docentes" onclick="openGame('trivia')">
+      <span class="game-card-icon">🧠</span>
+      <span class="game-card-tag">Todos</span>
+      <div class="game-card-title">Trivia Bíblica</div>
+      <div class="game-card-desc">Pon a prueba tu conocimiento sobre la Biblia, valores cristianos e historia del CEEVS. 10 preguntas aleatorias con timer.</div>
+      <div class="game-card-meta">
+        <span class="game-meta-pill">⏱ 30 seg/pregunta</span>
+        <span class="game-meta-pill">+45 XP máx</span>
+      </div>
+      <button class="game-card-btn">¡Jugar ahora!</button>
+    </div>
+
+    <!-- Sopa de letras -->
+    <div class="game-card reveal" data-audiences="todos,alumnos,padres" onclick="openGame('sopa')">
+      <span class="game-card-icon">🔤</span>
+      <span class="game-card-tag">Alumnos · Padres</span>
+      <div class="game-card-title">Sopa de Letras</div>
+      <div class="game-card-desc">Encuentra 10 palabras relacionadas a los valores y conceptos de la fe cristiana en nuestra sopa de letras interactiva.</div>
+      <div class="game-card-meta">
+        <span class="game-meta-pill">10 palabras</span>
+        <span class="game-meta-pill">+60 XP máx</span>
+      </div>
+      <button class="game-card-btn">¡Jugar ahora!</button>
+    </div>
+
+    <!-- Memoria -->
+    <div class="game-card reveal" data-audiences="todos,alumnos,padres" onclick="openGame('memoria')">
+      <span class="game-card-icon">🃏</span>
+      <span class="game-card-tag">Alumnos · Padres</span>
+      <div class="game-card-title">Memoria Cristiana</div>
+      <div class="game-card-desc">Empareja los valores cristianos con su símbolo. Entrena la memoria mientras aprendes virtudes de la fe en acción.</div>
+      <div class="game-card-meta">
+        <span class="game-meta-pill">8 pares</span>
+        <span class="game-meta-pill">+20 XP</span>
+      </div>
+      <button class="game-card-btn">¡Jugar ahora!</button>
+    </div>
+
+    <!-- Versículo del Día -->
+    <div class="game-card reveal" data-audiences="todos,padres,docentes" onclick="openGame('versiculo')">
+      <span class="game-card-icon">✝️</span>
+      <span class="game-card-tag">Padres · Docentes</span>
+      <div class="game-card-title">Versículo del Día</div>
+      <div class="game-card-desc">Recibe el versículo bíblico del día en Reina Valera 1960. Márcalo como favorito y suma XP a tu perfil de hoy.</div>
+      <div class="game-card-meta">
+        <span class="game-meta-pill">RVR 1960</span>
+        <span class="game-meta-pill">+5 XP/día</span>
+      </div>
+      <button class="game-card-btn">Ver versículo</button>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     MODAL DE JUEGO (contenedor único)
+════════════════════════════════════════ -->
+<div id="game-modal" class="game-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="game-modal-inner" id="game-modal-inner">
+    <button class="game-modal-close" onclick="closeGame()" aria-label="Cerrar juego">✕</button>
+    <div id="game-content"></div>
+  </div>
+</div>
+
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-main">
+    <div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+        <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;border:2px solid rgba(171,100,35,.5);background:#fff;flex-shrink:0;box-shadow:0 0 0 4px rgba(171,100,35,.14),0 8px 24px rgba(0,0,0,.25);">
+          <img src="assets/logo.png" alt="CEEVS" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+        </div>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:17px;color:#fff;">Instituto Evangélico</div>
+          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:var(--gold2);">Virginia Sapp</div>
+        </div>
+      </div>
+      <p style="color:rgba(255,255,255,.45);font-size:13.5px;line-height:1.7;max-width:280px;">Formando líderes con fe, excelencia y valores eternos desde 1962 en Tegucigalpa, Honduras.</p>
+    </div>
+    <div>
+      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:14px;">Navegación</div>
+      <div style="display:flex;flex-direction:column;gap:9px;">
+        <a href="index.html" style="color:rgba(255,255,255,.55);font-size:14px;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#d4882e'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Inicio</a>
+        <a href="quienes-somos.html" style="color:rgba(255,255,255,.55);font-size:14px;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#d4882e'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Quiénes Somos</a>
+        <a href="admisiones.html" style="color:rgba(255,255,255,.55);font-size:14px;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#d4882e'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Admisiones</a>
+        <a href="contactenos.html" style="color:rgba(255,255,255,.55);font-size:14px;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#d4882e'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Contáctenos</a>
+        <a href="interactivo.html" style="color:var(--gold2);font-size:14px;text-decoration:none;">Actividades</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:14px;">Contacto</div>
+      <div style="display:flex;flex-direction:column;gap:9px;color:rgba(255,255,255,.55);font-size:14px;">
+        <span>📍 Tegucigalpa, Honduras</span>
+        <span>📞 +504 2200-0000</span>
+        <span>✉️ info@ceevs.edu.hn</span>
+        <a href="https://wa.me/50422000000" target="_blank" rel="noopener" style="color:var(--gold2);text-decoration:none;">💬 WhatsApp</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Instituto Evangélico Virginia Sapp · CEEVS · Tegucigalpa, Honduras</span>
+    <span>Formando líderes desde 1962 ✦</span>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════ -->
+<!-- WhatsApp FAB -->
+<a id="wa-fab" href="https://wa.me/50422000000" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <span class="wa-tooltip">¿Necesitas información? 💬</span>
+</a>
+
+  <script src="js/main.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/games.js"></script>
+</body>
+</html>

@@ -165,20 +165,27 @@ function selectValor(card, badgeId) {
 
 // ── FORM SUBMIT ──
 function submitForm(btn) {
-  btn.textContent = '✓ ¡Solicitud enviada!';
-  btn.style.background = '#22c55e';
-  btn.style.color = '#fff';
+  const textEl = btn.querySelector('.f-submit-text');
+  const spinnerEl = btn.querySelector('.f-submit-spinner');
   btn.disabled = true;
+  if (textEl) textEl.style.display = 'none';
+  if (spinnerEl) spinnerEl.style.display = 'inline-flex';
   if (typeof addXP === 'function') {
     addXP(25, '🏫', '¡Bienvenido/a a la familia CEEVS!', 'Solicitud enviada · +25 XP');
     unlockBadge('contact');
   }
   setTimeout(() => {
-    btn.textContent = 'Enviar solicitud →';
-    btn.style.background = '';
-    btn.style.color = '';
-    btn.disabled = false;
-  }, 4000);
+    if (spinnerEl) spinnerEl.style.display = 'none';
+    if (textEl) { textEl.textContent = '✓ ¡Solicitud enviada!'; textEl.style.display = ''; }
+    btn.style.background = '#22c55e';
+    btn.style.color = '#fff';
+    setTimeout(() => {
+      if (textEl) textEl.textContent = 'Enviar solicitud →';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.disabled = false;
+    }, 3500);
+  }, 1500);
 }
 
 // ── DROPDOWN NAV (desktop) ──
