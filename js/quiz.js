@@ -117,4 +117,67 @@ function restartQuiz() {
   if (fill) fill.style.width = '25%';
   if (stepLabel) stepLabel.textContent = 'Pregunta 1 de 4';
   if (pctLabel) pctLabel.textContent = '25%';
+
+  // Reset lead form
+  const leadForm = document.getElementById('quiz-lead-form');
+  if (leadForm) leadForm.style.display = 'block';
+  const leadMsg = document.getElementById('quiz-lead-msg');
+  if (leadMsg) leadMsg.style.display = 'none';
+  ['quiz-lead-name', 'quiz-lead-phone', 'quiz-lead-email'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+/**
+ * Captura datos del lead después del quiz y los guarda en localStorage.
+ * En producción esto se enviaría a un backend/API.
+ */
+function submitQuizLead() {
+  var name = (document.getElementById('quiz-lead-name').value || '').trim();
+  var phone = (document.getElementById('quiz-lead-phone').value || '').trim();
+  var email = (document.getElementById('quiz-lead-email').value || '').trim();
+  var msg = document.getElementById('quiz-lead-msg');
+
+  if (!name && !phone && !email) {
+    if (msg) {
+      msg.textContent = 'Por favor ingresa al menos un dato de contacto.';
+      msg.style.color = '#ff9800';
+      msg.style.display = 'block';
+    }
+    return;
+  }
+
+  // Guardar lead en localStorage (colección de leads)
+  var leads = [];
+  try { leads = JSON.parse(localStorage.getItem('ceevs_quiz_leads')) || []; } catch (e) { leads = []; }
+
+  leads.push({
+    name: name,
+    phone: phone,
+    email: email,
+    quizAnswers: Object.assign({}, answers),
+    recommendation: (document.getElementById('r-title') || {}).textContent || '',
+    timestamp: new Date().toISOString()
+  });
+
+  localStorage.setItem('ceevs_quiz_leads', JSON.stringify(leads));
+
+  // Mostrar confirmación
+  if (msg) {
+    msg.textContent = '¡Gracias! Nuestro equipo te contactará pronto.';
+    msg.style.color = '#4caf50';
+    msg.style.display = 'block';
+  }
+
+  // Ocultar formulario y mostrar confirmación
+  var form = document.getElementById('quiz-lead-form');
+  if (form) {
+    var inputs = form.querySelectorAll('input, button');
+    inputs.forEach(function (el) { el.disabled = true; el.style.opacity = '.5'; });
+  }
+
+  if (typeof addXP === 'function') {
+    addXP(10, '📋', '¡Datos enviados!', 'Nuestro equipo te contactará +10 XP');
+  }
 }

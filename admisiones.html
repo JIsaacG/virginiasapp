@@ -154,7 +154,7 @@
     </nav>
     <div class="mm-actions">
       <a href="admisiones.html#portal-educativo" class="mm-btn-ghost" onclick="toggleMobileMenu()">🖥 Portal educativo</a>
-      <a href="admisiones.html#admisiones" class="mm-btn-solid" onclick="toggleMobileMenu()">Solicitar admisión 2025–2026 →</a>
+      <a href="admisiones.html#admisiones" class="mm-btn-solid" onclick="toggleMobileMenu()">Solicitar admisión 2026–2027 →</a>
     </div>
     <div class="mm-footer">✦ Instituto Evangélico Virginia Sapp · Fundado 1962 · Tegucigalpa, Honduras</div>
   </div>
@@ -164,7 +164,7 @@
 <!-- ─── PAGE HERO ─── -->
 <section class="page-hero">
   <div class="page-hero-content">
-    <div class="section-label"><span>Admisiones 2025-2026</span></div>
+    <div class="section-label"><span>Admisiones 2026-2027</span></div>
     <h1 class="page-hero-title">Tu hijo merece la <em>mejor educación</em></h1>
     <p class="page-hero-desc">Conoce nuestros niveles educativos, realiza el quiz interactivo y descubre el programa ideal para tu familia.</p>
   </div>
@@ -181,7 +181,7 @@
   <div class="niveles-cards">
     <div class="nivel-card reveal">
       <div class="nivel-card-bg">
-        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&q=70&auto=format" alt="Preescolar Virginia Sapp" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&q=70&auto=format" alt="Preescolar Virginia Sapp" loading="lazy" data-img-key="nivel-preescolar">
       </div>
       <div class="nivel-card-gradient"></div>
       <div class="nivel-card-content">
@@ -198,7 +198,7 @@
     </div>
     <div class="nivel-card reveal">
       <div class="nivel-card-bg">
-        <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=700&q=70&auto=format" alt="Primaria bilingüe Virginia Sapp" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=700&q=70&auto=format" alt="Primaria bilingüe Virginia Sapp" loading="lazy" data-img-key="nivel-primaria">
       </div>
       <div class="nivel-card-gradient"></div>
       <div class="nivel-card-content">
@@ -215,7 +215,7 @@
     </div>
     <div class="nivel-card reveal">
       <div class="nivel-card-bg">
-        <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=700&q=70&auto=format" alt="Secundaria Virginia Sapp" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=700&q=70&auto=format" alt="Secundaria Virginia Sapp" loading="lazy" data-img-key="nivel-secundaria">
       </div>
       <div class="nivel-card-gradient"></div>
       <div class="nivel-card-content">
@@ -341,7 +341,7 @@
           </button>
           <button class="quiz-opt" onclick="selectOpt(this,'q4','ciclo')">
             <span class="quiz-opt-icon">📅</span>
-            <span class="quiz-opt-label">Próximo ciclo 2025–2026</span>
+            <span class="quiz-opt-label">Próximo ciclo 2026–2027</span>
           </button>
           <button class="quiz-opt" onclick="selectOpt(this,'q4','explorando')">
             <span class="quiz-opt-icon">🔍</span>
@@ -367,8 +367,20 @@
           <div class="quiz-result-rec-label">Recomendación personalizada</div>
           <div class="quiz-result-rec-text" id="r-rec">Cargando...</div>
         </div>
+        <!-- Lead capture form -->
+        <div id="quiz-lead-form" style="margin:24px 0 20px;padding:20px 24px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px">
+          <p style="font-size:14px;color:rgba(255,255,255,.85);margin-bottom:14px;font-weight:500">¿Quieres que te contactemos con más información personalizada?</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <input type="text" id="quiz-lead-name" placeholder="Tu nombre" style="padding:11px 14px;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;background:rgba(255,255,255,.07);color:#fff;font-family:'Outfit',sans-serif;font-size:14px" onfocus="this.style.borderColor='rgba(171,100,35,.7)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+            <input type="tel" id="quiz-lead-phone" placeholder="WhatsApp / Teléfono" style="padding:11px 14px;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;background:rgba(255,255,255,.07);color:#fff;font-family:'Outfit',sans-serif;font-size:14px" onfocus="this.style.borderColor='rgba(171,100,35,.7)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+          </div>
+          <input type="email" id="quiz-lead-email" placeholder="Correo electrónico" style="width:100%;padding:11px 14px;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;background:rgba(255,255,255,.07);color:#fff;font-family:'Outfit',sans-serif;font-size:14px;margin-bottom:12px" onfocus="this.style.borderColor='rgba(171,100,35,.7)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+          <button onclick="submitQuizLead()" style="width:100%;padding:13px;background:var(--gold);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .2s" onmouseover="this.style.background='#c77a2a'" onmouseout="this.style.background='var(--gold)'">Solicitar información ahora</button>
+          <p id="quiz-lead-msg" style="display:none;margin-top:10px;font-size:13px;color:#4caf50;text-align:center"></p>
+          <p style="font-size:11px;color:rgba(255,255,255,.4);margin-top:8px;text-align:center">Tus datos están seguros. No los compartimos con terceros.</p>
+        </div>
         <div class="quiz-result-btns">
-          <a href="#contacto" class="btn-cta-main" onclick="addXP(20,'🏆','¡Quiz completado!','¡Eres un experto en CEEVS! +20 XP')">Solicitar información ahora</a>
+          <a href="#contacto" class="btn-cta-main">Ir al formulario completo</a>
           <button onclick="restartQuiz()" style="padding:14px 24px;background:transparent;border:1.5px solid rgba(255,255,255,.2);border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-family:'Outfit',sans-serif;font-size:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(255,255,255,.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,.2)'">Repetir quiz</button>
         </div>
       </div>
@@ -446,7 +458,7 @@
 
   <div class="admisiones-cta-block reveal">
     <div>
-      <h3>Cupos limitados para el<br>ciclo <em>2025–2026</em></h3>
+      <h3>Cupos limitados para el<br>ciclo <em>2026–2027</em></h3>
       <p>Asegura el lugar de tu hijo hoy. El proceso es rápido, transparente y con acompañamiento personalizado desde el primer día.</p>
     </div>
     <div class="admisiones-cta-btns">
@@ -556,7 +568,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <p class="f-copy">© 2025 Instituto Evangélico Virginia Sapp — CEEVS. Todos los derechos reservados.</p>
+    <p class="f-copy">© 2026 Instituto Evangélico Virginia Sapp — CEEVS. Todos los derechos reservados.<a href="admin.html" style="color:rgba(171,100,35,.4);text-decoration:none;font-size:11px;margin-left:8px" title="Administración">⚙</a></p>
     <div class="f-adieeds">Miembro certificado de <span>ADIEEDS</span></div>
   </div>
 </footer>
@@ -573,5 +585,6 @@
   <script src="js/main.js"></script>
   <script src="js/gamification.js"></script>
   <script src="js/quiz.js"></script>
+  <script src="js/image-manager.js"></script>
 </body>
 </html>

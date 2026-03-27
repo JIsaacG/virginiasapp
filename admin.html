@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administración | CEEVS</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@0,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --forest: #412404;
+      --gold: #ab6423;
+      --gold2: #d4882e;
+      --cream: #fdf6ec;
+      --cream2: #f5e8d0;
+      --ink: #1a0c02;
+      --r: 10px;
+      --rl: 16px;
+    }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #f8f4ef;
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ─── LOGIN SCREEN ─── */
+    #login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      background: linear-gradient(135deg, var(--forest) 0%, #2a1802 100%);
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 48px 40px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+      text-align: center;
+    }
+    .login-logo {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 3px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+    }
+    .login-card h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--forest);
+      margin-bottom: 6px;
+    }
+    .login-card p {
+      color: #8a7a6a;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+    .login-field {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .login-field input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e8ddd0;
+      border-radius: var(--r);
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color .2s;
+      background: var(--cream);
+    }
+    .login-field input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--forest);
+      color: #fff;
+      border: none;
+      border-radius: var(--r);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    .login-btn:hover { background: #5a3508; }
+    .login-btn:active { transform: scale(.98); }
+    .login-error {
+      display: none;
+      background: #fff0f0;
+      color: #c33;
+      padding: 10px 14px;
+      border-radius: var(--r);
+      font-size: 13px;
+      margin-bottom: 14px;
+      border: 1px solid #fdd;
+    }
+    .login-back {
+      display: inline-block;
+      margin-top: 20px;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .login-back:hover { text-decoration: underline; }
+
+    /* ─── DASHBOARD ─── */
+    #admin-dashboard { display: none; }
+    .admin-topbar {
+      background: var(--forest);
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .admin-topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .admin-topbar-left span {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .admin-topbar-left small {
+      font-size: 12px;
+      opacity: .7;
+    }
+    .admin-topbar-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .admin-topbar-actions a {
+      color: var(--gold2);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(171,100,35,.4);
+      transition: all .2s;
+    }
+    .admin-topbar-actions a:hover { background: rgba(171,100,35,.2); }
+    .btn-logout {
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.2);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      transition: all .2s;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,.2); }
+
+    /* ─── MAIN CONTENT ─── */
+    .admin-main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+    .admin-header {
+      margin-bottom: 32px;
+    }
+    .admin-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--forest);
+      margin-bottom: 8px;
+    }
+    .admin-header p {
+      color: #8a7a6a;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .admin-stats-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--cream);
+      padding: 14px 20px;
+      border-radius: var(--r);
+      margin-bottom: 28px;
+      border: 1px solid #e8ddd0;
+    }
+    #admin-stats {
+      font-size: 14px;
+      color: var(--forest);
+      font-weight: 500;
+    }
+    .admin-btn-danger {
+      background: none;
+      color: #c33;
+      border: 1px solid #ecc;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .admin-btn-danger:hover { background: #fff0f0; }
+
+    /* ─── SECTIONS & CARDS ─── */
+    .admin-section { margin-bottom: 36px; }
+    .admin-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--forest);
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .admin-section-title::before {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .admin-card {
+      background: #fff;
+      border-radius: var(--rl);
+      padding: 20px;
+      margin-bottom: 16px;
+      border: 1px solid #ece4d8;
+      transition: box-shadow .2s;
+    }
+    .admin-card:hover { box-shadow: 0 4px 16px rgba(65,36,4,.08); }
+
+    .admin-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .admin-card-label {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .admin-badge-custom {
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .admin-badge-default {
+      background: var(--cream);
+      color: #8a7a6a;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .admin-preview-wrap {
+      margin-bottom: 14px;
+      border-radius: var(--r);
+      overflow: hidden;
+      background: #f5f0ea;
+      min-height: 120px;
+      position: relative;
+    }
+    .admin-preview {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+    .admin-preview-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 120px;
+      color: #bba88f;
+      font-size: 14px;
+    }
+
+    .admin-input-group { margin-bottom: 14px; }
+    .admin-input-label {
+      display: block;
+      font-size: 12px;
+      color: #8a7a6a;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .admin-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid #e8ddd0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--ink);
+      transition: border-color .2s;
+      background: var(--cream);
+    }
+    .admin-input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .admin-input::placeholder { color: #bba88f; }
+
+    .admin-card-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .admin-btn-save {
+      flex: 1;
+      padding: 10px 16px;
+      background: var(--forest);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .admin-btn-save:hover { background: #5a3508; }
+    .admin-btn-reset {
+      padding: 10px 16px;
+      background: none;
+      color: var(--gold);
+      border: 1px solid #e8ddd0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .admin-btn-reset:hover:not(:disabled) { background: var(--cream); }
+    .admin-btn-reset:disabled {
+      opacity: .4;
+      cursor: default;
+    }
+
+    /* ─── HELP BOX ─── */
+    .admin-help {
+      background: var(--cream);
+      border: 1px solid #e8ddd0;
+      border-radius: var(--rl);
+      padding: 24px;
+      margin-top: 40px;
+    }
+    .admin-help h3 {
+      font-size: 16px;
+      color: var(--forest);
+      margin-bottom: 12px;
+    }
+    .admin-help p, .admin-help li {
+      font-size: 13px;
+      color: #6b5a48;
+      line-height: 1.7;
+    }
+    .admin-help ol {
+      padding-left: 18px;
+      margin-top: 8px;
+    }
+    .admin-help li { margin-bottom: 4px; }
+    .admin-help code {
+      background: rgba(65,36,4,.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* ─── TOAST ─── */
+    #admin-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--forest);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: var(--r);
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all .3s cubic-bezier(.4,0,.2,1);
+      z-index: 9999;
+    }
+    #admin-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      .admin-topbar { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+      .admin-topbar-left span { font-size: 15px; }
+      .admin-main { padding: 20px 14px 60px; }
+      .admin-header h2 { font-size: 22px; }
+      .admin-preview { height: 140px; }
+      .admin-card-actions { flex-direction: column; }
+      .admin-stats-bar { flex-direction: column; gap: 10px; text-align: center; }
+      .login-card { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── LOGIN SCREEN ─── -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">&#9878;</div>
+    <h1>Panel de Administración</h1>
+    <p>Instituto Evangélico Virginia Sapp — CEEVS</p>
+    <div class="login-error" id="login-error"></div>
+    <form id="login-form">
+      <div class="login-field">
+        <input type="password" id="admin-pass" placeholder="Contraseña de administrador" required autocomplete="off">
+      </div>
+      <button type="submit" class="login-btn">Ingresar</button>
+    </form>
+    <a href="index.html" class="login-back">&larr; Volver al sitio</a>
+  </div>
+</div>
+
+<!-- ─── DASHBOARD ─── -->
+<div id="admin-dashboard">
+  <div class="admin-topbar">
+    <div class="admin-topbar-left">
+      <span>CEEVS Admin</span>
+      <small>Panel de personalización</small>
+    </div>
+    <div class="admin-topbar-actions">
+      <a href="index.html">Ver sitio</a>
+      <button class="btn-logout" id="btn-logout">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div class="admin-main">
+    <div class="admin-header">
+      <h2>Gestión de Imágenes</h2>
+      <p>Personaliza las imágenes del sitio web pegando la URL (hipervínculo) de cada imagen. Los cambios se aplican instantáneamente en todas las páginas. Para obtener la URL de una imagen, haz clic derecho sobre ella y selecciona "Copiar dirección de imagen".</p>
+    </div>
+
+    <div class="admin-stats-bar">
+      <span id="admin-stats">Cargando...</span>
+      <button class="admin-btn-danger" id="btn-reset-all">Restaurar todas las originales</button>
+    </div>
+
+    <div id="images-grid"></div>
+
+    <div class="admin-help">
+      <h3>¿Cómo actualizar una imagen?</h3>
+      <ol>
+        <li>Sube tu foto a un servicio como <strong>Facebook</strong>, <strong>Google Drive</strong> (con enlace público), <strong>Imgur</strong>, o el servidor del colegio.</li>
+        <li>Copia la <strong>URL directa</strong> de la imagen (debe terminar en <code>.jpg</code>, <code>.png</code>, <code>.webp</code> o similar).</li>
+        <li>Pega la URL en el campo correspondiente y haz clic en <strong>"Guardar"</strong>.</li>
+        <li>Abre el sitio en otra pestaña para verificar que la imagen se ve correctamente.</li>
+      </ol>
+      <p style="margin-top:12px"><strong>Nota:</strong> Las imágenes se guardan en el navegador local. Para que los cambios sean visibles en otros dispositivos, cada navegador debe configurar sus propias imágenes, o las imágenes deben estar alojadas en un servidor y las URLs actualizadas directamente en el código HTML.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast de confirmación -->
+<div id="admin-toast"></div>
+
+<!-- Scripts -->
+<script src="js/image-manager.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
