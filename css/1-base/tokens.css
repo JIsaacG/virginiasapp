@@ -1,0 +1,38 @@
+/* ═══════════════════════════════════════
+   TOKENS & RESET
+═══════════════════════════════════════ */
+:root {
+  --ink:     #1a0c02;
+  --forest:  #412404;
+  --forest2: #5a3208;
+  --forest3: #6e3f0d;
+  --moss:    #8c5518;
+  --sage:    #b07840;
+  --gold:    #ab6423;
+  --gold2:   #d4882e;
+  --gold3:   #f0b95a;
+  --cream:   #fdf6ec;
+  --cream2:  #f5e8d0;
+  --parch:   #ecdcc0;
+  --white:   #FFFFFF;
+  --muted:   #7a6248;
+  --r:       10px;
+  --rl:      20px;
+  --rxl:     32px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* custom cursor */
+#cursor { position:fixed; width:10px; height:10px; background:var(--gold); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .1s; mix-blend-mode:multiply; }
+#cursor-ring { position:fixed; width:36px; height:36px; border:1.5px solid var(--gold); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .2s,height .2s,opacity .2s; opacity:.5; }
+body:hover #cursor { opacity:1; }

@@ -1,0 +1,43 @@
+/* ═══════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════ */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:400;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 5vw; height:70px;
+  background:rgba(65,36,4,0.97);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(171,100,35,0.12);
+  transition:all .3s;
+}
+nav.scrolled { height:60px; background:rgba(40,20,2,0.99); }
+
+.nav-logo { display:flex; align-items:center; gap:13px; text-decoration:none; }
+.nav-seal { display:none; }
+.nav-logo-img { display:flex; align-items:center; }
+.nav-seal::before {
+  content:'✦ CEEVS ✦ 1962 ✦';
+  position:absolute; width:100%; height:100%;
+  font-size:6px; color:rgba(171,100,35,0.5);
+  display:flex; align-items:center; justify-content:center;
+  letter-spacing:.1em; animation:rotate-slow 20s linear infinite;
+  opacity:0;
+}
+@keyframes rotate-slow { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+.nav-logo:hover .nav-seal::before { opacity:1; }
+.nav-wordmark { line-height:1.1; }
+.nav-wordmark b { display:block; font-size:13px; font-weight:600; color:#fff; letter-spacing:.06em; }
+.nav-wordmark small { font-size:9.5px; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; opacity:.8; }
+
+.nav-links { display:flex; list-style:none; gap:28px; align-items:center; }
+.nav-links a { font-size:13px; color:rgba(255,255,255,0.65); text-decoration:none; letter-spacing:.02em; position:relative; transition:color .2s; }
+.nav-links a::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--gold); transform:scaleX(0); transition:transform .2s; }
+.nav-links a:hover { color:var(--gold2); }
+.nav-links a:hover::after { transform:scaleX(1); }
+
+.nav-cta { display:flex; gap:10px; align-items:center; }
+.btn-nav-ghost { padding:7px 16px; border:1px solid rgba(171,100,35,.35); border-radius:6px; background:transparent; font-size:12.5px; color:var(--gold2); cursor:pointer; font-family:'Outfit',sans-serif; text-decoration:none; transition:all .2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-nav-ghost:hover { background:rgba(171,100,35,.1); border-color:var(--gold); }
+.btn-nav-solid { padding:8px 18px; background:var(--gold); border:none; border-radius:6px; font-size:12.5px; font-weight:600; color:var(--forest); cursor:pointer; font-family:'Outfit',sans-serif; text-decoration:none; transition:all .2s; display:inline-block; }
+.btn-nav-solid:hover { background:var(--gold2); transform:translateY(-1px); box-shadow:0 8px 24px rgba(171,100,35,.35); }
+

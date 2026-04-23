@@ -1,0 +1,26 @@
+/* ═══════════════════════════════════════
+   MISIÓN / VISIÓN — SPLIT
+═══════════════════════════════════════ */
+.mision-split { display:grid; grid-template-columns:1fr 1fr; min-height:60vh; }
+.mision-half { padding:80px 6vw; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden; }
+.mision-half:first-child { background:var(--cream); }
+.mision-half:last-child { background:var(--forest); }
+.mision-half:last-child .mision-big { color:rgba(255,255,255,.04); }
+.mision-big {
+  position:absolute; bottom:-10px; left:-10px;
+  font-family:'Playfair Display',serif;
+  font-size:clamp(100px,12vw,180px); font-weight:900;
+  color:rgba(65,36,4,.06); line-height:1; pointer-events:none; user-select:none;
+}
+.mision-tag { display:inline-block; font-size:10px; font-weight:700; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; padding:5px 12px; border:1px solid rgba(171,100,35,.35); border-radius:4px; margin-bottom:20px; }
+.mision-half:first-child .mision-tag { background:rgba(171,100,35,.06); }
+.mision-half:last-child .mision-tag { background:rgba(171,100,35,.08); border-color:rgba(171,100,35,.25); }
+.mision-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3vw,42px); font-weight:700; line-height:1.15; margin-bottom:20px; }
+.mision-half:first-child .mision-title { color:var(--forest); }
+.mision-half:last-child .mision-title { color:#fff; }
+.mision-half:first-child .mision-title em { color:var(--gold); font-style:italic; }
+.mision-half:last-child .mision-title em { color:var(--gold2); font-style:italic; }
+.mision-text { font-size:14.5px; line-height:1.8; }
+.mision-half:first-child .mision-text { color:var(--muted); }
+.mision-half:last-child .mision-text { color:rgba(255,255,255,.5); }
+

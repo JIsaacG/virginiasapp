@@ -10,8 +10,116 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/pages/recuerdos.css">
+  <style>
+    html { scroll-behavior: smooth; }
+
+    .recuerdos-back {
+      display:inline-flex;align-items:center;gap:6px;
+      color:var(--gold2);text-decoration:none;font-size:14px;font-weight:500;
+      margin-bottom:32px;transition:color .2s;
+    }
+    .recuerdos-back:hover { color:#fff; }
+
+    .albums-wrap {
+      max-width:1100px;margin:0 auto;
+      padding:0 5vw 60px;
+    }
+
+    .album-block {
+      margin-bottom:56px;
+      scroll-margin-top:100px;
+    }
+    .album-header {
+      display:flex;align-items:flex-end;justify-content:space-between;
+      margin-bottom:18px;padding-bottom:14px;
+      border-bottom:2px solid rgba(171,100,35,.2);
+    }
+    .album-title {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(20px,3vw,28px);font-weight:700;
+      color:var(--forest);line-height:1.2;
+    }
+    .album-title em { color:var(--gold); font-style:italic; }
+    .album-date {
+      font-size:13px;color:#8a7a6a;white-space:nowrap;
+      display:flex;align-items:center;gap:6px;
+    }
+    .album-date-dot {
+      width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;
+    }
+
+    .album-photos {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      grid-template-rows:auto auto;
+      gap:10px;
+    }
+    .album-photo {
+      border-radius:10px;overflow:hidden;cursor:pointer;
+      position:relative;
+    }
+    .album-photo img {
+      width:100%;height:220px;object-fit:cover;display:block;
+      transition:transform .4s;
+    }
+    .album-photo:hover img { transform:scale(1.05); }
+    .album-photo:first-child {
+      grid-column:span 2;grid-row:span 2;
+    }
+    .album-photo:first-child img {
+      height:100%;min-height:450px;
+    }
+    .album-photo::after {
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(to top,rgba(0,0,0,.25) 0%,transparent 40%);
+      opacity:0;transition:opacity .3s;pointer-events:none;
+    }
+    .album-photo:hover::after { opacity:1; }
+
+    @media(max-width:768px) {
+      .album-photos {
+        grid-template-columns:repeat(2,1fr);
+      }
+      .album-photo:first-child img { min-height:280px; }
+      .album-header { flex-direction:column; align-items:flex-start; gap:6px; }
+    }
+    @media(max-width:500px) {
+      .album-photos { grid-template-columns:1fr; gap:8px; }
+      .album-photo:first-child { grid-column:span 1; grid-row:span 1; }
+      .album-photo:first-child img { min-height:220px; }
+      .album-photo img { height:200px; }
+      .albums-wrap { padding:0 4vw 40px; }
+    }
+
+    /* Lightbox */
+    .rec-lb {
+      display:none;position:fixed;inset:0;z-index:9999;
+      background:rgba(0,0,0,.92);
+      align-items:center;justify-content:center;
+      cursor:pointer;
+    }
+    .rec-lb.open { display:flex; }
+    .rec-lb img {
+      max-width:92vw;max-height:90vh;object-fit:contain;
+      border-radius:8px;cursor:default;
+    }
+    .rec-lb-close {
+      position:absolute;top:20px;right:20px;
+      background:rgba(255,255,255,.12);border:none;
+      color:#fff;font-size:22px;width:44px;height:44px;
+      border-radius:50%;cursor:pointer;transition:background .2s;
+    }
+    .rec-lb-close:hover { background:rgba(255,255,255,.25); }
+    .rec-lb-nav {
+      position:absolute;top:50%;transform:translateY(-50%);
+      background:rgba(255,255,255,.1);border:none;
+      color:#fff;font-size:28px;width:48px;height:48px;
+      border-radius:50%;cursor:pointer;transition:background .2s;
+    }
+    .rec-lb-nav:hover { background:rgba(255,255,255,.25); }
+    .rec-lb-prev { left:16px; }
+    .rec-lb-next { right:16px; }
+  </style>
 </head>
 <body>
 

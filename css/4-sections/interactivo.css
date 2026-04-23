@@ -1,0 +1,345 @@
+/* ═══════════════════════════════════════════
+   ZONA INTERACTIVA — Mini-juegos
+═══════════════════════════════════════════ */
+
+/* Selector de audiencia */
+.audience-tabs {
+  display:flex; flex-wrap:wrap; gap:10px;
+  justify-content:center; margin-bottom:40px;
+}
+.audience-tab {
+  font-family:'Outfit',sans-serif; font-size:14px; font-weight:600;
+  padding:9px 22px; border-radius:100px; cursor:pointer;
+  border:1.5px solid rgba(171,100,35,.35);
+  background:rgba(171,100,35,.08); color:rgba(255,255,255,.6);
+  transition:all 200ms cubic-bezier(0.25,0.46,0.45,0.94);
+  letter-spacing:.03em;
+}
+.audience-tab:hover { border-color:var(--gold); color:var(--gold2); background:rgba(171,100,35,.18); }
+.audience-tab.active {
+  background:var(--gold); border-color:var(--gold);
+  color:#fff; box-shadow:0 4px 18px rgba(171,100,35,.4);
+}
+
+/* Grid de tarjetas de juego */
+.games-grid {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:24px;
+  max-width:900px; margin:0 auto;
+}
+@media(max-width:700px){ .games-grid{ grid-template-columns:1fr; } }
+
+.game-card {
+  background:rgba(65,36,4,.55); border:1.5px solid rgba(171,100,35,.22);
+  border-radius:var(--rxl); padding:28px 24px 24px;
+  cursor:pointer; transition:all 220ms cubic-bezier(0.25,0.46,0.45,0.94);
+  position:relative; overflow:hidden;
+}
+.game-card::before {
+  content:''; position:absolute; inset:0; border-radius:var(--rxl);
+  background:linear-gradient(135deg,rgba(171,100,35,.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+.game-card:hover {
+  transform:translateY(-4px);
+  border-color:var(--gold);
+  box-shadow:0 12px 32px rgba(0,0,0,.35), 0 0 0 1px rgba(171,100,35,.3);
+}
+.game-card:active { transform:translateY(-1px) scale(0.99); }
+.game-card[data-hidden="true"]{ display:none; }
+
+.game-card-icon { font-size:36px; margin-bottom:12px; display:block; }
+.game-card-tag {
+  display:inline-block; font-family:'Outfit',sans-serif;
+  font-size:11px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; padding:3px 10px; border-radius:100px;
+  background:rgba(171,100,35,.22); color:var(--gold2);
+  margin-bottom:10px;
+}
+.game-card-title {
+  font-family:'Playfair Display',serif; font-size:20px;
+  font-weight:700; color:#fff; margin-bottom:8px; line-height:1.2;
+}
+.game-card-desc {
+  font-family:'Outfit',sans-serif; font-size:13.5px;
+  color:rgba(255,255,255,.55); line-height:1.6; margin-bottom:18px;
+}
+.game-card-meta {
+  display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;
+}
+.game-meta-pill {
+  font-family:'Outfit',sans-serif; font-size:12px; font-weight:500;
+  padding:4px 11px; border-radius:100px;
+  background:rgba(255,255,255,.06); color:rgba(255,255,255,.5);
+}
+.game-card-btn {
+  width:100%; padding:11px; border-radius:12px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#fff; font-family:'Outfit',sans-serif; font-size:14px;
+  font-weight:700; border:none; cursor:pointer;
+  transition:all 200ms cubic-bezier(0.25,0.46,0.45,0.94);
+  letter-spacing:.02em;
+}
+.game-card-btn:hover { filter:brightness(1.1); transform:translateY(-1px); }
+.game-card-btn:active { transform:scale(0.97); }
+
+/* ─── Modal de juego ─── */
+.game-modal {
+  position:fixed; inset:0; z-index:9000;
+  background:rgba(10,5,0,.92); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  padding:20px; opacity:0; pointer-events:none;
+  transition:opacity 250ms ease;
+}
+.game-modal.open { opacity:1; pointer-events:all; }
+.game-modal-inner {
+  background:var(--forest); border:1.5px solid rgba(171,100,35,.3);
+  border-radius:var(--rxl); padding:32px 28px; width:100%;
+  max-width:680px; max-height:90vh; overflow-y:auto;
+  position:relative;
+  transform:translateY(20px); transition:transform 300ms cubic-bezier(.34,1.56,.64,1);
+}
+.game-modal.open .game-modal-inner { transform:translateY(0); }
+.game-modal-close {
+  position:absolute; top:16px; right:16px;
+  background:rgba(255,255,255,.08); border:none; color:rgba(255,255,255,.6);
+  width:36px; height:36px; border-radius:50%; font-size:18px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all 180ms ease; z-index:2;
+}
+.game-modal-close:hover { background:rgba(255,255,255,.15); color:#fff; }
+.game-modal-title {
+  font-family:'Playfair Display',serif; font-size:22px; font-weight:700;
+  color:#fff; margin-bottom:6px;
+}
+.game-modal-sub {
+  font-family:'Outfit',sans-serif; font-size:13.5px;
+  color:rgba(255,255,255,.5); margin-bottom:24px;
+}
+
+/* ─── Trivia ─── */
+.trivia-progress {
+  display:flex; align-items:center; gap:12px; margin-bottom:20px;
+}
+.trivia-progress-bar {
+  flex:1; height:6px; border-radius:100px;
+  background:rgba(255,255,255,.1);
+}
+.trivia-progress-fill {
+  height:100%; border-radius:100px;
+  background:linear-gradient(90deg,var(--gold),var(--gold2));
+  transition:width 400ms ease;
+}
+.trivia-progress-label {
+  font-family:'Outfit',sans-serif; font-size:12px;
+  color:rgba(255,255,255,.45); white-space:nowrap;
+}
+.trivia-timer-wrap { margin-bottom:16px; }
+.trivia-timer-bar {
+  height:4px; border-radius:100px;
+  background:rgba(255,255,255,.1);
+}
+.trivia-timer-fill {
+  height:100%; border-radius:100px;
+  background:linear-gradient(90deg,#4caf50,var(--gold2));
+  transition:width 1s linear;
+}
+.trivia-timer-fill.urgent { background:linear-gradient(90deg,#e53935,#ff7043); }
+.trivia-question {
+  font-family:'Playfair Display',serif; font-size:19px;
+  font-weight:700; color:#fff; line-height:1.4; margin-bottom:20px;
+}
+.trivia-options {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;
+}
+@media(max-width:500px){ .trivia-options{ grid-template-columns:1fr; } }
+.trivia-opt {
+  padding:14px 16px; border-radius:14px; cursor:pointer; text-align:left;
+  border:1.5px solid rgba(171,100,35,.25);
+  background:rgba(255,255,255,.04); color:rgba(255,255,255,.8);
+  font-family:'Outfit',sans-serif; font-size:14px; font-weight:500;
+  transition:all 200ms cubic-bezier(0.25,0.46,0.45,0.94);
+  min-height:48px; display:flex; align-items:center; line-height:1.35;
+}
+.trivia-opt:hover:not(:disabled) { border-color:var(--gold); background:rgba(171,100,35,.15); color:#fff; }
+.trivia-opt:active:not(:disabled) { transform:scale(0.97); }
+.trivia-opt.correct { border-color:#4caf50; background:rgba(76,175,80,.18); color:#a5d6a7; }
+.trivia-opt.wrong  { border-color:#e53935; background:rgba(229,57,53,.15); color:#ef9a9a; }
+.trivia-opt:disabled { opacity:.7; cursor:not-allowed; }
+.trivia-score-wrap {
+  text-align:center; padding:24px 0 8px;
+}
+.trivia-score-num {
+  font-family:'Playfair Display',serif; font-size:52px;
+  font-weight:900; color:var(--gold2); line-height:1;
+}
+.trivia-score-sub {
+  font-family:'Outfit',sans-serif; font-size:15px;
+  color:rgba(255,255,255,.55); margin-top:6px;
+}
+.trivia-btn-again {
+  display:block; width:100%; margin-top:20px; padding:13px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#fff; border:none; border-radius:14px; cursor:pointer;
+  font-family:'Outfit',sans-serif; font-size:15px; font-weight:700;
+  transition:all 200ms ease;
+}
+.trivia-btn-again:hover { filter:brightness(1.1); }
+
+/* ─── Sopa de letras ─── */
+.sopa-layout {
+  display:grid; grid-template-columns:1fr 180px; gap:20px; align-items:start;
+}
+@media(max-width:560px){ .sopa-layout{ grid-template-columns:1fr; } }
+.sopa-grid-wrap { overflow-x:auto; }
+.sopa-grid {
+  display:grid; grid-template-columns:repeat(12,1fr);
+  gap:3px; width:max-content; min-width:100%;
+}
+.sopa-cell {
+  width:clamp(28px,4.5vw,40px); height:clamp(28px,4.5vw,40px);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Outfit',sans-serif; font-size:clamp(12px,1.8vw,15px);
+  font-weight:700; text-transform:uppercase; color:rgba(255,255,255,.7);
+  border-radius:7px; cursor:pointer; user-select:none;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.05);
+  transition:all 150ms ease; position:relative;
+}
+.sopa-cell:hover { background:rgba(171,100,35,.2); color:#fff; border-color:rgba(171,100,35,.4); }
+.sopa-cell.selecting { background:rgba(171,100,35,.35); color:#fff; border-color:var(--gold); }
+.sopa-cell.found { background:rgba(76,175,80,.22); color:#a5d6a7; border-color:#4caf50; cursor:default; }
+.sopa-cell.first-sel { background:var(--gold); color:#fff; border-color:var(--gold2); }
+.sopa-words-list { display:flex; flex-direction:column; gap:7px; }
+.sopa-word-item {
+  font-family:'Outfit',sans-serif; font-size:13px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.06em;
+  color:rgba(255,255,255,.55); padding:6px 10px; border-radius:8px;
+  border:1px solid rgba(255,255,255,.08); transition:all 200ms ease;
+}
+.sopa-word-item.found { color:#4caf50; border-color:rgba(76,175,80,.35); background:rgba(76,175,80,.08); text-decoration:line-through; }
+.sopa-status {
+  font-family:'Outfit',sans-serif; font-size:13px;
+  color:rgba(255,255,255,.4); margin-top:12px; text-align:center;
+}
+.sopa-hint {
+  font-size:11.5px; color:rgba(255,255,255,.35); text-align:center;
+  margin-top:8px; font-family:'Outfit',sans-serif;
+}
+
+/* ─── Memoria Cristiana ─── */
+.memoria-stats {
+  display:flex; gap:20px; margin-bottom:18px; justify-content:center;
+}
+.mem-stat {
+  text-align:center;
+  font-family:'Outfit',sans-serif;
+}
+.mem-stat-num {
+  font-family:'Playfair Display',serif; font-size:26px;
+  font-weight:700; color:var(--gold2); line-height:1;
+}
+.mem-stat-label { font-size:11px; color:rgba(255,255,255,.4); margin-top:3px; }
+.memoria-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+  margin-bottom:16px;
+}
+@media(max-width:460px){ .memoria-grid{ grid-template-columns:repeat(4,1fr); gap:7px; } }
+.memoria-card {
+  perspective:800px; cursor:pointer;
+  aspect-ratio:3/4;
+}
+.memoria-card-inner {
+  width:100%; height:100%;
+  transition:transform 450ms cubic-bezier(0.25,0.46,0.45,0.94);
+  transform-style:preserve-3d; border-radius:12px; position:relative;
+}
+.memoria-card.flipped .memoria-card-inner { transform:rotateY(180deg); }
+.memoria-card.matched .memoria-card-inner { transform:rotateY(180deg); }
+.memoria-card-face {
+  position:absolute; inset:0; border-radius:12px;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:4px;
+  border:1.5px solid rgba(171,100,35,.25);
+}
+.memoria-card-back {
+  background:linear-gradient(135deg,rgba(65,36,4,.9),rgba(90,50,8,.8));
+  font-size:22px; color:var(--gold2);
+}
+.memoria-card-front {
+  background:rgba(255,255,255,.06); transform:rotateY(180deg);
+  flex-direction:column; text-align:center; padding:6px;
+}
+.memoria-card-front .card-emoji { font-size:22px; line-height:1; }
+.memoria-card-front .card-word {
+  font-family:'Outfit',sans-serif; font-size:10px;
+  font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+  color:rgba(255,255,255,.7); line-height:1.2;
+}
+.memoria-card.matched .memoria-card-face { border-color:rgba(76,175,80,.55); }
+.memoria-card.matched .memoria-card-front { background:rgba(76,175,80,.12); }
+.memoria-card.blocked { pointer-events:none; opacity:.85; }
+.memoria-win {
+  text-align:center; padding:12px 0;
+}
+.memoria-win-title {
+  font-family:'Playfair Display',serif; font-size:22px;
+  font-weight:700; color:var(--gold2); margin-bottom:6px;
+}
+.memoria-win-sub { font-family:'Outfit',sans-serif; font-size:14px; color:rgba(255,255,255,.5); }
+
+/* ─── Versículo del Día ─── */
+.versiculo-card {
+  background:rgba(255,255,255,.04); border:1px solid rgba(171,100,35,.25);
+  border-radius:var(--rl); padding:28px 24px; text-align:center;
+  position:relative; overflow:hidden;
+}
+.versiculo-card::before {
+  content:'\201C';
+  position:absolute; top:-8px; left:16px;
+  font-family:'Playfair Display',serif; font-size:96px;
+  font-weight:900; color:rgba(171,100,35,.12); line-height:1;
+  pointer-events:none;
+}
+.versiculo-text {
+  font-family:'Playfair Display',serif; font-size:18px;
+  font-style:italic; color:rgba(255,255,255,.85); line-height:1.7;
+  margin-bottom:16px; position:relative; z-index:1;
+}
+.versiculo-ref {
+  font-family:'Outfit',sans-serif; font-size:13px;
+  font-weight:600; color:var(--gold2); letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.versiculo-loading {
+  font-family:'Outfit',sans-serif; color:rgba(255,255,255,.4);
+  font-size:14px; text-align:center; padding:32px 0;
+}
+.versiculo-actions { display:flex; gap:12px; justify-content:center; margin-top:20px; }
+.btn-fav {
+  padding:10px 22px; border-radius:100px;
+  background:rgba(171,100,35,.18); border:1.5px solid rgba(171,100,35,.35);
+  color:var(--gold2); font-family:'Outfit',sans-serif;
+  font-size:14px; font-weight:600; cursor:pointer;
+  transition:all 200ms cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.btn-fav:hover { background:rgba(171,100,35,.32); border-color:var(--gold); color:#fff; }
+.btn-fav:active { transform:scale(0.97); }
+.btn-fav.faved { background:rgba(171,100,35,.4); border-color:var(--gold); color:#fff; }
+.btn-fav:disabled { opacity:.45; cursor:not-allowed; }
+
+/* ─── Zona Interactiva — section wrapper ─── */
+.zona-interactiva {
+  background:var(--forest); padding:80px 8vw 100px; min-height:60vh;
+}
+@media(max-width:900px){ .zona-interactiva{ padding:60px 6vw 80px; } }
+@media(max-width:600px){ .zona-interactiva{ padding:48px 5vw 64px; } }
+.zona-header { text-align:center; margin-bottom:48px; }
+.zona-title {
+  font-family:'Playfair Display',serif; font-size:clamp(28px,4vw,44px);
+  font-weight:900; color:#fff; line-height:1.1; margin-bottom:12px;
+}
+.zona-title em { color:var(--gold2); font-style:italic; }
+.zona-desc {
+  font-family:'Outfit',sans-serif; font-size:16px;
+  color:rgba(255,255,255,.5); max-width:560px; margin:0 auto 28px; line-height:1.7;
+}

@@ -1,0 +1,31 @@
+/* ═══════════════════════════════════════
+   SCROLL REVEAL ANIMATIONS
+═══════════════════════════════════════ */
+.reveal { opacity:0; transform:translateY(30px); transition:opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-left { opacity:0; transform:translateX(-30px); transition:opacity .7s ease, transform .7s ease; }
+.reveal-left.visible { opacity:1; transform:translateX(0); }
+.reveal-right { opacity:0; transform:translateX(30px); transition:opacity .7s ease, transform .7s ease; }
+.reveal-right.visible { opacity:1; transform:translateX(0); }
+
+/* hero animations */
+@keyframes heroFadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+.hero-eyebrow { animation:heroFadeUp .7s ease both; }
+.hero-founding-text { animation:heroFadeUp .7s .1s ease both; }
+.hero-headline { animation:heroFadeUp .8s .15s ease both; }
+.hero-desc { animation:heroFadeUp .8s .25s ease both; }
+.hero-ctas { animation:heroFadeUp .8s .35s ease both; }
+.hero-counters { animation:heroFadeUp .8s .5s ease both; }
+.hero-right { animation:heroFadeUp 1s .3s ease both; }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — TABLET 1100px
+═══════════════════════════════════════ */
+@media(max-width:1100px){
+  .valores-grid{ grid-template-columns:repeat(3,1fr); }
+  .niveles-cards{ grid-template-columns:1fr 1fr; gap:12px; }
+  .testimonios-layout{ grid-template-columns:1fr; gap:40px; }
+  .historia-grid{ gap:48px; }
+  .footer-main{ grid-template-columns:1.2fr 1fr 1fr 1fr; gap:32px; }
+}
+

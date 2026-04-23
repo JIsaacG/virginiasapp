@@ -1,0 +1,82 @@
+<!-- NAVBAR COMPONENT -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-img">
+      <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(171,100,35,.55);background:#fff;flex-shrink:0;box-shadow:0 0 0 3px rgba(171,100,35,.15);">
+        <img src="assets/logo.png" alt="CEEVS Logo" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+      </div>
+    </div>
+    <div class="nav-wordmark">
+      <b>Instituto Evangélico Virginia Sapp</b>
+      <small>Centro Educativo CEEVS · Tegucigalpa</small>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li class="nav-dropdown">
+      <a href="quienes-somos.html" class="">Quiénes Somos ▾</a>
+      <div class="dropdown-menu">
+        <a href="quienes-somos.html#historia">Reseña Histórica</a>
+        <a href="quienes-somos.html#filosofia">Filosofía Educativa</a>
+        <a href="quienes-somos.html#declaracion-fe">Declaración de Fe</a>
+        <a href="quienes-somos.html#mision-vision">Misión y Visión</a>
+        <a href="quienes-somos.html#valores">Valores</a>
+        <a href="quienes-somos.html#perfil-egresado">Perfil del Egresado</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <a href="admisiones.html" class="">Admisiones ▾</a>
+      <div class="dropdown-menu">
+        <a href="admisiones.html#niveles">Niveles Educativos</a>
+        <a href="admisiones.html#quiz-section">Quiz de Admisión</a>
+        <a href="admisiones.html#admisiones">Proceso de Admisión</a>
+        <a href="admisiones.html#portal-educativo">Portal Educativo</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <a href="contactenos.html" class="">Contáctenos ▾</a>
+      <div class="dropdown-menu">
+        <a href="contactenos.html#contacto">Ubicación y Contacto</a>
+        <a href="contactenos.html#exalumnos">Exalumnos</a>
+        <a href="contactenos.html#empleos">Empleos</a>
+      </div>
+    </li>
+    <li><a href="index.html#galeria">Galería</a></li>
+    <li><a href="interactivo.html">Actividades</a></li>
+  </ul>
+
+  <div class="nav-cta">
+    <a href="admisiones.html#portal-educativo" class="btn-nav-ghost">🖥 Portal</a>
+    <a href="admisiones.html#admisiones" class="btn-nav-solid">Solicitar admisión</a>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu drawer -->
+<div id="mobile-menu">
+  <div class="mm-inner">
+    <div class="mm-header">
+      <div class="mm-logo">Virginia <span>Sapp</span></div>
+      <button class="mm-close" onclick="toggleMobileMenu()">✕</button>
+    </div>
+    <nav class="mm-links">
+      <a href="index.html" onclick="toggleMobileMenu()"><span class="mm-num">01</span>Inicio</a>
+      <a href="quienes-somos.html#historia" onclick="toggleMobileMenu()"><span class="mm-num">02</span>Historia</a>
+      <a href="quienes-somos.html#filosofia" onclick="toggleMobileMenu()"><span class="mm-num">03</span>Filosofía</a>
+      <a href="quienes-somos.html#valores" onclick="toggleMobileMenu()"><span class="mm-num">04</span>Valores</a>
+      <a href="admisiones.html#niveles" onclick="toggleMobileMenu()"><span class="mm-num">05</span>Niveles educativos</a>
+      <a href="admisiones.html#quiz-section" onclick="toggleMobileMenu()"><span class="mm-num">06</span>Quiz interactivo 🎯</a>
+      <a href="admisiones.html#admisiones" onclick="toggleMobileMenu()"><span class="mm-num">07</span>Admisiones</a>
+      <a href="index.html#galeria" onclick="toggleMobileMenu()"><span class="mm-num">08</span>Galería</a>
+      <a href="contactenos.html#contacto" onclick="toggleMobileMenu()"><span class="mm-num">09</span>Contacto</a>
+      <a href="interactivo.html" onclick="toggleMobileMenu()"><span class="mm-num">10</span>Actividades 🎮</a>
+    </nav>
+    <div class="mm-actions">
+      <a href="admisiones.html#portal-educativo" class="mm-btn-ghost" onclick="toggleMobileMenu()">🖥 Portal educativo</a>
+      <a href="admisiones.html#admisiones" class="mm-btn-solid" onclick="toggleMobileMenu()">Solicitar admisión 2026–2027 →</a>
+    </div>
+    <div class="mm-footer">✦ Instituto Evangélico Virginia Sapp · Fundado 1962 · Tegucigalpa, Honduras</div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+/* ═══════════════════════════════════════
+   FAQ SECTION
+═══════════════════════════════════════ */
+.faq-section { background:var(--cream2); padding:96px 8vw; }
+.faq-grid { display:grid; grid-template-columns:1fr 2fr; gap:72px; align-items:start; }
+.faq-left h2 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,3vw,42px); font-weight:700; color:var(--forest); line-height:1.1;
+}
+.faq-left h2 em { color:var(--gold); font-style:italic; }
+.faq-left p { font-size:14px; color:var(--muted); line-height:1.8; margin-top:16px; }
+.faq-left .btn-cta-main { margin-top:28px; display:inline-block; }
+.faq-list { display:flex; flex-direction:column; gap:6px; }
+.faq-item {
+  border:1px solid rgba(65,36,4,.1); border-radius:var(--r);
+  background:#fff; overflow:hidden;
+  transition:border-color .2s, box-shadow .2s;
+}
+.faq-item.open { border-color:rgba(171,100,35,.35); box-shadow:0 4px 20px rgba(65,36,4,.07); }
+.faq-q {
+  width:100%; display:flex; justify-content:space-between; align-items:center; gap:16px;
+  padding:18px 22px; background:none; border:none; cursor:pointer;
+  font-family:'Outfit',sans-serif; text-align:left; transition:background .2s;
+}
+.faq-q:hover { background:rgba(171,100,35,.04); }
+.faq-item.open .faq-q { background:rgba(171,100,35,.05); }
+.faq-q-text { font-size:14.5px; font-weight:600; color:var(--forest); line-height:1.35; }
+.faq-icon {
+  flex-shrink:0; width:24px; height:24px; border-radius:50%;
+  background:rgba(171,100,35,.1); display:flex; align-items:center;
+  justify-content:center; font-size:16px; color:var(--gold);
+  transition:transform .3s, background .2s; line-height:1; font-style:normal;
+}
+.faq-item.open .faq-icon { transform:rotate(45deg); background:rgba(171,100,35,.2); }
+.faq-a { max-height:0; overflow:hidden; transition:max-height .35s ease; }
+.faq-item.open .faq-a { max-height:320px; }
+.faq-a-inner {
+  padding:14px 22px 20px; font-size:14px; color:var(--muted);
+  line-height:1.8; border-top:1px solid rgba(171,100,35,.1);
+}
+@media(max-width:900px){ .faq-grid{ grid-template-columns:1fr; gap:40px; } }
+@media(max-width:600px){ .faq-section{ padding:72px 6vw; } .faq-q{ padding:16px 18px; } .faq-q-text{ font-size:13.5px; } }
+
+

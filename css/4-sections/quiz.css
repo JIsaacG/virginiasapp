@@ -1,0 +1,47 @@
+/* ═══════════════════════════════════════
+   ADMISIONES — PASOS
+═══════════════════════════════════════ */
+.admisiones { background:var(--cream); padding:110px 8vw; }
+
+.admisiones-top { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; margin-bottom:72px; }
+.admisiones-top h2 { font-family:'Playfair Display',serif; font-size:clamp(34px,3.8vw,52px); font-weight:700; color:var(--forest); line-height:1.1; }
+.admisiones-top h2 em { color:var(--gold); font-style:italic; }
+.admisiones-top p { font-size:15px; color:var(--muted); line-height:1.8; margin-top:16px; }
+.admisiones-top .btn-cta-main { margin-top:32px; }
+
+.admisiones-levels { display:flex; flex-direction:column; gap:12px; }
+.admission-level {
+  background:var(--white); border-radius:var(--r); padding:20px 24px;
+  border:1.5px solid var(--cream2); display:flex; align-items:center; gap:16px; cursor:pointer; transition:all .3s;
+}
+.admission-level:hover { border-color:var(--gold); box-shadow:0 8px 24px rgba(65,36,4,.1); }
+.al-icon { width:44px; height:44px; border-radius:10px; background:var(--parch); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.al-name { font-size:14px; font-weight:600; color:var(--forest); }
+.al-grades { font-size:12px; color:var(--muted); margin-top:2px; }
+.al-arrow { margin-left:auto; font-size:16px; color:var(--gold); opacity:0; transition:opacity .2s; }
+.admission-level:hover .al-arrow { opacity:1; }
+
+.steps-row { display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative; }
+.steps-row::before { content:''; position:absolute; top:32px; left:10%; right:10%; height:1px; background:linear-gradient(90deg,var(--gold),rgba(171,100,35,.15)); z-index:0; }
+.step-box { position:relative; z-index:1; padding:0 20px; text-align:center; }
+.step-circle { width:64px; height:64px; border-radius:50%; background:var(--white); border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; position:relative; transition:all .3s; }
+.step-box:hover .step-circle { background:var(--gold); }
+.step-num-inner { font-family:'Playfair Display',serif; font-size:22px; font-weight:900; color:var(--gold); transition:color .3s; }
+.step-box:hover .step-num-inner { color:var(--forest); }
+.step-title { font-size:14px; font-weight:600; color:var(--forest); margin-bottom:8px; }
+.step-desc { font-size:12.5px; color:var(--muted); line-height:1.6; }
+
+.admisiones-cta-block {
+  margin-top:64px; background:var(--forest); border-radius:var(--rxl); padding:64px;
+  display:grid; grid-template-columns:1fr auto; gap:40px; align-items:center;
+  position:relative; overflow:hidden;
+}
+.admisiones-cta-block::before {
+  content:''; position:absolute; top:-100px; right:-100px; width:400px; height:400px;
+  border-radius:50%; background:radial-gradient(circle,rgba(171,100,35,.1) 0%,transparent 70%);
+}
+.admisiones-cta-block h3 { font-family:'Playfair Display',serif; font-size:36px; font-weight:700; color:#fff; line-height:1.2; position:relative; z-index:1; }
+.admisiones-cta-block h3 em { color:var(--gold2); font-style:italic; }
+.admisiones-cta-block p { font-size:14px; color:rgba(255,255,255,.5); margin-top:10px; line-height:1.6; position:relative; z-index:1; }
+.admisiones-cta-btns { display:flex; flex-direction:column; gap:12px; flex-shrink:0; position:relative; z-index:1; }
+

@@ -1,0 +1,131 @@
+/* ═══════════════════════════════════════
+   DECLARACIÓN DE FE
+═══════════════════════════════════════ */
+.declaracion-fe { background:var(--forest); padding:110px 8vw; position:relative; overflow:hidden; }
+.declaracion-fe::before { content:'✝'; position:absolute; right:5vw; top:50%; transform:translateY(-50%); font-size:clamp(200px,22vw,400px); color:rgba(171,100,35,.04); pointer-events:none; user-select:none; line-height:1; }
+.declaracion-inner { position:relative; z-index:1; }
+.declaracion-title { font-family:'Playfair Display',serif; font-size:clamp(34px,4vw,54px); font-weight:700; color:#fff; line-height:1.12; margin-bottom:16px; text-align:center; }
+.declaracion-title em { color:var(--gold2); font-style:italic; }
+.declaracion-intro { font-size:15px; color:rgba(255,255,255,.5); line-height:1.8; max-width:600px; margin:0 auto 56px; text-align:center; }
+.declaracion-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.declaracion-card { background:rgba(255,255,255,.04); border:1px solid rgba(171,100,35,.15); border-radius:var(--rl); padding:28px 24px; transition:all .3s; }
+.declaracion-card:hover { border-color:rgba(171,100,35,.4); background:rgba(255,255,255,.06); transform:translateY(-2px); }
+.dc-num { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--gold2); margin-bottom:12px; }
+.declaracion-card h3 { font-size:16px; font-weight:700; color:#fff; margin-bottom:8px; }
+.declaracion-card p { font-size:13px; color:rgba(255,255,255,.55); line-height:1.7; }
+
+/* ═══════════════════════════════════════
+   PERFIL DEL EGRESADO
+═══════════════════════════════════════ */
+.perfil-egresado { background:var(--parch); padding:110px 8vw; }
+.perfil-top { text-align:center; margin-bottom:56px; }
+.perfil-top h2 { font-family:'Playfair Display',serif; font-size:clamp(34px,4vw,54px); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:16px; }
+.perfil-top h2 em { color:var(--gold); font-style:italic; }
+.perfil-top p { font-size:15px; color:var(--muted); line-height:1.8; max-width:600px; margin:0 auto; }
+.perfil-traits { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.perfil-trait { background:var(--white); border-radius:var(--rl); padding:32px 24px; border:1.5px solid transparent; transition:all .3s; text-align:center; }
+.perfil-trait:hover { border-color:rgba(171,100,35,.3); box-shadow:0 12px 36px rgba(65,36,4,.1); transform:translateY(-3px); }
+.pt-icon { font-size:32px; margin-bottom:14px; display:block; }
+.perfil-trait h3 { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--forest); margin-bottom:10px; }
+.perfil-trait p { font-size:13.5px; color:var(--muted); line-height:1.7; }
+
+/* ═══════════════════════════════════════
+   PORTAL EDUCATIVO
+═══════════════════════════════════════ */
+.portal-educativo { background:var(--forest); padding:80px 8vw; border-top:2px solid rgba(171,100,35,.18); border-bottom:2px solid rgba(171,100,35,.18); }
+.portal-header { text-align:center; margin-bottom:48px; }
+.portal-header h2 { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,46px); font-weight:700; color:#fff; line-height:1.1; }
+.portal-header h2 em { color:var(--gold2); font-style:italic; }
+.portal-header p { font-size:14.5px; color:rgba(255,255,255,.45); margin-top:14px; max-width:540px; margin-left:auto; margin-right:auto; }
+.portal-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.portal-card { background:rgba(255,255,255,.04); border:1px solid rgba(171,100,35,.2); border-radius:var(--rl); padding:36px 28px; text-align:center; transition:all .3s; display:flex; flex-direction:column; }
+.portal-card:hover { border-color:var(--gold); background:rgba(255,255,255,.06); transform:translateY(-3px); box-shadow:0 16px 48px rgba(0,0,0,.2); }
+.pc-icon { font-size:36px; margin-bottom:16px; display:block; }
+.portal-card h3 { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#fff; margin-bottom:10px; }
+.portal-card p { font-size:13.5px; color:rgba(255,255,255,.55); line-height:1.7; margin-bottom:14px; }
+.pc-user { font-size:11px; color:var(--gold); letter-spacing:.06em; display:block; margin-bottom:20px; font-weight:600; }
+.btn-portal { display:inline-block; padding:12px 24px; background:var(--gold); border:none; border-radius:8px; font-size:13px; font-weight:600; color:var(--forest); cursor:pointer; font-family:'Outfit',sans-serif; transition:all .2s; text-decoration:none; margin-top:auto; }
+.btn-portal:hover { background:var(--gold2); transform:translateY(-1px); box-shadow:0 8px 24px rgba(171,100,35,.35); }
+
+/* ═══════════════════════════════════════
+   DEVOCIONAL
+═══════════════════════════════════════ */
+.devocional { background:var(--parch); padding:64px 8vw; text-align:center; }
+.devocional-inner { max-width:640px; margin:0 auto; }
+.devocional-cross { font-size:32px; color:var(--gold); margin-bottom:12px; }
+.devocional-label { font-size:10px; font-weight:700; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; margin-bottom:20px; }
+.devocional-verse { font-family:'Playfair Display',serif; font-size:clamp(20px,2.5vw,30px); font-weight:400; font-style:italic; color:var(--forest); line-height:1.6; margin-bottom:16px; border:none; padding:0; }
+.devocional-cite { font-size:13px; color:var(--muted); font-style:normal; letter-spacing:.04em; }
+
+/* ═══════════════════════════════════════
+   EXALUMNOS
+═══════════════════════════════════════ */
+.exalumnos-section { background:var(--cream); padding:80px 8vw; }
+.exalumnos-inner { max-width:800px; margin:0 auto; }
+.exalumnos-text { margin-bottom:32px; }
+.exalumnos-text h2 { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,46px); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:18px; }
+.exalumnos-text h2 em { color:var(--gold); font-style:italic; }
+.exalumnos-text p { font-size:15px; color:var(--muted); line-height:1.8; margin-bottom:12px; }
+
+/* ═══════════════════════════════════════
+   EMPLEOS
+═══════════════════════════════════════ */
+.empleos-section { background:var(--forest); padding:56px 8vw; }
+.empleos-inner { max-width:700px; margin:0 auto; text-align:center; }
+.empleos-icon { font-size:36px; margin-bottom:14px; }
+.empleos-inner h3 { font-family:'Playfair Display',serif; font-size:clamp(22px,2.5vw,32px); font-weight:700; color:#fff; margin-bottom:14px; }
+.empleos-inner p { font-size:14px; color:rgba(255,255,255,.5); line-height:1.75; margin-bottom:28px; }
+
+/* ═══════════════════════════════════════
+   NEW SECTIONS — RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:1100px){
+  .filosofia-pillars{ grid-template-columns:repeat(2,1fr); }
+  .declaracion-grid{ grid-template-columns:repeat(2,1fr); }
+  .perfil-traits{ grid-template-columns:repeat(2,1fr); }
+  .portal-cards{ grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:900px){
+  .filosofia{ padding:72px 6vw; }
+  .declaracion-fe{ padding:72px 6vw; }
+  .perfil-egresado{ padding:72px 6vw; }
+  .portal-educativo{ padding:56px 6vw; }
+  .devocional{ padding:48px 6vw; }
+  .exalumnos-section{ padding:56px 6vw; }
+  .empleos-section{ padding:44px 6vw; }
+  .declaracion-grid{ grid-template-columns:1fr; }
+  .portal-cards{ grid-template-columns:1fr; }
+}
+@media(max-width:600px){
+  .filosofia{ padding:56px 5vw; }
+  .filosofia-title{ font-size:clamp(28px,8vw,40px); }
+  .filosofia-pillars{ grid-template-columns:1fr; gap:12px; }
+  .filosofia-pillar{ padding:24px 18px; }
+  .declaracion-fe{ padding:56px 5vw; }
+  .declaracion-title{ font-size:clamp(28px,8vw,40px); }
+  .declaracion-grid{ gap:10px; }
+  .declaracion-card{ padding:22px 18px; }
+  .perfil-egresado{ padding:56px 5vw; }
+  .perfil-top h2{ font-size:clamp(28px,8vw,40px); }
+  .perfil-traits{ grid-template-columns:1fr; gap:12px; }
+  .perfil-trait{ padding:24px 18px; }
+  .portal-educativo{ padding:48px 5vw; }
+  .portal-header h2{ font-size:clamp(24px,7vw,36px); }
+  .portal-cards{ gap:12px; }
+  .portal-card{ padding:28px 20px; }
+  .devocional{ padding:40px 5vw; }
+  .devocional-verse{ font-size:clamp(18px,5vw,24px); }
+  .exalumnos-section{ padding:48px 5vw; }
+  .exalumnos-text h2{ font-size:clamp(24px,7vw,36px); }
+  .empleos-section{ padding:36px 5vw; }
+}
+@media(max-width:390px){
+  .filosofia{ padding:48px 4vw; }
+  .declaracion-fe{ padding:48px 4vw; }
+  .perfil-egresado{ padding:48px 4vw; }
+  .portal-educativo{ padding:40px 4vw; }
+  .devocional{ padding:36px 4vw; }
+  .exalumnos-section{ padding:40px 4vw; }
+  .empleos-section{ padding:32px 4vw; }
+}
+

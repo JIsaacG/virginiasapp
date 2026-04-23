@@ -1,0 +1,31 @@
+/* ═══════════════════════════════════════
+   VALORES — INTERACTIVE GRID
+═══════════════════════════════════════ */
+.valores { background:var(--parch); padding:110px 8vw; }
+
+.valores-header { text-align:center; margin-bottom:64px; }
+.valores-header h2 { font-family:'Playfair Display',serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:var(--forest); line-height:1.1; }
+.valores-header h2 em { color:var(--gold); font-style:italic; }
+.valores-header p { font-size:15px; color:var(--muted); margin-top:16px; max-width:500px; margin-left:auto; margin-right:auto; }
+
+.valores-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:60px; }
+
+.valor-card {
+  background:var(--white); border-radius:var(--rl); padding:28px 20px;
+  border:1.5px solid transparent; cursor:pointer; transition:all .3s;
+  text-align:center; position:relative; overflow:hidden;
+}
+.valor-card::before {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+  background:var(--gold); transform:scaleX(0); transition:transform .3s;
+}
+.valor-card:hover, .valor-card.active {
+  border-color:rgba(171,100,35,.3); transform:translateY(-4px);
+  box-shadow:0 16px 40px rgba(65,36,4,.12);
+}
+.valor-card:hover::before, .valor-card.active::before { transform:scaleX(1); }
+.valor-emoji { font-size:28px; margin-bottom:12px; display:block; filter:saturate(.8); }
+.valor-name { font-size:13px; font-weight:600; color:var(--forest); margin-bottom:6px; }
+.valor-desc { font-size:12px; color:var(--muted); line-height:1.5; opacity:0; max-height:0; overflow:hidden; transition:all .3s; }
+.valor-card:hover .valor-desc, .valor-card.active .valor-desc { opacity:1; max-height:60px; }
+

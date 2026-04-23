@@ -1,0 +1,65 @@
+/* ═══════════════════════════════════════════════════════════════
+   MAIN CSS — Importa todos los módulos modularizados
+   ═══════════════════════════════════════════════════════════════ */
+
+/* 1. BASE STYLES */
+@import url('1-base/tokens.css');
+
+/* 2. REUSABLE COMPONENTS */
+@import url('2-components/buttons.css');
+@import url('2-components/cards.css');
+@import url('2-components/badges.css');
+@import url('2-components/modals.css');
+
+/* 3. LAYOUT COMPONENTS */
+@import url('3-layout/gamification.css');
+@import url('3-layout/navbar.css');
+@import url('3-layout/footer.css');
+@import url('3-layout/dropdown.css');
+
+/* 3. SECTIONS */
+@import url('4-sections/hero.css');
+@import url('4-sections/marquee.css');
+@import url('4-sections/historia.css');
+@import url('4-sections/niveles.css');
+@import url('4-sections/mision.css');
+@import url('4-sections/valores.css');
+@import url('4-sections/quiz.css');
+@import url('4-sections/admisiones.css');
+@import url('4-sections/testimonios.css');
+@import url('4-sections/galeria.css');
+@import url('4-sections/contacto.css');
+@import url('4-sections/filosofia.css');
+@import url('4-sections/declaracion-fe.css');
+@import url('4-sections/perfil-egresado.css');
+@import url('4-sections/portal-educativo.css');
+@import url('4-sections/devocional.css');
+@import url('4-sections/exalumnos.css');
+@import url('4-sections/empleos.css');
+@import url('4-sections/page-hero.css');
+@import url('4-sections/interactivo.css');
+
+/* 4. RESPONSIVE DESIGN */
+@import url('5-responsive/media-queries.css');
+
+/* ═══════════════════════════════════════════════════════════════
+   Estructura modular de CSS
+
+   1-base/        → Variables, reset, tipografía
+   3-layout/      → Navbar, footer, gamification, dropdowns
+   4-sections/    → Cada sección principal de la página
+   5-responsive/  → Media queries centralizadas
+
+   MANTENIMIENTO:
+   - Cambiar tema: edita 1-base/tokens.css
+   - Cambiar navbar: edita 3-layout/navbar.css
+   - Cambiar hero: edita 4-sections/hero.css
+   - Agregar responsive: edita 5-responsive/media-queries.css
+
+   VENTAJAS:
+   ✓ Fácil de mantener
+   ✓ Cambios no impactan todo
+   ✓ Nueva página = reutiliza módulos
+   ✓ -90% tokens en cambios CSS
+
+   ═══════════════════════════════════════════════════════════════ */

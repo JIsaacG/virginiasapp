@@ -1,0 +1,48 @@
+/* ═══════════════════════════════════════
+   HISTORIA TIMELINE
+═══════════════════════════════════════ */
+.historia {
+  background:var(--cream); padding:110px 8vw; position:relative; overflow:hidden;
+}
+.historia::before {
+  content:'1962'; position:absolute; right:-2vw; top:40px;
+  font-family:'Playfair Display',serif; font-size:clamp(120px,18vw,240px);
+  font-weight:900; color:rgba(65,36,4,.06); line-height:1;
+  pointer-events:none; user-select:none;
+}
+
+.section-label { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+.section-label::before { content:''; width:28px; height:2px; background:var(--gold); }
+.section-label span { font-size:11px; font-weight:600; color:var(--gold); letter-spacing:.12em; text-transform:uppercase; }
+
+.historia-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; margin-top:60px; }
+
+.historia-text h2 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(34px,4vw,54px); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:24px;
+}
+.historia-text h2 em { font-style:italic; color:var(--gold); }
+.historia-text p { font-size:15px; color:var(--muted); line-height:1.8; margin-bottom:16px; }
+.historia-text p strong { color:var(--forest); font-weight:600; }
+
+.historia-timeline { position:relative; padding-left:28px; }
+.historia-timeline::before { content:''; position:absolute; left:9px; top:8px; bottom:8px; width:1.5px; background:linear-gradient(to bottom, var(--gold), transparent); }
+.timeline-item { position:relative; margin-bottom:32px; }
+.timeline-item::before { content:''; position:absolute; left:-22px; top:6px; width:10px; height:10px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 3px rgba(171,100,35,.2); }
+.timeline-year { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px; }
+.timeline-text { font-size:14px; color:var(--muted); line-height:1.6; }
+.timeline-text strong { color:var(--forest); }
+
+.historia-image-wrap { position:relative; }
+.historia-main-img { border-radius:var(--rxl); overflow:hidden; box-shadow:0 32px 80px rgba(65,36,4,.18); }
+.historia-main-img img { width:100%; aspect-ratio:4/5; object-fit:cover; display:block; filter:saturate(.85); }
+.historia-float-card {
+  position:absolute; bottom:-24px; left:-32px;
+  background:var(--forest); border-radius:var(--rl); padding:20px 24px;
+  box-shadow:0 24px 60px rgba(0,0,0,.3);
+  border:1px solid rgba(171,100,35,.2);
+  max-width:220px;
+}
+.float-card-num { font-family:'Playfair Display',serif; font-size:40px; font-weight:900; color:var(--gold2); line-height:1; }
+.float-card-text { font-size:12px; color:rgba(255,255,255,.55); margin-top:4px; line-height:1.4; }
+

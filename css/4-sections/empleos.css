@@ -1,0 +1,15 @@
+/* ═══════════════════════════════════════
+   FILOSOFÍA EDUCATIVA
+═══════════════════════════════════════ */
+.filosofia { background:var(--cream); padding:110px 8vw; }
+.filosofia-text { text-align:center; margin-bottom:56px; }
+.filosofia-title { font-family:'Playfair Display',serif; font-size:clamp(34px,4vw,54px); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:20px; }
+.filosofia-title em { color:var(--gold); font-style:italic; }
+.filosofia-desc { font-size:15px; color:var(--muted); line-height:1.8; max-width:680px; margin:0 auto; }
+.filosofia-pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.filosofia-pillar { background:var(--white); border-radius:var(--rl); padding:32px 24px; border:1.5px solid transparent; transition:all .3s; text-align:center; }
+.filosofia-pillar:hover { border-color:rgba(171,100,35,.3); box-shadow:0 12px 36px rgba(65,36,4,.1); transform:translateY(-3px); }
+.fp-icon { font-size:32px; margin-bottom:14px; display:block; }
+.filosofia-pillar h3 { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--forest); margin-bottom:10px; }
+.filosofia-pillar p { font-size:13.5px; color:var(--muted); line-height:1.7; }
+

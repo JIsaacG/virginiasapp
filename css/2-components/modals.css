@@ -1,0 +1,116 @@
+/* ═══════════════════════════════════════
+   MODALS — Ventanas modales y popups
+═══════════════════════════════════════ */
+
+/* Toast Notifications */
+#toast {
+  position:fixed; bottom:120px; right:24px; z-index:600;
+  background:var(--forest); border:1px solid var(--gold);
+  border-radius:var(--r); padding:12px 18px;
+  transform:translateX(110%);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  max-width:260px; cursor:pointer; user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+#toast.show { transform:translateX(0); }
+.toast-inner { display:flex; gap:10px; align-items:center; }
+.toast-icon { font-size:20px; }
+.toast-text strong { display:block; font-size:13px; color:var(--gold2); }
+.toast-text span { font-size:12px; color:rgba(255,255,255,0.6); }
+
+/* Lightbox */
+#lightbox {
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.92); align-items:center; justify-content:center;
+  cursor:pointer;
+}
+#lightbox.open { display:flex; }
+#lightbox img { max-width:92vw; max-height:90vh; object-fit:contain; border-radius:8px; cursor:default; }
+
+/* Recuerdos Lightbox */
+.rec-lb {
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.92);
+  align-items:center; justify-content:center;
+  cursor:pointer;
+}
+.rec-lb.open { display:flex; }
+.rec-lb img { max-width:92vw; max-height:90vh; object-fit:contain; border-radius:8px; cursor:default; }
+
+.rec-lb-close {
+  position:absolute; top:20px; right:20px;
+  background:rgba(255,255,255,.12); border:none;
+  color:#fff; font-size:22px; width:44px; height:44px;
+  border-radius:50%; cursor:pointer; transition:background .2s;
+}
+.rec-lb-close:hover { background:rgba(255,255,255,.25); }
+
+.rec-lb-nav {
+  position:absolute; top:50%; transform:translateY(-50%);
+  background:rgba(255,255,255,.1); border:none;
+  color:#fff; font-size:28px; width:48px; height:48px;
+  border-radius:50%; cursor:pointer; transition:background .2s;
+}
+.rec-lb-nav:hover { background:rgba(255,255,255,.25); }
+.rec-lb-prev { left:16px; }
+.rec-lb-next { right:16px; }
+
+/* Gallery Lightbox */
+.gallery-lightbox {
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.95); align-items:center; justify-content:center;
+}
+.gallery-lightbox.open { display:flex; }
+.gallery-lightbox-img { max-width:90vw; max-height:90vh; object-fit:contain; }
+.gallery-lightbox-close {
+  position:absolute; top:20px; right:20px;
+  background:transparent; border:none; color:#fff;
+  font-size:32px; cursor:pointer; z-index:100;
+}
+
+/* Quiz Result Modal */
+.quiz-result {
+  display:none; text-align:center; padding:20px 0;
+}
+.quiz-result.show { display:block; animation:fadeInUp .5s ease; }
+.quiz-result-emoji { font-size:64px; margin-bottom:20px; display:block; }
+.quiz-result-title {
+  font-family:'Playfair Display',serif; font-size:32px;
+  font-weight:700; color:#fff; margin-bottom:12px;
+}
+.quiz-result-subtitle {
+  font-size:15px; color:rgba(255,255,255,.55);
+  line-height:1.7; max-width:480px; margin:0 auto 32px;
+}
+.quiz-result-recommendation {
+  background:rgba(171,100,35,.1); border:1px solid rgba(171,100,35,.3);
+  border-radius:var(--rl); padding:24px 28px; margin-bottom:32px;
+  text-align:left;
+}
+.quiz-result-rec-label {
+  font-size:11px; font-weight:700; color:var(--gold);
+  letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px;
+}
+.quiz-result-rec-text {
+  font-size:15px; color:rgba(255,255,255,.8); line-height:1.6;
+}
+.quiz-result-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+/* Admin Login */
+#login-screen {
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; padding:24px;
+  background:linear-gradient(135deg, var(--forest) 0%, #2a1802 100%);
+}
+.login-card {
+  background:#fff; border-radius:20px; padding:48px 40px;
+  max-width:420px; width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  text-align:center;
+}
+.login-error {
+  display:none; background:#fff0f0; color:#c33;
+  padding:10px 14px; border-radius:var(--r);
+  font-size:13px; margin-bottom:14px;
+  border:1px solid #fdd;
+}

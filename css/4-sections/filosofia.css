@@ -1,0 +1,110 @@
+/* ═══════════════════════════════════════
+   RESPONSIVE — TABLET 900px
+═══════════════════════════════════════ */
+@media(max-width:900px){
+  /* cursor off en touch */
+  #cursor,#cursor-ring{ display:none; }
+  body{ cursor:auto; }
+
+  /* nav */
+  nav{ padding:0 20px; height:64px; }
+  nav.scrolled{ height:56px; }
+  .nav-links{ display:none; }
+  .nav-wordmark b{ font-size:12px; }
+  .nav-wordmark small{ display:none; }
+  .btn-nav-ghost{ display:none; }
+  .btn-nav-solid{ padding:8px 14px; font-size:12px; }
+
+  /* HUD — más compacto en tablet */
+  #game-hud{ bottom:16px; right:16px; min-width:190px; padding:12px 14px; }
+
+  /* toast */
+  #toast{ right:16px; bottom:110px; max-width:220px; }
+
+  /* hero */
+  .hero{ grid-template-columns:1fr; min-height:100svh; }
+  .hero-right,.hero-founding-badge{ display:none; }
+  .hero-left{ padding:72px 6vw 56px; justify-content:flex-end; min-height:100svh; }
+  .hero-counters{ margin-top:36px; padding-top:28px; gap:0; }
+  .hero-counter{ padding:0 16px; }
+  .counter-num{ font-size:32px; }
+
+  /* marquee */
+  .marquee-strip{ padding:11px 0; }
+  .marquee-item{ font-size:11px; padding:0 24px; }
+
+  /* historia */
+  .historia{ padding:72px 6vw; }
+  .historia::before{ font-size:clamp(80px,18vw,160px); }
+  .historia-grid{ grid-template-columns:1fr; gap:40px; }
+  .historia-image-wrap{ order:-1; }
+  .historia-main-img img{ aspect-ratio:16/9; }
+  .historia-float-card{ bottom:-16px; left:-12px; padding:16px 18px; }
+  .float-card-num{ font-size:32px; }
+
+  /* niveles */
+  .niveles{ padding:72px 6vw; }
+  .niveles-intro{ margin-bottom:40px; gap:20px; }
+  .niveles-intro p{ max-width:100%; }
+  .niveles-cards{ grid-template-columns:1fr; gap:10px; }
+  .nivel-card{ min-height:320px; }
+  .nivel-features{ opacity:1; transform:none; }
+
+  /* mision split */
+  .mision-split{ grid-template-columns:1fr; min-height:auto; }
+  .mision-half{ padding:56px 6vw; }
+  .mision-big{ font-size:clamp(80px,20vw,140px); }
+
+  /* valores */
+  .valores{ padding:72px 6vw; }
+  .valores-grid{ grid-template-columns:repeat(2,1fr); gap:10px; }
+  .valor-card{ padding:20px 16px; }
+  .valor-desc{ opacity:1; max-height:none; }
+
+  /* quiz */
+  .quiz-section{ padding:72px 6vw; }
+  .quiz-card{ padding:32px 28px; }
+  .quiz-options{ grid-template-columns:1fr 1fr; gap:10px; }
+
+  /* admisiones */
+  .admisiones{ padding:72px 6vw; }
+  .admisiones-top{ grid-template-columns:1fr; gap:36px; }
+  .steps-row{ grid-template-columns:1fr 1fr; gap:28px; }
+  .steps-row::before{ display:none; }
+  .admisiones-cta-block{ grid-template-columns:1fr; gap:24px; padding:40px; }
+  .admisiones-cta-block h3{ font-size:28px; }
+
+  /* testimonios */
+  .testimonios{ padding:72px 6vw; }
+  .testimonios-layout{ grid-template-columns:1fr; gap:36px; }
+  .testi-card:nth-child(1){ grid-column:span 2; grid-template-columns:1fr; }
+  .testi-card-featured-img{ display:none; }
+
+  /* galería */
+  .galeria{ padding:72px 6vw; }
+  .galeria-top{ flex-direction:column; align-items:flex-start; gap:16px; }
+  .galeria-mosaic{ grid-template-columns:1fr 1fr; grid-auto-rows:160px; gap:8px; }
+  .gi:nth-child(1){ grid-column:span 2; grid-row:span 2; }
+  .gi:nth-child(5){ grid-column:span 2; }
+  .gi:nth-child(8){ grid-column:span 2; grid-row:span 1; }
+  /* always show overlay on touch */
+  .gi-overlay{ opacity:1; background:rgba(40,20,2,.5); }
+
+  /* contacto */
+  .contacto{ padding:72px 6vw; grid-template-columns:1fr; gap:48px; }
+  .contacto-form{ padding:32px 24px; }
+
+  /* footer */
+  footer{ padding:56px 6vw 28px; }
+  .footer-main{ grid-template-columns:1fr 1fr; gap:32px; margin-bottom:28px; padding-bottom:40px; }
+  .f-brand-desc{ max-width:100%; }
+
+  /* carousel — tablet fixes */
+  .c-slide-content{ left:5vw; max-width:75vw; }
+  .c-playpause{ left:5vw; top:16px; opacity:.7; }
+  .c-counter{ right:5vw; top:20px; }
+  .c-ig-badge{ top:50px; right:5vw; }
+  .c-ctrl-prev{ left:12px; } .c-ctrl-next{ right:12px; }
+  .form-row{ grid-template-columns:1fr; }
+}
+

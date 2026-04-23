@@ -1,0 +1,52 @@
+/* ═══════════════════════════════════════
+   PADRES BAND
+═══════════════════════════════════════ */
+.padres-band {
+  background:var(--forest); padding:52px 8vw;
+  display:grid; grid-template-columns:1fr auto; gap:40px; align-items:center;
+  border-top:2px solid rgba(171,100,35,.18);
+  border-bottom:2px solid rgba(171,100,35,.18);
+  position:relative; overflow:hidden;
+}
+.padres-band::after {
+  content:''; position:absolute; right:-60px; top:-60px;
+  width:280px; height:280px; border-radius:50%;
+  background:radial-gradient(circle, rgba(171,100,35,.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+.padres-band-eyebrow {
+  font-size:11px; font-weight:600; color:var(--gold); letter-spacing:.12em;
+  text-transform:uppercase; margin-bottom:12px;
+  display:flex; align-items:center; gap:8px;
+}
+.padres-band-eyebrow::before { content:''; width:20px; height:1px; background:var(--gold); flex-shrink:0; }
+.padres-band-text h3 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(22px,2.6vw,34px); font-weight:700; color:#fff; line-height:1.15;
+}
+.padres-band-text h3 em { color:var(--gold2); font-style:italic; }
+.padres-band-text p { font-size:13.5px; color:rgba(255,255,255,.4); margin-top:8px; line-height:1.6; }
+.padres-band-btns { display:flex; gap:12px; flex-direction:column; flex-shrink:0; position:relative; z-index:1; }
+.btn-padres-primary {
+  padding:13px 26px; background:var(--gold); border:none; border-radius:8px;
+  font-size:13px; font-weight:600; color:var(--forest); cursor:pointer;
+  font-family:'Outfit',sans-serif; text-decoration:none; transition:all .2s;
+  display:flex; align-items:center; gap:8px; white-space:nowrap; justify-content:center;
+}
+.btn-padres-primary:hover { background:var(--gold2); transform:translateY(-1px); box-shadow:0 8px 28px rgba(171,100,35,.35); }
+.btn-padres-secondary {
+  padding:12px 26px; border:1.5px solid rgba(171,100,35,.4); border-radius:8px;
+  background:transparent; font-size:13px; color:var(--gold2); cursor:pointer;
+  font-family:'Outfit',sans-serif; text-decoration:none; transition:all .2s;
+  display:flex; align-items:center; gap:8px; white-space:nowrap; justify-content:center;
+}
+.btn-padres-secondary:hover { background:rgba(171,100,35,.1); border-color:var(--gold); color:#fff; }
+@media(max-width:900px){
+  .padres-band{ grid-template-columns:1fr; gap:28px; }
+  .padres-band-btns{ flex-direction:row; flex-wrap:wrap; }
+}
+@media(max-width:600px){
+  .padres-band{ padding:44px 6vw; }
+  .padres-band-btns{ flex-direction:column; }
+}
+

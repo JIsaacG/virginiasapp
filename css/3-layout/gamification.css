@@ -1,0 +1,35 @@
+/* ═══════════════════════════════════════
+   GAMIFICATION HUD
+═══════════════════════════════════════ */
+#game-hud {
+  position: fixed; bottom: 24px; right: 24px; z-index: 500;
+  background: var(--forest);
+  border: 1px solid rgba(171,100,35,0.3);
+  border-radius: var(--rl); padding: 14px 18px;
+  min-width: 220px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  transition: all .3s;
+}
+#game-hud.minimized { min-width: auto; padding: 10px 14px; }
+.hud-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.hud-title { font-size:11px; font-weight:600; color:var(--gold2); letter-spacing:.1em; text-transform:uppercase; }
+#hud-toggle { background:none; border:none; color:rgba(255,255,255,0.4); cursor:pointer; font-size:14px; padding:0; font-family:'Outfit',sans-serif; }
+.hud-body {}
+#hud-min-content { display:none; }
+.hud-xp-bar-wrap { margin-bottom:8px; }
+.hud-xp-label { display:flex; justify-content:space-between; font-size:11px; color:rgba(255,255,255,0.5); margin-bottom:4px; }
+.hud-xp-track { height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden; }
+.hud-xp-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold2)); border-radius:3px; transition:width .5s ease; }
+.hud-badges { display:flex; gap:6px; flex-wrap:wrap; }
+.hud-badge { width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); transition:all .3s; }
+.hud-badge.earned { background:rgba(171,100,35,0.15); border-color:rgba(171,100,35,0.4); }
+.hud-score { font-family:'Playfair Display',serif; font-size:22px; color:var(--gold2); font-weight:700; }
+.hud-score-label { font-size:10px; color:rgba(255,255,255,0.35); }
+
+/* toast */
+#toast { position:fixed; bottom:120px; right:24px; z-index:600; background:var(--forest); border:1px solid var(--gold); border-radius:var(--r); padding:12px 18px; transform:translateX(110%); transition:transform .35s cubic-bezier(.34,1.56,.64,1); max-width:260px; cursor:pointer; user-select:none; -webkit-tap-highlight-color:transparent; }
+#toast.show { transform:translateX(0); }
+.toast-inner { display:flex; gap:10px; align-items:center; }
+.toast-icon { font-size:20px; }
+.toast-text strong { display:block; font-size:13px; color:var(--gold2); }
+.toast-text span { font-size:12px; color:rgba(255,255,255,0.6); }

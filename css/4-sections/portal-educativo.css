@@ -1,0 +1,34 @@
+/* ═══════════════════════════════════════
+   WHATSAPP FAB
+═══════════════════════════════════════ */
+#wa-fab {
+  position:fixed; bottom:24px; left:24px; z-index:501;
+  width:52px; height:52px; border-radius:50%;
+  background:#25D366;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 8px 32px rgba(37,211,102,.45);
+  text-decoration:none;
+  transition:all .25s;
+  animation:wa-pulse 3s ease infinite;
+}
+#wa-fab:hover { transform:scale(1.1); background:#1ebe5d; box-shadow:0 12px 40px rgba(37,211,102,.6); }
+#wa-fab svg { width:26px; height:26px; fill:#fff; }
+@keyframes wa-pulse {
+  0%,100% { box-shadow:0 8px 32px rgba(37,211,102,.45); }
+  50% { box-shadow:0 8px 32px rgba(37,211,102,.45), 0 0 0 10px rgba(37,211,102,.1); }
+}
+.wa-tooltip {
+  position:absolute; left:62px; top:50%; transform:translateY(-50%);
+  background:var(--forest); color:#fff; font-size:12px; font-weight:500;
+  padding:6px 14px; border-radius:6px; white-space:nowrap;
+  opacity:0; pointer-events:none; transition:opacity .2s;
+  border:1px solid rgba(171,100,35,.3);
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+.wa-tooltip::before {
+  content:''; position:absolute; right:100%; top:50%; transform:translateY(-50%);
+  border:6px solid transparent; border-right-color:var(--forest);
+}
+#wa-fab:hover .wa-tooltip { opacity:1; }
+@media(max-width:600px){ #wa-fab{ bottom:88px; left:16px; width:46px; height:46px; } .wa-tooltip{ display:none; } }
+

@@ -1,0 +1,166 @@
+/* ═══════════════════════════════════════
+   RESPONSIVE — MOBILE 600px
+═══════════════════════════════════════ */
+@media(max-width:600px){
+  /* nav */
+  nav{ padding:0 16px; height:60px; }
+  .nav-seal{ width:34px; height:34px; font-size:13px; }
+  .nav-wordmark b{ font-size:11.5px; }
+  .btn-nav-solid{ padding:7px 12px; font-size:11.5px; }
+
+  /* HUD — comprimido abajo a la izquierda en móvil */
+  #game-hud{
+    bottom:0; right:0; left:0;
+    border-radius:16px 16px 0 0;
+    min-width:0; width:100%;
+    padding:12px 16px 20px;
+    border-left:none; border-right:none; border-bottom:none;
+  }
+  .hud-badges{ gap:8px; }
+  .hud-badge{ width:30px; height:30px; font-size:15px; }
+
+  /* toast — above HUD at bottom, compact, never blocks navbar */
+  #toast{
+    bottom:auto; top:auto; left:auto;
+    right:12px; bottom:80px;
+    max-width:200px; padding:8px 12px;
+    transform:translateX(110%);
+  }
+  #toast.show{ transform:translateX(0); }
+  .toast-icon{ font-size:16px; }
+  .toast-text strong{ font-size:11px; }
+  .toast-text span{ font-size:10px; }
+  .toast-inner{ gap:7px; }
+
+  /* hero */
+  .hero-left{ padding:68px 5vw 180px; }
+  .hero-eyebrow{ margin-bottom:20px; }
+  .eyebrow-text{ font-size:10px; letter-spacing:.1em; }
+  .hero-founding-text{ font-size:11px; padding:5px 12px; margin-bottom:20px; }
+  .hero-desc{ font-size:14px; line-height:1.7; margin-bottom:32px; max-width:100%; }
+  .hero-ctas{ gap:10px; }
+  .btn-cta-main{ padding:14px 24px; font-size:13.5px; width:100%; text-align:center; }
+  .btn-cta-ghost{ padding:13px 20px; font-size:13.5px; width:100%; justify-content:center; }
+  .hero-counters{
+    display:grid; grid-template-columns:repeat(3,1fr);
+    margin-top:28px; padding-top:24px; gap:0;
+  }
+  .hero-counter{ padding:0 10px; }
+  .counter-num{ font-size:26px; }
+  .counter-label{ font-size:10px; }
+
+  /* marquee */
+  .marquee-item{ font-size:10px; padding:0 18px; }
+
+  /* section labels & titles base */
+  .historia{ padding:56px 5vw; }
+  .historia::before{ display:none; }
+  .historia-main-img img{ aspect-ratio:4/3; }
+  .historia-float-card{ position:relative; bottom:auto; left:auto; margin-top:16px; border-radius:var(--r); max-width:100%; }
+  .historia-text h2{ font-size:clamp(28px,8vw,40px); }
+  .historia-text p{ font-size:14px; }
+  .timeline-text{ font-size:13px; }
+
+  /* niveles */
+  .niveles{ padding:56px 5vw; }
+  .niveles-intro h2{ font-size:clamp(28px,8vw,40px); }
+  .nivel-card{ min-height:280px; }
+  .nivel-name{ font-size:28px; }
+  .nivel-features{ display:none; }
+
+  /* mision split */
+  .mision-half{ padding:48px 5vw; }
+  .mision-title{ font-size:clamp(24px,7vw,34px); }
+  .mision-text{ font-size:14px; }
+  .mision-big{ display:none; }
+
+  /* valores */
+  .valores{ padding:56px 5vw; }
+  .valores-header h2{ font-size:clamp(28px,8vw,40px); }
+  .valores-grid{ grid-template-columns:1fr 1fr; gap:8px; }
+  .valor-card{ padding:16px 12px; }
+  .valor-emoji{ font-size:22px; margin-bottom:8px; }
+  .valor-name{ font-size:12px; }
+  .valor-desc{ font-size:11px; }
+
+  /* quiz */
+  .quiz-section{ padding:56px 5vw; }
+  .quiz-wrapper{ max-width:100%; }
+  .quiz-header h2{ font-size:clamp(26px,7.5vw,38px); }
+  .quiz-card{ padding:24px 18px; border-radius:var(--rl); }
+  .quiz-options{ grid-template-columns:1fr; gap:8px; }
+  .quiz-opt{ padding:14px 16px; font-size:13.5px; }
+  .quiz-question{ font-size:clamp(18px,5.5vw,24px); margin-bottom:24px; }
+  .quiz-result-title{ font-size:24px; }
+  .quiz-result-btns{ flex-direction:column; }
+  .quiz-result-btns .btn-cta-main{ width:100%; text-align:center; }
+
+  /* admisiones */
+  .admisiones{ padding:56px 5vw; }
+  .admisiones-top h2{ font-size:clamp(28px,8vw,40px); }
+  .steps-row{ grid-template-columns:1fr; gap:0; }
+  .step-box{
+    display:grid; grid-template-columns:64px 1fr; gap:16px; align-items:start;
+    text-align:left; padding:20px 0;
+    border-bottom:1px solid var(--cream2);
+  }
+  .step-box:last-child{ border-bottom:none; }
+  .step-circle{ margin:0; flex-shrink:0; }
+  .step-title{ font-size:14px; margin-bottom:6px; margin-top:4px; }
+  .step-desc{ font-size:12.5px; }
+  .admisiones-cta-block{ padding:28px 20px; border-radius:var(--rl); margin-top:40px; }
+  .admisiones-cta-block h3{ font-size:22px; }
+  .admisiones-cta-block p{ font-size:13px; }
+  .admisiones-cta-btns{ width:100%; }
+  .admisiones-cta-btns .btn-cta-main,
+  .admisiones-cta-btns .btn-cta-ghost{ width:100%; text-align:center; justify-content:center; }
+  .admission-level{ padding:16px; }
+  .al-icon{ width:38px; height:38px; font-size:17px; }
+
+  /* testimonios */
+  .testimonios{ padding:56px 5vw; }
+  .testimonios-left h2{ font-size:clamp(28px,8vw,40px); }
+  .testimonios-grid{ grid-template-columns:1fr; gap:12px; }
+  .testi-card:nth-child(1){ grid-column:span 1; display:block; }
+  .testi-card{ padding:24px 20px; }
+  .quote{ font-size:48px; }
+  .testi-text{ font-size:13.5px; }
+  .testi-card:nth-child(1) .testi-text{ font-size:14.5px; }
+
+  /* galería */
+  .galeria{ padding:56px 0 0; }
+  .galeria-inner-wrap{ padding:0 5vw; }
+  .galeria-top h2{ font-size:clamp(28px,8vw,40px); }
+  .galeria-filters{ gap:6px; }
+  .gal-filter{ padding:7px 14px; font-size:11.5px; }
+  .carousel-stage{ height:62vw; min-height:260px; max-height:420px; }
+  .c-slide-content{ left:5vw; padding:0 0 76px; max-width:85vw; }
+  .c-slide-title{ font-size:clamp(20px,6vw,34px); }
+  .c-counter{ right:5vw; }
+  .c-progress-row{ padding:0 5vw 22px; }
+  .c-thumb{ flex-basis:calc(100%/3); height:64px; }
+  .c-ctrl{ width:36px; height:36px; font-size:14px; }
+  .c-ctrl-prev{ left:10px; } .c-ctrl-next{ right:10px; }
+  .c-playpause{ opacity:.7; }
+  .lb-nav{ width:36px; height:36px; font-size:16px; }
+
+  /* contacto */
+  .contacto{ padding:56px 5vw; gap:40px; }
+  .contacto-left h2{ font-size:clamp(28px,8vw,40px); }
+  .contacto-desc{ font-size:14px; margin:16px 0 28px; }
+  .contacto-form{ padding:24px 18px; border-radius:var(--rl); }
+  .form-row{ grid-template-columns:1fr; margin-bottom:0; }
+  .form-submit-row{ grid-template-columns:1fr; }
+  .form-privacy{ text-align:left; }
+  .f-submit{ padding:16px; }
+  .ci-item{ gap:12px; }
+  .ci-icon{ width:38px; height:38px; font-size:14px; }
+
+  /* footer */
+  footer{ padding:48px 5vw 80px; }
+  .footer-main{ grid-template-columns:1fr; gap:28px; padding-bottom:32px; margin-bottom:24px; }
+  .f-brand-name{ font-size:22px; }
+  .f-col ul{ display:grid; grid-template-columns:1fr 1fr; gap:8px 16px; }
+  .footer-bottom{ flex-direction:column; align-items:flex-start; gap:8px; }
+}
+

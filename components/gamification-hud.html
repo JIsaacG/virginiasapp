@@ -1,0 +1,35 @@
+<!-- Game HUD -->
+<div id="game-hud">
+  <div class="hud-header">
+    <span class="hud-title">✦ Mi perfil CEEVS</span>
+    <button id="hud-toggle" onclick="toggleHUD()">−</button>
+  </div>
+  <div id="hud-main-content">
+    <div class="hud-xp-bar-wrap">
+      <div class="hud-xp-label">
+        <span id="hud-pts-label">0 puntos explorador</span>
+        <span id="hud-pts-max">100 pts</span>
+      </div>
+      <div class="hud-xp-track"><div class="hud-xp-fill" id="hud-fill" style="width:0%"></div></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+      <div>
+        <div class="hud-score" id="hud-score">0</div>
+        <div class="hud-score-label">XP ganados</div>
+      </div>
+      <div class="hud-badges" id="hud-badges">
+        <div class="hud-badge" title="Explorador" data-id="explorer">🗺️</div>
+        <div class="hud-badge" title="Conocedor" data-id="knower">📖</div>
+        <div class="hud-badge" title="Interesado" data-id="quiz">🎯</div>
+        <div class="hud-badge" title="Familia CEEVS" data-id="contact">🏫</div>
+        <div class="hud-badge" title="Fan de historia" data-id="history">⏳</div>
+        <div class="hud-badge" title="Sabio Cristiano" data-id="trivia">🧠</div>
+        <div class="hud-badge" title="Explorador de Palabras" data-id="sopaletras">📝</div>
+        <div class="hud-badge" title="Memorista" data-id="memoria">🃏</div>
+      </div>
+    </div>
+  </div>
+  <div id="hud-min-content">
+    <div class="hud-score" id="hud-score-min">0 XP</div>
+  </div>
+</div>
