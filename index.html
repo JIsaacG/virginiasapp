@@ -31,7 +31,7 @@
 <div id="game-hud">
   <div class="hud-header">
     <span class="hud-title">✦ Mi perfil CEEVS</span>
-    <button id="hud-toggle" onclick="toggleHUD()">−</button>
+    <button id="hud-toggle">−</button>
   </div>
   <div id="hud-main-content">
     <div class="hud-xp-bar-wrap">
@@ -41,7 +41,7 @@
       </div>
       <div class="hud-xp-track"><div class="hud-xp-fill" id="hud-fill" style="width:0%"></div></div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+    <div class="hud-row">
       <div>
         <div class="hud-score" id="hud-score">0</div>
         <div class="hud-score-label">XP ganados</div>
@@ -65,7 +65,7 @@
 
 
 <!-- Toast notification -->
-<div id="toast" onclick="dismissToast(event)">
+<div id="toast">
   <div class="toast-inner">
     <span class="toast-icon" id="toast-icon">🏆</span>
     <div class="toast-text">
@@ -81,8 +81,8 @@
 <nav id="navbar">
   <a href="index.html" class="nav-logo">
     <div class="nav-logo-img">
-      <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(171,100,35,.55);background:#fff;flex-shrink:0;box-shadow:0 0 0 3px rgba(171,100,35,.15);">
-        <img src="assets/logo.png" alt="CEEVS Logo" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+      <div class="nav-logo-icon">
+        <img src="assets/logo.png" alt="CEEVS Logo" onerror="this.style.display='none'">
       </div>
     </div>
     <div class="nav-wordmark">
@@ -127,7 +127,7 @@
   <div class="nav-cta">
     <a href="admisiones.html#portal-educativo" class="btn-nav-ghost">🖥 Portal</a>
     <a href="admisiones.html#admisiones" class="btn-nav-solid">Solicitar admisión</a>
-    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Abrir menú">
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir menú">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -138,23 +138,23 @@
   <div class="mm-inner">
     <div class="mm-header">
       <div class="mm-logo">Virginia <span>Sapp</span></div>
-      <button class="mm-close" onclick="toggleMobileMenu()">✕</button>
+      <button class="mm-close">✕</button>
     </div>
     <nav class="mm-links">
-      <a href="index.html" onclick="toggleMobileMenu()"><span class="mm-num">01</span>Inicio</a>
-      <a href="quienes-somos.html#historia" onclick="toggleMobileMenu()"><span class="mm-num">02</span>Historia</a>
-      <a href="quienes-somos.html#filosofia" onclick="toggleMobileMenu()"><span class="mm-num">03</span>Filosofía</a>
-      <a href="quienes-somos.html#valores" onclick="toggleMobileMenu()"><span class="mm-num">04</span>Valores</a>
-      <a href="admisiones.html#niveles" onclick="toggleMobileMenu()"><span class="mm-num">05</span>Niveles educativos</a>
-      <a href="admisiones.html#quiz-section" onclick="toggleMobileMenu()"><span class="mm-num">06</span>Quiz interactivo 🎯</a>
-      <a href="admisiones.html#admisiones" onclick="toggleMobileMenu()"><span class="mm-num">07</span>Admisiones</a>
-      <a href="index.html#galeria" onclick="toggleMobileMenu()"><span class="mm-num">08</span>Galería</a>
-      <a href="contactenos.html#contacto" onclick="toggleMobileMenu()"><span class="mm-num">09</span>Contacto</a>
-      <a href="interactivo.html" onclick="toggleMobileMenu()"><span class="mm-num">10</span>Actividades 🎮</a>
+      <a href="index.html"><span class="mm-num">01</span>Inicio</a>
+      <a href="quienes-somos.html#historia"><span class="mm-num">02</span>Historia</a>
+      <a href="quienes-somos.html#filosofia"><span class="mm-num">03</span>Filosofía</a>
+      <a href="quienes-somos.html#valores"><span class="mm-num">04</span>Valores</a>
+      <a href="admisiones.html#niveles"><span class="mm-num">05</span>Niveles educativos</a>
+      <a href="admisiones.html#quiz-section"><span class="mm-num">06</span>Quiz interactivo 🎯</a>
+      <a href="admisiones.html#admisiones"><span class="mm-num">07</span>Admisiones</a>
+      <a href="index.html#galeria"><span class="mm-num">08</span>Galería</a>
+      <a href="contactenos.html#contacto"><span class="mm-num">09</span>Contacto</a>
+      <a href="interactivo.html"><span class="mm-num">10</span>Actividades 🎮</a>
     </nav>
     <div class="mm-actions">
-      <a href="admisiones.html#portal-educativo" class="mm-btn-ghost" onclick="toggleMobileMenu()">🖥 Portal educativo</a>
-      <a href="admisiones.html#admisiones" class="mm-btn-solid" onclick="toggleMobileMenu()">Solicitar admisión 2026–2027 →</a>
+      <a href="admisiones.html#portal-educativo" class="mm-btn-ghost">🖥 Portal educativo</a>
+      <a href="admisiones.html#admisiones" class="mm-btn-solid">Solicitar admisión 2026–2027 →</a>
     </div>
     <div class="mm-footer">✦ Instituto Evangélico Virginia Sapp · Fundado 1962 · Tegucigalpa, Honduras</div>
   </div>
@@ -205,7 +205,7 @@
     </p>
 
     <div class="hero-ctas">
-      <a href="#admisiones" class="btn-cta-main" onclick="addXP(15,'🎓','¡Listo para el siguiente paso!','Explorando admisiones +15 XP')">Solicitar admisión 2026–2027</a>
+      <a href="#admisiones" class="btn-cta-main" data-xp-action data-xp-pts="15" data-xp-icon="🎓" data-xp-title="¡Listo para el siguiente paso!" data-xp-desc="Explorando admisiones +15 XP">Solicitar admisión 2026–2027</a>
       <a href="https://portal.edubox.app/login/virginiasapp" class="btn-cta-ghost" target="_blank" rel="noopener">
         <span>Soy padre / alumno</span>
         <span>→</span>
@@ -322,11 +322,11 @@
         <h2 class="reveal">Momentos que<br>construyen <em>historia</em></h2>
       </div>
       <div class="galeria-filters">
-        <button class="gal-filter active" onclick="filterGalCarousel(this,'all')">Todo</button>
-        <button class="gal-filter" onclick="filterGalCarousel(this,'academico')">Académico</button>
-        <button class="gal-filter" onclick="filterGalCarousel(this,'deportes')">Deportes</button>
-        <button class="gal-filter" onclick="filterGalCarousel(this,'cultural')">Cultural</button>
-        <button class="gal-filter" onclick="filterGalCarousel(this,'graduaciones')">Graduaciones</button>
+        <button class="gal-filter active" data-cat="all">Todo</button>
+        <button class="gal-filter" data-cat="academico">Académico</button>
+        <button class="gal-filter" data-cat="deportes">Deportes</button>
+        <button class="gal-filter" data-cat="cultural">Cultural</button>
+        <button class="gal-filter" data-cat="graduaciones">Graduaciones</button>
       </div>
     </div>
   </div>
@@ -345,7 +345,7 @@
     <div class="c-slide-grad-bottom" style="pointer-events:none;z-index:2"></div>
 
     <!-- Play/Pause -->
-    <button class="c-playpause" id="c-playpause" onclick="toggleCarouselPause(event)" title="Pausar/Reanudar">
+    <button class="c-playpause" id="c-playpause" title="Pausar/Reanudar">
       <span class="c-playpause-icon" id="c-pp-icon">⏸</span>
     </button>
 
@@ -354,7 +354,7 @@
       <strong id="c-cur">1</strong> / <span id="c-tot">8</span>
     </div>
     <a href="https://www.facebook.com/ieevs.edu.hn/" target="_blank" rel="noopener"
-       class="c-ig-badge" onclick="addXP(5,'📸','¡Visitando Instagram!','+5 XP')">
+       class="c-ig-badge" data-xp-pts="5" data-xp-icon="📸" data-xp-title="¡Visitando Facebook!" data-xp-desc="+5 XP">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
       Virginia Sapp · FB
     </a>
@@ -366,8 +366,8 @@
     </div>
 
     <!-- Controls -->
-    <button class="c-ctrl c-ctrl-prev" onclick="carouselStep(-1,event)" aria-label="Anterior">&#8592;</button>
-    <button class="c-ctrl c-ctrl-next" onclick="carouselStep(1,event)" aria-label="Siguiente">&#8594;</button>
+    <button class="c-ctrl c-ctrl-prev" aria-label="Anterior">&#8592;</button>
+    <button class="c-ctrl c-ctrl-next" aria-label="Siguiente">&#8594;</button>
 
     <!-- Progress bars -->
     <div class="c-progress-row" id="c-progress-row"></div>
@@ -456,7 +456,7 @@
       </a>
     </div>
     <div style="text-align:center;margin-top:28px">
-      <a href="recuerdos.html" style="display:inline-flex;align-items:center;gap:8px;padding:13px 32px;background:var(--forest);color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;font-family:'Outfit',sans-serif;transition:background .2s" onmouseover="this.style.background='#5a3508'" onmouseout="this.style.background='var(--forest)'">Ver todos los recuerdos →</a>
+      <a href="recuerdos.html" class="btn-recuerdos">Ver todos los recuerdos →</a>
     </div>
   </div>
 
@@ -474,7 +474,7 @@
         <div style="font-size:11.5px;color:rgba(255,255,255,.45);margin-top:2px;">Álbum 64 Aniversario · Doble clic en cualquier foto para abrir en Facebook</div>
       </div>
     </div>
-    <a href="https://www.facebook.com/ieevs.edu.hn/" target="_blank" rel="noopener" class="c-ig-cta-btn" onclick="addXP(5,'📷','¡Siguiendo en IG!','+5 XP · ¡Nos sigues en Instagram!')">
+    <a href="https://www.facebook.com/ieevs.edu.hn/" target="_blank" rel="noopener" class="c-ig-cta-btn" data-xp-pts="5" data-xp-icon="📷" data-xp-title="¡Siguiendo en Facebook!" data-xp-desc="+5 XP">
       Ver más en Facebook →
     </a>
   </div>
@@ -486,7 +486,7 @@
         <div style="font-size:12px;font-weight:700;color:var(--gold2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px;">⚙️ Panel Facebook API</div>
         <div style="font-size:11px;color:rgba(255,255,255,.35);">Solo tú ves esto · Presiona Ctrl+Shift+F para mostrar/ocultar</div>
       </div>
-      <button onclick="showFBConfigPanel()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:18px;font-family:Outfit,sans-serif;">✕</button>
+      <button class="fb-config-close">✕</button>
     </div>
     <div style="margin-bottom:14px;">
       <label style="display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:.05em;text-transform:uppercase;margin-bottom:7px;">Page Access Token de Facebook</label>
@@ -497,12 +497,8 @@
       <input id="fb-album-input" type="text" value="442742817865421" style="width:100%;padding:11px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:Outfit,sans-serif;outline:none;">
     </div>
     <div style="display:flex;gap:10px;">
-      <button onclick="applyFBToken()" style="flex:1;padding:12px;background:var(--gold);border:none;border-radius:8px;font-size:13px;font-weight:700;color:var(--forest);cursor:pointer;font-family:Outfit,sans-serif;transition:background .2s;" onmouseover="this.style.background='#d4882e'" onmouseout="this.style.background='var(--gold)'">
-        Cargar fotos del álbum ↻
-      </button>
-      <a href="https://developers.facebook.com/tools/explorer" target="_blank" style="padding:12px 16px;border:1px solid rgba(255,255,255,.15);border-radius:8px;font-size:12px;color:rgba(255,255,255,.6);text-decoration:none;display:flex;align-items:center;white-space:nowrap;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)'">
-        Obtener token →
-      </a>
+      <button class="fb-apply-btn">Cargar fotos del álbum ↻</button>
+      <a href="https://developers.facebook.com/tools/explorer" target="_blank" class="fb-token-link">Obtener token →</a>
     </div>
     <div id="fb-status" style="margin-top:12px;font-size:12px;color:rgba(255,255,255,.4);text-align:center;min-height:16px;"></div>
     <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);font-size:11px;color:rgba(255,255,255,.25);line-height:1.6;">
@@ -512,12 +508,12 @@
 
   <!-- LIGHTBOX -->
   <div id="lightbox" role="dialog" aria-modal="true">
-    <button class="lb-close" onclick="closeLightbox()" aria-label="Cerrar">✕</button>
-    <button class="lb-nav lb-prev" onclick="lbStep(-1)" aria-label="Anterior">&#8592;</button>
+    <button class="lb-close" aria-label="Cerrar">✕</button>
+    <button class="lb-nav lb-prev" aria-label="Anterior">&#8592;</button>
     <div class="lb-img-wrap">
       <img id="lb-img" alt="">
     </div>
-    <button class="lb-nav lb-next" onclick="lbStep(1)" aria-label="Siguiente">&#8594;</button>
+    <button class="lb-nav lb-next" aria-label="Siguiente">&#8594;</button>
     <div class="lb-info">
       <div class="lb-info-tag" id="lb-tag"></div>
       <div class="lb-info-title" id="lb-title"></div>
@@ -602,7 +598,7 @@
     <div class="faq-list reveal-right">
 
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <button class="faq-q" aria-expanded="false">
           <span class="faq-q-text">¿Cuáles son las edades para cada nivel?</span>
           <span class="faq-icon">+</span>
         </button>
@@ -612,7 +608,7 @@
       </div>
 
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <button class="faq-q" aria-expanded="false">
           <span class="faq-q-text">¿Cuál es el proceso de admisión paso a paso?</span>
           <span class="faq-icon">+</span>
         </button>
@@ -622,7 +618,7 @@
       </div>
 
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <button class="faq-q" aria-expanded="false">
           <span class="faq-q-text">¿Qué diferencia al programa bilingüe del programa en español?</span>
           <span class="faq-icon">+</span>
         </button>
@@ -632,7 +628,7 @@
       </div>
 
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <button class="faq-q" aria-expanded="false">
           <span class="faq-q-text">¿Cuándo inicia el período de admisiones?</span>
           <span class="faq-icon">+</span>
         </button>
@@ -642,7 +638,7 @@
       </div>
 
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <button class="faq-q" aria-expanded="false">
           <span class="faq-q-text">¿Cómo accedo a la plataforma académica si ya soy parte de CEEVS?</span>
           <span class="faq-icon">+</span>
         </button>
@@ -652,7 +648,7 @@
       </div>
 
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        <button class="faq-q" aria-expanded="false">
           <span class="faq-q-text">¿El colegio tiene transporte escolar?</span>
           <span class="faq-icon">+</span>
         </button>
@@ -751,7 +747,7 @@
     <div class="f-adieeds">Miembro certificado de <span>ADIEEDS</span></div>
   </div>
   <div style="text-align:center;padding:18px 0 10px;border-top:1px solid rgba(171,100,35,.12)">
-    <a href="admin.html" style="display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:rgba(171,100,35,.1);color:var(--gold);border:1px solid rgba(171,100,35,.25);border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(171,100,35,.2)';this.style.borderColor='rgba(171,100,35,.5)'" onmouseout="this.style.background='rgba(171,100,35,.1)';this.style.borderColor='rgba(171,100,35,.25)'">⚙ Administrador</a>
+    <a href="admin.html" class="admin-footer-link">⚙ Administrador</a>
   </div>
 </footer>
 
@@ -764,9 +760,14 @@
   <span class="wa-tooltip">¿Necesitas información? 💬</span>
 </a>
 
-  <script src="js/main.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/core/app.js"></script>
+  <script src="js/core/dom.js"></script>
+  <script src="js/core/storage.js"></script>
   <script src="js/gamification.js"></script>
+  <script src="js/main.js"></script>
   <script src="js/gallery.js"></script>
   <script src="js/image-manager.js"></script>
+  <script>App.init();</script>
 </body>
 </html>

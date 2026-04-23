@@ -31,7 +31,7 @@
 <div id="game-hud">
   <div class="hud-header">
     <span class="hud-title">✦ Mi perfil CEEVS</span>
-    <button id="hud-toggle" onclick="toggleHUD()">−</button>
+    <button id="hud-toggle">−</button>
   </div>
   <div id="hud-main-content">
     <div class="hud-xp-bar-wrap">
@@ -41,7 +41,7 @@
       </div>
       <div class="hud-xp-track"><div class="hud-xp-fill" id="hud-fill" style="width:0%"></div></div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+    <div class="hud-row">
       <div>
         <div class="hud-score" id="hud-score">0</div>
         <div class="hud-score-label">XP ganados</div>
@@ -65,7 +65,7 @@
 
 
 <!-- Toast notification -->
-<div id="toast" onclick="dismissToast(event)">
+<div id="toast">
   <div class="toast-inner">
     <span class="toast-icon" id="toast-icon">🏆</span>
     <div class="toast-text">
@@ -81,8 +81,8 @@
 <nav id="navbar">
   <a href="index.html" class="nav-logo">
     <div class="nav-logo-img">
-      <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(171,100,35,.55);background:#fff;flex-shrink:0;box-shadow:0 0 0 3px rgba(171,100,35,.15);">
-        <img src="assets/logo.png" alt="CEEVS Logo" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+      <div class="nav-logo-icon">
+        <img src="assets/logo.png" alt="CEEVS Logo" onerror="this.style.display='none'">
       </div>
     </div>
     <div class="nav-wordmark">
@@ -127,7 +127,7 @@
   <div class="nav-cta">
     <a href="admisiones.html#portal-educativo" class="btn-nav-ghost">🖥 Portal</a>
     <a href="admisiones.html#admisiones" class="btn-nav-solid">Solicitar admisión</a>
-    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Abrir menú">
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir menú">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -138,23 +138,23 @@
   <div class="mm-inner">
     <div class="mm-header">
       <div class="mm-logo">Virginia <span>Sapp</span></div>
-      <button class="mm-close" onclick="toggleMobileMenu()">✕</button>
+      <button class="mm-close">✕</button>
     </div>
     <nav class="mm-links">
-      <a href="index.html" onclick="toggleMobileMenu()"><span class="mm-num">01</span>Inicio</a>
-      <a href="quienes-somos.html#historia" onclick="toggleMobileMenu()"><span class="mm-num">02</span>Historia</a>
-      <a href="quienes-somos.html#filosofia" onclick="toggleMobileMenu()"><span class="mm-num">03</span>Filosofía</a>
-      <a href="quienes-somos.html#valores" onclick="toggleMobileMenu()"><span class="mm-num">04</span>Valores</a>
-      <a href="admisiones.html#niveles" onclick="toggleMobileMenu()"><span class="mm-num">05</span>Niveles educativos</a>
-      <a href="admisiones.html#quiz-section" onclick="toggleMobileMenu()"><span class="mm-num">06</span>Quiz interactivo 🎯</a>
-      <a href="admisiones.html#admisiones" onclick="toggleMobileMenu()"><span class="mm-num">07</span>Admisiones</a>
-      <a href="index.html#galeria" onclick="toggleMobileMenu()"><span class="mm-num">08</span>Galería</a>
-      <a href="contactenos.html#contacto" onclick="toggleMobileMenu()"><span class="mm-num">09</span>Contacto</a>
-      <a href="interactivo.html" onclick="toggleMobileMenu()"><span class="mm-num">10</span>Actividades 🎮</a>
+      <a href="index.html"><span class="mm-num">01</span>Inicio</a>
+      <a href="quienes-somos.html#historia"><span class="mm-num">02</span>Historia</a>
+      <a href="quienes-somos.html#filosofia"><span class="mm-num">03</span>Filosofía</a>
+      <a href="quienes-somos.html#valores"><span class="mm-num">04</span>Valores</a>
+      <a href="admisiones.html#niveles"><span class="mm-num">05</span>Niveles educativos</a>
+      <a href="admisiones.html#quiz-section"><span class="mm-num">06</span>Quiz interactivo 🎯</a>
+      <a href="admisiones.html#admisiones"><span class="mm-num">07</span>Admisiones</a>
+      <a href="index.html#galeria"><span class="mm-num">08</span>Galería</a>
+      <a href="contactenos.html#contacto"><span class="mm-num">09</span>Contacto</a>
+      <a href="interactivo.html"><span class="mm-num">10</span>Actividades 🎮</a>
     </nav>
     <div class="mm-actions">
-      <a href="admisiones.html#portal-educativo" class="mm-btn-ghost" onclick="toggleMobileMenu()">🖥 Portal educativo</a>
-      <a href="admisiones.html#admisiones" class="mm-btn-solid" onclick="toggleMobileMenu()">Solicitar admisión 2026–2027 →</a>
+      <a href="admisiones.html#portal-educativo" class="mm-btn-ghost">🖥 Portal educativo</a>
+      <a href="admisiones.html#admisiones" class="mm-btn-solid">Solicitar admisión 2026–2027 →</a>
     </div>
     <div class="mm-footer">✦ Instituto Evangélico Virginia Sapp · Fundado 1962 · Tegucigalpa, Honduras</div>
   </div>
@@ -314,52 +314,52 @@
     <p>Cada principio que enseñamos lo vivimos primero. Haz clic en un valor para conocer cómo lo practicamos.</p>
   </div>
   <div class="valores-grid reveal" id="valores-grid">
-    <div class="valor-card" onclick="selectValor(this,'explorer')" data-xp="5">
+    <div class="valor-card" data-badge="explorer" data-xp="5">
       <span class="valor-emoji">⭐</span>
       <div class="valor-name">Excelencia</div>
       <div class="valor-desc">Damos lo mejor en todo lo que hacemos, porque trabajamos para la gloria de Dios.</div>
     </div>
-    <div class="valor-card" onclick="selectValor(this)" data-xp="5">
+    <div class="valor-card" data-xp="5">
       <span class="valor-emoji">💎</span>
       <div class="valor-name">Integridad</div>
       <div class="valor-desc">Actuamos con honestidad y coherencia entre lo que creemos, decimos y hacemos.</div>
     </div>
-    <div class="valor-card" onclick="selectValor(this)" data-xp="5">
+    <div class="valor-card" data-xp="5">
       <span class="valor-emoji">🤝</span>
       <div class="valor-name">Compromiso</div>
       <div class="valor-desc">Dedicación plena a la misión educativa cristiana que nos fue encomendada.</div>
     </div>
-    <div class="valor-card" onclick="selectValor(this)" data-xp="5">
+    <div class="valor-card" data-xp="5">
       <span class="valor-emoji">🙏</span>
       <div class="valor-name">Humildad</div>
       <div class="valor-desc">Servimos con corazón enseñable, reconociendo que todo don viene de Dios.</div>
     </div>
-    <div class="valor-card" onclick="selectValor(this)" data-xp="5">
+    <div class="valor-card" data-xp="5">
       <span class="valor-emoji">🌿</span>
       <div class="valor-name">Solidaridad</div>
       <div class="valor-desc">Una comunidad que se apoya mutuamente, reflejando el amor de Cristo.</div>
     </div>
-    <div class="valor-card" onclick="selectValor(this)" data-xp="5">
+    <div class="valor-card" data-xp="5">
       <span class="valor-emoji">🕊️</span>
       <div class="valor-name">Servicio</div>
       <div class="valor-desc">Impactamos con generosidad a los demás, siguiendo el ejemplo de Jesús.</div>
     </div>
-    <div class="valor-card" onclick="selectValor(this)" data-xp="5">
+    <div class="valor-card" data-xp="5">
       <span class="valor-emoji">❤️</span>
       <div class="valor-name">Amor</div>
       <div class="valor-desc">El amor ágape es el fundamento de toda nuestra comunidad educativa.</div>
     </div>
-    <div class="valor-card" onclick="selectValor(this)" data-xp="5">
+    <div class="valor-card" data-xp="5">
       <span class="valor-emoji">🌟</span>
       <div class="valor-name">Respeto</div>
       <div class="valor-desc">Reconocemos la dignidad de cada persona creada a imagen y semejanza de Dios.</div>
     </div>
-    <div class="valor-card" onclick="selectValor(this)" data-xp="5">
+    <div class="valor-card" data-xp="5">
       <span class="valor-emoji">🌻</span>
       <div class="valor-name">Gratitud</div>
       <div class="valor-desc">Reconocemos con acción de gracias las bendiciones que Dios derrama cada día.</div>
     </div>
-    <div class="valor-card" onclick="selectValor(this)" data-xp="5">
+    <div class="valor-card" data-xp="5">
       <span class="valor-emoji">⚖️</span>
       <div class="valor-name">Justicia</div>
       <div class="valor-desc">Obramos con equidad y rectitud, reflejando el carácter justo de Dios.</div>
@@ -370,7 +370,7 @@
 <div style="text-align:center;padding:40px 8vw;background:var(--cream2)">
   <p style="font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,28px);color:var(--forest);margin-bottom:8px">¿Te identificas con nuestros valores?</p>
   <p style="color:#8a7a6a;margin-bottom:20px;font-size:15px">Conoce cómo ser parte de la familia Virginia Sapp</p>
-  <a href="admisiones.html#admisiones" style="display:inline-block;padding:14px 32px;background:var(--forest);color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px;transition:background .2s" onmouseover="this.style.background='#5a3508'" onmouseout="this.style.background='var(--forest)'">Iniciar proceso de admisión →</a>
+  <a href="admisiones.html#admisiones" class="btn-cta-forest">Iniciar proceso de admisión →</a>
 </div>
 
 <!-- ─── PERFIL DEL EGRESADO ─── -->
@@ -419,7 +419,7 @@
 <div style="text-align:center;padding:40px 8vw;background:var(--forest);color:#fff">
   <p style="font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,28px);margin-bottom:8px">¿Quieres esto para tu hijo?</p>
   <p style="opacity:.75;margin-bottom:20px;font-size:15px">El primer paso es más fácil de lo que piensas</p>
-  <a href="admisiones.html#quiz-section" style="display:inline-block;padding:14px 32px;background:var(--gold);color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px;transition:background .2s" onmouseover="this.style.background='#c77a2a'" onmouseout="this.style.background='var(--gold)'">Descubre el nivel ideal →</a>
+  <a href="admisiones.html#quiz-section" class="btn-cta-gold">Descubre el nivel ideal →</a>
 </div>
 
 <!-- ─── FOOTER ─── -->
@@ -476,7 +476,7 @@
     <div class="f-adieeds">Miembro certificado de <span>ADIEEDS</span></div>
   </div>
   <div style="text-align:center;padding:18px 0 10px;border-top:1px solid rgba(171,100,35,.12)">
-    <a href="admin.html" style="display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:rgba(171,100,35,.1);color:var(--gold);border:1px solid rgba(171,100,35,.25);border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(171,100,35,.2)';this.style.borderColor='rgba(171,100,35,.5)'" onmouseout="this.style.background='rgba(171,100,35,.1)';this.style.borderColor='rgba(171,100,35,.25)'">⚙ Administrador</a>
+    <a href="admin.html" class="admin-footer-link">⚙ Administrador</a>
   </div>
 </footer>
 
@@ -489,8 +489,13 @@
   <span class="wa-tooltip">¿Necesitas información? 💬</span>
 </a>
 
-  <script src="js/main.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/core/app.js"></script>
+  <script src="js/core/dom.js"></script>
+  <script src="js/core/storage.js"></script>
   <script src="js/gamification.js"></script>
+  <script src="js/main.js"></script>
   <script src="js/image-manager.js"></script>
+  <script>App.init();</script>
 </body>
 </html>

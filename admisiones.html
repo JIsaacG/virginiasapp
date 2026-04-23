@@ -31,7 +31,7 @@
 <div id="game-hud">
   <div class="hud-header">
     <span class="hud-title">✦ Mi perfil CEEVS</span>
-    <button id="hud-toggle" onclick="toggleHUD()">−</button>
+    <button id="hud-toggle">−</button>
   </div>
   <div id="hud-main-content">
     <div class="hud-xp-bar-wrap">
@@ -41,7 +41,7 @@
       </div>
       <div class="hud-xp-track"><div class="hud-xp-fill" id="hud-fill" style="width:0%"></div></div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+    <div class="hud-row">
       <div>
         <div class="hud-score" id="hud-score">0</div>
         <div class="hud-score-label">XP ganados</div>
@@ -65,7 +65,7 @@
 
 
 <!-- Toast notification -->
-<div id="toast" onclick="dismissToast(event)">
+<div id="toast">
   <div class="toast-inner">
     <span class="toast-icon" id="toast-icon">🏆</span>
     <div class="toast-text">
@@ -81,8 +81,8 @@
 <nav id="navbar">
   <a href="index.html" class="nav-logo">
     <div class="nav-logo-img">
-      <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(171,100,35,.55);background:#fff;flex-shrink:0;box-shadow:0 0 0 3px rgba(171,100,35,.15);">
-        <img src="assets/logo.png" alt="CEEVS Logo" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+      <div class="nav-logo-icon">
+        <img src="assets/logo.png" alt="CEEVS Logo" onerror="this.style.display='none'">
       </div>
     </div>
     <div class="nav-wordmark">
@@ -127,7 +127,7 @@
   <div class="nav-cta">
     <a href="admisiones.html#portal-educativo" class="btn-nav-ghost">🖥 Portal</a>
     <a href="admisiones.html#admisiones" class="btn-nav-solid">Solicitar admisión</a>
-    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Abrir menú">
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir menú">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -138,23 +138,23 @@
   <div class="mm-inner">
     <div class="mm-header">
       <div class="mm-logo">Virginia <span>Sapp</span></div>
-      <button class="mm-close" onclick="toggleMobileMenu()">✕</button>
+      <button class="mm-close">✕</button>
     </div>
     <nav class="mm-links">
-      <a href="index.html" onclick="toggleMobileMenu()"><span class="mm-num">01</span>Inicio</a>
-      <a href="quienes-somos.html#historia" onclick="toggleMobileMenu()"><span class="mm-num">02</span>Historia</a>
-      <a href="quienes-somos.html#filosofia" onclick="toggleMobileMenu()"><span class="mm-num">03</span>Filosofía</a>
-      <a href="quienes-somos.html#valores" onclick="toggleMobileMenu()"><span class="mm-num">04</span>Valores</a>
-      <a href="admisiones.html#niveles" onclick="toggleMobileMenu()"><span class="mm-num">05</span>Niveles educativos</a>
-      <a href="admisiones.html#quiz-section" onclick="toggleMobileMenu()"><span class="mm-num">06</span>Quiz interactivo 🎯</a>
-      <a href="admisiones.html#admisiones" onclick="toggleMobileMenu()"><span class="mm-num">07</span>Admisiones</a>
-      <a href="index.html#galeria" onclick="toggleMobileMenu()"><span class="mm-num">08</span>Galería</a>
-      <a href="contactenos.html#contacto" onclick="toggleMobileMenu()"><span class="mm-num">09</span>Contacto</a>
-      <a href="interactivo.html" onclick="toggleMobileMenu()"><span class="mm-num">10</span>Actividades 🎮</a>
+      <a href="index.html"><span class="mm-num">01</span>Inicio</a>
+      <a href="quienes-somos.html#historia"><span class="mm-num">02</span>Historia</a>
+      <a href="quienes-somos.html#filosofia"><span class="mm-num">03</span>Filosofía</a>
+      <a href="quienes-somos.html#valores"><span class="mm-num">04</span>Valores</a>
+      <a href="admisiones.html#niveles"><span class="mm-num">05</span>Niveles educativos</a>
+      <a href="admisiones.html#quiz-section"><span class="mm-num">06</span>Quiz interactivo 🎯</a>
+      <a href="admisiones.html#admisiones"><span class="mm-num">07</span>Admisiones</a>
+      <a href="index.html#galeria"><span class="mm-num">08</span>Galería</a>
+      <a href="contactenos.html#contacto"><span class="mm-num">09</span>Contacto</a>
+      <a href="interactivo.html"><span class="mm-num">10</span>Actividades 🎮</a>
     </nav>
     <div class="mm-actions">
-      <a href="admisiones.html#portal-educativo" class="mm-btn-ghost" onclick="toggleMobileMenu()">🖥 Portal educativo</a>
-      <a href="admisiones.html#admisiones" class="mm-btn-solid" onclick="toggleMobileMenu()">Solicitar admisión 2026–2027 →</a>
+      <a href="admisiones.html#portal-educativo" class="mm-btn-ghost">🖥 Portal educativo</a>
+      <a href="admisiones.html#admisiones" class="mm-btn-solid">Solicitar admisión 2026–2027 →</a>
     </div>
     <div class="mm-footer">✦ Instituto Evangélico Virginia Sapp · Fundado 1962 · Tegucigalpa, Honduras</div>
   </div>
@@ -255,25 +255,25 @@
       <div class="quiz-step active" id="qs-1">
         <div class="quiz-question">¿Cuántos años tiene <span>tu hijo/a</span>?</div>
         <div class="quiz-options">
-          <button class="quiz-opt" onclick="selectOpt(this,'q1','preschool')">
+          <button class="quiz-opt" data-q="q1" data-val="preschool">
             <span class="quiz-opt-icon">🌱</span>
             <span class="quiz-opt-label">3 a 5 años</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q1','primary')">
+          <button class="quiz-opt" data-q="q1" data-val="primary">
             <span class="quiz-opt-icon">📚</span>
             <span class="quiz-opt-label">6 a 11 años</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q1','secondary')">
+          <button class="quiz-opt" data-q="q1" data-val="secondary">
             <span class="quiz-opt-icon">🎓</span>
             <span class="quiz-opt-label">12 a 17 años</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q1','unsure')">
+          <button class="quiz-opt" data-q="q1" data-val="unsure">
             <span class="quiz-opt-icon">🤔</span>
             <span class="quiz-opt-label">Aún no estoy seguro/a</span>
           </button>
         </div>
         <div class="quiz-nav">
-          <button class="quiz-btn-next" id="q1-next" disabled onclick="goStep(2)">Continuar →</button>
+          <button class="quiz-btn-next" id="q1-next" disabled data-step="2">Continuar →</button>
         </div>
       </div>
 
@@ -281,26 +281,26 @@
       <div class="quiz-step" id="qs-2">
         <div class="quiz-question">¿Qué valoras más en <span>la educación</span> de tu hijo/a?</div>
         <div class="quiz-options">
-          <button class="quiz-opt" onclick="selectOpt(this,'q2','fe')">
+          <button class="quiz-opt" data-q="q2" data-val="fe">
             <span class="quiz-opt-icon">✝️</span>
             <span class="quiz-opt-label">Formación en fe y valores</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q2','bilingue')">
+          <button class="quiz-opt" data-q="q2" data-val="bilingue">
             <span class="quiz-opt-icon">🌎</span>
             <span class="quiz-opt-label">Programa bilingüe (inglés)</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q2','academico')">
+          <button class="quiz-opt" data-q="q2" data-val="academico">
             <span class="quiz-opt-icon">📐</span>
             <span class="quiz-opt-label">Excelencia académica</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q2','todo')">
+          <button class="quiz-opt" data-q="q2" data-val="todo">
             <span class="quiz-opt-icon">🌟</span>
             <span class="quiz-opt-label">Todo lo anterior</span>
           </button>
         </div>
         <div class="quiz-nav">
-          <button class="quiz-btn-back" onclick="goStep(1)">← Atrás</button>
-          <button class="quiz-btn-next" id="q2-next" disabled onclick="goStep(3)">Continuar →</button>
+          <button class="quiz-btn-back" data-step="1">← Atrás</button>
+          <button class="quiz-btn-next" id="q2-next" disabled data-step="3">Continuar →</button>
         </div>
       </div>
 
@@ -308,26 +308,26 @@
       <div class="quiz-step" id="qs-3">
         <div class="quiz-question">¿En qué idioma prefieren <span>las clases</span>?</div>
         <div class="quiz-options">
-          <button class="quiz-opt" onclick="selectOpt(this,'q3','espanol')">
+          <button class="quiz-opt" data-q="q3" data-val="espanol">
             <span class="quiz-opt-icon">🇭🇳</span>
             <span class="quiz-opt-label">Solo en español</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q3','bilingue')">
+          <button class="quiz-opt" data-q="q3" data-val="bilingue">
             <span class="quiz-opt-icon">🌐</span>
             <span class="quiz-opt-label">Bilingüe español–inglés</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q3','cualquiera')">
+          <button class="quiz-opt" data-q="q3" data-val="cualquiera">
             <span class="quiz-opt-icon">💬</span>
             <span class="quiz-opt-label">Cualquiera de los dos</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q3','nosey')">
+          <button class="quiz-opt" data-q="q3" data-val="nosey">
             <span class="quiz-opt-icon">🤷</span>
             <span class="quiz-opt-label">Necesito más información</span>
           </button>
         </div>
         <div class="quiz-nav">
-          <button class="quiz-btn-back" onclick="goStep(2)">← Atrás</button>
-          <button class="quiz-btn-next" id="q3-next" disabled onclick="goStep(4)">Continuar →</button>
+          <button class="quiz-btn-back" data-step="2">← Atrás</button>
+          <button class="quiz-btn-next" id="q3-next" disabled data-step="4">Continuar →</button>
         </div>
       </div>
 
@@ -335,26 +335,26 @@
       <div class="quiz-step" id="qs-4">
         <div class="quiz-question">¿Cuándo te gustaría que <span>comenzara</span>?</div>
         <div class="quiz-options">
-          <button class="quiz-opt" onclick="selectOpt(this,'q4','ya')">
+          <button class="quiz-opt" data-q="q4" data-val="ya">
             <span class="quiz-opt-icon">⚡</span>
             <span class="quiz-opt-label">Lo antes posible</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q4','ciclo')">
+          <button class="quiz-opt" data-q="q4" data-val="ciclo">
             <span class="quiz-opt-icon">📅</span>
             <span class="quiz-opt-label">Próximo ciclo 2026–2027</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q4','explorando')">
+          <button class="quiz-opt" data-q="q4" data-val="explorando">
             <span class="quiz-opt-icon">🔍</span>
             <span class="quiz-opt-label">Solo estoy explorando</span>
           </button>
-          <button class="quiz-opt" onclick="selectOpt(this,'q4','decidir')">
+          <button class="quiz-opt" data-q="q4" data-val="decidir">
             <span class="quiz-opt-icon">🗓️</span>
             <span class="quiz-opt-label">Aún debo decidir</span>
           </button>
         </div>
         <div class="quiz-nav">
-          <button class="quiz-btn-back" onclick="goStep(3)">← Atrás</button>
-          <button class="quiz-btn-next" id="q4-next" disabled onclick="showQuizResult()">Ver mi resultado 🎯</button>
+          <button class="quiz-btn-back" data-step="3">← Atrás</button>
+          <button class="quiz-btn-next" id="q4-next" disabled data-show-result>Ver mi resultado 🎯</button>
         </div>
       </div>
 
@@ -371,17 +371,17 @@
         <div id="quiz-lead-form" style="margin:24px 0 20px;padding:20px 24px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px">
           <p style="font-size:14px;color:rgba(255,255,255,.85);margin-bottom:14px;font-weight:500">¿Quieres que te contactemos con más información personalizada?</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-            <input type="text" id="quiz-lead-name" placeholder="Tu nombre" style="padding:11px 14px;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;background:rgba(255,255,255,.07);color:#fff;font-family:'Outfit',sans-serif;font-size:14px" onfocus="this.style.borderColor='rgba(171,100,35,.7)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
-            <input type="tel" id="quiz-lead-phone" placeholder="WhatsApp / Teléfono" style="padding:11px 14px;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;background:rgba(255,255,255,.07);color:#fff;font-family:'Outfit',sans-serif;font-size:14px" onfocus="this.style.borderColor='rgba(171,100,35,.7)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+            <input type="text" id="quiz-lead-name" class="quiz-lead-input" placeholder="Tu nombre">
+            <input type="tel" id="quiz-lead-phone" class="quiz-lead-input" placeholder="WhatsApp / Teléfono">
           </div>
-          <input type="email" id="quiz-lead-email" placeholder="Correo electrónico" style="width:100%;padding:11px 14px;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;background:rgba(255,255,255,.07);color:#fff;font-family:'Outfit',sans-serif;font-size:14px;margin-bottom:12px" onfocus="this.style.borderColor='rgba(171,100,35,.7)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
-          <button onclick="submitQuizLead()" style="width:100%;padding:13px;background:var(--gold);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .2s" onmouseover="this.style.background='#c77a2a'" onmouseout="this.style.background='var(--gold)'">Solicitar información ahora</button>
+          <input type="email" id="quiz-lead-email" class="quiz-lead-input" placeholder="Correo electrónico" style="width:100%;margin-bottom:12px">
+          <button class="btn-quiz-lead" id="quiz-lead-submit">Solicitar información ahora</button>
           <p id="quiz-lead-msg" style="display:none;margin-top:10px;font-size:13px;color:#4caf50;text-align:center"></p>
           <p style="font-size:11px;color:rgba(255,255,255,.4);margin-top:8px;text-align:center">Tus datos están seguros. No los compartimos con terceros.</p>
         </div>
         <div class="quiz-result-btns">
           <a href="#contacto" class="btn-cta-main">Ir al formulario completo</a>
-          <button onclick="restartQuiz()" style="padding:14px 24px;background:transparent;border:1.5px solid rgba(255,255,255,.2);border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;font-family:'Outfit',sans-serif;font-size:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(255,255,255,.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,.2)'">Repetir quiz</button>
+          <button id="quiz-restart-btn" class="btn-quiz-restart">Repetir quiz</button>
         </div>
       </div>
     </div>
@@ -572,7 +572,7 @@
     <div class="f-adieeds">Miembro certificado de <span>ADIEEDS</span></div>
   </div>
   <div style="text-align:center;padding:18px 0 10px;border-top:1px solid rgba(171,100,35,.12)">
-    <a href="admin.html" style="display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:rgba(171,100,35,.1);color:var(--gold);border:1px solid rgba(171,100,35,.25);border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(171,100,35,.2)';this.style.borderColor='rgba(171,100,35,.5)'" onmouseout="this.style.background='rgba(171,100,35,.1)';this.style.borderColor='rgba(171,100,35,.25)'">⚙ Administrador</a>
+    <a href="admin.html" class="admin-footer-link">⚙ Administrador</a>
   </div>
 </footer>
 
@@ -585,9 +585,14 @@
   <span class="wa-tooltip">¿Necesitas información? 💬</span>
 </a>
 
-  <script src="js/main.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/core/app.js"></script>
+  <script src="js/core/dom.js"></script>
+  <script src="js/core/storage.js"></script>
   <script src="js/gamification.js"></script>
+  <script src="js/main.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/image-manager.js"></script>
+  <script>App.init();</script>
 </body>
 </html>

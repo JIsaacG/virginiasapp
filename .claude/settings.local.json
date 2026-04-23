@@ -11,7 +11,8 @@
       "WebFetch(domain:github.com)",
       "mcp__ui-ux-pro__search_patterns",
       "mcp__ui-ux-pro__search_all",
-      "mcp__ui-ux-pro__search_styles"
+      "mcp__ui-ux-pro__search_styles",
+      "Bash(xargs wc *)"
     ]
   }
 }

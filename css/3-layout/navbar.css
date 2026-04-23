@@ -35,6 +35,13 @@ nav.scrolled { height:60px; background:rgba(40,20,2,0.99); }
 .nav-links a:hover { color:var(--gold2); }
 .nav-links a:hover::after { transform:scaleX(1); }
 
+.nav-logo-icon {
+  width: 44px; height: 44px; border-radius: 50%; overflow: hidden;
+  border: 2px solid rgba(171,100,35,.55); background: #fff;
+  flex-shrink: 0; box-shadow: 0 0 0 3px rgba(171,100,35,.15);
+}
+.nav-logo-icon img { width: 100%; height: 100%; object-fit: cover; }
+
 .nav-cta { display:flex; gap:10px; align-items:center; }
 .btn-nav-ghost { padding:7px 16px; border:1px solid rgba(171,100,35,.35); border-radius:6px; background:transparent; font-size:12.5px; color:var(--gold2); cursor:pointer; font-family:'Outfit',sans-serif; text-decoration:none; transition:all .2s; display:inline-flex; align-items:center; gap:6px; }
 .btn-nav-ghost:hover { background:rgba(171,100,35,.1); border-color:var(--gold); }

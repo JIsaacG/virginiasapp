@@ -10,6 +10,7 @@
 @import url('2-components/cards.css');
 @import url('2-components/badges.css');
 @import url('2-components/modals.css');
+@import url('2-components/utils.css');
 
 /* 3. LAYOUT COMPONENTS */
 @import url('3-layout/gamification.css');

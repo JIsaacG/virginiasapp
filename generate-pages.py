@@ -1,158 +1,102 @@
 #!/usr/bin/env python3
 """
-Generador automático de páginas HTML
+Validador de páginas CEEVS
+Verifica que todas las páginas HTML cumplan los estándares del proyecto.
 
-Automatiza la creación de páginas reutilizando componentes y layouts.
-Cambios en un componente = regenerar todos los HTML automáticamente.
-
-USO:
-  python generate-pages.py
-
-RESULTADO:
-  Actualiza/crea todas las páginas HTML automáticamente
+Uso:
+  python generate-pages.py          # valida todas las páginas
+  python generate-pages.py --fix    # muestra sugerencias de corrección
 """
 
 import os
-import json
+import re
+import sys
 
-# Configuración de páginas
-PAGES_CONFIG = {
-    "index.html": {
-        "title": "Instituto Evangélico Virginia Sapp | CEEVS · Tegucigalpa, Honduras",
-        "description": "Formamos líderes con valores cristianos desde 1962. Educación bilingüe en Preescolar, Primaria y Secundaria en Tegucigalpa, Honduras.",
-        "lang": "es",
-        "robots": "index, follow",
-        "components": ["custom-cursor", "navbar", "gamification-hud", "toast"],
-    },
-    "quienes-somos.html": {
-        "title": "Quiénes Somos | CEEVS",
-        "description": "Conoce nuestra historia, filosofía educativa y valores.",
-        "lang": "es",
-        "robots": "index, follow",
-        "components": ["custom-cursor", "navbar", "gamification-hud", "toast"],
-    },
-    "admisiones.html": {
-        "title": "Admisiones 2026–2027 | CEEVS",
-        "description": "Proceso de admisión y niveles educativos.",
-        "lang": "es",
-        "robots": "index, follow",
-        "components": ["custom-cursor", "navbar", "gamification-hud", "toast"],
-    },
-    "contactenos.html": {
-        "title": "Contáctenos | CEEVS",
-        "description": "Ubicación, teléfono y formulario de contacto.",
-        "lang": "es",
-        "robots": "index, follow",
-        "components": ["custom-cursor", "navbar", "gamification-hud", "toast"],
-    },
-    "interactivo.html": {
-        "title": "Actividades Interactivas | CEEVS",
-        "description": "Mini-juegos educativos para todas las edades.",
-        "lang": "es",
-        "robots": "index, follow",
-        "components": ["custom-cursor", "navbar", "gamification-hud", "toast"],
-    },
-    "recuerdos.html": {
-        "title": "Recuerdos | Instituto Evangélico Virginia Sapp · CEEVS",
-        "description": "Álbumes de fotos y recuerdos del Instituto Evangélico Virginia Sapp.",
-        "lang": "es",
-        "robots": "index, follow",
-        "components": ["custom-cursor", "navbar", "gamification-hud", "toast"],
-        "extra_css": "css/pages/recuerdos.css",
-    },
-    "admin.html": {
-        "title": "Administración | CEEVS",
-        "lang": "es",
-        "robots": "noindex, nofollow",
-        "components": ["custom-cursor"],
-        "extra_css": "css/pages/admin.css",
-    },
-}
+PAGES = [
+    'index.html',
+    'quienes-somos.html',
+    'admisiones.html',
+    'contactenos.html',
+    'interactivo.html',
+    'recuerdos.html',
+]
 
-def load_component(component_name):
-    """Carga el contenido de un componente HTML"""
-    path = f"components/{component_name}.html"
-    if os.path.exists(path):
-        with open(path, 'r', encoding='utf-8') as f:
-            return f.read()
-    return f"<!-- ERROR: Componente {component_name} no encontrado -->"
+REQUIRED_SCRIPTS = [
+    'js/config.js',
+    'js/core/app.js',
+    'js/core/dom.js',
+    'js/core/storage.js',
+    'js/gamification.js',
+    'js/main.js',
+]
 
-def generate_head(config):
-    """Genera el <head> de una página"""
-    title = config.get("title", "CEEVS")
-    desc = config.get("description", "Instituto Evangélico Virginia Sapp")
-    lang = config.get("lang", "es")
-    robots = config.get("robots", "index, follow")
+BANNED_PATTERNS = [
+    (r'\bonclick\s*=', 'Inline onclick handler'),
+    (r'\bonmouseover\s*=', 'Inline onmouseover handler'),
+    (r'\bonmouseout\s*=', 'Inline onmouseout handler'),
+    (r'\bonfocus\s*=.*this\.style', 'Inline onfocus style mutation'),
+    (r'\bonblur\s*=.*this\.style', 'Inline onblur style mutation'),
+]
 
-    head = f'''<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="{desc}">
-<meta name="robots" content="{robots}">
-<meta name="theme-color" content="#412404">
+REQUIRED_TAGS = [
+    (r'<meta charset=', 'charset meta'),
+    (r'<meta name="viewport"', 'viewport meta'),
+    (r'<meta name="description"', 'description meta'),
+    (r'App\.init\(\)', 'App.init() call'),
+]
 
-<!-- Open Graph -->
-<meta property="og:title" content="{title}">
-<meta property="og:description" content="{desc}">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="es_HN">
 
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+def check_page(path):
+    with open(path, encoding='utf-8') as f:
+        content = f.read()
 
-<!-- Styles -->
-<link rel="stylesheet" href="css/main.css">'''
+    errors = []
+    warnings = []
 
-    if config.get("extra_css"):
-        head += f'\n<link rel="stylesheet" href="{config["extra_css"]}">'
+    for pattern, label in BANNED_PATTERNS:
+        matches = re.findall(pattern, content)
+        if matches:
+            count = len(matches)
+            errors.append(f'{count}x {label}')
 
-    return head
+    for pattern, label in REQUIRED_TAGS:
+        if not re.search(pattern, content):
+            errors.append(f'Missing: {label}')
 
-def generate_page(filename, config):
-    """Genera una página HTML completa"""
-    title = config.get("title", "CEEVS")
-    components = config.get("components", [])
+    for script in REQUIRED_SCRIPTS:
+        if script not in content:
+            errors.append(f'Missing script: {script}')
 
-    # Construir HTML
-    html = f"""<!DOCTYPE html>
-<html lang="{config.get('lang', 'es')}">
-<head>
-{generate_head(config)}
-<title>{title}</title>
-</head>
-<body>
+    return errors, warnings
 
-"""
 
-    # Agregar componentes
-    for comp in components:
-        html += load_component(comp) + "\n\n"
+def run():
+    print('CEEVS — Validador de páginas')
+    print('=' * 50)
+    total_errors = 0
 
-    # Agregar body content (si existe en página original)
-    # Por ahora, esto es un template base
-    # Las páginas completas se editan manualmente
+    for page in PAGES:
+        if not os.path.exists(page):
+            print(f'\n[SKIP] {page}  (no encontrado)')
+            continue
 
-    html += """</body>
-</html>
-"""
-    return html
+        errors, warnings = check_page(page)
+        status = 'OK' if not errors else 'FAIL'
+        print(f'\n[{status}] {page}')
+        for e in errors:
+            print(f'       ERROR: {e}')
+            total_errors += 1
+        for w in warnings:
+            print(f'    WARNING: {w}')
 
-if __name__ == "__main__":
-    print("🔄 Generador de páginas CEEVS")
-    print("=" * 50)
+    print('\n' + '=' * 50)
+    if total_errors == 0:
+        print('Todas las páginas pasaron la validación.')
+    else:
+        print(f'{total_errors} error(es) encontrado(s). Revisar arriba.')
+    return total_errors
 
-    for filename, config in PAGES_CONFIG.items():
-        print(f"\n✓ Configuración cargada para: {filename}")
-        print(f"  Componentes: {', '.join(config.get('components', []))}")
 
-        # En fase 2, solo mostramos la configuración
-        # Las páginas completas se generarían si tenemos templates
-
-    print("\n" + "=" * 50)
-    print("📝 NOTA: Este script está listo para automatizar")
-    print("   la generación de páginas cuando tengas templates.")
-    print("\n   Para activarlo completamente, necesitas:")
-    print("   1. layouts/ con templates base")
-    print("   2. Bloques de contenido separados")
-    print("   3. Sistema de macros para secciones")
+if __name__ == '__main__':
+    exit_code = run()
+    sys.exit(0 if exit_code == 0 else 1)

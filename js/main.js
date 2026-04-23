@@ -1,93 +1,261 @@
-/**
- * main.js — Shared core functionality
- * Handles: touch detection, custom cursor, parallax, navbar scroll,
- * mobile menu, counter animations, scroll-reveal, FAQ accordion,
- * stagger animations, form submission
- */
+'use strict';
 
-// ── TOUCH DETECTION ──
-const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-const isMobile = window.innerWidth <= 600;
+const Main = {
+  name: 'Main',
 
-// ── CUSTOM CURSOR (desktop only) ──
-const cursor = document.getElementById('cursor');
-const cursorRing = document.getElementById('cursor-ring');
+  init() {
+    this._setupCursor();
+    this._setupParallaxAndNavbar();
+    this._setupMobileMenu();
+    this._setupFAQ();
+    this._setupCounters();
+    this._setupScrollReveal();
+    this._setupStagger();
+    this._setupDropdowns();
+    this._setupValorCards();
+    this._setupContactForm();
+    this._setupXPLinks();
+  },
 
-if (!isTouch && cursor && cursorRing) {
-  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+  _setupCursor() {
+    const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    const cursor = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursor-ring');
 
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    cursor.style.left = mouseX + 'px';
-    cursor.style.top = mouseY + 'px';
-  });
+    if (!isTouch && cursor && cursorRing) {
+      let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
 
-  function animateRing() {
-    ringX += (mouseX - ringX) * 0.12;
-    ringY += (mouseY - ringY) * 0.12;
-    cursorRing.style.left = ringX + 'px';
-    cursorRing.style.top = ringY + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
+      document.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+      });
 
-  document.querySelectorAll('a,button,.valor-card,.nivel-card,.quiz-opt').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
-      cursorRing.style.opacity = '.2';
+      const animateRing = () => {
+        ringX += (mouseX - ringX) * CONFIG.CURSOR_RING_EASING;
+        ringY += (mouseY - ringY) * CONFIG.CURSOR_RING_EASING;
+        cursorRing.style.left = ringX + 'px';
+        cursorRing.style.top = ringY + 'px';
+        requestAnimationFrame(animateRing);
+      };
+      animateRing();
+
+      document.querySelectorAll('a,button,.valor-card,.nivel-card,.quiz-opt').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+          cursorRing.style.opacity = '.2';
+        });
+        el.addEventListener('mouseleave', () => {
+          cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+          cursorRing.style.opacity = '.5';
+        });
+      });
+    } else if (cursor && cursorRing) {
+      cursor.style.display = 'none';
+      cursorRing.style.display = 'none';
+      document.body.style.cursor = 'auto';
+    }
+  },
+
+  _setupParallaxAndNavbar() {
+    const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    const heroBg = document.getElementById('hero-parallax');
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      const navbar = document.getElementById('navbar');
+      if (navbar) navbar.classList.toggle('scrolled', y > CONFIG.NAVBAR_SCROLL_THRESHOLD);
+      if (!isTouch && heroBg && !ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          heroBg.style.transform = `translateY(${y * CONFIG.PARALLAX_SPEED}px)`;
+          ticking = false;
+        });
+      }
     });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.transform = 'translate(-50%,-50%) scale(1)';
-      cursorRing.style.opacity = '.5';
+  },
+
+  _setupMobileMenu() {
+    const toggle = () => {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.getElementById('nav-hamburger');
+      if (!menu || !btn) return;
+      const open = menu.classList.toggle('open');
+      btn.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+
+    const hamburger = document.getElementById('nav-hamburger');
+    if (hamburger) hamburger.addEventListener('click', toggle);
+
+    const mmClose = document.querySelector('.mm-close');
+    if (mmClose) mmClose.addEventListener('click', toggle);
+
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu) {
+      mobileMenu.addEventListener('click', e => {
+        if (e.target === mobileMenu || e.target.tagName === 'A') toggle();
+      });
+    }
+
+    // Store toggle so other code can call it
+    this._toggleMobileMenu = toggle;
+  },
+
+  _setupFAQ() {
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('.faq-q');
+      if (!btn) return;
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
     });
-  });
-} else if (cursor && cursorRing) {
-  cursor.style.display = 'none';
-  cursorRing.style.display = 'none';
-  document.body.style.cursor = 'auto';
-}
+  },
 
-// ── PARALLAX HERO + NAVBAR SCROLL ──
-const heroBg = document.getElementById('hero-parallax');
-let ticking = false;
+  _setupCounters() {
+    const animateCount = el => {
+      const target = parseInt(el.dataset.target);
+      const duration = target > 1000 ? 2000 : 1200;
+      const start = Date.now();
+      const step = () => {
+        const elapsed = Date.now() - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(ease * target).toLocaleString();
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      step();
+    };
 
-window.addEventListener('scroll', () => {
-  const y = window.scrollY;
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { animateCount(e.target); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.5 });
 
-  // Navbar scroll state
-  const navbar = document.getElementById('navbar');
-  if (navbar) navbar.classList.toggle('scrolled', y > 60);
+    document.querySelectorAll('.count').forEach(el => obs.observe(el));
+  },
 
-  // Parallax (desktop only, when hero exists)
-  if (!isTouch && heroBg && !ticking) {
-    ticking = true;
-    requestAnimationFrame(() => {
-      heroBg.style.transform = `translateY(${y * 0.3}px)`;
-      ticking = false;
+  _setupScrollReveal() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), 60);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => obs.observe(el));
+  },
+
+  _setupStagger() {
+    document.querySelectorAll(
+      '.steps-row .step-box,' +
+      '.testimonios-grid .testi-card,' +
+      '.galeria-mosaic .gi,' +
+      '.valores-grid .valor-card,' +
+      '.niveles-cards .nivel-card'
+    ).forEach((el, i) => {
+      el.style.transitionDelay = (i * CONFIG.STAGGER_DELAY_MS) + 'ms';
     });
-  }
-});
+  },
 
-// ── MOBILE MENU ──
-function toggleMobileMenu() {
-  const menu = document.getElementById('mobile-menu');
-  const btn = document.getElementById('nav-hamburger');
-  if (!menu || !btn) return;
-  const open = menu.classList.toggle('open');
-  btn.classList.toggle('open', open);
-  document.body.style.overflow = open ? 'hidden' : '';
-}
+  _setupDropdowns() {
+    document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+      let timeout;
+      dropdown.addEventListener('mouseenter', () => {
+        clearTimeout(timeout);
+        dropdown.classList.add('dropdown-open');
+      });
+      dropdown.addEventListener('mouseleave', () => {
+        timeout = setTimeout(() => dropdown.classList.remove('dropdown-open'), 200);
+      });
+    });
+  },
 
-// Close on backdrop tap
-const mobileMenu = document.getElementById('mobile-menu');
-if (mobileMenu) {
-  mobileMenu.addEventListener('click', function (e) {
-    if (e.target === this) toggleMobileMenu();
-  });
-}
+  _setupValorCards() {
+    let valorCount = 0;
+    document.addEventListener('click', e => {
+      const card = e.target.closest('.valor-card');
+      if (!card) return;
+      const wasActive = card.classList.contains('active');
+      card.classList.toggle('active');
+      if (!wasActive) {
+        valorCount++;
+        const badgeId = card.dataset.badge;
+        if (valorCount === 1) addXP(5, '✦', '¡Explorando valores!', 'Conociste el primer valor +5 XP');
+        if (valorCount === 5) { addXP(10, '🌟', '¡Medio camino!', 'Exploraste 5 valores +10 XP'); unlockBadge('knower'); }
+        if (valorCount === 10) { addXP(15, '💎', '¡Conoces todos los valores!', '¡Explorador completo! +15 XP'); }
+        if (badgeId) unlockBadge(badgeId);
+      }
+    });
+  },
 
-// ── FAQ ACCORDION ──
+  _setupContactForm() {
+    const btn = document.getElementById('f-submit-btn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const textEl = btn.querySelector('.f-submit-text');
+      const spinnerEl = btn.querySelector('.f-submit-spinner');
+      btn.disabled = true;
+      if (textEl) textEl.style.display = 'none';
+      if (spinnerEl) spinnerEl.style.display = 'inline-flex';
+      addXP(25, '🏫', '¡Bienvenido/a a la familia CEEVS!', 'Solicitud enviada · +25 XP');
+      unlockBadge('contact');
+      setTimeout(() => {
+        if (spinnerEl) spinnerEl.style.display = 'none';
+        if (textEl) { textEl.textContent = '✓ ¡Solicitud enviada!'; textEl.style.display = ''; }
+        btn.style.background = '#22c55e';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+          if (textEl) textEl.textContent = 'Enviar solicitud →';
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.disabled = false;
+        }, 3500);
+      }, 1500);
+    });
+  },
+
+  _setupXPLinks() {
+    // Hero CTA XP action
+    const heroCta = document.querySelector('.hero-ctas .btn-cta-main[data-xp-action]');
+    if (heroCta) {
+      heroCta.addEventListener('click', () => {
+        const pts = +heroCta.dataset.xpPts || 15;
+        const icon = heroCta.dataset.xpIcon || '🎓';
+        const title = heroCta.dataset.xpTitle || '¡Explorando admisiones!';
+        const desc = heroCta.dataset.xpDesc || '+' + pts + ' XP';
+        addXP(pts, icon, title, desc);
+      });
+    }
+
+    // Gallery badge FB link
+    document.addEventListener('click', e => {
+      const el = e.target.closest('[data-xp-pts]');
+      if (!el) return;
+      const pts = +el.dataset.xpPts;
+      const icon = el.dataset.xpIcon || '✦';
+      const title = el.dataset.xpTitle || '¡Nuevo logro!';
+      const desc = el.dataset.xpDesc || '+' + pts + ' XP';
+      if (pts) addXP(pts, icon, title, desc);
+    });
+  },
+};
+
+// Backward-compatible global stub
+function toggleMobileMenu() { Main._toggleMobileMenu && Main._toggleMobileMenu(); }
+function submitForm() { document.getElementById('f-submit-btn')?.click(); }
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
   const isOpen = item.classList.contains('open');
@@ -95,107 +263,7 @@ function toggleFaq(btn) {
     el.classList.remove('open');
     el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
   });
-  if (!isOpen) {
-    item.classList.add('open');
-    btn.setAttribute('aria-expanded', 'true');
-  }
+  if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
 }
 
-// ── COUNTER ANIMATION ──
-function animateCount(el) {
-  const target = parseInt(el.dataset.target);
-  const duration = target > 1000 ? 2000 : 1200;
-  const start = Date.now();
-  const step = () => {
-    const elapsed = Date.now() - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const ease = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.round(ease * target).toLocaleString();
-    if (progress < 1) requestAnimationFrame(step);
-  };
-  step();
-}
-
-const counterObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      animateCount(e.target);
-      counterObs.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.5 });
-
-document.querySelectorAll('.count').forEach(el => counterObs.observe(el));
-
-// ── SCROLL REVEAL ──
-const revealObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('visible'), 60);
-      revealObs.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => revealObs.observe(el));
-
-// ── STAGGER CHILDREN ──
-document.querySelectorAll(
-  '.steps-row .step-box,' +
-  '.testimonios-grid .testi-card,' +
-  '.galeria-mosaic .gi,' +
-  '.valores-grid .valor-card,' +
-  '.niveles-cards .nivel-card'
-).forEach((el, i) => {
-  el.style.transitionDelay = (i * 80) + 'ms';
-});
-
-// ── VALORES SELECTION ──
-let valorCount = 0;
-function selectValor(card, badgeId) {
-  const wasActive = card.classList.contains('active');
-  card.classList.toggle('active');
-  if (!wasActive && typeof addXP === 'function') {
-    valorCount++;
-    if (valorCount === 1) addXP(5, '✦', '¡Explorando valores!', 'Conociste el primer valor +5 XP');
-    if (valorCount === 5) { addXP(10, '🌟', '¡Medio camino!', 'Exploraste 5 valores +10 XP'); unlockBadge('knower'); }
-    if (valorCount === 10) { addXP(15, '💎', '¡Conoces todos los valores!', '¡Explorador completo! +15 XP'); }
-  }
-}
-
-// ── FORM SUBMIT ──
-function submitForm(btn) {
-  const textEl = btn.querySelector('.f-submit-text');
-  const spinnerEl = btn.querySelector('.f-submit-spinner');
-  btn.disabled = true;
-  if (textEl) textEl.style.display = 'none';
-  if (spinnerEl) spinnerEl.style.display = 'inline-flex';
-  if (typeof addXP === 'function') {
-    addXP(25, '🏫', '¡Bienvenido/a a la familia CEEVS!', 'Solicitud enviada · +25 XP');
-    unlockBadge('contact');
-  }
-  setTimeout(() => {
-    if (spinnerEl) spinnerEl.style.display = 'none';
-    if (textEl) { textEl.textContent = '✓ ¡Solicitud enviada!'; textEl.style.display = ''; }
-    btn.style.background = '#22c55e';
-    btn.style.color = '#fff';
-    setTimeout(() => {
-      if (textEl) textEl.textContent = 'Enviar solicitud →';
-      btn.style.background = '';
-      btn.style.color = '';
-      btn.disabled = false;
-    }, 3500);
-  }, 1500);
-}
-
-// ── DROPDOWN NAV (desktop) ──
-document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
-  let timeout;
-  dropdown.addEventListener('mouseenter', () => {
-    clearTimeout(timeout);
-    dropdown.classList.add('dropdown-open');
-  });
-  dropdown.addEventListener('mouseleave', () => {
-    timeout = setTimeout(() => dropdown.classList.remove('dropdown-open'), 200);
-  });
-});
+App.register(Main);
