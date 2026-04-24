@@ -19,6 +19,7 @@ PAGES = [
     'contactenos.html',
     'interactivo.html',
     'recuerdos.html',
+    'inventario.html',
 ]
 
 REQUIRED_SCRIPTS = [

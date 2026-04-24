@@ -32,6 +32,8 @@
 
 <!-- ─── DASHBOARD ─── -->
 <div id="admin-dashboard">
+
+  <!-- Topbar -->
   <div class="admin-topbar">
     <div class="admin-topbar-left">
       <span>CEEVS Admin</span>
@@ -43,36 +45,211 @@
     </div>
   </div>
 
-  <div class="admin-main">
-    <div class="admin-header">
-      <h2>Gestión de Imágenes</h2>
-      <p>Personaliza las imágenes del sitio web pegando la URL (hipervínculo) de cada imagen. Los cambios se aplican instantáneamente en todas las páginas. Para obtener la URL de una imagen, haz clic derecho sobre ella y selecciona "Copiar dirección de imagen".</p>
-    </div>
-
-    <div class="admin-stats-bar">
-      <span id="admin-stats">Cargando...</span>
-      <button class="admin-btn-danger" id="btn-reset-all">Restaurar todas las originales</button>
-    </div>
-
-    <div id="images-grid"></div>
-
-    <div class="admin-help">
-      <h3>¿Cómo actualizar una imagen?</h3>
-      <ol>
-        <li>Sube tu foto a un servicio como <strong>Facebook</strong>, <strong>Google Drive</strong> (con enlace público), <strong>Imgur</strong>, o el servidor del colegio.</li>
-        <li>Copia la <strong>URL directa</strong> de la imagen (debe terminar en <code>.jpg</code>, <code>.png</code>, <code>.webp</code> o similar).</li>
-        <li>Pega la URL en el campo correspondiente y haz clic en <strong>"Guardar"</strong>.</li>
-        <li>Abre el sitio en otra pestaña para verificar que la imagen se ve correctamente.</li>
-      </ol>
-      <p style="margin-top:12px"><strong>Nota:</strong> Las imágenes se guardan en el navegador local. Para que los cambios sean visibles en otros dispositivos, cada navegador debe configurar sus propias imágenes, o las imágenes deben estar alojadas en un servidor y las URLs actualizadas directamente en el código HTML.</p>
+  <!-- Tab Navigation -->
+  <div class="admin-tabs-bar">
+    <div class="admin-tabs-container">
+      <button class="admin-tab-btn active" data-tab="imagenes">
+        <span class="admin-tab-icon">🖼️</span> Imágenes
+      </button>
+      <button class="admin-tab-btn" data-tab="paleta">
+        <span class="admin-tab-icon">🎨</span> Paleta
+      </button>
+      <button class="admin-tab-btn" data-tab="video">
+        <span class="admin-tab-icon">🎬</span> Video Hero
+      </button>
+      <button class="admin-tab-btn" data-tab="inventario">
+        <span class="admin-tab-icon">📦</span> Inventario
+      </button>
     </div>
   </div>
-</div>
+
+  <!-- ─── PANEL: Imágenes ─── -->
+  <div class="admin-tab-panel active" id="panel-imagenes">
+    <div class="admin-main">
+      <div class="admin-header">
+        <h2>Gestión de Imágenes</h2>
+        <p>Personaliza las imágenes del sitio pegando la URL directa de cada imagen. Los cambios se aplican instantáneamente.</p>
+      </div>
+      <div class="admin-stats-bar">
+        <span id="admin-stats">Cargando...</span>
+        <button class="admin-btn-danger" id="btn-reset-all">Restaurar todas las originales</button>
+      </div>
+      <div id="images-grid"></div>
+      <div class="admin-help">
+        <h3>¿Cómo actualizar una imagen?</h3>
+        <ol>
+          <li>Sube tu foto a <strong>Facebook</strong>, <strong>Google Drive</strong> (enlace público), <strong>Imgur</strong>, o el servidor del colegio.</li>
+          <li>Copia la <strong>URL directa</strong> de la imagen (debe terminar en <code>.jpg</code>, <code>.png</code>, <code>.webp</code>).</li>
+          <li>Pega la URL en el campo y haz clic en <strong>"Guardar"</strong>.</li>
+          <li>Abre el sitio en otra pestaña para verificar que se ve correctamente.</li>
+        </ol>
+        <p><strong>Nota:</strong> Las imágenes se guardan en el navegador local. Cada navegador/dispositivo es independiente.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PANEL: Paleta ─── -->
+  <div class="admin-tab-panel" id="panel-paleta">
+    <div class="admin-main">
+      <div class="admin-header">
+        <h2>Paleta de Colores</h2>
+        <p>Selecciona el esquema de colores institucional. El cambio se aplica en todas las páginas del sitio.</p>
+      </div>
+
+      <div class="palette-grid" id="palette-grid">
+        <!-- Renderizado por admin.js -->
+      </div>
+
+      <div class="palette-footer">
+        <button class="admin-btn-danger" id="btn-reset-theme">Restaurar paleta original (Clásico)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PANEL: Video Hero ─── -->
+  <div class="admin-tab-panel" id="panel-video">
+    <div class="admin-main">
+      <div class="admin-header">
+        <h2>Video Principal (Hero)</h2>
+        <p>Configura el video que aparece en el fondo del hero de inicio. Soporta MP4, WebM y otros formatos web.</p>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Configuración del Video</h3>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-input-label" for="video-url-input">URL del Video</label>
+          <input type="url" id="video-url-input" class="admin-input" placeholder="https://ejemplo.com/video.mp4">
+          <small class="admin-input-hint">Soporta MP4, WebM. Máx. recomendado: 5MB para carga rápida.</small>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-checkbox-label">
+            <input type="checkbox" id="video-enabled-check" class="admin-checkbox">
+            <span>Activar video en el sitio</span>
+          </label>
+          <small class="admin-input-hint">Si desactivas, el sitio mostrará la imagen de fondo original.</small>
+        </div>
+
+        <div class="admin-form-actions">
+          <button class="admin-btn-save" id="btn-save-video">💾 Guardar Configuración</button>
+          <button class="admin-btn-secondary" id="btn-reset-video">↺ Limpiar</button>
+        </div>
+
+        <div class="video-preview-section">
+          <h3>Estado actual</h3>
+          <div class="video-preview-box" id="video-status-box">
+            <p>Cargando configuración...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PANEL: Inventario ─── -->
+  <div class="admin-tab-panel" id="panel-inventario">
+    <div class="admin-main">
+      <div class="admin-header">
+        <h2>Gestión de Inventario</h2>
+        <p>Crea, edita y gestiona los productos del catálogo público visible en <a href="inventario.html" target="_blank">inventario.html</a>.</p>
+      </div>
+
+      <!-- Formulario -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 id="inv-form-title">Agregar Nuevo Producto</h3>
+        </div>
+
+        <form id="inv-form" class="admin-inventory-form">
+          <input type="hidden" id="inv-product-id" value="">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="admin-input-label" for="inv-nombre">Nombre del Producto *</label>
+              <input type="text" id="inv-nombre" class="admin-input" placeholder="Ej: Sudadera CEEVS" required>
+            </div>
+            <div class="form-group">
+              <label class="admin-input-label" for="inv-categoria">Categoría *</label>
+              <select id="inv-categoria" class="admin-select" required>
+                <option value="">Selecciona una categoría</option>
+                <option value="Uniformes">Uniformes</option>
+                <option value="Útiles">Útiles</option>
+                <option value="Souvenirs">Souvenirs</option>
+                <option value="Libros">Libros</option>
+                <option value="Otros">Otros</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group full">
+              <label class="admin-input-label" for="inv-descripcion">Descripción</label>
+              <textarea id="inv-descripcion" class="admin-textarea" placeholder="Descripción breve del producto" rows="2"></textarea>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="admin-input-label" for="inv-imagen">URL de Imagen</label>
+              <input type="url" id="inv-imagen" class="admin-input" placeholder="https://ejemplo.com/imagen.jpg">
+            </div>
+            <div class="form-group">
+              <label class="admin-input-label" for="inv-disponibilidad">Disponibilidad *</label>
+              <select id="inv-disponibilidad" class="admin-select" required>
+                <option value="disponible">Disponible</option>
+                <option value="agotado">Agotado</option>
+                <option value="proximamente">Próximamente</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="admin-input-label" for="inv-talla">Talla/Tamaño (opcional)</label>
+              <input type="text" id="inv-talla" class="admin-input" placeholder="Ej: S, M, L, XL">
+            </div>
+            <div class="form-group">
+              <label class="admin-input-label" for="inv-color">Color (opcional)</label>
+              <input type="text" id="inv-color" class="admin-input" placeholder="Ej: Verde bosque">
+            </div>
+            <div class="form-group">
+              <label class="admin-input-label" for="inv-precio">Precio (opcional)</label>
+              <input type="text" id="inv-precio" class="admin-input" placeholder="Ej: L. 350">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="admin-btn-save">💾 Guardar Producto</button>
+            <button type="button" class="admin-btn-secondary" id="btn-inv-reset-form">↺ Limpiar</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Lista de Productos -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Productos Registrados</h3>
+          <span class="product-count" id="inv-count">0 productos</span>
+        </div>
+        <div class="inventory-list" id="inv-list">
+          <p class="empty-state">No hay productos. Crea uno con el formulario.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /#admin-dashboard -->
 
 <!-- Toast de confirmación -->
 <div id="admin-toast"></div>
 
 <!-- Scripts -->
+<script src="js/themes.js"></script>
+<script src="js/video-loader.js"></script>
+<script src="js/inventory.js"></script>
 <script src="js/image-manager.js"></script>
 <script src="js/admin.js"></script>
 </body>

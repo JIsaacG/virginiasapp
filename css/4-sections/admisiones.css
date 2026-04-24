@@ -1,5 +1,7 @@
 /* ═══════════════════════════════════════
    TESTIMONIOS
+   NOTE: This file is misnamed. It contains .testimonios* styles, not admissions-specific styles.
+   This file should be named "testimonios.css". Do not rename without updating main.css imports.
 ═══════════════════════════════════════ */
 .testimonios { background:var(--cream2); padding:110px 8vw; }
 

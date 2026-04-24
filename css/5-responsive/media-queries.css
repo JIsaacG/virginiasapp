@@ -1,5 +1,12 @@
 /* ═══════════════════════════════════════
-   DECLARACIÓN DE FE
+   DECLARACIÓN DE FE + SECTION STYLES
+
+   NOTE: This file has mixed content. Lines 1–79 contain full section component styles
+   (declaracion-fe, perfil-egresado, portal-educativo, devocional, exalumnos, empleos).
+   Lines 80+ contain media queries for responsive behavior of those sections.
+
+   Ideally, each section's styles should live in its own file under 4-sections/ with
+   internal @media rules. This file is temporary during the modular CSS transition.
 ═══════════════════════════════════════ */
 .declaracion-fe { background:var(--forest); padding:110px 8vw; position:relative; overflow:hidden; }
 .declaracion-fe::before { content:'✝'; position:absolute; right:5vw; top:50%; transform:translateY(-50%); font-size:clamp(200px,22vw,400px); color:rgba(171,100,35,.04); pointer-events:none; user-select:none; line-height:1; }

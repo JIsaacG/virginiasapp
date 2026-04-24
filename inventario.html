@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario Institucional | Instituto Evangélico Virginia Sapp · CEEVS</title>
+  <meta name="description" content="Catálogo oficial de uniformes, útiles, souvenirs y materiales del Instituto Evangélico Virginia Sapp — CEEVS, Tegucigalpa, Honduras.">
+  <meta name="theme-color" content="#412404">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Inventario Institucional | CEEVS">
+  <meta property="og:description" content="Uniformes, útiles, souvenirs y materiales oficiales del Instituto Evangélico Virginia Sapp.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_HN">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/pages/inventario.css">
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Game HUD -->
+<div id="game-hud">
+  <div class="hud-header">
+    <span class="hud-title">✦ Mi perfil CEEVS</span>
+    <button id="hud-toggle">−</button>
+  </div>
+  <div id="hud-main-content">
+    <div class="hud-xp-bar-wrap">
+      <div class="hud-xp-label">
+        <span id="hud-pts-label">0 puntos explorador</span>
+        <span id="hud-pts-max">100 pts</span>
+      </div>
+      <div class="hud-xp-track"><div class="hud-xp-fill" id="hud-fill" style="width:0%"></div></div>
+    </div>
+    <div class="hud-row">
+      <div>
+        <div class="hud-score" id="hud-score">0</div>
+        <div class="hud-score-label">XP ganados</div>
+      </div>
+      <div class="hud-badges" id="hud-badges">
+        <div class="hud-badge" title="Explorador" data-id="explorer">🗺️</div>
+        <div class="hud-badge" title="Conocedor" data-id="knower">📖</div>
+        <div class="hud-badge" title="Interesado" data-id="quiz">🎯</div>
+        <div class="hud-badge" title="Familia CEEVS" data-id="contact">🏫</div>
+        <div class="hud-badge" title="Fan de historia" data-id="history">⏳</div>
+        <div class="hud-badge" title="Sabio Cristiano" data-id="trivia">🧠</div>
+        <div class="hud-badge" title="Explorador de Palabras" data-id="sopaletras">📝</div>
+        <div class="hud-badge" title="Memorista" data-id="memoria">🃏</div>
+      </div>
+    </div>
+  </div>
+  <div id="hud-min-content">
+    <div class="hud-score" id="hud-score-min">0 XP</div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast">
+  <div class="toast-inner">
+    <span class="toast-icon" id="toast-icon">🏆</span>
+    <div class="toast-text">
+      <strong id="toast-title">¡Logro desbloqueado!</strong>
+      <span id="toast-desc">+10 puntos</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-img">
+      <div class="nav-logo-icon">
+        <img src="assets/logo.png" alt="CEEVS Logo" onerror="this.style.display='none'">
+      </div>
+    </div>
+    <div class="nav-wordmark">
+      <b>Instituto Evangélico Virginia Sapp</b>
+      <small>Centro Educativo CEEVS · Tegucigalpa</small>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li class="nav-dropdown">
+      <a href="quienes-somos.html" class="">Quiénes Somos ▾</a>
+      <div class="dropdown-menu">
+        <a href="quienes-somos.html#historia">Reseña Histórica</a>
+        <a href="quienes-somos.html#filosofia">Filosofía Educativa</a>
+        <a href="quienes-somos.html#declaracion-fe">Declaración de Fe</a>
+        <a href="quienes-somos.html#mision-vision">Misión y Visión</a>
+        <a href="quienes-somos.html#valores">Valores</a>
+        <a href="quienes-somos.html#perfil-egresado">Perfil del Egresado</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <a href="admisiones.html" class="">Admisiones ▾</a>
+      <div class="dropdown-menu">
+        <a href="admisiones.html#niveles">Niveles Educativos</a>
+        <a href="admisiones.html#quiz-section">Quiz de Admisión</a>
+        <a href="admisiones.html#admisiones">Proceso de Admisión</a>
+        <a href="admisiones.html#portal-educativo">Portal Educativo</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <a href="contactenos.html" class="">Contáctenos ▾</a>
+      <div class="dropdown-menu">
+        <a href="contactenos.html#contacto">Ubicación y Contacto</a>
+        <a href="contactenos.html#exalumnos">Exalumnos</a>
+        <a href="contactenos.html#empleos">Empleos</a>
+      </div>
+    </li>
+    <li><a href="index.html#galeria">Galería</a></li>
+    <li><a href="interactivo.html">Actividades</a></li>
+    <li><a href="inventario.html" class="nav-active">Inventario</a></li>
+  </ul>
+
+  <div class="nav-cta">
+    <a href="admisiones.html#portal-educativo" class="btn-nav-ghost">🖥 Portal</a>
+    <a href="admisiones.html#admisiones" class="btn-nav-solid">Solicitar admisión</a>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu drawer -->
+<div id="mobile-menu">
+  <div class="mm-inner">
+    <div class="mm-header">
+      <div class="mm-logo">Virginia <span>Sapp</span></div>
+      <button class="mm-close">✕</button>
+    </div>
+    <nav class="mm-links">
+      <a href="index.html"><span class="mm-num">01</span>Inicio</a>
+      <a href="quienes-somos.html#historia"><span class="mm-num">02</span>Historia</a>
+      <a href="quienes-somos.html#filosofia"><span class="mm-num">03</span>Filosofía</a>
+      <a href="quienes-somos.html#valores"><span class="mm-num">04</span>Valores</a>
+      <a href="admisiones.html#niveles"><span class="mm-num">05</span>Niveles educativos</a>
+      <a href="admisiones.html#quiz-section"><span class="mm-num">06</span>Quiz interactivo 🎯</a>
+      <a href="admisiones.html#admisiones"><span class="mm-num">07</span>Admisiones</a>
+      <a href="index.html#galeria"><span class="mm-num">08</span>Galería</a>
+      <a href="contactenos.html#contacto"><span class="mm-num">09</span>Contacto</a>
+      <a href="interactivo.html"><span class="mm-num">10</span>Actividades 🎮</a>
+      <a href="inventario.html"><span class="mm-num">11</span>Inventario 🛍️</a>
+    </nav>
+    <div class="mm-actions">
+      <a href="admisiones.html#portal-educativo" class="mm-btn-ghost">🖥 Portal educativo</a>
+      <a href="admisiones.html#admisiones" class="mm-btn-solid">Solicitar admisión 2026–2027 →</a>
+    </div>
+    <div class="mm-footer">✦ Instituto Evangélico Virginia Sapp · Fundado 1962 · Tegucigalpa, Honduras</div>
+  </div>
+</div>
+
+<!-- ─── PAGE HERO ─── -->
+<section class="inv-page-hero">
+  <div class="inv-page-hero-inner">
+    <div class="inv-page-hero-eyebrow">
+      <div class="eyebrow-dot"></div>
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Tienda Institucional CEEVS</span>
+    </div>
+    <h1 class="inv-page-hero-title">Inventario<br><span>Institucional</span></h1>
+    <p class="inv-page-hero-desc">Uniformes oficiales, útiles escolares, souvenirs y materiales del Instituto Evangélico Virginia Sapp. Consulta disponibilidad y precios.</p>
+  </div>
+  <div class="inv-page-hero-bg"></div>
+</section>
+
+<!-- ─── FILTROS ─── -->
+<section class="inv-filters-section">
+  <div class="inv-filters-wrap">
+    <p class="inv-filters-label">Filtrar por categoría:</p>
+    <div class="inv-filters" id="inv-filters">
+      <button class="inv-filter-btn active" data-category="todos">Todos</button>
+      <button class="inv-filter-btn" data-category="Uniformes">Uniformes</button>
+      <button class="inv-filter-btn" data-category="Útiles">Útiles</button>
+      <button class="inv-filter-btn" data-category="Souvenirs">Souvenirs</button>
+      <button class="inv-filter-btn" data-category="Libros">Libros</button>
+      <button class="inv-filter-btn" data-category="Otros">Otros</button>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GRID DE PRODUCTOS ─── -->
+<section class="inv-catalog-section">
+  <div class="inv-grid" id="inv-grid">
+    <!-- Renderizado por inventory.js -->
+  </div>
+</section>
+
+<!-- ─── CTA CONTACTO ─── -->
+<section class="inv-cta-section">
+  <div class="inv-cta-inner">
+    <h2 class="inv-cta-title">¿Tienes alguna pregunta?</h2>
+    <p class="inv-cta-desc">Para consultas sobre disponibilidad, tallas o pedidos especiales, contáctanos directamente.</p>
+    <a href="contactenos.html#contacto" class="btn-cta-main">Contáctenos →</a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-grid">
+    <div class="f-col f-brand">
+      <div class="f-logo-wrap">
+        <img src="assets/logo.png" alt="CEEVS" class="f-logo-img" onerror="this.style.display='none'">
+        <div>
+          <strong>Instituto Evangélico</strong><br>
+          <span>Virginia Sapp</span>
+        </div>
+      </div>
+      <p class="f-tagline">Formando líderes con fe, excelencia y valores cristianos desde 1962.</p>
+      <div class="f-soc">
+        <a href="#" class="soc-btn">f</a>
+        <a href="#" class="soc-btn">ig</a>
+        <a href="#" class="soc-btn">yt</a>
+      </div>
+    </div>
+    <div class="f-col">
+      <h4>Institución</h4>
+      <ul>
+        <li><a href="quienes-somos.html#historia">Nuestra historia</a></li>
+        <li><a href="quienes-somos.html#filosofia">Filosofía educativa</a></li>
+        <li><a href="quienes-somos.html#declaracion-fe">Declaración de Fe</a></li>
+        <li><a href="quienes-somos.html#valores">Valores</a></li>
+        <li><a href="quienes-somos.html#perfil-egresado">Perfil del egresado</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h4>Admisiones</h4>
+      <ul>
+        <li><a href="admisiones.html#niveles">Preescolar</a></li>
+        <li><a href="admisiones.html#niveles">Primaria Bilingüe</a></li>
+        <li><a href="admisiones.html#niveles">Secundaria Español</a></li>
+        <li><a href="admisiones.html#niveles">Secundaria Bilingüe</a></li>
+        <li><a href="https://virginiasapp.edubox.app/">Matrícula en línea</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h4>Comunidad</h4>
+      <ul>
+        <li><a href="contactenos.html#exalumnos">Exalumnos</a></li>
+        <li><a href="contactenos.html#empleos">Empleos</a></li>
+        <li><a href="https://portal.edubox.app/login/virginiasapp">Plataforma estudiantil</a></li>
+        <li><a href="inventario.html">Inventario</a></li>
+        <li><a href="contactenos.html#contacto">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="f-copy">© 2026 Instituto Evangélico Virginia Sapp — CEEVS. Todos los derechos reservados.</p>
+    <div class="f-adieeds">Miembro certificado de <span>ADIEEDS</span></div>
+  </div>
+  <div style="text-align:center;padding:18px 0 10px;border-top:1px solid rgba(171,100,35,.12)">
+    <a href="admin.html" class="admin-footer-link">⚙ Administrador</a>
+  </div>
+</footer>
+
+<!-- WhatsApp FAB -->
+<a id="wa-fab" href="https://wa.me/50422000000" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  <span class="wa-tooltip">¿Necesitas información? 💬</span>
+</a>
+
+  <script src="js/config.js"></script>
+  <script src="js/core/app.js"></script>
+  <script src="js/core/dom.js"></script>
+  <script src="js/core/storage.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/inventory.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/image-manager.js"></script>
+  <script>App.init();</script>
+</body>
+</html>

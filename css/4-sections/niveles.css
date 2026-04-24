@@ -1,5 +1,8 @@
 /* ═══════════════════════════════════════
    MISIÓN / VISIÓN — SPLIT
+   NOTE: This file is misnamed. It contains .mision-* styles, not .nivel-* styles.
+   The actual "Niveles" (grade levels) styles live in css/2-components/cards.css
+   under .nivel-card. Do not rename this file without updating all references.
 ═══════════════════════════════════════ */
 .mision-split { display:grid; grid-template-columns:1fr 1fr; min-height:60vh; }
 .mision-half { padding:80px 6vw; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden; }

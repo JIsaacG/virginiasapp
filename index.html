@@ -122,6 +122,7 @@
     </li>
     <li><a href="index.html#galeria">Galería</a></li>
     <li><a href="interactivo.html">Actividades</a></li>
+    <li><a href="inventario.html">Inventario</a></li>
   </ul>
 
   <div class="nav-cta">
@@ -151,6 +152,7 @@
       <a href="index.html#galeria"><span class="mm-num">08</span>Galería</a>
       <a href="contactenos.html#contacto"><span class="mm-num">09</span>Contacto</a>
       <a href="interactivo.html"><span class="mm-num">10</span>Actividades 🎮</a>
+      <a href="inventario.html"><span class="mm-num">11</span>Inventario 🛍️</a>
     </nav>
     <div class="mm-actions">
       <a href="admisiones.html#portal-educativo" class="mm-btn-ghost">🖥 Portal educativo</a>
@@ -162,7 +164,13 @@
 
 <!-- ─── HERO ─── -->
 <section class="hero">
-  <div class="hero-parallax-bg" id="hero-parallax"></div>
+  <div class="hero-media-layer">
+    <div class="hero-parallax-bg" id="hero-parallax"></div>
+    <video class="hero-video" id="hero-video" autoplay muted loop playsinline
+           poster="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1600&q=75&auto=format">
+    </video>
+    <button class="hero-video-toggle" id="hero-video-toggle" aria-label="Pausar video">⏸</button>
+  </div>
   <div class="hero-overlay"></div>
   <div class="hero-grain"></div>
 
@@ -767,6 +775,8 @@
   <script src="js/gamification.js"></script>
   <script src="js/main.js"></script>
   <script src="js/gallery.js"></script>
+  <script src="js/video-loader.js"></script>
+  <script src="js/themes.js"></script>
   <script src="js/image-manager.js"></script>
   <script>App.init();</script>
 </body>
