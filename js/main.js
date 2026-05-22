@@ -7,13 +7,14 @@ const Main = {
     this._setupCursor();
     this._setupParallaxAndNavbar();
     this._setupMobileMenu();
+    this._setupNavActive();
+    this._setupLogoFallback();
     this._setupFAQ();
     this._setupCounters();
     this._setupScrollReveal();
     this._setupStagger();
     this._setupDropdowns();
     this._setupValorCards();
-    this._setupContactForm();
     this._setupXPLinks();
   },
 
@@ -78,30 +79,58 @@ const Main = {
   },
 
   _setupMobileMenu() {
-    const toggle = () => {
-      const menu = document.getElementById('mobile-menu');
-      const btn = document.getElementById('nav-hamburger');
-      if (!menu || !btn) return;
-      const open = menu.classList.toggle('open');
-      btn.classList.toggle('open', open);
+    const menu = document.getElementById('mobile-menu');
+    const hamburger = document.getElementById('nav-hamburger');
+    if (!menu || !hamburger) return;
+
+    const setOpen = (open) => {
+      menu.classList.toggle('open', open);
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', String(open));
+      menu.setAttribute('aria-hidden', String(!open));
       document.body.style.overflow = open ? 'hidden' : '';
     };
 
-    const hamburger = document.getElementById('nav-hamburger');
-    if (hamburger) hamburger.addEventListener('click', toggle);
+    hamburger.addEventListener('click', () => {
+      setOpen(!menu.classList.contains('open'));
+    });
 
-    const mmClose = document.querySelector('.mm-close');
-    if (mmClose) mmClose.addEventListener('click', toggle);
+    const closeBtn = document.querySelector('.mm-close');
+    if (closeBtn) closeBtn.addEventListener('click', () => setOpen(false));
 
-    const mobileMenu = document.getElementById('mobile-menu');
-    if (mobileMenu) {
-      mobileMenu.addEventListener('click', e => {
-        if (e.target === mobileMenu || e.target.tagName === 'A') toggle();
-      });
-    }
+    menu.addEventListener('click', (e) => {
+      if (e.target === menu || e.target.closest('a')) setOpen(false);
+    });
 
-    // Store toggle so other code can call it
-    this._toggleMobileMenu = toggle;
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+
+    this._toggleMobileMenu = () => setOpen(!menu.classList.contains('open'));
+  },
+
+  _setupNavActive() {
+    const path = window.location.pathname.split('/').pop() || 'index.html';
+    const MAP = {
+      'quienes-somos.html': 'quienes-somos',
+      'admisiones.html': 'admisiones',
+      'contactenos.html': 'contactenos',
+      'interactivo.html': 'actividades',
+      'mision-evangelistica.html': 'mision-evangelistica',
+    };
+    const activeId = MAP[path];
+    if (!activeId) return;
+    document.querySelectorAll('[data-nav-id="' + activeId + '"]').forEach(el => {
+      el.classList.add('nav-active');
+    });
+  },
+
+  _setupLogoFallback() {
+    const img = document.getElementById('nav-logo-img');
+    if (!img) return;
+    img.addEventListener('error', () => {
+      img.src = 'assets/logo.jpg';
+    }, { once: true });
   },
 
   _setupFAQ() {
@@ -201,32 +230,6 @@ const Main = {
     });
   },
 
-  _setupContactForm() {
-    const btn = document.getElementById('f-submit-btn');
-    if (!btn) return;
-    btn.addEventListener('click', () => {
-      const textEl = btn.querySelector('.f-submit-text');
-      const spinnerEl = btn.querySelector('.f-submit-spinner');
-      btn.disabled = true;
-      if (textEl) textEl.style.display = 'none';
-      if (spinnerEl) spinnerEl.style.display = 'inline-flex';
-      addXP(25, '🏫', '¡Bienvenido/a a la familia CEEVS!', 'Solicitud enviada · +25 XP');
-      unlockBadge('contact');
-      setTimeout(() => {
-        if (spinnerEl) spinnerEl.style.display = 'none';
-        if (textEl) { textEl.textContent = '✓ ¡Solicitud enviada!'; textEl.style.display = ''; }
-        btn.style.background = '#22c55e';
-        btn.style.color = '#fff';
-        setTimeout(() => {
-          if (textEl) textEl.textContent = 'Enviar solicitud →';
-          btn.style.background = '';
-          btn.style.color = '';
-          btn.disabled = false;
-        }, 3500);
-      }, 1500);
-    });
-  },
-
   _setupXPLinks() {
     // Hero CTA XP action
     const heroCta = document.querySelector('.hero-ctas .btn-cta-main[data-xp-action]');
@@ -255,7 +258,6 @@ const Main = {
 
 // Backward-compatible global stub
 function toggleMobileMenu() { Main._toggleMobileMenu && Main._toggleMobileMenu(); }
-function submitForm() { document.getElementById('f-submit-btn')?.click(); }
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
   const isOpen = item.classList.contains('open');

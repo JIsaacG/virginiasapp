@@ -55,16 +55,6 @@
 }
 .btn-recuerdos:hover { background: #5a3508; }
 
-/* Quiz lead button */
-.btn-quiz-lead {
-  width: 100%; padding: 13px;
-  background: var(--gold); color: #fff;
-  border: none; border-radius: 8px;
-  font-size: 15px; font-weight: 600; cursor: pointer;
-  font-family: 'Outfit', sans-serif; transition: background .2s;
-}
-.btn-quiz-lead:hover { background: #c77a2a; }
-
 /* FB Config panel close/apply buttons */
 .fb-config-close {
   background: none; border: none; color: rgba(255,255,255,.4);
@@ -108,13 +98,3 @@
   font-size: 14px; transition: all .2s;
 }
 .btn-quiz-restart:hover { border-color: rgba(255,255,255,.5); }
-
-/* Quiz lead form inputs */
-.quiz-lead-input {
-  padding: 11px 14px;
-  border: 1.5px solid rgba(255,255,255,.15); border-radius: 8px;
-  background: rgba(255,255,255,.07); color: #fff;
-  font-family: 'Outfit', sans-serif; font-size: 14px;
-  transition: border-color .2s; outline: none;
-}
-.quiz-lead-input:focus { border-color: rgba(171,100,35,.7); }

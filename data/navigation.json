@@ -1,0 +1,120 @@
+{
+  "main": [
+    {
+      "id": "quienes-somos",
+      "label": "Quiénes somos",
+      "href": "quienes-somos.html",
+      "type": "internal"
+    },
+    {
+      "id": "admisiones",
+      "label": "Admisiones",
+      "href": "admisiones.html",
+      "type": "internal"
+    },
+    {
+      "id": "contactenos",
+      "label": "Contáctenos",
+      "href": "contactenos.html",
+      "type": "internal"
+    },
+    {
+      "id": "galeria",
+      "label": "Galería",
+      "href": "index.html#galeria",
+      "type": "anchor"
+    },
+    {
+      "id": "actividades",
+      "label": "Actividades",
+      "href": "interactivo.html",
+      "type": "internal"
+    },
+    {
+      "id": "mision-evangelistica",
+      "label": "Misión evangelística",
+      "href": "mision-evangelistica.html",
+      "type": "internal"
+    }
+  ],
+  "actions": [
+    {
+      "id": "portal",
+      "label": "Portal",
+      "href": "https://portal.edubox.app/login/virginiasapp",
+      "type": "external",
+      "target": "_blank",
+      "rel": "noopener",
+      "variant": "secondary"
+    },
+    {
+      "id": "solicitar-admision",
+      "label": "Solicitar admisión",
+      "href": "https://portal.edubox.app/login/virginiasapp",
+      "type": "external",
+      "target": "_blank",
+      "rel": "noopener",
+      "variant": "primary"
+    }
+  ],
+  "mobile": [
+    {
+      "id": "inicio",
+      "label": "Inicio",
+      "href": "index.html",
+      "type": "internal"
+    },
+    {
+      "id": "quienes-somos",
+      "label": "Quiénes somos",
+      "href": "quienes-somos.html",
+      "type": "internal"
+    },
+    {
+      "id": "admisiones",
+      "label": "Admisiones",
+      "href": "admisiones.html",
+      "type": "internal"
+    },
+    {
+      "id": "contactenos",
+      "label": "Contáctenos",
+      "href": "contactenos.html",
+      "type": "internal"
+    },
+    {
+      "id": "galeria",
+      "label": "Galería",
+      "href": "index.html#galeria",
+      "type": "anchor"
+    },
+    {
+      "id": "actividades",
+      "label": "Actividades",
+      "href": "interactivo.html",
+      "type": "internal"
+    },
+    {
+      "id": "mision-evangelistica",
+      "label": "Misión evangelística",
+      "href": "mision-evangelistica.html",
+      "type": "internal"
+    },
+    {
+      "id": "portal",
+      "label": "Portal",
+      "href": "https://portal.edubox.app/login/virginiasapp",
+      "type": "external",
+      "target": "_blank",
+      "rel": "noopener"
+    },
+    {
+      "id": "solicitar-admision",
+      "label": "Solicitar admisión",
+      "href": "https://portal.edubox.app/login/virginiasapp",
+      "type": "external",
+      "target": "_blank",
+      "rel": "noopener"
+    }
+  ]
+}

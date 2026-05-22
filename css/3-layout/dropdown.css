@@ -1,31 +1,56 @@
 /* ═══════════════════════════════════════
-   DROPDOWN NAV MENUS (multi-page)
+   DROPDOWN NAV MENUS — Fase 1 CEEVS
 ═══════════════════════════════════════ */
-.nav-dropdown { position:relative; }
-.nav-dropdown > a { cursor:pointer; }
+.nav-dropdown { position: relative; }
+.nav-dropdown > a { cursor: pointer; }
+
 .dropdown-menu {
-  position:absolute; top:100%; left:50%; transform:translateX(-50%) translateY(8px);
-  background:rgba(40,20,2,.98); backdrop-filter:blur(16px);
-  border:1px solid rgba(171,100,35,.2); border-radius:var(--r);
-  padding:8px 0; min-width:200px;
-  opacity:0; pointer-events:none; transition:all .25s;
-  box-shadow:0 16px 48px rgba(0,0,0,.35);
-  z-index:450;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #fff;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(11, 103, 165, 0.14);
+  border-radius: 10px;
+  padding: 8px 0;
+  min-width: 210px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 12px 40px rgba(30, 30, 30, 0.12);
+  z-index: 1050;
 }
+
 .nav-dropdown.dropdown-open .dropdown-menu,
 .nav-dropdown:hover .dropdown-menu {
-  opacity:1; pointer-events:all; transform:translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0);
 }
-.dropdown-menu a {
-  display:block; padding:10px 20px;
-  font-size:12.5px; color:rgba(255,255,255,.6);
-  text-decoration:none; transition:all .15s;
-  white-space:nowrap;
-}
-.dropdown-menu a:hover {
-  color:var(--gold2); background:rgba(171,100,35,.08);
-  padding-left:24px;
-}
-.dropdown-menu a::after { display:none; }
-.nav-active { color:var(--gold2) !important; }
 
+.dropdown-menu a {
+  display: block;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ceevs-black, #1E1E1E);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, padding-left 0.15s;
+  white-space: nowrap;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu a:focus-visible {
+  color: var(--ceevs-blue, #0B67A5);
+  background: rgba(11, 103, 165, 0.06);
+  padding-left: 26px;
+  outline: none;
+}
+
+.dropdown-menu a::after { display: none; }
+
+/* Estado activo para enlace actual */
+.nav-active {
+  color: var(--ceevs-blue, #0B67A5) !important;
+}

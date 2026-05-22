@@ -20,7 +20,22 @@ const Games = {
 
   init() {
     if (!document.getElementById('games-grid')) return;
+    this._loadWordSearch();
     this._bindEvents();
+  },
+
+  // SDD-F5-ACT-002 — palabras de la sopa de letras desde data/word-search.json.
+  // _SOPA_WORDS (más abajo) es el listado por defecto si la carga falla.
+  _loadWordSearch() {
+    fetch('data/word-search.json')
+      .then(r => (r.ok ? r.json() : null))
+      .then(data => {
+        if (data && data.status === 'approved' &&
+            Array.isArray(data.words) && data.words.length) {
+          this._SOPA_WORDS = data.words;
+        }
+      })
+      .catch(() => { /* se mantiene el listado por defecto embebido */ });
   },
 
   _bindEvents() {
@@ -267,14 +282,15 @@ const Games = {
     const wordListHTML = this._SOPA_WORDS.map(w =>
       `<div class="sopa-word-item" id="sw-${w.word}">${w.word}</div>`
     ).join('');
+    const total = this._SOPA_WORDS.length;
     return `
       <div class="game-modal-title">🔤 Sopa de Letras</div>
-      <div class="game-modal-sub">Encuentra las 10 palabras. Toca la primera y luego la última letra.</div>
+      <div class="game-modal-sub">Encuentra las ${total} palabras. Toca la primera y luego la última letra.</div>
       <div class="sopa-layout">
         <div class="sopa-grid-wrap">
           <div class="sopa-grid" id="sopa-grid">${gridHTML}</div>
           <p class="sopa-hint">Toca la letra inicial → luego la letra final de la palabra</p>
-          <p class="sopa-status" id="sopa-status">0 / 10 palabras encontradas</p>
+          <p class="sopa-status" id="sopa-status">0 / ${total} palabras encontradas</p>
         </div>
         <div><div class="sopa-words-list">${wordListHTML}</div></div>
       </div>`;
@@ -345,7 +361,7 @@ const Games = {
     const wordEl = document.getElementById('sw-' + match.word);
     if (wordEl) wordEl.classList.add('found');
     const statusEl = document.getElementById('sopa-status');
-    if (statusEl) statusEl.textContent = `${this.state.sopa.found.length} / 10 palabras encontradas`;
+    if (statusEl) statusEl.textContent = `${this.state.sopa.found.length} / ${this._SOPA_WORDS.length} palabras encontradas`;
     giveXP(5, '🔤', `¡Encontraste ${match.word}!`, '+5 XP');
     if (this.state.sopa.found.length === this._SOPA_WORDS.length) {
       giveXP(10, '🎉', '¡Sopa completada!', '¡Todas las palabras encontradas! +10 XP');

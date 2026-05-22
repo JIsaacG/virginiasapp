@@ -1,0 +1,138 @@
+/* ═══════════════════════════════════════
+   SUGERENCIAS — Fase 4 CEEVS
+   Formulario que abre el cliente de correo (mailto)
+═══════════════════════════════════════ */
+
+.sugerencias {
+  background: var(--cream);
+  padding: 80px 8vw;
+}
+
+.sugerencias-inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.sugerencias-intro {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sugerencias-intro h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.4vw, 44px);
+  font-weight: 700;
+  color: var(--forest);
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+.sugerencias-intro h2 em { color: var(--gold); font-style: italic; }
+.sugerencias-intro p {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.sugerencias-card {
+  background: var(--white);
+  border: 1.5px solid var(--cream2);
+  border-radius: var(--rl);
+  padding: 36px 32px;
+}
+
+.sg-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.sg-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sg-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--forest);
+  margin-bottom: 6px;
+}
+
+.sg-optional {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.sg-required {
+  color: #c0392b;
+  font-weight: 700;
+}
+
+.sg-input,
+.sg-select,
+.sg-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--cream2);
+  border-radius: var(--r);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.sg-input:focus,
+.sg-select:focus,
+.sg-textarea:focus {
+  border-color: var(--gold);
+  outline: none;
+}
+
+.sg-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.sg-submit {
+  width: 100%;
+  padding: 15px;
+  background: var(--gold);
+  border: none;
+  border-radius: var(--r);
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: background 0.2s;
+}
+.sg-submit:hover { background: var(--gold2); }
+.sg-submit:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+}
+
+.sg-note {
+  margin-top: 14px;
+  font-size: 12.5px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.sg-error {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #c0392b;
+  text-align: center;
+}
+.sg-error[hidden] { display: none; }
+
+@media (max-width: 600px) {
+  .sugerencias { padding: 56px 5vw; }
+  .sugerencias-card { padding: 26px 20px; }
+  .sg-row { grid-template-columns: 1fr; gap: 0; }
+}

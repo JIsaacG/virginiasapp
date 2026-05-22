@@ -1,0 +1,160 @@
+/* ═══════════════════════════════════════
+   MISIÓN EVANGELÍSTICA — Fase 1 CEEVS
+═══════════════════════════════════════ */
+
+.mission-section {
+  padding: 80px 8vw;
+}
+
+.mission-section .container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.mission-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 700;
+  color: var(--ceevs-brown, #6A2407);
+  margin-bottom: 20px;
+  line-height: 1.15;
+}
+
+.mission-section p {
+  font-size: 1rem;
+  color: var(--muted, #7a6248);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+/* ── Purpose section ── */
+.mission-purpose {
+  background: var(--cream, #fdf6ec);
+}
+
+/* ── Devotional card ── */
+.mission-devotional {
+  background: var(--parch, #ecdcc0);
+  text-align: center;
+}
+
+.mission-card {
+  background: var(--white, #fff);
+  border-radius: 16px;
+  padding: 36px 32px;
+  border: 1px solid rgba(11, 103, 165, 0.10);
+  box-shadow: 0 8px 24px rgba(30, 30, 30, 0.06);
+  margin-top: 16px;
+}
+
+.mission-card .devocional-verse {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-style: italic;
+  color: var(--ceevs-brown, #6A2407);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.mission-card .devocional-cite {
+  font-size: 0.88rem;
+  color: var(--ceevs-blue, #0B67A5);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* ── Resources grid ── */
+.mission-resources {
+  background: var(--cream2, #f5e8d0);
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.mission-grid .mission-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ceevs-blue, #0B67A5);
+  margin-bottom: 10px;
+}
+
+/* ── Video placeholder ── */
+.mission-video {
+  background: var(--forest, #412404);
+}
+
+.mission-video h2 {
+  color: #fff;
+}
+
+.mission-video p {
+  color: rgba(255, 255, 255, 0.60);
+}
+
+.mission-video-placeholder {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  padding: 60px 32px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.50);
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* ── CTA section ── */
+.mission-cta {
+  background: var(--ceevs-blue, #0B67A5);
+  text-align: center;
+}
+
+.mission-cta h2 {
+  color: #fff;
+}
+
+.mission-cta p {
+  color: rgba(255, 255, 255, 0.80);
+}
+
+.mission-cta-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.mission-cta .btn-nav-ghost {
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+
+.mission-cta .btn-nav-ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mission-section {
+    padding: 56px 5vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .mission-section {
+    padding: 40px 4vw;
+  }
+
+  .mission-card {
+    padding: 24px 18px;
+  }
+
+  .mission-cta-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+}

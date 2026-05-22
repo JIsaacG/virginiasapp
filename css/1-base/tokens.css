@@ -2,6 +2,16 @@
    TOKENS & RESET
 ═══════════════════════════════════════ */
 :root {
+  /* Paleta institucional CEEVS — Fase 1 */
+  --ceevs-blue:   #0B67A5;
+  --ceevs-sky:    #3BA6E0;
+  --ceevs-gold:   #D7AF4A;
+  --ceevs-brown:  #6A2407;
+  --ceevs-orange: #F57C00;
+  --ceevs-black:  #1E1E1E;
+  --ceevs-white:  #FFFFFF;
+
+  /* Paleta heredada (conservada para compatibilidad) */
   --ink:     #1a0c02;
   --forest:  #412404;
   --forest2: #5a3208;

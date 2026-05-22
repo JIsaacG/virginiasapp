@@ -1,9 +1,25 @@
 'use strict';
 
+/* ═══════════════════════════════════════
+   QUIZ DE ADMISIÓN — Fase 2 CEEVS
+   Auto-avance sin botón "Continuar" (SDD-F2-ADM-004)
+   Resultado con CTAs concretos (SDD-F2-ADM-005)
+═══════════════════════════════════════ */
+
 const Quiz = {
   name: 'Quiz',
   answers: {},
   currentStep: 1,
+  totalSteps: 4,
+  transitioning: false,
+
+  // Fuente de verdad de redirecciones (espejo de data/redirects.json)
+  REDIRECTS: {
+    edubox: 'https://portal.edubox.app/login/virginiasapp',
+    waGeneral: 'https://wa.me/50492215752?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp.',
+    waPrimaria: 'https://wa.me/50492215752?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20de%20Primaria%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp.',
+    waSecundaria: 'https://wa.me/50492700210?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20de%20Secundaria%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp.',
+  },
 
   init() {
     if (!document.getElementById('quiz-section')) return;
@@ -11,54 +27,69 @@ const Quiz = {
   },
 
   _bindEvents() {
-    // Option selection via delegation
     const quizSection = document.getElementById('quiz-section');
-    if (quizSection) {
-      quizSection.addEventListener('click', e => {
-        const opt = e.target.closest('.quiz-opt');
-        if (opt) {
-          const q = opt.dataset.q;
-          const val = opt.dataset.val;
-          if (q && val) this.selectOpt(opt, q, val);
-        }
-        const nextBtn = e.target.closest('.quiz-btn-next[data-step]');
-        if (nextBtn && !nextBtn.disabled) this.goStep(+nextBtn.dataset.step);
-        const backBtn = e.target.closest('.quiz-btn-back[data-step]');
-        if (backBtn) this.goStep(+backBtn.dataset.step);
-        const showResultBtn = e.target.closest('[data-show-result]');
-        if (showResultBtn && !showResultBtn.disabled) this.showResult();
-        if (e.target.id === 'quiz-show-result') this.showResult();
-        if (e.target.id === 'quiz-restart-btn') this.restart();
-        if (e.target.id === 'quiz-lead-submit') this.submitLead();
-      });
-    }
+    if (!quizSection) return;
+
+    quizSection.addEventListener('click', e => {
+      const opt = e.target.closest('.quiz-opt');
+      if (opt) {
+        const q = opt.dataset.q;
+        const val = opt.dataset.val;
+        if (q && val) this.selectOpt(opt, q, val);
+        return;
+      }
+      const backBtn = e.target.closest('.quiz-btn-back[data-step]');
+      if (backBtn) { this.goStep(+backBtn.dataset.step); return; }
+      if (e.target.closest('#quiz-restart-btn')) this.restart();
+    });
   },
 
   selectOpt(btn, q, val) {
-    btn.closest('.quiz-options').querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('selected'));
+    if (this.transitioning) return;
+
+    btn.closest('.quiz-options')
+      .querySelectorAll('.quiz-opt')
+      .forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
     this.answers[q] = val;
-    const nextBtn = document.getElementById(`${q}-next`);
-    if (nextBtn) nextBtn.disabled = false;
+
+    const stepNum = parseInt(q.replace('q', ''), 10);
+
+    // Feedback visual breve y avance automático (SDD-F2-ADM-004)
+    this.transitioning = true;
+    setTimeout(() => {
+      if (stepNum >= this.totalSteps) {
+        this.showResult();
+      } else {
+        this.goStep(stepNum + 1);
+      }
+      this.transitioning = false;
+    }, 350);
   },
 
   goStep(n) {
     const current = document.getElementById(`qs-${this.currentStep}`);
     if (current) current.classList.remove('active');
+
+    const result = document.getElementById('quiz-result');
+    if (result) result.classList.remove('show');
+
     this.currentStep = n;
     const next = document.getElementById(`qs-${n}`);
     if (next) next.classList.add('active');
 
-    const pct = (n / 4) * 100;
+    const pct = (n / this.totalSteps) * 100;
     const fill = document.getElementById('q-fill');
     const stepLabel = document.getElementById('q-step-label');
     const pctLabel = document.getElementById('q-pct-label');
 
     if (fill) fill.style.width = pct + '%';
-    if (stepLabel) stepLabel.textContent = `Pregunta ${n} de 4`;
-    if (pctLabel) pctLabel.textContent = pct + '%';
+    if (stepLabel) stepLabel.textContent = `Pregunta ${n} de ${this.totalSteps}`;
+    if (pctLabel) pctLabel.textContent = Math.round(pct) + '%';
 
-    addXP(5, '🎯', '¡Avanzando en el quiz!', '+5 XP por cada respuesta');
+    if (typeof addXP === 'function') {
+      addXP(5, '🎯', '¡Avanzando en el quiz!', '+5 XP por cada respuesta');
+    }
   },
 
   showResult() {
@@ -75,28 +106,36 @@ const Quiz = {
 
     const age = this.answers.q1;
     const lang = this.answers.q3;
-    let emoji = '🏫', title = '¡Tenemos el programa ideal!';
-    let sub = 'Basándonos en tus respuestas, te recomendamos:';
+    let emoji = '🏫';
+    let title = '¡Tenemos el programa ideal!';
+    const sub = 'Basándonos en tus respuestas, te recomendamos:';
     let rec = '';
+    let track = 'unsure'; // preescolar | primaria | secundaria | unsure
 
     if (age === 'preschool') {
-      emoji = '🌱'; title = '¡El Preescolar es para tu hijo!';
+      track = 'preescolar';
+      emoji = '🌱'; title = '¡El Preescolar es para tu hijo/a!';
       rec = 'Nuestro programa de Preescolar (Pre-Kínder y Kínder) brinda estimulación temprana integral, valores bíblicos y el amor que cada niño merece para florecer. ¡El mejor comienzo de vida!';
     } else if (age === 'primary' && lang === 'bilingue') {
+      track = 'primaria';
       emoji = '📚'; title = '¡Primaria Bilingüe es el camino!';
-      rec = 'El programa de Primaria Bilingüe de 1° a 6° grado combina excelencia académica en inglés y español con valores cristianos. Tu hijo tendrá una ventaja enorme para el futuro.';
+      rec = 'El programa de Primaria Bilingüe de 1° a 6° grado combina excelencia académica en inglés y español con valores cristianos. Tu hijo/a tendrá una ventaja enorme para el futuro.';
     } else if (age === 'primary') {
+      track = 'primaria';
       emoji = '📚'; title = '¡Primaria es tu opción!';
       rec = 'El programa de Primaria Bilingüe de 1° a 6° grado ofrece la base académica más sólida en un ambiente de fe y valores. ¡El mejor lugar para crecer!';
     } else if (age === 'secondary' && lang === 'bilingue') {
+      track = 'secundaria';
       emoji = '🎓'; title = '¡Secundaria Bilingüe, sin duda!';
       rec = 'El Bachillerato Bilingüe de 7° a 11° grado preparará a tu hijo/a para la universidad con inglés avanzado, liderazgo cristiano y una formación académica de primer nivel.';
     } else if (age === 'secondary') {
+      track = 'secundaria';
       emoji = '🎓'; title = '¡Secundaria es la respuesta!';
       rec = 'Nuestro Bachillerato en Ciencias y Humanidades de 7° a 9° grado (Español) forma líderes con valores sólidos listos para enfrentar el mundo con fe y excelencia.';
     } else {
+      track = 'unsure';
       emoji = '💬'; title = '¡Platiquemos personalmente!';
-      rec = 'Basado en tus respuestas, lo mejor es que conversemos para orientarte de manera personalizada. Nuestro equipo de admisiones está listo para ayudarte a tomar la mejor decisión para tu familia.';
+      rec = 'Lo mejor es que conversemos para orientarte de manera personalizada. Nuestro equipo de admisiones está listo para ayudarte a tomar la mejor decisión para tu familia.';
     }
 
     const rEmoji = document.getElementById('r-emoji');
@@ -109,21 +148,73 @@ const Quiz = {
     if (rTitle) rTitle.textContent = title;
     if (rSub) rSub.textContent = sub;
     if (rRec) rRec.textContent = rec;
+
+    this._renderResultCTAs(track);
+
     if (result) result.classList.add('show');
 
-    addXP(20, '🏆', '¡Quiz completado!', '¡Conoces perfectamente CEEVS! +20 XP');
-    unlockBadge('quiz');
+    if (typeof addXP === 'function') {
+      addXP(20, '🏆', '¡Quiz completado!', '¡Conoces perfectamente CEEVS! +20 XP');
+    }
+    if (typeof unlockBadge === 'function') unlockBadge('quiz');
+  },
+
+  // SDD-F2-ADM-005 — cada resultado entrega al menos 2 CTAs concretos
+  _renderResultCTAs(track) {
+    const container = document.getElementById('quiz-result-btns');
+    if (!container) return;
+
+    // Limpiar CTAs dinámicos previos
+    container.querySelectorAll('.quiz-cta-dynamic').forEach(el => el.remove());
+
+    const R = this.REDIRECTS;
+    let ctas;
+    if (track === 'unsure') {
+      ctas = [
+        { label: '💬 Hablar por WhatsApp', href: R.waGeneral, cls: 'btn-cta-main', external: true },
+        { label: 'Ver niveles educativos', href: '#niveles', cls: 'btn-cta-ghost', external: false },
+      ];
+    } else {
+      const wa = track === 'secundaria' ? R.waSecundaria : R.waPrimaria;
+      const waLabel = track === 'secundaria'
+        ? '💬 Consultar por WhatsApp Secundaria'
+        : '💬 Consultar por WhatsApp Primaria';
+      ctas = [
+        { label: '🎓 Solicitar admisión en EDUBOX', href: R.edubox, cls: 'btn-cta-main', external: true },
+        { label: waLabel, href: wa, cls: 'btn-cta-ghost', external: true },
+      ];
+    }
+
+    const restartBtn = document.getElementById('quiz-restart-btn');
+    ctas.forEach(cta => {
+      const a = document.createElement('a');
+      a.href = cta.href;
+      a.className = `${cta.cls} quiz-cta-dynamic`;
+      a.textContent = cta.label;
+      if (cta.external) {
+        a.target = '_blank';
+        a.rel = 'noopener';
+      }
+      container.insertBefore(a, restartBtn);
+    });
   },
 
   restart() {
     for (const k in this.answers) delete this.answers[k];
     this.currentStep = 1;
+    this.transitioning = false;
+
     document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('selected'));
-    document.querySelectorAll('.quiz-btn-next').forEach(b => b.disabled = true);
 
     const result = document.getElementById('quiz-result');
     if (result) result.classList.remove('show');
+
+    const btnsContainer = document.getElementById('quiz-result-btns');
+    if (btnsContainer) {
+      btnsContainer.querySelectorAll('.quiz-cta-dynamic').forEach(el => el.remove());
+    }
+
     const qs1 = document.getElementById('qs-1');
     if (qs1) qs1.classList.add('active');
 
@@ -132,64 +223,14 @@ const Quiz = {
     const pctLabel = document.getElementById('q-pct-label');
 
     if (fill) fill.style.width = '25%';
-    if (stepLabel) stepLabel.textContent = 'Pregunta 1 de 4';
+    if (stepLabel) stepLabel.textContent = `Pregunta 1 de ${this.totalSteps}`;
     if (pctLabel) pctLabel.textContent = '25%';
-
-    const leadForm = document.getElementById('quiz-lead-form');
-    if (leadForm) leadForm.style.display = 'block';
-    const leadMsg = document.getElementById('quiz-lead-msg');
-    if (leadMsg) leadMsg.style.display = 'none';
-    ['quiz-lead-name', 'quiz-lead-phone', 'quiz-lead-email'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
-    });
-  },
-
-  submitLead() {
-    const name = (document.getElementById('quiz-lead-name')?.value || '').trim();
-    const phone = (document.getElementById('quiz-lead-phone')?.value || '').trim();
-    const email = (document.getElementById('quiz-lead-email')?.value || '').trim();
-    const msg = document.getElementById('quiz-lead-msg');
-
-    if (!name && !phone && !email) {
-      if (msg) {
-        msg.textContent = 'Por favor ingresa al menos un dato de contacto.';
-        msg.style.color = '#ff9800';
-        msg.style.display = 'block';
-      }
-      return;
-    }
-
-    let leads = [];
-    try { leads = JSON.parse(localStorage.getItem('ceevs_quiz_leads')) || []; } catch { leads = []; }
-    leads.push({
-      name, phone, email,
-      quizAnswers: { ...this.answers },
-      recommendation: document.getElementById('r-title')?.textContent || '',
-      timestamp: new Date().toISOString(),
-    });
-    localStorage.setItem('ceevs_quiz_leads', JSON.stringify(leads));
-
-    if (msg) {
-      msg.textContent = '¡Gracias! Nuestro equipo te contactará pronto.';
-      msg.style.color = '#4caf50';
-      msg.style.display = 'block';
-    }
-
-    const form = document.getElementById('quiz-lead-form');
-    if (form) {
-      form.querySelectorAll('input, button').forEach(el => { el.disabled = true; el.style.opacity = '.5'; });
-    }
-
-    addXP(10, '📋', '¡Datos enviados!', 'Nuestro equipo te contactará +10 XP');
   },
 };
 
-// Backward-compatible stubs (HTML still uses data attributes but these remain for safety)
-function selectOpt(btn, q, val) { Quiz.selectOpt(btn, q, val); }
+// Stubs retrocompatibles
 function goStep(n) { Quiz.goStep(n); }
 function showQuizResult() { Quiz.showResult(); }
 function restartQuiz() { Quiz.restart(); }
-function submitQuizLead() { Quiz.submitLead(); }
 
 App.register(Quiz);

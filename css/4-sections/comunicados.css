@@ -1,0 +1,121 @@
+/* ═══════════════════════════════════════
+   COMUNICADOS Y CALENDARIO — Fase 5
+   SDD-F5-NEWS-001 / SDD-F5-CALENDAR-001
+═══════════════════════════════════════ */
+
+.comunicados { background: var(--cream); padding: 84px 8vw; }
+.comunicados-inner { max-width: 1080px; margin: 0 auto; }
+
+.comunicados-head { text-align: center; margin-bottom: 44px; }
+.comunicados-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.4vw, 44px);
+  font-weight: 700;
+  color: var(--forest);
+  line-height: 1.15;
+}
+.comunicados-head h2 em { color: var(--gold); font-style: italic; }
+.comunicados-head p { font-size: 15px; color: var(--muted); margin-top: 10px; }
+
+.comunicados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.comunicado-card {
+  background: var(--white);
+  border: 1.5px solid var(--cream2);
+  border-radius: var(--rl);
+  padding: 26px 24px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.comunicado-card:hover {
+  border-color: rgba(171, 100, 35, 0.3);
+  box-shadow: 0 12px 32px rgba(65, 36, 4, 0.08);
+}
+
+.comunicado-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.comunicado-cat {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(171, 100, 35, 0.1);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.comunicado-date { font-size: 12px; color: var(--muted); }
+
+.comunicado-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--forest);
+  margin-bottom: 8px;
+}
+.comunicado-card p {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.comunicado-updated {
+  font-size: 11.5px;
+  color: var(--sage);
+  margin-top: auto;
+}
+
+.comunicado-placeholder { border-style: dashed; }
+
+.comunicados-note {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+}
+.comunicados-note a { color: var(--gold); font-weight: 600; text-decoration: none; }
+.comunicados-note a:hover { color: var(--forest); }
+
+/* Calendario escolar */
+.calendario { background: var(--parch); padding: 84px 8vw; }
+.calendario-inner { max-width: 760px; margin: 0 auto; }
+.calendario-head { text-align: center; margin-bottom: 28px; }
+.calendario-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 700;
+  color: var(--forest);
+}
+.calendario-head h2 em { color: var(--gold); font-style: italic; }
+
+.calendario-card {
+  background: var(--white);
+  border: 1.5px solid var(--cream2);
+  border-radius: var(--rl);
+  padding: 36px 32px;
+  text-align: center;
+}
+.calendario-card p { font-size: 15px; color: var(--muted); line-height: 1.8; }
+.calendario-pending {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 700px) {
+  .comunicados, .calendario { padding: 60px 6vw; }
+  .calendario-card { padding: 26px 22px; }
+}

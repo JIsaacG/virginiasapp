@@ -1,0 +1,35 @@
+{
+  "institution": {
+    "officialName": "CENTRO EDUCATIVO EVANGELICO VIRGINIA SAPP",
+    "officialNameDisplay": "CENTRO EDUCATIVO EVANGÉLICO VIRGINIA SAPP",
+    "shortName": "CEEVS",
+    "legacyName": "Instituto Evangélico Virginia Sapp",
+    "location": "Tegucigalpa, Honduras"
+  },
+  "branding": {
+    "logo": "assets/logo principal.png",
+    "logoFallback": "assets/logo.jpg",
+    "logoAlt": "Logo del Centro Educativo Evangélico Virginia Sapp",
+    "colors": {
+      "blue": "#0B67A5",
+      "sky": "#3BA6E0",
+      "gold": "#D7AF4A",
+      "brown": "#6A2407",
+      "orange": "#F57C00",
+      "black": "#1E1E1E",
+      "white": "#FFFFFF"
+    }
+  },
+  "urls": {
+    "edubox": "https://portal.edubox.app/login/virginiasapp"
+  },
+  "languages": {
+    "default": "es",
+    "supported": ["es", "en"],
+    "phase1Behavior": "show-selector-disabled-or-prepared"
+  },
+  "phase": {
+    "current": "FASE_1_NAV_IDENTIDAD",
+    "notes": "Fase inicial de identidad y navegacion. No implementar backend ni CMS todavia."
+  }
+}

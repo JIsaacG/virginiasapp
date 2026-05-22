@@ -84,6 +84,41 @@
 .empleos-inner p { font-size:14px; color:rgba(255,255,255,.5); line-height:1.75; margin-bottom:28px; }
 
 /* ═══════════════════════════════════════
+   NAVBAR — RESPONSIVE (Fase 1)
+═══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .nav-links,
+  .nav-cta .btn-nav-ghost,
+  .nav-cta .btn-nav-solid {
+    display: none;
+  }
+
+  .nav-hamburger {
+    display: inline-flex;
+  }
+
+  #navbar {
+    min-height: 64px;
+  }
+
+  .nav-wordmark strong,
+  .nav-wordmark b {
+    font-size: clamp(0.60rem, 2.2vw, 0.78rem);
+  }
+}
+
+@media (max-width: 480px) {
+  #navbar {
+    padding: 10px 16px;
+  }
+
+  .nav-logo-img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ═══════════════════════════════════════
    NEW SECTIONS — RESPONSIVE
 ═══════════════════════════════════════ */
 @media(max-width:1100px){

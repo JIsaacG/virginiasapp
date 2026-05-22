@@ -1,0 +1,138 @@
+/* ═══════════════════════════════════════
+   CONTACTO — CANALES DIRECTOS (Fase 4)
+   Reemplaza el formulario simulado por canales reales
+═══════════════════════════════════════ */
+
+/* Ubicación como enlace */
+.ci-link {
+  color: var(--gold2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.ci-link:hover,
+.ci-link:focus-visible { color: #fff; }
+
+/* Redes sociales pendientes (sin enlaces falsos) */
+.soc-disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.soc-disabled:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Bloque de canales directos */
+.contacto-canales {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--rxl);
+  padding: 40px;
+}
+
+.canales-head { margin-bottom: 28px; }
+.canales-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.canales-subtitle {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+}
+
+.canal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.canal-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r);
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.canal-card:hover,
+.canal-card:focus-visible {
+  border-color: var(--gold);
+  background: rgba(171, 100, 35, 0.1);
+  transform: translateX(2px);
+  outline: none;
+}
+
+.canal-icon {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(171, 100, 35, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.canal-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.canal-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.canal-detail {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.canal-arrow {
+  flex: 0 0 auto;
+  font-size: 18px;
+  color: var(--gold2);
+  transition: transform 0.2s;
+}
+
+.canal-card:hover .canal-arrow { transform: translateX(4px); }
+
+.canales-note {
+  margin-top: 24px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+}
+.canales-note a {
+  color: var(--gold2);
+  text-decoration: none;
+  font-weight: 600;
+}
+.canales-note a:hover,
+.canales-note a:focus-visible { color: #fff; }
+
+/* Empleos — nota explicativa del mailto */
+.empleos-hint {
+  font-size: 13px !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  margin: 0 auto 20px !important;
+  max-width: 520px;
+}
+
+@media (max-width: 820px) {
+  .contacto-canales { padding: 28px 22px; }
+}

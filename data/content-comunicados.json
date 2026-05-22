@@ -1,0 +1,22 @@
+{
+  "status": "pending-content",
+  "note": "Contrato de contenido para comunicados.html. Los comunicados oficiales serán cargados aquí una vez aprobados por CEEVS. Estructura preparada para un futuro CMS (Fase 7).",
+  "categories": ["Comunicado", "Noticia", "Evento", "Calendario"],
+  "items": [],
+  "itemSchema": {
+    "id": "comunicado-000",
+    "title": "Título del comunicado",
+    "date": "AAAA-MM-DD",
+    "category": "Comunicado",
+    "summary": "Resumen breve.",
+    "content": "Contenido completo.",
+    "lastUpdated": "AAAA-MM-DD",
+    "image": null,
+    "status": "published"
+  },
+  "calendar": {
+    "status": "pending-content",
+    "note": "Fechas del calendario escolar pendientes de confirmación institucional. No inventar fechas.",
+    "events": []
+  }
+}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Misión evangelística | Centro Educativo Evangélico Virginia Sapp</title>
+  <meta name="description" content="Conoce la misión evangelística del Centro Educativo Evangélico Virginia Sapp y su compromiso con la formación cristiana integral.">
+  <meta name="theme-color" content="#0B67A5">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Misión evangelística | Centro Educativo Evangélico Virginia Sapp">
+  <meta property="og:description" content="Formación cristiana integral, valores bíblicos y propósito evangelístico en CEEVS.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_HN">
+  <!-- PENDING_ASSET_OG_IMAGE: reemplazar por imagen institucional oficial (1200x630) -->
+  <meta property="og:image" content="assets/logo.jpg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Game HUD -->
+<div id="game-hud">
+  <div class="hud-header">
+    <span class="hud-title">✦ Mi perfil CEEVS</span>
+    <button id="hud-toggle">−</button>
+  </div>
+  <div id="hud-main-content">
+    <div class="hud-xp-bar-wrap">
+      <div class="hud-xp-label">
+        <span id="hud-pts-label">0 puntos explorador</span>
+        <span id="hud-pts-max">100 pts</span>
+      </div>
+      <div class="hud-xp-track"><div class="hud-xp-fill" id="hud-fill" style="width:0%"></div></div>
+    </div>
+    <div class="hud-row">
+      <div>
+        <div class="hud-score" id="hud-score">0</div>
+        <div class="hud-score-label">XP ganados</div>
+      </div>
+      <div class="hud-badges" id="hud-badges">
+        <div class="hud-badge" title="Explorador" data-id="explorer">🗺️</div>
+        <div class="hud-badge" title="Conocedor" data-id="knower">📖</div>
+        <div class="hud-badge" title="Interesado" data-id="quiz">🎯</div>
+        <div class="hud-badge" title="Familia CEEVS" data-id="contact">🏫</div>
+        <div class="hud-badge" title="Fan de historia" data-id="history">⏳</div>
+        <div class="hud-badge" title="Sabio Cristiano" data-id="trivia">🧠</div>
+        <div class="hud-badge" title="Explorador de Palabras" data-id="sopaletras">📝</div>
+        <div class="hud-badge" title="Memorista" data-id="memoria">🃏</div>
+      </div>
+    </div>
+  </div>
+  <div id="hud-min-content">
+    <div class="hud-score" id="hud-score-min">0 XP</div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast">
+  <div class="toast-inner">
+    <span class="toast-icon" id="toast-icon">🏆</span>
+    <div class="toast-text">
+      <strong id="toast-title">¡Logro desbloqueado!</strong>
+      <span id="toast-desc">+10 puntos</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR — Fase 1 CEEVS -->
+<!-- PENDING_ASSET_LOGO_PRINCIPAL: Colocar el logo oficial en assets/logo principal.png -->
+<nav id="navbar" aria-label="Navegación principal">
+  <a href="index.html" class="nav-logo" aria-label="Ir al inicio — Centro Educativo Evangélico Virginia Sapp">
+    <span class="nav-logo-img">
+      <img
+        src="assets/logo principal.png"
+        alt="Logo del Centro Educativo Evangélico Virginia Sapp"
+        class="nav-logo-image"
+        id="nav-logo-img"
+      >
+    </span>
+    <span class="nav-wordmark">
+      <strong>CENTRO EDUCATIVO EVANGÉLICO VIRGINIA SAPP</strong>
+      <small>CEEVS</small>
+    </span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="quienes-somos.html" data-nav-id="quienes-somos">Quiénes somos</a></li>
+    <li><a href="admisiones.html" data-nav-id="admisiones">Admisiones</a></li>
+    <li><a href="contactenos.html" data-nav-id="contactenos">Contáctenos</a></li>
+    <li><a href="index.html#galeria" data-nav-id="galeria">Galería</a></li>
+    <li><a href="interactivo.html" data-nav-id="actividades">Actividades</a></li>
+    <li><a href="mision-evangelistica.html" data-nav-id="mision-evangelistica">Misión evangelística</a></li>
+  </ul>
+
+  <div class="nav-cta">
+    <a
+      href="https://portal.edubox.app/login/virginiasapp"
+      class="btn-nav-ghost"
+      target="_blank"
+      rel="noopener"
+      data-nav-id="portal"
+    >Portal</a>
+
+    <a
+      href="https://portal.edubox.app/login/virginiasapp"
+      class="btn-nav-solid"
+      target="_blank"
+      rel="noopener"
+      data-nav-id="solicitar-admision"
+    >Solicitar admisión</a>
+
+    <button
+      class="nav-hamburger"
+      id="nav-hamburger"
+      type="button"
+      aria-label="Abrir menú principal"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu drawer -->
+<div id="mobile-menu" aria-hidden="true">
+  <div class="mm-inner">
+    <div class="mm-header">
+      <div class="mm-logo">CEEVS</div>
+      <button class="mm-close" type="button" aria-label="Cerrar menú principal">✕</button>
+    </div>
+
+    <nav class="mm-links" aria-label="Navegación móvil">
+      <a href="index.html"><span class="mm-num">01</span>Inicio</a>
+      <a href="quienes-somos.html"><span class="mm-num">02</span>Quiénes somos</a>
+      <a href="admisiones.html"><span class="mm-num">03</span>Admisiones</a>
+      <a href="contactenos.html"><span class="mm-num">04</span>Contáctenos</a>
+      <a href="index.html#galeria"><span class="mm-num">05</span>Galería</a>
+      <a href="interactivo.html"><span class="mm-num">06</span>Actividades</a>
+      <a href="mision-evangelistica.html"><span class="mm-num">07</span>Misión evangelística</a>
+    </nav>
+
+    <div class="mm-actions">
+      <a
+        href="https://portal.edubox.app/login/virginiasapp"
+        class="mm-btn-ghost"
+        target="_blank"
+        rel="noopener"
+      >Portal</a>
+
+      <a
+        href="https://portal.edubox.app/login/virginiasapp"
+        class="mm-btn-solid"
+        target="_blank"
+        rel="noopener"
+      >Solicitar admisión</a>
+    </div>
+
+    <div class="language-switcher" aria-label="Selector de idioma">
+      <span class="language-current">ES</span>
+      <span class="language-separator">|</span>
+      <span class="language-option language-disabled" title="English version pending">EN</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MAIN CONTENT ─── -->
+<main id="main-content">
+
+  <!-- Hero de página -->
+  <section class="page-hero mission-hero">
+    <div class="page-hero-content">
+      <div class="section-label"><span>Misión evangelística</span></div>
+      <h1>Misión evangelística</h1>
+      <p>
+        <!-- PENDING_CONTENT_MISION_EVANGELISTICA: Reemplazar con texto oficial aprobado por CEEVS. -->
+        Formación cristiana integral, valores bíblicos y servicio con propósito.
+      </p>
+    </div>
+  </section>
+
+  <!-- Propósito evangelístico -->
+  <section class="mission-section mission-purpose">
+    <div class="container">
+      <h2>Propósito evangelístico</h2>
+      <p>
+        <!-- PENDING_CONTENT_MISION_PROPOSITO: Reemplazar con texto oficial aprobado por CEEVS. -->
+        Este espacio presentará el propósito evangelístico oficial del Centro Educativo Evangélico Virginia Sapp.
+        La institución fue fundada con el firme compromiso de integrar la fe cristiana en cada aspecto de la formación
+        académica y humana de sus estudiantes.
+      </p>
+    </div>
+  </section>
+
+  <!-- Versículo o devocional destacado -->
+  <section class="mission-section mission-devotional">
+    <div class="container">
+      <h2>Versículo destacado</h2>
+      <article class="mission-card">
+        <!-- PENDING_CONTENT_DEVOCIONAL: Reemplazar con versículo oficial aprobado por CEEVS. -->
+        <p class="devocional-verse">"Instruye al niño en su camino, y aun cuando fuere viejo no se apartará de él."</p>
+        <cite class="devocional-cite">— Proverbios 22:6</cite>
+      </article>
+    </div>
+  </section>
+
+  <!-- Recursos y artículos -->
+  <section class="mission-section mission-resources">
+    <div class="container">
+      <h2>Recursos y artículos</h2>
+      <div class="mission-grid">
+        <article class="mission-card">
+          <h3>Recurso evangelístico</h3>
+          <!-- PENDING_CONTENT_RECURSO: Reemplazar con recursos oficiales aprobados por CEEVS. -->
+          <p>Próximamente compartiremos recursos evangelísticos, artículos de fe y materiales de formación cristiana.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video evangelístico -->
+  <section class="mission-section mission-video">
+    <div class="container">
+      <h2>Video destacado</h2>
+      <div class="mission-video-placeholder">
+        <!-- PENDING_ASSET_VIDEO_MISION: Video pendiente de confirmación institucional. -->
+        <p>Video evangelístico pendiente de confirmación institucional por CEEVS.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA hacia admisiones -->
+  <section class="mission-section mission-cta">
+    <div class="container">
+      <h2>Únete a nuestra comunidad</h2>
+      <p>
+        <!-- PENDING_CONTENT_CTA_MISION: Reemplazar con texto oficial aprobado por CEEVS. -->
+        Forma parte del Centro Educativo Evangélico Virginia Sapp y crece en fe, conocimiento y servicio.
+      </p>
+      <div class="mission-cta-actions">
+        <a
+          href="https://portal.edubox.app/login/virginiasapp"
+          class="btn-nav-solid"
+          target="_blank"
+          rel="noopener"
+        >Solicitar admisión</a>
+        <a href="contactenos.html" class="btn-nav-ghost">Contáctenos</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-main">
+    <div class="footer-col">
+      <h3>CENTRO EDUCATIVO EVANGÉLICO VIRGINIA SAPP</h3>
+      <p>Formando líderes con valores cristianos desde 1962</p>
+      <p>Tegucigalpa, Honduras</p>
+    </div>
+    <div class="footer-col">
+      <h4>Institucional</h4>
+      <ul>
+        <li><a href="quienes-somos.html">Quiénes somos</a></li>
+        <li><a href="admisiones.html">Admisiones</a></li>
+        <li><a href="contactenos.html">Contáctenos</a></li>
+        <li><a href="index.html#galeria">Galería</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Académico</h4>
+      <ul>
+        <li><a href="admisiones.html#niveles">Niveles educativos</a></li>
+        <li><a href="https://portal.edubox.app/login/virginiasapp" target="_blank" rel="noopener">Portal educativo</a></li>
+        <li><a href="interactivo.html">Actividades</a></li>
+        <li><a href="mision-evangelistica.html">Misión evangelística</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Centro Educativo Evangélico Virginia Sapp (CEEVS). Todos los derechos reservados.</p>
+    <p>✦ Educación Cristiana de Excelencia · Tegucigalpa, Honduras</p>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="js/config.js"></script>
+<script src="js/core/app.js"></script>
+<script src="js/core/dom.js"></script>
+<script src="js/core/storage.js"></script>
+<script src="js/gamification.js"></script>
+<script src="js/main.js"></script>
+  <script src="js/i18n-data.js"></script>
+  <script src="js/i18n.js"></script>
+<script>App.init();</script>
+</body>
+</html>

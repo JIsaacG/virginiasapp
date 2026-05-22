@@ -40,6 +40,13 @@
 @import url('4-sections/empleos.css');
 @import url('4-sections/page-hero.css');
 @import url('4-sections/interactivo.css');
+@import url('4-sections/mision-evangelistica.css');
+@import url('4-sections/quienes-somos.css');
+@import url('4-sections/contacto-canales.css');
+@import url('4-sections/sugerencias.css');
+@import url('4-sections/home-mision.css');
+@import url('4-sections/comunicados.css');
+@import url('4-sections/capacitate.css');
 
 /* 4. RESPONSIVE DESIGN */
 @import url('5-responsive/media-queries.css');

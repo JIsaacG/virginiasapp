@@ -1,0 +1,30 @@
+{
+  "edubox": {
+    "label": "EDUBOX",
+    "url": "https://portal.edubox.app/login/virginiasapp",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  "whatsapp": {
+    "general": {
+      "label": "WhatsApp general",
+      "url": "https://wa.me/50492215752?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp."
+    },
+    "primaria": {
+      "label": "WhatsApp Primaria",
+      "url": "https://wa.me/50492215752?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20de%20Primaria%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp."
+    },
+    "secundaria": {
+      "label": "WhatsApp Secundaria",
+      "url": "https://wa.me/50492700210?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20de%20Secundaria%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp."
+    }
+  },
+  "jobs": {
+    "mailto": "mailto:rrhh@virginiasapp.edu.hn?subject=Aplicaci%C3%B3n%20de%20empleo%20-%20%5BNombre%5D&body=Estimado%20equipo%20de%20RRHH%2C%0A%0AAdjunto%20mi%20hoja%20de%20vida...",
+    "status": "PENDING_DECISION_HR_EMAIL"
+  },
+  "suggestions": {
+    "mailto": "mailto:administracion.general@virginiasapp.edu.hn?subject=OPORTUNIDAD%20DE%20MEJORA%20CEEVS",
+    "status": "PENDING_DECISION_SUGGESTIONS_EMAIL"
+  }
+}

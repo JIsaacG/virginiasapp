@@ -1,0 +1,7 @@
+# robots.txt — Centro Educativo Evangélico Virginia Sapp (CEEVS)
+User-agent: *
+Allow: /
+Disallow: /admin.html
+
+# PENDING_DOMAIN_OFFICIAL: confirmar el dominio oficial antes de publicar.
+Sitemap: https://www.virginiasapp.edu.hn/sitemap.xml
