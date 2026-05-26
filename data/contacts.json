@@ -9,23 +9,22 @@
       "label": "WhatsApp Primaria",
       "number": "+50492215752",
       "url": "https://wa.me/50492215752",
-      "status": "PENDING_CONFIRMATION"
+      "status": "CONFIRMED"
     },
     "secondary": {
       "label": "WhatsApp Secundaria",
       "number": "+50492700210",
       "url": "https://wa.me/50492700210",
-      "status": "PENDING_CONFIRMATION"
+      "status": "CONFIRMED"
     }
   },
   "jobs": {
-    "email": "rrhh@virginiasapp.edu.hn",
-    "alternateEmailFromScreenshots": "empleosaideeds@gmail.com",
-    "status": "PENDING_FINAL_DECISION"
+    "email": "empleosadieeds@gmail.com",
+    "status": "CONFIRMED"
   },
   "feedback": {
     "email": "administracion.general@virginiasapp.edu.hn",
     "subject": "OPORTUNIDAD DE MEJORA CEEVS",
-    "status": "PENDING_CONFIRMATION"
+    "status": "CONFIRMED"
   }
 }

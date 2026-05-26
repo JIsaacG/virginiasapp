@@ -11,21 +11,21 @@
   --ceevs-black:  #1E1E1E;
   --ceevs-white:  #FFFFFF;
 
-  /* Paleta heredada (conservada para compatibilidad) */
-  --ink:     #1a0c02;
-  --forest:  #412404;
-  --forest2: #5a3208;
-  --forest3: #6e3f0d;
-  --moss:    #8c5518;
-  --sage:    #b07840;
-  --gold:    #ab6423;
-  --gold2:   #d4882e;
-  --gold3:   #f0b95a;
-  --cream:   #fdf6ec;
-  --cream2:  #f5e8d0;
-  --parch:   #ecdcc0;
+  /* Paleta inicial del sitio: Cafe Dorado */
+  --ink:     #1E1E1E;
+  --forest:  #6A2407;
+  --forest2: #4F1B05;
+  --forest3: #7E3312;
+  --moss:    #A54A18;
+  --sage:    #C68437;
+  --gold:    #D7AF4A;
+  --gold2:   #F57C00;
+  --gold3:   #3BA6E0;
+  --cream:   #FFF9F2;
+  --cream2:  #F8EBDD;
+  --parch:   #EBD7C0;
   --white:   #FFFFFF;
-  --muted:   #7a6248;
+  --muted:   #6F5C4C;
   --r:       10px;
   --rl:      20px;
   --rxl:     32px;

@@ -188,8 +188,8 @@ def check_page(path):
             errors.append('contactenos.html conserva el formulario simulado de contacto')
         if 'contacto-canales' not in content:
             errors.append('contactenos.html no tiene el bloque de canales directos')
-        if 'mailto:rrhh@virginiasapp.edu.hn' not in content:
-            errors.append('Empleos no usa mailto a RRHH (SDD-F4-JOBS-001)')
+        if 'mailto:empleosadieeds@gmail.com' not in content:
+            errors.append('Empleos no usa el mailto oficial confirmado (SDD-F4-JOBS-001)')
 
     # ── Fase 4: validaciones específicas de sugerencias.html ──
     if os.path.basename(path) == 'sugerencias.html':

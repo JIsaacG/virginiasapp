@@ -1,7 +1,7 @@
 /**
  * THEMES — Sistema de paletas de color administrables
  *
- * Proporciona un sistema de temas basado en variables CSS con 5 paletas pre-validadas.
+ * Proporciona un sistema de temas basado en variables CSS con paletas pre-validadas.
  * Los temas se guardan en localStorage (ceevs_theme) y se aplican automáticamente al cargar.
  *
  * IIFE pattern: se ejecuta automáticamente y expone window.ceevsThemes
@@ -10,12 +10,15 @@
 (function() {
   'use strict';
 
+  const DEFAULT_PALETTE = 'cafe_dorado';
   const STORAGE_KEY = 'ceevs_theme';
   const STYLE_ID = 'ceevs-theme-override';
 
   const PALETTES = {
     clasico: {
       label: 'Clásico (Original)',
+      description: 'La paleta histórica del sitio, útil como referencia y punto de retorno.',
+      swatches: ['#412404', '#ab6423', '#f0b95a', '#fdf6ec'],
       forest: '#412404',
       forest2: '#5a3208',
       gold: '#ab6423',
@@ -23,41 +26,60 @@
       gold3: '#f0b95a',
       cream: '#fdf6ec'
     },
-    azul_marino: {
-      label: 'Marino Institucional',
-      forest: '#0c2340',
-      forest2: '#1a3a5c',
-      gold: '#2b6cb0',
-      gold2: '#3182ce',
-      gold3: '#63b3ed',
-      cream: '#ebf4ff'
+    institucional_balanceado: {
+      label: 'Institucional Balanceado',
+      description: 'Negro suave para estructura, cafe para profundidad, dorado y naranja en CTA, y celeste como acento vivo.',
+      swatches: ['#1E1E1E', '#6A2407', '#D7AF4A', '#F57C00', '#3BA6E0'],
+      forest: '#1E1E1E',
+      forest2: '#6A2407',
+      gold: '#D7AF4A',
+      gold2: '#F57C00',
+      gold3: '#3BA6E0',
+      cream: '#FFFFFF'
     },
-    verde_fe: {
-      label: 'Verde Fe',
-      forest: '#1a3a2a',
-      forest2: '#2d5a3d',
-      gold: '#2f855a',
-      gold2: '#38a169',
-      gold3: '#68d391',
-      cream: '#f0fff4'
+    azul_academico: {
+      label: 'Azul Academico',
+      description: 'El azul institucional toma liderazgo visual; dorado y naranja sostienen jerarquia sin perder calidez.',
+      swatches: ['#0B67A5', '#3BA6E0', '#D7AF4A', '#F57C00', '#FFFFFF'],
+      forest: '#0B67A5',
+      forest2: '#084D7B',
+      gold: '#D7AF4A',
+      gold2: '#3BA6E0',
+      gold3: '#F57C00',
+      cream: '#F7FBFF'
     },
-    purpura_real: {
-      label: 'Púrpura Real',
-      forest: '#2d1a4e',
-      forest2: '#44287a',
-      gold: '#6b46c1',
-      gold2: '#805ad5',
-      gold3: '#b794f4',
-      cream: '#faf5ff'
+    cafe_dorado: {
+      label: 'Cafe Dorado',
+      description: 'La combinacion mas institucional para comunicar legado, cercania y sobriedad cristiana.',
+      swatches: ['#6A2407', '#D7AF4A', '#F57C00', '#3BA6E0', '#FFFFFF'],
+      forest: '#6A2407',
+      forest2: '#1E1E1E',
+      gold: '#D7AF4A',
+      gold2: '#F57C00',
+      gold3: '#3BA6E0',
+      cream: '#FFF9F2'
     },
-    terracota: {
-      label: 'Terracota Cálido',
-      forest: '#3d1c0d',
-      forest2: '#5c2d18',
-      gold: '#c05621',
-      gold2: '#dd6b20',
-      gold3: '#f6ad55',
-      cream: '#fffaf0'
+    fuego_mision: {
+      label: 'Fuego Mision',
+      description: 'Naranja y cafe empujan llamados y momentos evangelisticos, con dorado para reforzar valor institucional.',
+      swatches: ['#6A2407', '#F57C00', '#D7AF4A', '#1E1E1E', '#FFFFFF'],
+      forest: '#6A2407',
+      forest2: '#1E1E1E',
+      gold: '#F57C00',
+      gold2: '#D7AF4A',
+      gold3: '#3BA6E0',
+      cream: '#FFF7EF'
+    },
+    contraste_formal: {
+      label: 'Contraste Formal',
+      description: 'Negro y azul para una base solida; dorado y celeste iluminan botones, chips y detalles interactivos.',
+      swatches: ['#1E1E1E', '#0B67A5', '#D7AF4A', '#3BA6E0', '#FFFFFF'],
+      forest: '#1E1E1E',
+      forest2: '#0B67A5',
+      gold: '#D7AF4A',
+      gold2: '#3BA6E0',
+      gold3: '#F57C00',
+      cream: '#F4F8FB'
     }
   };
 
@@ -66,7 +88,7 @@
    * @param {string} id - ID de la paleta (key en PALETTES)
    */
   function apply(id) {
-    const palette = PALETTES[id] || PALETTES.clasico;
+    const palette = PALETTES[id] || PALETTES[DEFAULT_PALETTE];
     let styleEl = document.getElementById(STYLE_ID);
 
     if (!styleEl) {
@@ -120,7 +142,7 @@
   }
 
   /**
-   * Resetea a la paleta por defecto (clasico)
+  * Resetea a la paleta por defecto.
    */
   function reset() {
     try {
@@ -137,9 +159,9 @@
    */
   function getCurrent() {
     try {
-      return localStorage.getItem(STORAGE_KEY) || 'clasico';
+      return localStorage.getItem(STORAGE_KEY) || DEFAULT_PALETTE;
     } catch (e) {
-      return 'clasico';
+      return DEFAULT_PALETTE;
     }
   }
 

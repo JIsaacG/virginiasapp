@@ -648,6 +648,13 @@
   margin-bottom: 6px;
 }
 
+.palette-description {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #6f6255;
+  min-height: 60px;
+}
+
 .palette-active-badge {
   font-size: 12px;
   color: #2f855a;
@@ -672,6 +679,11 @@
 }
 
 .palette-apply-btn:hover { background: var(--forest2, #5a3208); }
+
+.palette-apply-btn:disabled {
+  background: #d8d2c8;
+  cursor: default;
+}
 
 .palette-footer {
   margin-top: 32px;

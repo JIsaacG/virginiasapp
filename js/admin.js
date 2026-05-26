@@ -347,53 +347,53 @@
   }
 
   /* ─── Palette Panel ─── */
-  var PALETTE_LABELS = {
-    clasico:      'Clásico (Original)',
-    azul_marino:  'Marino Institucional',
-    verde_fe:     'Verde Fe',
-    purpura_real: 'Púrpura Real',
-    terracota:    'Terracota Cálido'
-  };
-
-  var PALETTE_SWATCHES = {
-    clasico:      ['#412404', '#ab6423', '#fdf6ec'],
-    azul_marino:  ['#0c2340', '#2b6cb0', '#ebf4ff'],
-    verde_fe:     ['#1a3a2a', '#2f855a', '#f0fff4'],
-    purpura_real: ['#2d1a4e', '#6b46c1', '#faf5ff'],
-    terracota:    ['#3d1c0d', '#c05621', '#fffaf0']
-  };
+  function getPaletteCatalog() {
+    return (window.ceevsThemes && window.ceevsThemes.PALETTES) || {
+      cafe_dorado: {
+        label: 'Cafe Dorado',
+        description: 'La combinacion mas institucional para comunicar legado, cercania y sobriedad cristiana.',
+        swatches: ['#6A2407', '#D7AF4A', '#F57C00', '#3BA6E0', '#FFFFFF']
+      }
+    };
+  }
 
   function renderPalettePanel() {
     var grid = document.getElementById('palette-grid');
     if (!grid) return;
-    var current = window.ceevsThemes ? window.ceevsThemes.getCurrent() : 'clasico';
+    var palettes = getPaletteCatalog();
+    var current = window.ceevsThemes ? window.ceevsThemes.getCurrent() : 'cafe_dorado';
     var html = '';
-    Object.keys(PALETTE_LABELS).forEach(function(id) {
-      var swatches = PALETTE_SWATCHES[id];
+    Object.keys(palettes).forEach(function(id) {
+      var palette = palettes[id];
+      var swatches = palette.swatches || [palette.forest, palette.gold, palette.gold2, palette.cream];
       var isActive = id === current;
       html += '<div class="palette-card' + (isActive ? ' palette-card--active' : '') + '" data-palette-id="' + id + '">' +
         '<div class="palette-preview">' +
           swatches.map(function(c) { return '<div class="palette-swatch" style="background:' + c + '"></div>'; }).join('') +
         '</div>' +
         '<div class="palette-info">' +
-          '<h3>' + PALETTE_LABELS[id] + '</h3>' +
+          '<h3>' + palette.label + '</h3>' +
+          '<p class="palette-description">' + (palette.description || '') + '</p>' +
           (isActive ? '<p class="palette-active-badge">✓ Paleta activa</p>' : '') +
-          '<button class="palette-apply-btn" data-apply-palette="' + id + '">Aplicar</button>' +
+          '<button class="palette-apply-btn" data-apply-palette="' + id + '"' + (isActive ? ' disabled' : '') + '>' + (isActive ? 'Activa' : 'Aplicar') + '</button>' +
         '</div>' +
       '</div>';
     });
     grid.innerHTML = html;
 
-    grid.addEventListener('click', function(e) {
-      var btn = e.target.closest('[data-apply-palette]');
-      if (!btn) return;
-      var paletteId = btn.getAttribute('data-apply-palette');
-      if (window.ceevsThemes) {
-        window.ceevsThemes.save(paletteId);
-        showToast('Paleta "' + PALETTE_LABELS[paletteId] + '" aplicada');
-        renderPalettePanel();
-      }
-    });
+    if (!grid.dataset.paletteBound) {
+      grid.addEventListener('click', function(e) {
+        var btn = e.target.closest('[data-apply-palette]');
+        if (!btn || btn.disabled) return;
+        var paletteId = btn.getAttribute('data-apply-palette');
+        if (window.ceevsThemes) {
+          window.ceevsThemes.save(paletteId);
+          showToast('Paleta "' + palettes[paletteId].label + '" aplicada');
+          renderPalettePanel();
+        }
+      });
+      grid.dataset.paletteBound = 'true';
+    }
   }
 
   /* ─── Video Panel ─── */
@@ -607,7 +607,7 @@
     var resetThemeBtn = document.getElementById('btn-reset-theme');
     if (resetThemeBtn) resetThemeBtn.addEventListener('click', function() {
       if (window.ceevsThemes) window.ceevsThemes.reset();
-      showToast('Paleta restaurada a Clásico');
+      showToast('Paleta restaurada a Cafe Dorado');
       renderPalettePanel();
     });
 

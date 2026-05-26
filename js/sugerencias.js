@@ -9,7 +9,7 @@
 const Sugerencias = {
   name: 'Sugerencias',
 
-  // PENDING_DECISION_SUGGESTIONS_EMAIL — confirmar correo oficial (data/redirects.json)
+  // Correo oficial confirmado para trazabilidad de oportunidades de mejora.
   EMAIL: 'administracion.general@virginiasapp.edu.hn',
   SUBJECT: 'OPORTUNIDAD DE MEJORA CEEVS',
 

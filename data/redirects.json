@@ -20,11 +20,11 @@
     }
   },
   "jobs": {
-    "mailto": "mailto:rrhh@virginiasapp.edu.hn?subject=Aplicaci%C3%B3n%20de%20empleo%20-%20%5BNombre%5D&body=Estimado%20equipo%20de%20RRHH%2C%0A%0AAdjunto%20mi%20hoja%20de%20vida...",
-    "status": "PENDING_DECISION_HR_EMAIL"
+    "mailto": "mailto:empleosadieeds@gmail.com?subject=Aplicaci%C3%B3n%20de%20empleo%20-%20%5BNombre%5D&body=Estimado%20equipo%2C%0A%0AAdjunto%20mi%20hoja%20de%20vida%20para%20su%20consideraci%C3%B3n.%0A%0ANombre%3A%0APuesto%20de%20inter%C3%A9s%3A%0ANivel%2F%C3%A1rea%3A%0ATel%C3%A9fono%3A%0A%0AGracias.",
+    "status": "CONFIRMED"
   },
   "suggestions": {
     "mailto": "mailto:administracion.general@virginiasapp.edu.hn?subject=OPORTUNIDAD%20DE%20MEJORA%20CEEVS",
-    "status": "PENDING_DECISION_SUGGESTIONS_EMAIL"
+    "status": "CONFIRMED"
   }
 }
