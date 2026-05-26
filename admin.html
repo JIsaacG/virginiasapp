@@ -101,7 +101,11 @@
       </div>
 
       <div class="palette-footer">
-        <button class="admin-btn-danger" id="btn-reset-theme">Restaurar paleta inicial (Cafe Dorado)</button>
+        <p class="palette-footer-note" id="palette-global-note">La paleta global del sitio se gestiona desde js/site-settings.js.</p>
+        <div class="palette-footer-actions">
+          <button class="admin-btn-secondary" id="btn-save-theme-global">Guardar paleta activa como global</button>
+          <button class="admin-btn-danger" id="btn-reset-theme">Restaurar paleta global actual</button>
+        </div>
       </div>
     </div>
   </div>
@@ -247,6 +251,7 @@
 <div id="admin-toast"></div>
 
 <!-- Scripts -->
+<script src="js/site-settings.js"></script>
 <script src="js/themes.js"></script>
 <script src="js/video-loader.js"></script>
 <script src="js/inventory.js"></script>

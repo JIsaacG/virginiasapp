@@ -13,9 +13,9 @@
   justify-content: space-between;
   gap: 24px;
   padding: 12px clamp(18px, 4vw, 56px);
-  background: rgba(255, 255, 255, 0.96);
-  color: var(--ceevs-black, #1E1E1E);
-  border-bottom: 1px solid rgba(11, 103, 165, 0.14);
+  background: var(--cream, #FFF9F2);
+  color: var(--ink, #1E1E1E);
+  border-bottom: 1px solid var(--parch, #EBD7C0);
   box-shadow: 0 8px 24px rgba(30, 30, 30, 0.06);
   backdrop-filter: blur(12px);
   transition: box-shadow 0.3s;
@@ -40,8 +40,8 @@
   width: 48px;
   height: 48px;
   border-radius: 999px;
-  background: var(--ceevs-white, #FFFFFF);
-  border: 2px solid rgba(11, 103, 165, 0.20);
+  background: var(--white, #FFFFFF);
+  border: 2px solid var(--gold3, #3BA6E0);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -66,7 +66,7 @@
 .nav-wordmark b {
   font-size: clamp(0.68rem, 1vw, 0.88rem);
   letter-spacing: 0.03em;
-  color: var(--ceevs-blue, #0B67A5);
+  color: var(--forest, #6A2407);
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
@@ -77,7 +77,7 @@
   font-size: 0.70rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--ceevs-brown, #6A2407);
+  color: var(--gold2, #F57C00);
   font-weight: 600;
 }
 
@@ -92,7 +92,7 @@
 }
 
 .nav-links a {
-  color: var(--ceevs-black, #1E1E1E);
+  color: var(--ink, #1E1E1E);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.90rem;
@@ -110,7 +110,7 @@
   bottom: 2px;
   height: 3px;
   border-radius: 999px;
-  background: var(--ceevs-gold, #D7AF4A);
+  background: var(--gold, #D7AF4A);
   transform: scaleX(0);
   transition: transform 0.2s;
 }
@@ -118,7 +118,7 @@
 .nav-links a:hover,
 .nav-links a:focus-visible,
 .nav-links a.nav-active {
-  color: var(--ceevs-blue, #0B67A5);
+  color: var(--forest2, #4F1B05);
   outline: none;
 }
 
@@ -153,22 +153,22 @@
 }
 
 .btn-nav-ghost {
-  color: var(--ceevs-blue, #0B67A5);
-  border: 1.5px solid rgba(11, 103, 165, 0.35);
+  color: var(--forest, #6A2407);
+  border: 1.5px solid var(--sage, #C68437);
   background: transparent;
 }
 
 .btn-nav-ghost:hover,
 .btn-nav-ghost:focus-visible {
-  background: rgba(11, 103, 165, 0.08);
-  border-color: var(--ceevs-blue, #0B67A5);
+  background: var(--cream2, #F8EBDD);
+  border-color: var(--gold2, #F57C00);
   outline: none;
 }
 
 .btn-nav-solid {
-  color: var(--ceevs-white, #FFFFFF);
-  background: var(--ceevs-orange, #F57C00);
-  border: 1.5px solid var(--ceevs-orange, #F57C00);
+  color: var(--white, #FFFFFF);
+  background: var(--gold2, #F57C00);
+  border: 1.5px solid var(--gold2, #F57C00);
 }
 
 .btn-nav-solid:hover,
@@ -195,13 +195,13 @@
 }
 
 .nav-hamburger:hover {
-  background: rgba(11, 103, 165, 0.08);
+  background: var(--cream2, #F8EBDD);
 }
 
 .nav-hamburger span {
   width: 24px;
   height: 2px;
-  background: var(--ceevs-black, #1E1E1E);
+  background: var(--forest, #6A2407);
   border-radius: 999px;
   display: block;
   transition: all 0.3s;
@@ -221,7 +221,7 @@
 /* ── Foco visible global ── */
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--ceevs-blue, #0B67A5);
+  outline: 2px solid var(--gold2, #F57C00);
   outline-offset: 3px;
 }
 
@@ -247,7 +247,7 @@ button:focus-visible {
   right: 0;
   width: min(88vw, 360px);
   height: 100%;
-  background: #fff;
+  background: var(--cream, #FFF9F2);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -265,7 +265,7 @@ button:focus-visible {
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 1px solid rgba(11, 103, 165, 0.12);
+  border-bottom: 1px solid var(--parch, #EBD7C0);
   flex-shrink: 0;
 }
 
@@ -273,26 +273,26 @@ button:focus-visible {
   font-size: 1.1rem;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: var(--ceevs-blue, #0B67A5);
+  color: var(--forest, #6A2407);
 }
 
 .mm-close {
   width: 40px;
   height: 40px;
   border: 0;
-  background: rgba(11, 103, 165, 0.08);
+  background: var(--cream2, #F8EBDD);
   border-radius: 8px;
   font-size: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ceevs-black, #1E1E1E);
+  color: var(--ink, #1E1E1E);
   transition: background 0.2s;
 }
 
 .mm-close:hover {
-  background: rgba(11, 103, 165, 0.16);
+  background: var(--parch, #EBD7C0);
 }
 
 .mm-links {
@@ -307,7 +307,7 @@ button:focus-visible {
   align-items: center;
   gap: 14px;
   padding: 13px 24px;
-  color: var(--ceevs-black, #1E1E1E);
+  color: var(--ink, #1E1E1E);
   text-decoration: none;
   font-size: 0.97rem;
   font-weight: 600;
@@ -317,16 +317,16 @@ button:focus-visible {
 
 .mm-links a:hover,
 .mm-links a:focus-visible {
-  background: rgba(11, 103, 165, 0.06);
-  color: var(--ceevs-blue, #0B67A5);
-  border-left-color: var(--ceevs-gold, #D7AF4A);
+  background: var(--cream2, #F8EBDD);
+  color: var(--forest2, #4F1B05);
+  border-left-color: var(--gold, #D7AF4A);
   outline: none;
 }
 
 .mm-num {
   font-size: 0.72rem;
   font-weight: 700;
-  color: var(--ceevs-gold, #D7AF4A);
+  color: var(--gold2, #F57C00);
   letter-spacing: 0.08em;
   flex-shrink: 0;
   min-width: 24px;
@@ -337,7 +337,7 @@ button:focus-visible {
   flex-direction: column;
   gap: 10px;
   padding: 16px 24px;
-  border-top: 1px solid rgba(11, 103, 165, 0.12);
+  border-top: 1px solid var(--parch, #EBD7C0);
   flex-shrink: 0;
 }
 
@@ -356,19 +356,19 @@ button:focus-visible {
 }
 
 .mm-btn-ghost {
-  color: var(--ceevs-blue, #0B67A5);
-  border: 1.5px solid rgba(11, 103, 165, 0.35);
+  color: var(--forest, #6A2407);
+  border: 1.5px solid var(--sage, #C68437);
   background: transparent;
 }
 
 .mm-btn-ghost:hover {
-  background: rgba(11, 103, 165, 0.08);
+  background: var(--cream2, #F8EBDD);
 }
 
 .mm-btn-solid {
-  color: #fff;
-  background: var(--ceevs-orange, #F57C00);
-  border: 1.5px solid var(--ceevs-orange, #F57C00);
+  color: var(--white, #FFFFFF);
+  background: var(--gold2, #F57C00);
+  border: 1.5px solid var(--gold2, #F57C00);
 }
 
 .mm-btn-solid:hover {
@@ -384,12 +384,12 @@ button:focus-visible {
   font-weight: 700;
   letter-spacing: 0.08em;
   padding: 12px 24px;
-  border-top: 1px solid rgba(11, 103, 165, 0.08);
+  border-top: 1px solid var(--parch, #EBD7C0);
   flex-shrink: 0;
 }
 
 .language-separator {
-  color: rgba(30, 30, 30, 0.30);
+  color: var(--muted, #6F5C4C);
 }
 
 /* Botones del conmutador ES/EN */
@@ -400,7 +400,7 @@ button:focus-visible {
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: rgba(30, 30, 30, 0.45);
+  color: var(--muted, #6F5C4C);
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 6px;
@@ -409,13 +409,13 @@ button:focus-visible {
 
 .lang-btn:hover,
 .lang-btn:focus-visible {
-  color: var(--ceevs-blue, #0B67A5);
+  color: var(--forest, #6A2407);
   outline: none;
 }
 
 .lang-btn.lang-active {
-  color: var(--ceevs-blue, #0B67A5);
-  background: rgba(11, 103, 165, 0.10);
+  color: var(--forest, #6A2407);
+  background: var(--cream2, #F8EBDD);
 }
 
 /* Conmutador de escritorio inyectado en la barra de navegación */

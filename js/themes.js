@@ -2,7 +2,8 @@
  * THEMES — Sistema de paletas de color administrables
  *
  * Proporciona un sistema de temas basado en variables CSS con paletas pre-validadas.
- * Los temas se guardan en localStorage (ceevs_theme) y se aplican automáticamente al cargar.
+ * La paleta global se lee desde window.CEEVS_SITE_SETTINGS y la selección local
+ * temporal se guarda en localStorage (ceevs_theme).
  *
  * IIFE pattern: se ejecuta automáticamente y expone window.ceevsThemes
  */
@@ -10,7 +11,6 @@
 (function() {
   'use strict';
 
-  const DEFAULT_PALETTE = 'cafe_dorado';
   const STORAGE_KEY = 'ceevs_theme';
   const STYLE_ID = 'ceevs-theme-override';
 
@@ -83,12 +83,17 @@
     }
   };
 
+  function getDefaultPalette() {
+    const configured = window.CEEVS_SITE_SETTINGS && window.CEEVS_SITE_SETTINGS.defaultPalette;
+    return PALETTES[configured] ? configured : 'institucional_balanceado';
+  }
+
   /**
    * Aplica una paleta inyectando un <style> en <head>
    * @param {string} id - ID de la paleta (key en PALETTES)
    */
   function apply(id) {
-    const palette = PALETTES[id] || PALETTES[DEFAULT_PALETTE];
+    const palette = PALETTES[id] || PALETTES[getDefaultPalette()];
     let styleEl = document.getElementById(STYLE_ID);
 
     if (!styleEl) {
@@ -111,15 +116,17 @@
    * Carga el tema guardado en localStorage y lo aplica
    */
   function loadSaved() {
+    let paletteId = getDefaultPalette();
     try {
       const savedId = localStorage.getItem(STORAGE_KEY);
       if (savedId && PALETTES[savedId]) {
-        apply(savedId);
+        paletteId = savedId;
       }
     } catch (e) {
       // localStorage no disponible o error de acceso
       console.warn('Theme loader: localStorage not available', e);
     }
+    apply(paletteId);
   }
 
   /**
@@ -147,11 +154,10 @@
   function reset() {
     try {
       localStorage.removeItem(STORAGE_KEY);
-      const styleEl = document.getElementById(STYLE_ID);
-      if (styleEl) styleEl.remove();
     } catch (e) {
       console.error('Theme reset failed:', e);
     }
+    apply(getDefaultPalette());
   }
 
   /**
@@ -159,9 +165,10 @@
    */
   function getCurrent() {
     try {
-      return localStorage.getItem(STORAGE_KEY) || DEFAULT_PALETTE;
+      const savedId = localStorage.getItem(STORAGE_KEY);
+      return savedId && PALETTES[savedId] ? savedId : getDefaultPalette();
     } catch (e) {
-      return DEFAULT_PALETTE;
+      return getDefaultPalette();
     }
   }
 
@@ -172,7 +179,8 @@
     loadSaved: loadSaved,
     save: save,
     reset: reset,
-    getCurrent: getCurrent
+    getCurrent: getCurrent,
+    getDefault: getDefaultPalette
   };
 
   // Auto-cargar tema guardado al iniciar

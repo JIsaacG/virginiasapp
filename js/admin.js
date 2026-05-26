@@ -357,16 +357,88 @@
     };
   }
 
+  function getGlobalPaletteId() {
+    if (window.ceevsThemes && window.ceevsThemes.getDefault) {
+      return window.ceevsThemes.getDefault();
+    }
+    return 'institucional_balanceado';
+  }
+
+  function buildSiteSettingsContent(paletteId) {
+    return [
+      'window.CEEVS_SITE_SETTINGS = {',
+      "  defaultPalette: '" + paletteId + "'",
+      '};',
+      ''
+    ].join('\n');
+  }
+
+  function downloadSiteSettingsFile(paletteId) {
+    var blob = new Blob([buildSiteSettingsContent(paletteId)], { type: 'application/javascript;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = 'site-settings.js';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(function() { URL.revokeObjectURL(url); }, 0);
+  }
+
+  async function savePaletteAsGlobal() {
+    var paletteId = window.ceevsThemes ? window.ceevsThemes.getCurrent() : 'institucional_balanceado';
+    var palettes = getPaletteCatalog();
+    var content = buildSiteSettingsContent(paletteId);
+
+    if (window.showDirectoryPicker) {
+      try {
+        var rootHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        var jsHandle = await rootHandle.getDirectoryHandle('js');
+        var fileHandle = await jsHandle.getFileHandle('site-settings.js', { create: true });
+        var writable = await fileHandle.createWritable();
+        await writable.write(content);
+        await writable.close();
+
+        window.CEEVS_SITE_SETTINGS = window.CEEVS_SITE_SETTINGS || {};
+        window.CEEVS_SITE_SETTINGS.defaultPalette = paletteId;
+
+        try {
+          localStorage.removeItem('ceevs_theme');
+        } catch (e) {}
+
+        if (window.ceevsThemes) {
+          window.ceevsThemes.apply(paletteId);
+        }
+
+        showToast('Paleta global "' + palettes[paletteId].label + '" guardada en js/site-settings.js. Haz commit y push para publicarla.');
+        renderPalettePanel();
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+      }
+    }
+
+    downloadSiteSettingsFile(paletteId);
+    showToast('Se descargó site-settings.js. Reemplázalo en /js y luego haz commit y push.');
+  }
+
   function renderPalettePanel() {
     var grid = document.getElementById('palette-grid');
     if (!grid) return;
     var palettes = getPaletteCatalog();
-    var current = window.ceevsThemes ? window.ceevsThemes.getCurrent() : 'cafe_dorado';
+    var current = window.ceevsThemes ? window.ceevsThemes.getCurrent() : 'institucional_balanceado';
+    var globalPalette = getGlobalPaletteId();
+    var globalLabel = palettes[globalPalette] ? palettes[globalPalette].label : 'Cafe Dorado';
+    var footerNote = document.getElementById('palette-global-note');
+    if (footerNote) {
+      footerNote.textContent = '"Aplicar" cambia solo este navegador. "Guardar como global" actualiza js/site-settings.js del proyecto. Paleta global actual: ' + globalLabel + '.';
+    }
     var html = '';
     Object.keys(palettes).forEach(function(id) {
       var palette = palettes[id];
       var swatches = palette.swatches || [palette.forest, palette.gold, palette.gold2, palette.cream];
       var isActive = id === current;
+      var isGlobal = id === globalPalette;
       html += '<div class="palette-card' + (isActive ? ' palette-card--active' : '') + '" data-palette-id="' + id + '">' +
         '<div class="palette-preview">' +
           swatches.map(function(c) { return '<div class="palette-swatch" style="background:' + c + '"></div>'; }).join('') +
@@ -374,6 +446,7 @@
         '<div class="palette-info">' +
           '<h3>' + palette.label + '</h3>' +
           '<p class="palette-description">' + (palette.description || '') + '</p>' +
+          (isGlobal ? '<p class="palette-global-badge">◎ Paleta global</p>' : '') +
           (isActive ? '<p class="palette-active-badge">✓ Paleta activa</p>' : '') +
           '<button class="palette-apply-btn" data-apply-palette="' + id + '"' + (isActive ? ' disabled' : '') + '>' + (isActive ? 'Activa' : 'Aplicar') + '</button>' +
         '</div>' +
@@ -607,8 +680,13 @@
     var resetThemeBtn = document.getElementById('btn-reset-theme');
     if (resetThemeBtn) resetThemeBtn.addEventListener('click', function() {
       if (window.ceevsThemes) window.ceevsThemes.reset();
-      showToast('Paleta restaurada a Cafe Dorado');
+      showToast('Paleta local restaurada a la configuración global');
       renderPalettePanel();
+    });
+
+    var saveGlobalThemeBtn = document.getElementById('btn-save-theme-global');
+    if (saveGlobalThemeBtn) saveGlobalThemeBtn.addEventListener('click', function() {
+      savePaletteAsGlobal();
     });
 
     var saveVideoBtn = document.getElementById('btn-save-video');

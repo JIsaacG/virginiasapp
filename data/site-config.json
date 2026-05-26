@@ -10,6 +10,7 @@
     "logo": "assets/logo principal.png",
     "logoFallback": "assets/logo.jpg",
     "logoAlt": "Logo del Centro Educativo Evangélico Virginia Sapp",
+    "defaultPalette": "institucional_balanceado",
     "colors": {
       "blue": "#0B67A5",
       "sky": "#3BA6E0",
