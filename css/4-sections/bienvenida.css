@@ -9,6 +9,16 @@
   padding: 96px 8vw;
 }
 
+/* Encabezado: queda justo encima del menú sticky */
+.bienvenida--intro {
+  padding-bottom: 40px;
+}
+
+/* Galería: queda justo debajo del menú sticky */
+.bienvenida--gallery-section {
+  padding-top: 40px;
+}
+
 .bienvenida-inner {
   max-width: 1140px;
   margin: 0 auto;
@@ -16,7 +26,7 @@
 
 .bienvenida-head {
   max-width: 720px;
-  margin: 0 auto 48px;
+  margin: 0 auto;
   text-align: center;
 }
 
