@@ -4,7 +4,9 @@
 ═══════════════════════════════════════ */
 
 /* ── Navegación interna (pills) — SDD-F3-QS-001 ── */
+/* Oculta temporalmente a solicitud institucional. Para reactivarla, quitar `display: none`. */
 .qs-nav {
+  display: none;
   position: sticky;
   top: 72px;
   z-index: 500;
