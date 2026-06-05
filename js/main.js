@@ -5,6 +5,7 @@ const Main = {
 
   init() {
     this._setupCursor();
+    this._setupHeroGallery();
     this._setupParallaxAndNavbar();
     this._setupMobileMenu();
     this._setupNavActive();
@@ -16,6 +17,101 @@ const Main = {
     this._setupDropdowns();
     this._setupValorCards();
     this._setupXPLinks();
+  },
+
+  _setupHeroGallery() {
+    const strip = document.querySelector('.hero-mini-strip');
+    const prevBtn = document.querySelector('.hero-slider-btn.prev');
+    const nextBtn = document.querySelector('.hero-slider-btn.next');
+    const lightbox = document.getElementById('hero-lightbox');
+    const img = document.getElementById('hero-lightbox-img');
+    const title = document.getElementById('hero-lightbox-title');
+    if (!strip || !lightbox || !img) return;
+
+    const openLightbox = card => {
+      const src = card.dataset.src;
+      const alt = card.dataset.alt || '';
+      const label = card.dataset.title || '';
+      img.alt = alt;
+      img.src = src;
+      if (title) title.textContent = label;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    strip.addEventListener('click', e => {
+      const card = e.target.closest('.hero-mini-card');
+      if (!card) return;
+      openLightbox(card);
+    });
+
+    const closeLightbox = () => {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox || e.target.closest('.hero-lightbox-close')) closeLightbox();
+    });
+
+    const getStep = () => {
+      const card = strip.querySelector('.hero-mini-card');
+      if (!card) return Math.round(strip.clientWidth / 2);
+      const style = getComputedStyle(card);
+      return card.offsetWidth + parseInt(style.marginRight, 10);
+    };
+
+    const scrollBy = direction => {
+      const step = getStep();
+      const target = direction > 0
+        ? Math.min(strip.scrollLeft + step, strip.scrollWidth - strip.clientWidth)
+        : Math.max(strip.scrollLeft - step, 0);
+      strip.scrollTo({ left: target, behavior: 'smooth' });
+    };
+
+    if (prevBtn) prevBtn.addEventListener('click', () => { scrollBy(-1); resetAutoScroll(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { scrollBy(1); resetAutoScroll(); });
+
+    let autoScroll = null;
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      autoScroll = setInterval(() => {
+        if (strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 10) {
+          strip.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          scrollBy(1);
+        }
+      }, 4200);
+    };
+
+    const stopAutoScroll = () => {
+      if (autoScroll) {
+        clearInterval(autoScroll);
+        autoScroll = null;
+      }
+    };
+
+    const resetAutoScroll = () => {
+      stopAutoScroll();
+      startAutoScroll();
+    };
+
+    strip.addEventListener('mouseenter', stopAutoScroll);
+    strip.addEventListener('mouseleave', startAutoScroll);
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') {
+        scrollBy(1);
+        resetAutoScroll();
+      }
+      if (e.key === 'ArrowLeft') {
+        scrollBy(-1);
+        resetAutoScroll();
+      }
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+    });
+
+    startAutoScroll();
   },
 
   _setupCursor() {

@@ -254,12 +254,39 @@
 
   <div class="hero-right">
     <div class="hero-photo-stack">
-      <div class="hero-photo-main">
-        <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600&q=75&auto=format" alt="Estudiantes del Instituto Evangélico Virginia Sapp" loading="eager" data-img-key="hero-main">
+      <div class="hero-slider">
+        <button type="button" class="hero-slider-btn prev" aria-label="Anterior imagen">‹</button>
+        <div class="hero-mini-strip" aria-label="Galería de vista previa de imágenes">
+          <button type="button" class="hero-mini-card" data-src="https://virginiasapp.edu.hn/wp-content/uploads/2025/10/IMG_1816-1400x786.jpg" data-alt="Estudiantes en actividades escolares" data-title="Vida escolar en Virginia Sapp">
+            <img src="https://virginiasapp.edu.hn/wp-content/uploads/2025/10/IMG_1816-1400x786.jpg" alt="Miniatura estudiantes en actividades escolares" loading="lazy">
+            <div class="hero-mini-overlay"><span>VER GRANDE</span></div>
+          </button>
+          <button type="button" class="hero-mini-card" data-src="https://virginiasapp.edu.hn/wp-content/uploads/2026/01/IMG_5896.jpg" data-alt="Aula dinámica" data-title="Aula dinámica en Virginia Sapp">
+            <img src="https://virginiasapp.edu.hn/wp-content/uploads/2026/01/IMG_5896.jpg" alt="Miniatura aula dinámica" loading="lazy">
+            <div class="hero-mini-overlay"><span>VER GRANDE</span></div>
+          </button>
+          <button type="button" class="hero-mini-card" data-src="https://virginiasapp.edu.hn/wp-content/uploads/2025/12/IMG_4411.jpg" data-alt="Momentos de estudio" data-title="Momentos de estudio y convivencia">
+            <img src="https://virginiasapp.edu.hn/wp-content/uploads/2025/12/IMG_4411.jpg" alt="Miniatura momentos de estudio" loading="lazy">
+            <div class="hero-mini-overlay"><span>VER GRANDE</span></div>
+          </button>
+          <button type="button" class="hero-mini-card" data-src="https://virginiasapp.edu.hn/wp-content/uploads/2025/12/IMG_2006.jpg" data-alt="Campus y comunidad" data-title="Campus y sentido de comunidad">
+            <img src="https://virginiasapp.edu.hn/wp-content/uploads/2025/12/IMG_2006.jpg" alt="Miniatura campus y comunidad" loading="lazy">
+            <div class="hero-mini-overlay"><span>VER GRANDE</span></div>
+          </button>
+          <button type="button" class="hero-mini-card" data-src="https://virginiasapp.edu.hn/wp-content/uploads/2026/03/IMG_7464.JPG-712x400.jpeg" data-alt="Estudiantes del Instituto Evangélico Virginia Sapp" data-title="Admisiones en la biblioteca">
+            <img src="https://virginiasapp.edu.hn/wp-content/uploads/2026/03/IMG_7464.JPG-712x400.jpeg" alt="Miniatura estudiantes en la biblioteca" loading="lazy">
+            <div class="hero-mini-overlay"><span>VER GRANDE</span></div>
+          </button>
+          <button type="button" class="hero-mini-card" data-src="https://virginiasapp.edu.hn/wp-content/uploads/2026/01/IMG_8171.jpg" data-alt="Clases en Virginia Sapp" data-title="Aula activa">
+            <img src="https://virginiasapp.edu.hn/wp-content/uploads/2026/01/IMG_8171.jpg" alt="Miniatura clases en Virginia Sapp" loading="lazy">
+            <div class="hero-mini-overlay"><span>VER GRANDE</span></div>
+          </button>
+        </div>
+        <button type="button" class="hero-slider-btn next" aria-label="Siguiente imagen">›</button>
       </div>
-      <div class="hero-photo-float">
-        <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=400&q=75&auto=format" alt="Clases en Virginia Sapp" loading="eager" data-img-key="hero-float">
-      </div>
+    </div>
+    <div class="hero-photo-meta">
+      <!--
       <div class="hero-pill">
         <div class="hero-pill-num">A+</div>
         <div class="hero-pill-label">Excelencia académica</div>
@@ -268,6 +295,7 @@
         <span class="hero-tag-dot"></span>
         <span>Admisiones 2026–2027 abiertas</span>
       </div>
+      -->
     </div>
   </div>
 
@@ -276,6 +304,15 @@
     <span class="scroll-text">Explorar</span>
   </div>
 </section>
+
+<!-- Hero mini lightbox -->
+<div id="hero-lightbox" class="hero-lightbox" role="dialog" aria-modal="true" aria-labelledby="hero-lightbox-title">
+  <div class="hero-lightbox-inner">
+    <button class="hero-lightbox-close" aria-label="Cerrar imagen">✕</button>
+    <img id="hero-lightbox-img" alt="Imagen ampliada del hero">
+    <div class="hero-lightbox-title" id="hero-lightbox-title"></div>
+  </div>
+</div>
 
 <!-- MARQUEE -->
 <div class="marquee-strip" aria-hidden="true">
@@ -324,40 +361,7 @@
 
 <!-- Preview: Historia (resumen) -->
 <!-- ─── HISTORIA ─── -->
-<section class="historia" id="historia">
-  <div class="section-label"><span>Nuestra identidad</span></div>
-  <div class="historia-grid">
-    <div class="historia-text reveal-left">
-      <h2>Más de seis décadas<br>sembrando <em>vidas</em></h2>
-      <p>El <strong>Instituto Evangélico Virginia Sapp</strong> se fundó en 1962 con el nombre de "Instituto Evangélico" por iniciativa de la misionera estadounidense <strong>Virginia Sapp</strong>, con el apoyo de la Misión Evangélica Mundial y padres de familia.</p>
-      <p>Desde sus inicios fue concebido como una institución <strong>sin fines de lucro</strong>, con el propósito de brindar a la sociedad hondureña una alternativa diferente de educación Cristocéntrica con excelencia, fundamentada bajo principios y valores cristianos que transforman vidas y comunidades.</p>
-      <div class="historia-timeline">
-        <div class="timeline-item">
-          <div class="timeline-year">1962 — Fundación</div>
-          <div class="timeline-text">La misionera <strong>Virginia Sapp</strong> funda el Instituto Evangélico en Tegucigalpa con apoyo de la Misión Evangélica Mundial.</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-year">Décadas 70–80</div>
-          <div class="timeline-text">Crecimiento institucional y consolidación del modelo educativo Cristocéntrico en Honduras.</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-year">Actualidad</div>
-          <div class="timeline-text"><strong>64 años</strong> de legado. Tres niveles, programa bilingüe y cientos de egresados transformando Honduras.</div>
-        </div>
-      </div>
-    </div>
-    <div class="historia-image-wrap reveal-right">
-      <div class="historia-main-img">
-        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=700&q=75&auto=format" alt="Historia del Instituto Virginia Sapp" loading="lazy" data-img-key="index-historia">
-      </div>
-      <div class="historia-float-card">
-        <div class="float-card-num">1962</div>
-        <div class="float-card-text">Año de fundación por Virginia Sapp · Tegucigalpa</div>
-      </div>
-    </div>
-  </div>
-</section>
-
+<!-- Historia section removed -->
 
 <!-- ─── GALERÍA ─── -->
 <section class="galeria" id="galeria">
