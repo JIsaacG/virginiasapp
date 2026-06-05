@@ -2,7 +2,7 @@
   "admissions": {
     "edubox": "https://portal.edubox.app/login/virginiasapp",
     "email": "admisiones@virginiasapp.edu.hn",
-    "status": "PENDING_CONFIRMATION_EMAIL"
+    "status": "CONFIRMED"
   },
   "whatsapp": {
     "primary": {
