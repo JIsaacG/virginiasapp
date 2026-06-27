@@ -314,9 +314,12 @@
 .mem-stat-label { font-size:11px; color:rgba(255,255,255,.4); margin-top:3px; }
 .memoria-grid {
   display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
-  margin-bottom:16px;
+  margin:0 auto 16px;
+  /* El tablero es cuadrado (4×4). Lo limitamos a la altura disponible
+     para que las 16 cartas siempre quepan sin scroll vertical. */
+  max-width:min(100%, calc(90vh - 235px));
 }
-@media(max-width:460px){ .memoria-grid{ grid-template-columns:repeat(4,1fr); gap:7px; } }
+@media(max-width:460px){ .memoria-grid{ gap:7px; max-width:min(100%, calc(92vh - 200px)); } }
 .memoria-card {
   perspective:800px; cursor:pointer;
   aspect-ratio:1;
