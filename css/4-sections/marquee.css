@@ -46,17 +46,28 @@
 .float-card-num { font-family:'Playfair Display',serif; font-size:40px; font-weight:900; color:var(--gold2); line-height:1; }
 .float-card-text { font-size:12px; color:rgba(255,255,255,.55); margin-top:4px; line-height:1.4; }
 
-/* Reel de Instagram embebido en el slot de historia */
-.historia-reel { width:100%; max-width:400px; }
-.historia-reel .instagram-media {
-  margin:0 !important;
-  min-width:0 !important;
-  width:100% !important;
-  max-width:100% !important;
-  border-radius:var(--rxl) !important;
-  box-shadow:0 32px 80px rgba(65,36,4,.18) !important;
+/* Reel de Instagram embebido en el slot de historia.
+   Marco vertical 9:16: recorta cabecera y pie de IG para mostrar solo el video. */
+.historia-reel {
+  position:relative;
+  width:100%;
+  max-width:380px;
+  aspect-ratio:9 / 16;
+  border-radius:var(--rxl);
+  overflow:hidden;
+  box-shadow:0 32px 80px rgba(65,36,4,.18);
+  background:#000;
+}
+.historia-reel iframe {
+  position:absolute;
+  top:-54px;            /* oculta la cabecera (avatar/usuario/ver perfil) */
+  left:0;
+  width:100%;
+  height:calc(100% + 240px); /* extiende para que el video llene y el pie quede recortado abajo */
+  border:0;
+  display:block;
 }
 @media (max-width:768px){
-  .historia-reel { max-width:360px; margin:0 auto; }
+  .historia-reel { max-width:340px; margin:0 auto; }
 }
 
