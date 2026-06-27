@@ -8,16 +8,19 @@
   position: fixed;
   bottom: 8px;
   left: 0;
-  width: 150px;
+  width: 95px;
   height: auto;
   z-index: 90;            /* sobre el contenido, bajo modales/navbar */
-  pointer-events: none;   /* nunca bloquea clics */
+  pointer-events: none;   /* el contenedor no bloquea clics... */
   will-change: transform;
   transform: translateX(-260px);
   display: none;
 }
 
 .mascota.is-active { display: block; }
+
+/* ...pero el león sí es clicable */
+.mascota__inner { pointer-events: auto; cursor: pointer; }
 
 /* Flip horizontal según la dirección de marcha */
 .mascota__inner {
@@ -35,21 +38,39 @@
 
 /* Rebote sutil mientras corre */
 .mascota.is-running .mascota__img {
-  animation: mascota-bob 0.24s ease-in-out infinite;
+  animation: mascota-bob 0.30s ease-in-out infinite;
 }
 
 @keyframes mascota-bob {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-7px); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* Brinco al darle clic */
+.mascota.is-happy .mascota__img {
+  animation: mascota-hop 0.6s ease-out 1;
+}
+
+@keyframes mascota-hop {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(-24px); }
+  55%  { transform: translateY(0); }
+  72%  { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+/* Realce sutil al pasar el mouse (invita a hacer clic) */
+.mascota__inner:hover .mascota__img {
+  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.28)) brightness(1.06);
 }
 
 /* Tablet / móvil: león más pequeño */
 @media (max-width: 1024px) {
-  .mascota { width: 120px; }
+  .mascota { width: 78px; }
 }
 
 @media (max-width: 640px) {
-  .mascota { width: 92px; bottom: 4px; }
+  .mascota { width: 60px; bottom: 4px; }
 }
 
 /* Nota: la mascota es decorativa de marca y se muestra siempre.

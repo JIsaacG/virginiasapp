@@ -1,43 +1,49 @@
 /**
  * MASCOTA — León animado que recorre la página
  *
- * Reproduce los frames de assets/animacion/ para dar sensación de
- * dinamismo: el león ENTRA corriendo por un lado, se detiene a SALUDAR
- * y SALE corriendo por el otro extremo. En el siguiente ciclo reaparece
- * por el lado contrario, simulando que cruza entre las páginas del sitio.
+ * Da sensación de dinamismo sin cansar: el león aparece cada cierto tiempo
+ * con un comportamiento ALEATORIO (cruza, saluda, se asoma y se devuelve...),
+ * se mueve LENTO y con suavidad (acelera y frena), y si le das CLIC saluda
+ * con un brinquito y luego se va.
  *
- * Frames:
+ * Frames (assets/animacion/):
  *   1, 4, 2  → ciclo de carrera
  *   5, 6     → saludo (mano arriba)
  *   3        → pose en reposo
  *
- * Todos los frames miran hacia la DERECHA; al ir hacia la izquierda se
- * voltea con scaleX(-1).
+ * Todos miran a la DERECHA; al ir a la izquierda se voltea con scaleX(-1).
  */
 
 const Mascota = (function () {
   const BASE = 'assets/animacion/';
-  const RUN = ['1', '4', '2'];   // ciclo de carrera
-  const WAVE = ['5', '6'];        // saludo
+  const RUN = ['1', '4', '2'];
+  const WAVE = ['5', '6'];
   const IDLE = '3';
 
-  const SPEED = 0.34;             // px por ms (velocidad de carrera)
-  const RUN_FRAME_MS = 100;       // cambio de frame al correr
-  const WAVE_FRAME_MS = 320;      // cambio de frame al saludar
-  const WAVE_DURATION = 2600;     // cuánto saluda (ms)
-  const FIRST_DELAY = 800;        // espera inicial tras cargar
-  const PAUSE_MIN = 7000;         // pausa entre apariciones
-  const PAUSE_RANGE = 6000;
-
-  let started = false;
+  const BASE_SPEED = 0.085;     // px por ms — LENTO (antes 0.34)
+  const RUN_FRAME_MS = 150;     // cambio de frame al correr
+  const WAVE_FRAME_MS = 300;    // cambio de frame al saludar
+  const FIRST_DELAY = 900;      // espera inicial
+  const PAUSE_MIN = 9000;       // pausa mínima entre apariciones
+  const PAUSE_MAX = 20000;      // pausa máxima
 
   let wrap, inner, img;
-  let raf = null;
-  let frameTimer = null;
-  let waveTimer = null;
-  let fromLeft = true;
+  let raf = null, frameTimer = null, waveTimer = null, nextTimer = null;
+  let token = 0;                // testigo de cancelación
+  let curX = 0, curDir = 1;     // posición/dirección actuales
+  let speed = BASE_SPEED;       // velocidad de la escena en curso
+  let started = false;
 
-  function src(n) { return BASE + n + '.png'; }
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const src = (n) => BASE + n + '.png';
+
+  // Curvas de aceleración para que no se vea robótico
+  const ease = {
+    linear: (t) => t,
+    in:     (t) => t * t,
+    out:    (t) => 1 - (1 - t) * (1 - t),
+    inOut:  (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
+  };
 
   function preload() {
     [...RUN, ...WAVE, IDLE].forEach((n) => { const i = new Image(); i.src = src(n); });
@@ -47,6 +53,7 @@ const Mascota = (function () {
     wrap = document.createElement('div');
     wrap.className = 'mascota';
     wrap.setAttribute('aria-hidden', 'true');
+    wrap.title = '¡Hola! 🦁';
 
     inner = document.createElement('div');
     inner.className = 'mascota__inner';
@@ -60,8 +67,11 @@ const Mascota = (function () {
     inner.appendChild(img);
     wrap.appendChild(inner);
     document.body.appendChild(wrap);
+
+    wrap.addEventListener('click', onClick);
   }
 
+  function setStart(x) { curX = x; setX(x); }
   function setX(x) { wrap.style.transform = 'translateX(' + x + 'px)'; }
   function face(dir) { inner.style.transform = dir < 0 ? 'scaleX(-1)' : 'scaleX(1)'; }
 
@@ -74,111 +84,182 @@ const Mascota = (function () {
       img.src = src(frames[i]);
     }, ms);
   }
+  function stopFrames() { if (frameTimer) { clearInterval(frameTimer); frameTimer = null; } }
 
-  function stopFrames() {
-    if (frameTimer) { clearInterval(frameTimer); frameTimer = null; }
+  function stopMotion() {
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    if (waveTimer) { clearTimeout(waveTimer); waveTimer = null; }
+    stopFrames();
   }
 
-  // Corre de x0 a x1 y luego ejecuta done()
-  function run(x0, x1, done) {
-    const dir = x1 >= x0 ? 1 : -1;
-    face(dir);
-    wrap.classList.add('is-running');
-    startFrames(RUN, RUN_FRAME_MS);
+  const vw = () => window.innerWidth;
+  const offW = () => wrap.offsetWidth || 95;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-    let x = x0;
-    let last = null;
-    setX(x);
+  // Mueve de la posición actual a x1; devuelve false si fue cancelado
+  function moveTo(x1, spd, easing) {
+    return new Promise((resolve) => {
+      const my = token;
+      const x0 = curX;
+      const dir = x1 >= x0 ? 1 : -1;
+      const dur = Math.max(Math.abs(x1 - x0) / spd, 1);
+      curDir = dir;
+      face(dir);
+      wrap.classList.add('is-running');
+      startFrames(RUN, RUN_FRAME_MS);
 
-    function step(t) {
-      if (last === null) last = t;
-      const dt = Math.min(t - last, 48); // limita saltos al cambiar de pestaña
-      last = t;
-      x += dir * SPEED * dt;
-
-      const arrived = dir > 0 ? x >= x1 : x <= x1;
-      if (arrived) {
-        setX(x1);
-        wrap.classList.remove('is-running');
-        stopFrames();
-        raf = null;
-        if (done) done();
-        return;
+      let start = null;
+      function step(t) {
+        if (my !== token) { resolve(false); return; }
+        if (start === null) start = t;
+        const p = Math.min((t - start) / dur, 1);
+        curX = x0 + (x1 - x0) * easing(p);
+        setX(curX);
+        if (p >= 1) {
+          wrap.classList.remove('is-running');
+          stopFrames();
+          raf = null;
+          resolve(true);
+          return;
+        }
+        raf = requestAnimationFrame(step);
       }
-      setX(x);
       raf = requestAnimationFrame(step);
-    }
-    raf = requestAnimationFrame(step);
-  }
-
-  // Saluda mirando hacia faceDir durante WAVE_DURATION
-  function wave(faceDir, done) {
-    face(faceDir);
-    startFrames(WAVE, WAVE_FRAME_MS);
-    waveTimer = setTimeout(() => {
-      stopFrames();
-      img.src = src(IDLE);
-      if (done) done();
-    }, WAVE_DURATION);
-  }
-
-  function vw() { return window.innerWidth; }
-  function offW() { return wrap.offsetWidth || 150; }
-
-  // Una escena completa: entra → saluda → sale
-  function scene(left, done) {
-    const w = offW();
-    const margin = Math.min(vw() * 0.14, 180);
-    wrap.classList.add('is-active');
-
-    if (left) {
-      const startX = -w - 30;
-      const stopX = margin;
-      const endX = vw() + 30;
-      run(startX, stopX, () => wave(1, () => run(stopX, endX, () => {
-        wrap.classList.remove('is-active');
-        if (done) done();
-      })));
-    } else {
-      const startX = vw() + 30;
-      const stopX = vw() - margin - w;
-      const endX = -w - 30;
-      run(startX, stopX, () => wave(-1, () => run(stopX, endX, () => {
-        wrap.classList.remove('is-active');
-        if (done) done();
-      })));
-    }
-  }
-
-  function loop() {
-    scene(fromLeft, () => {
-      fromLeft = !fromLeft; // la próxima vez entra por el lado contrario
-      setTimeout(loop, PAUSE_MIN + Math.random() * PAUSE_RANGE);
     });
+  }
+
+  // Saluda durante ms; devuelve false si fue cancelado
+  function doWave(ms) {
+    return new Promise((resolve) => {
+      const my = token;
+      startFrames(WAVE, WAVE_FRAME_MS);
+      waveTimer = setTimeout(() => {
+        waveTimer = null;
+        stopFrames();
+        if (my !== token) { resolve(false); return; }
+        img.src = src(IDLE);
+        resolve(true);
+      }, ms);
+    });
+  }
+
+  // Pausa en reposo "mirando alrededor"; devuelve false si fue cancelado
+  async function idle(ms) {
+    const my = token;
+    stopFrames();
+    img.src = src(IDLE);
+    await sleep(ms);
+    return my === token;
+  }
+
+  // ── Comportamientos (todos parten desde fuera de pantalla) ──────────────
+
+  // Cruza de lado a lado sin detenerse
+  async function cross(fromLeft) {
+    const w = offW();
+    setStart(fromLeft ? -w - 40 : vw() + 40);
+    await moveTo(fromLeft ? vw() + 40 : -w - 40, speed * 1.15, ease.inOut);
+  }
+
+  // Entra, frena, saluda y sigue su camino hacia el lado contrario
+  async function greet(fromLeft) {
+    const w = offW();
+    const stopX = fromLeft ? rnd(vw() * 0.18, vw() * 0.5)
+                           : rnd(vw() * 0.5 - w, vw() * 0.78 - w);
+    setStart(fromLeft ? -w - 40 : vw() + 40);
+    if (!await moveTo(stopX, speed, ease.out)) return;
+    if (Math.random() < 0.5 && !await idle(rnd(400, 1100))) return;
+    if (!await doWave(rnd(2400, 3800))) return;
+    if (!await idle(rnd(200, 600))) return;
+    await moveTo(fromLeft ? vw() + 40 : -w - 40, speed, ease.in);
+  }
+
+  // Se asoma un poco, saluda y se devuelve por donde entró
+  async function peek(fromLeft) {
+    const w = offW();
+    const stopX = fromLeft ? rnd(vw() * 0.1, vw() * 0.26)
+                           : rnd(vw() * 0.74 - w, vw() * 0.9 - w);
+    setStart(fromLeft ? -w - 40 : vw() + 40);
+    if (!await moveTo(stopX, speed, ease.out)) return;
+    if (!await doWave(rnd(2200, 3400))) return;
+    if (!await idle(rnd(150, 500))) return;
+    await moveTo(fromLeft ? -w - 40 : vw() + 40, speed * 1.1, ease.in);
+  }
+
+  // Pasea: entra, se detiene, avanza otro tramo, saluda y sale
+  async function wander(fromLeft) {
+    const w = offW();
+    const x1 = fromLeft ? rnd(vw() * 0.18, vw() * 0.34) : rnd(vw() * 0.6 - w, vw() * 0.78 - w);
+    const x2 = fromLeft ? rnd(vw() * 0.42, vw() * 0.6)  : rnd(vw() * 0.22 - w, vw() * 0.4 - w);
+    setStart(fromLeft ? -w - 40 : vw() + 40);
+    if (!await moveTo(x1, speed, ease.out)) return;
+    if (!await idle(rnd(500, 1300))) return;
+    if (!await moveTo(x2, speed * 0.9, ease.inOut)) return;
+    if (!await doWave(rnd(2200, 3400))) return;
+    await moveTo(fromLeft ? vw() + 40 : -w - 40, speed, ease.in);
+  }
+
+  // Selección ponderada de comportamiento
+  function pickBehavior() {
+    const r = Math.random();
+    if (r < 0.40) return greet;
+    if (r < 0.65) return cross;
+    if (r < 0.85) return peek;
+    return wander;
+  }
+
+  // ── Bucle principal ─────────────────────────────────────────────────────
+
+  async function runScene() {
+    const my = ++token;            // nueva escena cancela la anterior
+    wrap.classList.add('is-active');
+    speed = BASE_SPEED * rnd(0.8, 1.3);
+    const fromLeft = Math.random() < 0.5;   // lado aleatorio
+    await pickBehavior()(fromLeft);
+    if (my !== token) return;      // un clic tomó el control
+    wrap.classList.remove('is-active');
+    scheduleNext();
+  }
+
+  function scheduleNext() {
+    clearTimeout(nextTimer);
+    nextTimer = setTimeout(runScene, rnd(PAUSE_MIN, PAUSE_MAX));
+  }
+
+  // Clic: interrumpe, saluda con brinquito y se va
+  async function onClick() {
+    if (!wrap.classList.contains('is-active')) return;
+    const my = ++token;            // cancela lo que estuviera haciendo
+    stopMotion();
+
+    wrap.classList.add('is-happy');
+    const ok = await doWave(rnd(2000, 2800));
+    wrap.classList.remove('is-happy');
+    if (!ok || my !== token) return;
+
+    // Sale por el borde más cercano
+    const w = offW();
+    const goLeft = (curX + w / 2) < vw() / 2;
+    await moveTo(goLeft ? -w - 40 : vw() + 40, speed * 1.1, ease.in);
+    if (my !== token) return;
+    wrap.classList.remove('is-active');
+    scheduleNext();
   }
 
   return {
     name: 'Mascota',
     init() {
-      if (started) return;          // evita doble arranque (App + fallback)
+      if (started) return;
       started = true;
-
-      if (!document.querySelector('.mascota')) {
-        preload();
-        build();
-      }
-      console.log('🦁 Mascota lista. Forzar aparición: Mascota.test()');
-      setTimeout(loop, FIRST_DELAY);
+      if (!document.querySelector('.mascota')) { preload(); build(); }
+      console.log('🦁 Mascota lista. Clic = saluda · forzar: Mascota.test()');
+      nextTimer = setTimeout(runScene, FIRST_DELAY);
     },
-
-    // Disparo manual desde la consola para depurar
+    // Disparo manual desde la consola
     test() {
       if (!document.querySelector('.mascota')) { preload(); build(); }
-      if (raf) cancelAnimationFrame(raf);
-      stopFrames();
-      if (waveTimer) clearTimeout(waveTimer);
-      scene(true, () => console.log('🦁 Escena de prueba terminada'));
-    }
+      runScene();
+    },
   };
 })();
 
@@ -187,7 +268,7 @@ if (typeof App !== 'undefined' && App.register) {
   App.register(Mascota);
 }
 
-// Auto-arranque de respaldo: si App.init() no lo ejecuta, arranca solo
+// Auto-arranque de respaldo por si App.init() no lo ejecuta
 (function () {
   const start = () => Mascota.init();
   if (document.readyState === 'loading') {
@@ -197,5 +278,4 @@ if (typeof App !== 'undefined' && App.register) {
   }
 })();
 
-// Accesible desde la consola del navegador
 window.Mascota = Mascota;
