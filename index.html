@@ -351,30 +351,14 @@
   </div>
 
   <div class="hub-video-frame reveal" id="hub-video-slot" data-video-slot>
-    <!-- ▼▼▼ ESPACIO RESERVADO PARA EL VIDEO QUE BRINDARÁS ▼▼▼
-         Cuando tengas el video, REEMPLAZA todo el bloque .hub-video-ph
-         (de aquí abajo) por UNA de estas opciones:
-
-         1) Video propio (archivo .mp4):
-            <video class="hub-video-el" controls playsinline poster="assets/poster-presentacion.jpg">
-              <source src="assets/video-presentacion.mp4" type="video/mp4">
-            </video>
-
-         2) Video de YouTube:
-            <iframe class="hub-video-el"
-                    src="https://www.youtube.com/embed/ID_DEL_VIDEO"
-                    title="Video de presentación Virginia Sapp"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-         ▲▲▲ -->
-    <div class="hub-video-ph">
-      <span class="hub-video-glow" aria-hidden="true"></span>
-      <button class="hub-video-play" type="button" aria-label="Video de presentación (próximamente)">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-      </button>
-      <div class="hub-video-ph-text">Video de presentación</div>
-      <div class="hub-video-ph-sub">Próximamente disponible</div>
-    </div>
+    <!-- Video de presentación alojado localmente.
+         Coloca el archivo .mp4 en: assets/videos/presentacion-virginia-sapp-2026.mp4
+         (opcional) imagen de portada en: assets/videos/poster-presentacion.jpg -->
+    <video class="hub-video-el" controls playsinline preload="metadata"
+           poster="assets/videos/poster-presentacion.jpg">
+      <source src="assets/videos/presentacion-virginia-sapp-2026.mp4" type="video/mp4">
+      Tu navegador no soporta la reproducción de video.
+    </video>
   </div>
 </section>
 
