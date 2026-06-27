@@ -17,6 +17,7 @@
 @import url('3-layout/navbar.css');
 @import url('3-layout/footer.css');
 @import url('3-layout/dropdown.css');
+@import url('3-layout/mascota.css');
 
 /* 3. SECTIONS */
 @import url('4-sections/hero.css');
