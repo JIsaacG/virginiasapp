@@ -25,9 +25,11 @@ const Mascota = (function () {
   const RUN_FRAME_MS = 100;       // cambio de frame al correr
   const WAVE_FRAME_MS = 320;      // cambio de frame al saludar
   const WAVE_DURATION = 2600;     // cuánto saluda (ms)
-  const FIRST_DELAY = 1500;       // espera inicial tras cargar
+  const FIRST_DELAY = 800;        // espera inicial tras cargar
   const PAUSE_MIN = 7000;         // pausa entre apariciones
   const PAUSE_RANGE = 6000;
+
+  let started = false;
 
   let wrap, inner, img;
   let raf = null;
@@ -155,18 +157,52 @@ const Mascota = (function () {
     });
   }
 
+  const reducedMotion = () =>
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   return {
     name: 'Mascota',
     init() {
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      if (document.querySelector('.mascota')) return; // evita duplicados
-      preload();
-      build();
+      if (started) return;          // evita doble arranque (App + fallback)
+      started = true;
+
+      if (reducedMotion()) {
+        console.warn('🦁 Mascota desactivada: el sistema tiene "reducir movimiento" activado.');
+        return;
+      }
+      if (!document.querySelector('.mascota')) {
+        preload();
+        build();
+      }
+      console.log('🦁 Mascota lista. Forzar aparición: Mascota.test()');
       setTimeout(loop, FIRST_DELAY);
+    },
+
+    // Disparo manual desde la consola para depurar
+    test() {
+      if (!document.querySelector('.mascota')) { preload(); build(); }
+      if (raf) cancelAnimationFrame(raf);
+      stopFrames();
+      if (waveTimer) clearTimeout(waveTimer);
+      scene(true, () => console.log('🦁 Escena de prueba terminada'));
     }
   };
 })();
 
+// Registro en el sistema de módulos
 if (typeof App !== 'undefined' && App.register) {
   App.register(Mascota);
 }
+
+// Auto-arranque de respaldo: si App.init() no lo ejecuta, arranca solo
+(function () {
+  const start = () => Mascota.init();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+
+// Accesible desde la consola del navegador
+window.Mascota = Mascota;
