@@ -2,83 +2,170 @@
 
     .recuerdos-back {
       display:inline-flex;align-items:center;gap:6px;
-      color:var(--gold2);text-decoration:none;font-size:14px;font-weight:500;
-      margin-bottom:32px;transition:color .2s;
+      color:var(--gold2);text-decoration:none;font-size:14px;font-weight:600;
+      margin-bottom:32px;transition:color .2s, gap .2s;
     }
-    .recuerdos-back:hover { color:#fff; }
+    .recuerdos-back:hover { color:var(--forest2); gap:10px; }
 
     .albums-wrap {
-      max-width:1100px;margin:0 auto;
+      max-width:1120px;margin:0 auto;
       padding:0 5vw 60px;
+      counter-reset: album;
     }
 
+    /* ───────── Album block ───────── */
     .album-block {
-      margin-bottom:56px;
+      margin-bottom:64px;
       scroll-margin-top:100px;
+      counter-increment: album;
     }
+
+    /* ───────── Header ───────── */
     .album-header {
+      position:relative;
       display:flex;align-items:flex-end;justify-content:space-between;
-      margin-bottom:18px;padding-bottom:14px;
-      border-bottom:2px solid rgba(171,100,35,.2);
+      gap:18px;margin-bottom:20px;padding-bottom:16px;
+    }
+    /* gradient underline */
+    .album-header::after {
+      content:'';position:absolute;left:0;bottom:0;height:2px;width:100%;
+      background:linear-gradient(90deg, var(--gold) 0%, rgba(213,175,74,.25) 45%, rgba(213,175,74,0) 85%);
+      border-radius:2px;
     }
     .album-title {
+      position:relative;
       font-family:'Playfair Display',serif;
-      font-size:clamp(20px,3vw,28px);font-weight:700;
-      color:var(--forest);line-height:1.2;
+      font-size:clamp(20px,3vw,29px);font-weight:700;
+      color:var(--forest);line-height:1.18;
+    }
+    /* kicker "ÁLBUM 01" via CSS counter — no HTML change */
+    .album-title::before {
+      content:"Álbum " counter(album, decimal-leading-zero);
+      display:block;
+      font-family:'Outfit',sans-serif;
+      font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+      color:var(--gold2);
+      margin-bottom:9px;
     }
     .album-title em { color:var(--gold); font-style:italic; }
+
     .album-date {
-      font-size:13px;color:#8a7a6a;white-space:nowrap;
-      display:flex;align-items:center;gap:6px;
+      font-size:12.5px;color:var(--forest2);white-space:nowrap;font-weight:500;
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(213,175,74,.12);
+      border:1px solid rgba(213,175,74,.32);
+      padding:7px 13px;border-radius:999px;
     }
     .album-date-dot {
-      width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;
+      width:7px;height:7px;border-radius:50%;background:var(--gold2);flex-shrink:0;
+      box-shadow:0 0 0 3px rgba(245,124,0,.18);
+      animation:recDotPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes recDotPulse {
+      0%,100% { box-shadow:0 0 0 3px rgba(245,124,0,.18); }
+      50%     { box-shadow:0 0 0 6px rgba(245,124,0,.04); }
     }
 
+    /* ───────── Magazine mosaic (fills every cell) ───────── */
     .album-photos {
       display:grid;
       grid-template-columns:repeat(4,1fr);
-      grid-template-rows:auto auto;
-      gap:10px;
+      grid-template-rows:repeat(2,minmax(0,1fr));
+      gap:12px;
+      height:clamp(360px,38vw,480px);
     }
-    .album-photo {
-      border-radius:10px;overflow:hidden;cursor:pointer;
-      position:relative;
-    }
-    .album-photo img {
-      width:100%;height:220px;object-fit:cover;display:block;
-      transition:transform .4s;
-    }
-    .album-photo:hover img { transform:scale(1.05); }
-    .album-photo:first-child {
-      grid-column:span 2;grid-row:span 2;
-    }
-    .album-photo:first-child img {
-      height:100%;min-height:450px;
-    }
-    .album-photo::after {
-      content:'';position:absolute;inset:0;
-      background:linear-gradient(to top,rgba(0,0,0,.25) 0%,transparent 40%);
-      opacity:0;transition:opacity .3s;pointer-events:none;
-    }
-    .album-photo:hover::after { opacity:1; }
+    .album-photo:nth-child(1) { grid-column:1 / 3; grid-row:1 / 3; }   /* featured */
+    .album-photo:nth-child(2) { grid-column:3 / 5; grid-row:1; }       /* wide */
+    .album-photo:nth-child(3) { grid-column:3;     grid-row:2; }
+    .album-photo:nth-child(4) { grid-column:4;     grid-row:2; }
 
+    .album-photo {
+      position:relative;
+      border-radius:14px;overflow:hidden;cursor:pointer;
+      background:var(--parch);
+      box-shadow:0 2px 10px rgba(106,36,7,.08);
+      transition:box-shadow .35s ease;
+    }
+    .album-photo:nth-child(1) { box-shadow:0 6px 22px rgba(106,36,7,.15); }
+    .album-photo img {
+      width:100%;height:100%;object-fit:cover;display:block;
+      transition:transform .65s cubic-bezier(.2,.7,.2,1);
+    }
+
+    /* bottom gradient veil */
+    .album-photo::after {
+      content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+      background:linear-gradient(to top, rgba(30,14,4,.5) 0%, rgba(30,14,4,.06) 45%, transparent 72%);
+      opacity:0;transition:opacity .4s ease;
+    }
+    /* expand glyph */
+    .album-photo::before {
+      content:'';position:absolute;z-index:2;top:50%;left:50%;
+      width:48px;height:48px;border-radius:50%;pointer-events:none;
+      transform:translate(-50%,-50%) scale(.55);
+      background:rgba(255,255,255,.94) url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%236A2407'%20stroke-width='2.2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M15%203h6v6M9%2021H3v-6M21%203l-7%207M3%2021l7-7'/%3E%3C/svg%3E") center/21px no-repeat;
+      box-shadow:0 8px 20px rgba(0,0,0,.28);
+      opacity:0;transition:opacity .35s ease, transform .35s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .album-photo:hover { box-shadow:0 16px 36px rgba(106,36,7,.26); }
+    .album-photo:hover img { transform:scale(1.07); }
+    .album-photo:hover::after { opacity:1; }
+    .album-photo:hover::before { opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+    /* ───────── Scroll reveal (staggered) — intentionally NOT gated by
+       prefers-reduced-motion so the site owner can see the motion ───────── */
+    .js-reveal .album-header { opacity:0; }
+    .js-reveal .album-photo  { opacity:0; }
+    .js-reveal .album-block.in .album-header {
+      animation:recHeadIn .55s ease both;
+    }
+    .js-reveal .album-block.in .album-photo {
+      animation:recPhotoIn .6s cubic-bezier(.2,.7,.2,1) both;
+    }
+    .js-reveal .album-block.in .album-photo:nth-child(1) { animation-delay:.04s; }
+    .js-reveal .album-block.in .album-photo:nth-child(2) { animation-delay:.12s; }
+    .js-reveal .album-block.in .album-photo:nth-child(3) { animation-delay:.20s; }
+    .js-reveal .album-block.in .album-photo:nth-child(4) { animation-delay:.28s; }
+    @keyframes recHeadIn {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:none; }
+    }
+    @keyframes recPhotoIn {
+      from { opacity:0; transform:translateY(26px) scale(.985); }
+      to   { opacity:1; transform:none; }
+    }
+
+    /* ───────── Tablet ───────── */
     @media(max-width:768px) {
       .album-photos {
         grid-template-columns:repeat(2,1fr);
+        grid-template-rows:auto;
+        height:auto;
+        gap:10px;
       }
-      .album-photo:first-child img { min-height:280px; }
-      .album-header { flex-direction:column; align-items:flex-start; gap:6px; }
-    }
-    @media(max-width:500px) {
-      .album-photos { grid-template-columns:1fr; gap:8px; }
-      .album-photo:first-child { grid-column:span 1; grid-row:span 1; }
-      .album-photo:first-child img { min-height:220px; }
+      .album-photo:nth-child(1) { grid-column:1 / 3; grid-row:auto; }
+      .album-photo:nth-child(2) { grid-column:auto;  grid-row:auto; }
+      .album-photo:nth-child(3) { grid-column:auto;  grid-row:auto; }
+      .album-photo:nth-child(4) { grid-column:1 / 3; grid-row:auto; }
       .album-photo img { height:200px; }
-      .albums-wrap { padding:0 4vw 40px; }
+      .album-photo:nth-child(1) img { height:264px; }
+      .album-photo:nth-child(4) img { height:230px; }
+      .album-header { flex-direction:column; align-items:flex-start; gap:10px; }
     }
 
-    /* Lightbox */
+    /* ───────── Phone ───────── */
+    @media(max-width:500px) {
+      .album-photos { grid-template-columns:1fr; gap:9px; }
+      .album-photo:nth-child(1),
+      .album-photo:nth-child(4) { grid-column:auto; }
+      .album-photo img { height:230px; }
+      .album-photo:nth-child(1) img { height:260px; }
+      .albums-wrap { padding:0 4vw 40px; }
+      .album-block { margin-bottom:48px; }
+    }
+
+    /* ───────── Lightbox ───────── */
     .rec-lb {
       display:none;position:fixed;inset:0;z-index:9999;
       background:rgba(0,0,0,.92);

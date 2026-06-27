@@ -183,7 +183,7 @@
 </section>
 
 <!-- ALBUMS -->
-<section style="background:var(--cream);padding-top:48px;">
+<section style="background:linear-gradient(180deg,#FBF7F1 0%, #FFFFFF 26%);padding-top:48px;">
   <div class="albums-wrap">
 
     <a href="recuerdos.html" class="recuerdos-back">← Volver a la galería principal</a>
@@ -383,6 +383,18 @@
     if (e.key === 'ArrowLeft') step(-1);
     if (e.key === 'ArrowRight') step(1);
   });
+
+  /* Scroll reveal — staggered. Not gated by prefers-reduced-motion on
+     purpose: the site owner runs reduced motion and still wants to see it. */
+  if ('IntersectionObserver' in window) {
+    document.documentElement.classList.add('js-reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.album-block').forEach(function(b) { io.observe(b); });
+  }
 
   if (window.location.hash) {
     setTimeout(function() {
