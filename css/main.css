@@ -52,7 +52,7 @@
 @import url('4-sections/portal.css');
 
 /* 4. RESPONSIVE DESIGN */
-@import url('5-responsive/media-queries.css');
+@import url('5-responsive/media-queries.css?v=20260627-2');
 
 /* ═══════════════════════════════════════════════════════════════
    Estructura modular de CSS

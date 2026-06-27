@@ -23,10 +23,10 @@
 
 /* ── Resumen institucional: logo + tarjetas flip (giran al pasar el mouse) ── */
 .declaracion-logo { display:block; margin:0 auto 22px; width:120px; height:auto; filter:drop-shadow(0 8px 22px rgba(0,0,0,.4)); }
-.dc-flip { perspective:1200px; min-height:208px; border:none; background:transparent; padding:0; cursor:pointer; outline:none; }
-.dc-flip-inner { position:relative; width:100%; height:100%; min-height:208px; transition:transform .7s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; }
+.dc-flip { perspective:900px; perspective-origin:center 35%; min-height:208px; border:none; background:transparent; padding:0; cursor:pointer; outline:none; }
+.dc-flip-inner { position:relative; width:100%; height:100%; min-height:208px; transition:transform .85s cubic-bezier(.2,.85,.3,1); transform-style:preserve-3d; will-change:transform; }
 .dc-flip:hover .dc-flip-inner,
-.dc-flip:focus-within .dc-flip-inner { transform:rotateY(180deg); }
+.dc-flip:focus-within .dc-flip-inner { transform:rotateX(-180deg); }
 .dc-face {
   position:absolute; inset:0;
   display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:6px;
@@ -38,7 +38,7 @@
 .dc-front h3 { font-family:'Playfair Display',serif; font-size:27px; font-weight:800; color:#fff; line-height:1.1; margin:0; }
 .dc-sub { font-size:13px; color:rgba(255,255,255,.55); line-height:1.4; }
 .dc-back {
-  transform:rotateY(180deg);
+  transform:rotateX(180deg);
   background:linear-gradient(155deg, rgba(171,100,35,.24), rgba(255,255,255,.05));
   border-color:rgba(171,100,35,.45);
 }
