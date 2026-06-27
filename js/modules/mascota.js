@@ -157,19 +157,12 @@ const Mascota = (function () {
     });
   }
 
-  const reducedMotion = () =>
-    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   return {
     name: 'Mascota',
     init() {
       if (started) return;          // evita doble arranque (App + fallback)
       started = true;
 
-      if (reducedMotion()) {
-        console.warn('🦁 Mascota desactivada: el sistema tiene "reducir movimiento" activado.');
-        return;
-      }
       if (!document.querySelector('.mascota')) {
         preload();
         build();

@@ -52,7 +52,5 @@
   .mascota { width: 92px; bottom: 4px; }
 }
 
-/* Respeta usuarios que prefieren menos movimiento */
-@media (prefers-reduced-motion: reduce) {
-  .mascota { display: none !important; }
-}
+/* Nota: la mascota es decorativa de marca y se muestra siempre.
+   (Se quitó el bloqueo por prefers-reduced-motion a petición del dueño del sitio.) */
