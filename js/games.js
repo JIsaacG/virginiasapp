@@ -109,9 +109,9 @@ const Games = {
     const content = document.getElementById('game-content');
     if (!modal || !content) return;
     this._clearGameTimers();
-    // La sopa usa un modal más ancho para mostrar las 12 columnas sin scroll horizontal
+    // Sopa y Memoria usan un modal más ancho para sus rejillas (sin scroll horizontal)
     const inner = document.getElementById('game-modal-inner');
-    if (inner) inner.classList.toggle('game-modal-wide', id === 'sopa');
+    if (inner) inner.classList.toggle('game-modal-wide', id === 'sopa' || id === 'memoria');
     content.innerHTML = '';
     // startTrivia / _initOrdena reconstruyen su propio HTML (para el "Jugar de nuevo")
     if (id === 'trivia')    { this.startTrivia(); }
