@@ -45,7 +45,6 @@
 .dc-back-title { font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:var(--gold2); }
 .dc-back p { font-size:13.5px; color:rgba(255,255,255,.88); line-height:1.6; margin:0; }
 .dc-flip:focus-visible .dc-face { box-shadow:0 0 0 2px var(--gold2); }
-@media (prefers-reduced-motion:reduce) { .dc-flip-inner { transition:none; } }
 
 /* ═══════════════════════════════════════
    PERFIL DEL EGRESADO
