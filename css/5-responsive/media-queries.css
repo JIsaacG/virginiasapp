@@ -21,6 +21,32 @@
 .declaracion-card h3 { font-size:16px; font-weight:700; color:#fff; margin-bottom:8px; }
 .declaracion-card p { font-size:13px; color:rgba(255,255,255,.55); line-height:1.7; }
 
+/* ── Resumen institucional: logo + tarjetas flip (giran al pasar el mouse) ── */
+.declaracion-logo { display:block; margin:0 auto 22px; width:120px; height:auto; filter:drop-shadow(0 8px 22px rgba(0,0,0,.4)); }
+.dc-flip { perspective:1200px; min-height:208px; border:none; background:transparent; padding:0; cursor:pointer; outline:none; }
+.dc-flip-inner { position:relative; width:100%; height:100%; min-height:208px; transition:transform .7s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; }
+.dc-flip:hover .dc-flip-inner,
+.dc-flip:focus-within .dc-flip-inner { transform:rotateY(180deg); }
+.dc-face {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:6px;
+  padding:26px 22px; border-radius:var(--rl);
+  background:rgba(255,255,255,.04); border:1px solid rgba(171,100,35,.15);
+  -webkit-backface-visibility:hidden; backface-visibility:hidden;
+}
+.dc-icon { font-size:38px; line-height:1; margin-bottom:4px; }
+.dc-front h3 { font-family:'Playfair Display',serif; font-size:27px; font-weight:800; color:#fff; line-height:1.1; margin:0; }
+.dc-sub { font-size:13px; color:rgba(255,255,255,.55); line-height:1.4; }
+.dc-back {
+  transform:rotateY(180deg);
+  background:linear-gradient(155deg, rgba(171,100,35,.24), rgba(255,255,255,.05));
+  border-color:rgba(171,100,35,.45);
+}
+.dc-back-title { font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:var(--gold2); }
+.dc-back p { font-size:13.5px; color:rgba(255,255,255,.88); line-height:1.6; margin:0; }
+.dc-flip:focus-visible .dc-face { box-shadow:0 0 0 2px var(--gold2); }
+@media (prefers-reduced-motion:reduce) { .dc-flip-inner { transition:none; } }
+
 /* ═══════════════════════════════════════
    PERFIL DEL EGRESADO
 ═══════════════════════════════════════ */
