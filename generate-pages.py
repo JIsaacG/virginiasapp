@@ -198,10 +198,11 @@ def check_page(path):
         if 'js/sugerencias.js' not in content:
             errors.append('sugerencias.html no carga js/sugerencias.js')
 
-    # ── Fase 5: misión evangelística visible en inicio ──
+    # ── Fase 6: misión evangelística accesible desde el inicio ──
+    # Tras rediseñar el index como portal de navegación, el acceso a la
+    # misión evangelística es una tarjeta del portal (no la antigua
+    # sección home-mision). Basta con que el inicio enlace a su página.
     if os.path.basename(path) == 'index.html':
-        if 'class="home-mision"' not in content:
-            errors.append('index.html no muestra la misión evangelística (home-mision)')
         if 'mision-evangelistica.html' not in content:
             errors.append('index.html no enlaza a mision-evangelistica.html')
 

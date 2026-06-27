@@ -48,6 +48,7 @@
 @import url('4-sections/home-mision.css');
 @import url('4-sections/comunicados.css');
 @import url('4-sections/capacitate.css');
+@import url('4-sections/portal.css');
 
 /* 4. RESPONSIVE DESIGN */
 @import url('5-responsive/media-queries.css');
