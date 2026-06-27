@@ -34,8 +34,9 @@ const Mascota = (function () {
   let speed = BASE_SPEED;       // velocidad de la escena en curso
   let started = false;
 
+  const ASSET_VER = '2';   // súbelo si vuelves a editar los PNG (rompe caché)
   const rnd = (a, b) => a + Math.random() * (b - a);
-  const src = (n) => BASE + n + '.png';
+  const src = (n) => BASE + n + '.png?v=' + ASSET_VER;
 
   // Curvas de aceleración para que no se vea robótico
   const ease = {
