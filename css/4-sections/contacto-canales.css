@@ -177,7 +177,7 @@
 }
 .mapa-cta {
   position: absolute;
-  right: 18px;
+  left: 18px;
   bottom: 18px;
   display: inline-flex;
   align-items: center;
@@ -203,5 +203,5 @@
 @media (max-width: 640px) {
   .mapa-section { padding: 56px 6vw 64px; }
   .mapa-frame iframe { height: 340px; }
-  .mapa-cta { right: 12px; bottom: 12px; padding: 10px 14px; font-size: 12.5px; }
+  .mapa-cta { left: 12px; bottom: 12px; padding: 10px 14px; font-size: 12.5px; }
 }
