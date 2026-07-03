@@ -1,0 +1,17 @@
+# Jekyll configuration for GitHub Pages
+# Exclude non-web files from the published site to keep the deployment clean
+# and avoid potential CDN issues with non-ASCII filenames and large binary files.
+exclude:
+  - "Página web.xlsx"
+  - "ceevs-v2 (3).zip"
+  - "Requerimientos/"
+  - "generate-pages.py"
+  - "minify.py"
+  - "transform.py"
+  - "ANALISIS_ARQUITECTURA.md"
+  - "COLOR_DISTRIBUTION_GUIDE.md"
+  - "PLAN_EJECUTADO.md"
+  - "PLAN_IMPLEMENTACION.md"
+  - "PLAN_TRABAJO_SECCIONES.md"
+  - ".editorconfig"
+  - ".mcp.json"
