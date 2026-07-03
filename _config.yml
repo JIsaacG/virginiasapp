@@ -1,0 +1,34 @@
+# ═══════════════════════════════════════════════════════════
+# GitHub Pages (Jekyll) — Centro Educativo Evangélico Virginia Sapp
+# ═══════════════════════════════════════════════════════════
+# Este sitio es HTML/CSS/JS estático; Jekyll solo publica los archivos.
+# Excluimos del build los archivos NO web (planillas, documentos, scripts,
+# planificación). En especial "Página web.xlsx" (11 MB, nombre con acento /
+# no-ASCII), cuyo path rompía el paso "Deploy to GitHub Pages" — fallo de
+# publicación en el CDN ("Deployment failed, try again later"). Ref: PR #1.
+
+exclude:
+  # ── Culpable principal: nombre no-ASCII (á) + 11 MB ──
+  - "Página web.xlsx"
+  - "Requerimientos/Página web.xlsx"
+
+  # ── Otros archivos pesados / no-web ──
+  - "ceevs-v2 (3).zip"
+
+  # ── Carpetas de documentación, requerimientos y herramientas ──
+  - "Requerimientos/"
+  - "Docs/"
+  - ".claude/"
+
+  # ── Scripts de desarrollo (Python) ──
+  - "*.py"
+
+  # ── Documentación de planificación / arquitectura ──
+  - "ANALISIS_ARQUITECTURA.md"
+  - "COLOR_DISTRIBUTION_GUIDE.md"
+  - "PLAN_EJECUTADO.md"
+  - "PLAN_IMPLEMENTACION.md"
+  - "PLAN_TRABAJO_SECCIONES.md"
+  - "CLAUDE.md"
+  - "README.md"
+  - "assets/README.md"
