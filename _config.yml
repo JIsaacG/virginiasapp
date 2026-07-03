@@ -5,6 +5,7 @@ exclude:
   - "Página web.xlsx"
   - "ceevs-v2 (3).zip"
   - "Requerimientos/"
+  - "Docs/"
   - "generate-pages.py"
   - "minify.py"
   - "transform.py"
@@ -13,5 +14,3 @@ exclude:
   - "PLAN_EJECUTADO.md"
   - "PLAN_IMPLEMENTACION.md"
   - "PLAN_TRABAJO_SECCIONES.md"
-  - ".editorconfig"
-  - ".mcp.json"
