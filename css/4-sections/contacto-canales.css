@@ -136,3 +136,72 @@
 @media (max-width: 820px) {
   .contacto-canales { padding: 28px 22px; }
 }
+
+/* ═══════════════════════════════════════
+   MAPA — Ubicación (Google Maps embed)
+═══════════════════════════════════════ */
+.mapa-section {
+  padding: 72px 8vw 88px;
+}
+.mapa-head {
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto 36px;
+}
+.mapa-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 900;
+  color: #fff;
+  margin: 10px 0 12px;
+}
+.mapa-head h2 em { color: var(--gold2); font-style: italic; }
+.mapa-desc {
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.65;
+}
+.mapa-frame {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: var(--rxl);
+  overflow: hidden;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.mapa-frame iframe {
+  display: block;
+  width: 100%;
+  filter: grayscale(0.15) contrast(1.05);
+}
+.mapa-cta {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: var(--gold);
+  color: #1e0e02;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: var(--r);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, background 0.2s;
+}
+.mapa-cta:hover,
+.mapa-cta:focus-visible {
+  background: var(--gold2);
+  transform: translateY(-2px);
+  outline: none;
+}
+.mapa-cta-icon { font-size: 15px; }
+
+@media (max-width: 640px) {
+  .mapa-section { padding: 56px 6vw 64px; }
+  .mapa-frame iframe { height: 340px; }
+  .mapa-cta { right: 12px; bottom: 12px; padding: 10px 14px; font-size: 12.5px; }
+}
