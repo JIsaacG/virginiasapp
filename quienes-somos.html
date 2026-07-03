@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/main.css?v=20260627-4">
+  <link rel="stylesheet" href="css/main.css?v=20260703-1">
 </head>
 <body>
 
@@ -625,108 +625,132 @@
   </div>
 </section>
 
-<!-- ─── EQUIPO DIRECTIVO (Fase 3 · SDD-F3-QS-008) ─── -->
+<!-- ─── EQUIPO DIRECTIVO (Fase 3 · SDD-F3-QS-008 · rediseño retratos + modal) ─── -->
+<!-- PENDING_ASSET_EQUIPO_FOTOS: para mostrar retratos reales, agregar dentro de cada
+     .lead-avatar un <img class="lead-photo" data-img-key="qs-equipo-XXX" ...>; la foto
+     cubre el monograma automáticamente. Mientras tanto se muestran las iniciales. -->
 <section class="equipo" id="equipo-directivo">
   <div class="equipo-inner">
     <div class="equipo-top">
       <div class="section-label" style="justify-content:center"><span>Liderazgo institucional</span></div>
       <h2>Nuestro <em>equipo directivo</em></h2>
-      <p>Conoce a quienes guían el día a día del Centro Educativo Evangélico Virginia Sapp.</p>
+      <p>Conoce a quienes guían el día a día del Centro Educativo Evangélico Virginia Sapp. <strong>Haz clic en cada perfil</strong> para leer su reseña.</p>
     </div>
-    <div class="equipo-grid">
-      <div class="equipo-card">
-        <button class="equipo-card-head" type="button" aria-expanded="false" aria-controls="equipo-1">
-          <span class="equipo-avatar" aria-hidden="true">SC</span>
-          <span class="equipo-card-info">
-            <span class="equipo-name">Sara Corrales</span>
-            <span class="equipo-role">Directora Ejecutiva</span>
-          </span>
-          <span class="equipo-toggle" aria-hidden="true">+</span>
-        </button>
-        <div class="equipo-card-panel" id="equipo-1" role="region" hidden>
-          <strong>MSc. Sara Corrales.</strong> Líder educativa y coach especializada en desarrollo personal, liderazgo organizacional y gestión educativa, con amplia experiencia en evaluación, formación y acompañamiento institucional cristiano.
-        </div>
-      </div>
-      <div class="equipo-card">
-        <button class="equipo-card-head" type="button" aria-expanded="false" aria-controls="equipo-2">
-          <span class="equipo-avatar" aria-hidden="true">DH</span>
-          <span class="equipo-card-info">
-            <span class="equipo-name">Dessiré Hulse</span>
-            <span class="equipo-role">Directora de Secundaria</span>
-          </span>
-          <span class="equipo-toggle" aria-hidden="true">+</span>
-        </button>
-        <div class="equipo-card-panel" id="equipo-2" role="region" hidden>
-          <strong>Lic. Dessiré Hulse.</strong> Directora educativa con más de 22 años de experiencia en gestión académica, liderazgo docente y procesos de calidad educativa, enfocada en la excelencia y el acompañamiento integral.
-        </div>
-      </div>
-      <div class="equipo-card">
-        <button class="equipo-card-head" type="button" aria-expanded="false" aria-controls="equipo-3">
-          <span class="equipo-avatar" aria-hidden="true">AA</span>
-          <span class="equipo-card-info">
-            <span class="equipo-name">Ana Ávila</span>
-            <span class="equipo-role">Directora de Primaria</span>
-          </span>
-          <span class="equipo-toggle" aria-hidden="true">+</span>
-        </button>
-        <div class="equipo-card-panel" id="equipo-3" role="region" hidden>
-          <strong>Mgtr. Ana Estela Ávila.</strong> Directora de Preescolar y Primaria con 27 años de experiencia en el ámbito educativo y 15 años en dirección de primaria, comprometida con la formación integral y el fortalecimiento institucional.
-        </div>
-      </div>
-      <div class="equipo-card">
-        <button class="equipo-card-head" type="button" aria-expanded="false" aria-controls="equipo-4">
-          <span class="equipo-avatar" aria-hidden="true">DV</span>
-          <span class="equipo-card-info">
-            <span class="equipo-name">Diana Vásquez</span>
-            <span class="equipo-role">Administradora General</span>
-          </span>
-          <span class="equipo-toggle" aria-hidden="true">+</span>
-        </button>
-        <div class="equipo-card-panel" id="equipo-4" role="region" hidden>
-          <strong>Lic. Diana Vásquez.</strong> Administradora con formación en contaduría pública y 2 años de experiencia en gestión administrativa y financiera institucional.
-        </div>
-      </div>
-      <div class="equipo-card">
-        <button class="equipo-card-head" type="button" aria-expanded="false" aria-controls="equipo-5">
-          <span class="equipo-avatar" aria-hidden="true">NI</span>
-          <span class="equipo-card-info">
-            <span class="equipo-name">Nadia Irula</span>
-            <span class="equipo-role">Coordinadora de Talento Humano</span>
-          </span>
-          <span class="equipo-toggle" aria-hidden="true">+</span>
-        </button>
-        <div class="equipo-card-panel" id="equipo-5" role="region" hidden>
-          <strong>Lic. Nadia Irula.</strong> Coordinadora de Talento Humano con formación en psicología y gestión de recursos humanos, con 2 años de experiencia en desarrollo y acompañamiento del personal.
-        </div>
-      </div>
-      <div class="equipo-card">
-        <button class="equipo-card-head" type="button" aria-expanded="false" aria-controls="equipo-6">
-          <span class="equipo-avatar" aria-hidden="true">ML</span>
-          <span class="equipo-card-info">
-            <span class="equipo-name">Martha López</span>
-            <span class="equipo-role">Coordinadora de Pastoral</span>
-          </span>
-          <span class="equipo-toggle" aria-hidden="true">+</span>
-        </button>
-        <div class="equipo-card-panel" id="equipo-6" role="region" hidden>
-          <!-- PENDING_CONTENT_EQUIPO_MARTHA_LOPEZ: Reemplazar con la reseña oficial aprobada por CEEVS. -->
-          Reseña profesional pendiente de confirmación institucional.
-        </div>
-      </div>
-      <div class="equipo-card">
-        <button class="equipo-card-head" type="button" aria-expanded="false" aria-controls="equipo-7">
-          <span class="equipo-avatar" aria-hidden="true">RA</span>
-          <span class="equipo-card-info">
-            <span class="equipo-name">Rosa Armijo</span>
-            <span class="equipo-role">Especialista de Español</span>
-          </span>
-          <span class="equipo-toggle" aria-hidden="true">+</span>
-        </button>
-        <div class="equipo-card-panel" id="equipo-7" role="region" hidden>
-          <!-- PENDING_CONTENT_EQUIPO_ROSA_ARMIJO: Reemplazar con la reseña oficial aprobada por CEEVS. -->
-          Reseña profesional pendiente de confirmación institucional.
-        </div>
-      </div>
+
+    <!-- Líder destacada -->
+    <div class="lead-featured">
+      <button class="lead-card lead-card--featured" type="button"
+              data-lead
+              data-mono="SC"
+              data-name="Sara Corrales"
+              data-title="MSc. Sara Corrales"
+              data-role="Directora Ejecutiva"
+              data-bio="Líder educativa y coach especializada en desarrollo personal, liderazgo organizacional y gestión educativa, con amplia experiencia en evaluación, formación y acompañamiento institucional cristiano.">
+        <span class="lead-badge" aria-hidden="true">✦ Dirección Ejecutiva</span>
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">SC</span></span>
+        <span class="lead-name">Sara Corrales</span>
+        <span class="lead-role">Directora Ejecutiva</span>
+        <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
+      </button>
+    </div>
+
+    <!-- Resto del equipo directivo -->
+    <div class="lead-grid">
+      <button class="lead-card" type="button"
+              data-lead
+              data-mono="DH"
+              data-name="Dessiré Hulse"
+              data-title="Lic. Dessiré Hulse"
+              data-role="Directora de Secundaria"
+              data-bio="Directora educativa con más de 22 años de experiencia en gestión académica, liderazgo docente y procesos de calidad educativa, enfocada en la excelencia y el acompañamiento integral.">
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">DH</span></span>
+        <span class="lead-name">Dessiré Hulse</span>
+        <span class="lead-role">Directora de Secundaria</span>
+        <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
+      </button>
+
+      <button class="lead-card" type="button"
+              data-lead
+              data-mono="AA"
+              data-name="Ana Ávila"
+              data-title="Mgtr. Ana Estela Ávila"
+              data-role="Directora de Primaria"
+              data-bio="Directora de Preescolar y Primaria con 27 años de experiencia en el ámbito educativo y 15 años en dirección de primaria, comprometida con la formación integral y el fortalecimiento institucional.">
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">AA</span></span>
+        <span class="lead-name">Ana Ávila</span>
+        <span class="lead-role">Directora de Primaria</span>
+        <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
+      </button>
+
+      <button class="lead-card" type="button"
+              data-lead
+              data-mono="DV"
+              data-name="Diana Vásquez"
+              data-title="Lic. Diana Vásquez"
+              data-role="Administradora General"
+              data-bio="Administradora con formación en contaduría pública y 2 años de experiencia en gestión administrativa y financiera institucional.">
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">DV</span></span>
+        <span class="lead-name">Diana Vásquez</span>
+        <span class="lead-role">Administradora General</span>
+        <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
+      </button>
+
+      <button class="lead-card" type="button"
+              data-lead
+              data-mono="NI"
+              data-name="Nadia Irula"
+              data-title="Lic. Nadia Irula"
+              data-role="Coordinadora de Talento Humano"
+              data-bio="Coordinadora de Talento Humano con formación en psicología y gestión de recursos humanos, con 2 años de experiencia en desarrollo y acompañamiento del personal.">
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">NI</span></span>
+        <span class="lead-name">Nadia Irula</span>
+        <span class="lead-role">Coordinadora de Talento Humano</span>
+        <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
+      </button>
+
+      <!-- PENDING_CONTENT_EQUIPO_MARTHA_LOPEZ: Reemplazar data-bio con la reseña oficial aprobada por CEEVS. -->
+      <button class="lead-card" type="button"
+              data-lead
+              data-mono="ML"
+              data-name="Martha López"
+              data-title="Lic. Martha López"
+              data-role="Coordinadora de Pastoral"
+              data-bio-pending="true"
+              data-bio="Reseña profesional pendiente de confirmación institucional.">
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">ML</span></span>
+        <span class="lead-name">Martha López</span>
+        <span class="lead-role">Coordinadora de Pastoral</span>
+        <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
+      </button>
+
+      <!-- PENDING_CONTENT_EQUIPO_ROSA_ARMIJO: Reemplazar data-bio con la reseña oficial aprobada por CEEVS. -->
+      <button class="lead-card" type="button"
+              data-lead
+              data-mono="RA"
+              data-name="Rosa Armijo"
+              data-title="Lic. Rosa Armijo"
+              data-role="Especialista de Español"
+              data-bio-pending="true"
+              data-bio="Reseña profesional pendiente de confirmación institucional.">
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">RA</span></span>
+        <span class="lead-name">Rosa Armijo</span>
+        <span class="lead-role">Especialista de Español</span>
+        <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal reutilizable de reseña -->
+  <div class="lead-modal" id="lead-modal" role="dialog" aria-modal="true" aria-labelledby="lead-modal-name" aria-hidden="true">
+    <div class="lead-modal-backdrop" data-lead-close></div>
+    <div class="lead-modal-card" role="document">
+      <button class="lead-modal-close" type="button" data-lead-close aria-label="Cerrar reseña">✕</button>
+      <span class="lead-modal-avatar" aria-hidden="true"><span class="lead-modal-mono" id="lead-modal-mono">SC</span></span>
+      <span class="lead-modal-title" id="lead-modal-title"></span>
+      <h3 class="lead-modal-name" id="lead-modal-name"></h3>
+      <span class="lead-modal-role" id="lead-modal-role"></span>
+      <span class="lead-modal-divider" aria-hidden="true"></span>
+      <p class="lead-modal-bio" id="lead-modal-bio"></p>
     </div>
   </div>
 </section>

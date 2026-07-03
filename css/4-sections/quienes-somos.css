@@ -179,10 +179,25 @@
   letter-spacing: 0.04em;
 }
 
-/* ── Equipo directivo — SDD-F3-QS-008 ── */
-.equipo { background: var(--parch); padding: 96px 8vw; }
-.equipo-inner { max-width: 1080px; margin: 0 auto; }
-.equipo-top { text-align: center; margin-bottom: 48px; }
+/* ── Equipo directivo — SDD-F3-QS-008 (rediseño: retratos + modal) ── */
+.equipo {
+  position: relative;
+  background: var(--parch);
+  padding: 96px 8vw;
+  overflow: hidden;
+}
+/* Textura decorativa sutil de fondo */
+.equipo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(215, 175, 74, 0.14), transparent 42%),
+    radial-gradient(circle at 88% 82%, rgba(245, 124, 0, 0.10), transparent 45%);
+  pointer-events: none;
+}
+.equipo-inner { position: relative; max-width: 1120px; margin: 0 auto; }
+.equipo-top { text-align: center; margin-bottom: 52px; }
 .equipo-top h2 {
   font-family: 'Playfair Display', serif;
   font-size: clamp(30px, 3.6vw, 48px);
@@ -192,74 +207,273 @@
 }
 .equipo-top h2 em { color: var(--gold); font-style: italic; }
 .equipo-top p { font-size: 15px; color: var(--muted); margin-top: 12px; }
+.equipo-top p strong { color: var(--forest2); }
 
-.equipo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-  align-items: start;
-}
-
-.equipo-card {
+/* ─ Tarjeta de líder (retrato circular clicable) ─ */
+.lead-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   background: var(--white);
   border: 1.5px solid var(--cream2);
   border-radius: var(--rl);
-  overflow: hidden;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.equipo-card:hover {
-  border-color: rgba(171, 100, 35, 0.35);
-  box-shadow: 0 10px 30px rgba(65, 36, 4, 0.08);
-}
-
-.equipo-card-head {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 20px;
-  background: transparent;
-  border: none;
+  padding: 28px 20px 24px;
   cursor: pointer;
   font-family: 'Outfit', sans-serif;
-  text-align: left;
+  text-align: center;
+  transition: transform 0.28s cubic-bezier(.22,1,.36,1), border-color 0.25s, box-shadow 0.28s;
+}
+.lead-card:hover,
+.lead-card:focus-visible {
+  transform: translateY(-8px);
+  border-color: rgba(215, 175, 74, 0.55);
+  box-shadow: 0 18px 40px rgba(65, 36, 4, 0.16);
+  outline: none;
 }
 
-.equipo-card-head:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: -2px;
-}
-
-.equipo-avatar {
-  flex: 0 0 auto;
-  width: 52px;
-  height: 52px;
+/* Avatar con anillo dorado animado */
+.lead-avatar {
+  position: relative;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  display: grid;
+  place-items: center;
+  margin-bottom: 14px;
+  isolation: isolate;
+}
+.lead-avatar::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--gold), var(--gold2), var(--gold3), var(--gold));
+  opacity: 0.35;
+  z-index: -1;
+  transition: opacity 0.3s;
+  animation: leadRingSpin 6s linear infinite;
+}
+.lead-card:hover .lead-avatar::before,
+.lead-card:focus-visible .lead-avatar::before { opacity: 1; }
+@keyframes leadRingSpin { to { transform: rotate(360deg); } }
+
+.lead-mono {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(140deg, var(--forest2), var(--moss));
   color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
   font-weight: 700;
   letter-spacing: 0.02em;
+  border: 3px solid var(--white);
+}
+/* Foto real opcional (se activa si el admin sube imagen vía image-manager) */
+.lead-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--white);
 }
 
-.equipo-card-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.equipo-name { font-size: 15px; font-weight: 700; color: var(--forest); }
-.equipo-role { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
-.equipo-toggle { flex: 0 0 auto; font-size: 18px; color: var(--gold); transition: transform 0.25s; }
-.equipo-card-head[aria-expanded="true"] .equipo-toggle { transform: rotate(45deg); }
+.lead-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--forest);
+  line-height: 1.2;
+}
+.lead-role {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--forest2);
+  margin-top: 3px;
+  letter-spacing: 0.01em;
+}
+.lead-cta {
+  margin-top: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold2);
+  opacity: 0.75;
+  transition: opacity 0.25s, letter-spacing 0.25s;
+}
+.lead-card:hover .lead-cta,
+.lead-card:focus-visible .lead-cta { opacity: 1; letter-spacing: 0.13em; }
 
-.equipo-card-panel {
-  padding: 0 20px 20px;
-  font-size: 13.5px;
+/* ─ Líder destacada (Dirección Ejecutiva) ─ */
+.lead-featured {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 34px;
+}
+.lead-card--featured {
+  width: min(420px, 100%);
+  padding: 34px 32px 30px;
+  background: linear-gradient(180deg, var(--white), #fffdf8);
+  border-color: rgba(215, 175, 74, 0.45);
+  box-shadow: 0 14px 36px rgba(65, 36, 4, 0.10);
+}
+.lead-card--featured .lead-avatar { width: 124px; height: 124px; }
+.lead-card--featured .lead-mono { font-size: 40px; }
+.lead-card--featured .lead-name { font-size: 24px; }
+.lead-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 5px 15px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 16px rgba(245, 124, 0, 0.28);
+}
+
+/* ─ Rejilla del resto del equipo ─ */
+.lead-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+/* ═ Modal de reseña ═ */
+.lead-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 6000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+.lead-modal.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+
+.lead-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 15, 4, 0.62);
+  backdrop-filter: blur(6px);
+}
+
+.lead-modal-card {
+  position: relative;
+  width: min(500px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--white);
+  border-radius: var(--rxl);
+  padding: 44px 38px 40px;
+  text-align: center;
+  box-shadow: 0 30px 70px rgba(30, 15, 4, 0.45);
+  border-top: 5px solid var(--gold);
+  transform: translateY(26px) scale(0.97);
+  transition: transform 0.34s cubic-bezier(.22,1,.36,1);
+}
+.lead-modal.is-open .lead-modal-card { transform: translateY(0) scale(1); }
+
+.lead-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: var(--cream2);
+  color: var(--forest2);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.lead-modal-close:hover { background: var(--gold); color: #fff; transform: rotate(90deg); }
+
+.lead-modal-avatar {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+.lead-modal-avatar::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--gold), var(--gold2), var(--gold3), var(--gold));
+  z-index: -1;
+  animation: leadRingSpin 7s linear infinite;
+}
+.lead-modal-mono {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(140deg, var(--forest2), var(--moss));
+  color: #fff;
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  font-weight: 700;
+  border: 4px solid var(--white);
+}
+.lead-modal-title {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold2);
+}
+.lead-modal-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 4vw, 30px);
+  font-weight: 700;
+  color: var(--forest);
+  margin-top: 6px;
+  line-height: 1.15;
+}
+.lead-modal-role {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--forest2);
+  margin-top: 6px;
+}
+.lead-modal-divider {
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin: 20px auto;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+}
+.lead-modal-bio {
+  font-size: 15px;
   color: var(--muted);
-  line-height: 1.7;
+  line-height: 1.85;
 }
-
-.equipo-card-panel[hidden] { display: none; }
+.lead-modal-bio.is-pending { font-style: italic; color: var(--gold2); }
 
 /* ── Junta directiva — SDD-F3-QS-009 ── */
 .junta { background: var(--forest); padding: 96px 8vw; }
@@ -422,7 +636,11 @@
 
 @media (max-width: 700px) {
   .acsi, .laes, .equipo, .junta { padding: 64px 6vw; }
-  .equipo-grid { grid-template-columns: 1fr; }
+  .lead-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+  .lead-card { padding: 22px 12px 20px; }
+  .lead-avatar { width: 84px; height: 84px; }
+  .lead-name { font-size: 16px; }
+  .lead-modal-card { padding: 38px 24px 32px; }
   .laes-card, .junta-card { padding: 28px 22px; }
   .perfil-cat-list li { font-size: 14px; }
 }
