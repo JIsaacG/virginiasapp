@@ -10,7 +10,7 @@
   transition: color 0.2s;
 }
 .ci-link:hover,
-.ci-link:focus-visible { color: #fff; }
+.ci-link:focus-visible { color: var(--forest2); }
 
 /* Redes sociales pendientes (sin enlaces falsos) */
 .soc-disabled {
@@ -18,15 +18,15 @@
   cursor: default;
 }
 .soc-disabled:hover {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(65, 36, 4, 0.12);
   background: transparent;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(65, 36, 4, 0.3);
 }
 
 /* Bloque de canales directos */
 .contacto-canales {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(65, 36, 4, 0.03);
+  border: 1px solid rgba(171, 100, 35, 0.18);
   border-radius: var(--rxl);
   padding: 40px;
 }
@@ -36,12 +36,12 @@
   font-family: 'Playfair Display', serif;
   font-size: 26px;
   font-weight: 700;
-  color: #fff;
+  color: var(--forest);
   margin-bottom: 8px;
 }
 .canales-subtitle {
   font-size: 13.5px;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--muted);
   line-height: 1.6;
 }
 
@@ -56,8 +56,8 @@
   align-items: center;
   gap: 16px;
   padding: 18px 20px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  background: rgba(65, 36, 4, 0.03);
+  border: 1.5px solid rgba(171, 100, 35, 0.14);
   border-radius: var(--r);
   text-decoration: none;
   transition: border-color 0.2s, background 0.2s, transform 0.2s;
@@ -94,12 +94,12 @@
 .canal-name {
   font-size: 14.5px;
   font-weight: 700;
-  color: #fff;
+  color: var(--ink);
 }
 
 .canal-detail {
   font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--muted);
 }
 
 .canal-arrow {
@@ -114,7 +114,7 @@
 .canales-note {
   margin-top: 24px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--muted);
   line-height: 1.6;
 }
 .canales-note a {
@@ -123,7 +123,7 @@
   font-weight: 600;
 }
 .canales-note a:hover,
-.canales-note a:focus-visible { color: #fff; }
+.canales-note a:focus-visible { color: var(--forest2); }
 
 /* Empleos — nota explicativa del mailto */
 .empleos-hint {
