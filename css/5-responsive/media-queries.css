@@ -9,20 +9,20 @@
    internal @media rules. This file is temporary during the modular CSS transition.
 ═══════════════════════════════════════ */
 .declaracion-fe { background:var(--cream2); padding:110px 8vw; position:relative; overflow:hidden; }
-.declaracion-fe::before { content:'✝'; position:absolute; right:5vw; top:50%; transform:translateY(-50%); font-size:clamp(200px,22vw,400px); color:rgba(171,100,35,.06); pointer-events:none; user-select:none; line-height:1; }
+.declaracion-fe::before { content:'✝'; position:absolute; right:5vw; top:50%; transform:translateY(-50%); font-size:clamp(200px,22vw,400px); color:rgba(171,100,35,.04); pointer-events:none; user-select:none; line-height:1; }
 .declaracion-inner { position:relative; z-index:1; }
 .declaracion-title { font-family:'Playfair Display',serif; font-size:clamp(34px,4vw,54px); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:16px; text-align:center; }
 .declaracion-title em { color:var(--gold2); font-style:italic; }
 .declaracion-intro { font-size:15px; color:var(--muted); line-height:1.8; max-width:600px; margin:0 auto 56px; text-align:center; }
 .declaracion-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-.declaracion-card { background:var(--white); border:1px solid rgba(171,100,35,.18); border-radius:var(--rl); padding:28px 24px; transition:all .3s; box-shadow:0 2px 12px rgba(65,36,4,.06); }
-.declaracion-card:hover { border-color:rgba(171,100,35,.45); background:var(--cream2); transform:translateY(-2px); box-shadow:0 8px 28px rgba(65,36,4,.1); }
+.declaracion-card { background:var(--white); border:1px solid rgba(171,100,35,.15); border-radius:var(--rl); padding:28px 24px; transition:all .3s; }
+.declaracion-card:hover { border-color:rgba(171,100,35,.4); background:var(--cream2); transform:translateY(-2px); }
 .dc-num { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--gold2); margin-bottom:12px; }
 .declaracion-card h3 { font-size:16px; font-weight:700; color:var(--forest); margin-bottom:8px; }
 .declaracion-card p { font-size:13px; color:var(--muted); line-height:1.7; }
 
 /* ── Resumen institucional: logo + tarjetas flip (giran al pasar el mouse) ── */
-.declaracion-logo { display:block; margin:0 auto 22px; width:120px; height:auto; filter:drop-shadow(0 8px 22px rgba(65,36,4,.25)); }
+.declaracion-logo { display:block; margin:0 auto 22px; width:120px; height:auto; filter:drop-shadow(0 8px 22px rgba(30,30,30,.15)); }
 .dc-flip { perspective:900px; perspective-origin:center 35%; min-height:208px; border:none; background:transparent; padding:0; cursor:pointer; outline:none; }
 .dc-flip-inner { position:relative; width:100%; height:100%; min-height:208px; transition:transform .85s cubic-bezier(.2,.85,.3,1); transform-style:preserve-3d; will-change:transform; }
 .dc-flip:hover .dc-flip-inner,
@@ -31,8 +31,7 @@
   position:absolute; inset:0;
   display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:6px;
   padding:26px 22px; border-radius:var(--rl);
-  background:var(--white); border:1px solid rgba(171,100,35,.18);
-  box-shadow:0 2px 12px rgba(65,36,4,.06);
+  background:var(--white); border:1px solid rgba(171,100,35,.18); box-shadow:0 8px 24px rgba(30,30,30,.06);
   -webkit-backface-visibility:hidden; backface-visibility:hidden;
 }
 .dc-icon { font-size:38px; line-height:1; margin-bottom:4px; }
@@ -40,11 +39,11 @@
 .dc-sub { font-size:13px; color:var(--muted); line-height:1.4; }
 .dc-back {
   transform:rotateX(180deg);
-  background:linear-gradient(155deg, var(--parch), var(--cream2));
+  background:linear-gradient(155deg, rgba(171,100,35,.16), rgba(255,255,255,.96));
   border-color:rgba(171,100,35,.45);
 }
 .dc-back-title { font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:var(--gold2); }
-.dc-back p { font-size:13.5px; color:var(--forest); line-height:1.6; margin:0; }
+.dc-back p { font-size:13.5px; color:var(--muted); line-height:1.6; margin:0; }
 .dc-flip:focus-visible .dc-face { box-shadow:0 0 0 2px var(--gold2); }
 
 /* ═══════════════════════════════════════
