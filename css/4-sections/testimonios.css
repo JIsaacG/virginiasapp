@@ -1,14 +1,14 @@
 /* ═══════════════════════════════════════
    GALERÍA — CARRUSEL CINEMATOGRÁFICO
 ═══════════════════════════════════════ */
-.galeria { background:var(--forest); padding:110px 0 0; overflow:hidden; }
+.galeria { background:var(--cream2); padding:110px 0 0; overflow:hidden; }
 .galeria-inner-wrap { padding:0 8vw; }
 .galeria-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px; flex-wrap:wrap; gap:20px; }
-.galeria-top h2 { font-family:'Playfair Display',serif; font-size:clamp(34px,3.5vw,50px); font-weight:700; color:#fff; line-height:1.1; }
+.galeria-top h2 { font-family:'Playfair Display',serif; font-size:clamp(34px,3.5vw,50px); font-weight:700; color:var(--forest); line-height:1.1; }
 .galeria-top h2 em { color:var(--gold2); font-style:italic; }
 
 .galeria-filters { display:flex; gap:8px; flex-wrap:wrap; }
-.gal-filter { padding:8px 18px; border:1.5px solid rgba(171,100,35,.3); border-radius:20px; background:transparent; font-size:12px; color:rgba(255,255,255,.5); cursor:pointer; font-family:'Outfit',sans-serif; transition:all .25s; font-weight:500; }
+.gal-filter { padding:8px 18px; border:1.5px solid rgba(171,100,35,.3); border-radius:20px; background:transparent; font-size:12px; color:var(--muted); cursor:pointer; font-family:'Outfit',sans-serif; transition:all .25s; font-weight:500; }
 .gal-filter.active,.gal-filter:hover { background:var(--gold); border-color:var(--gold); color:var(--forest); font-weight:600; }
 
 /* ── MAIN CAROUSEL STAGE ── */

@@ -71,21 +71,22 @@
 }
 
 .capacitate-cta {
-  background: var(--forest);
+  background: var(--parch);
   padding: 72px 8vw;
   text-align: center;
+  border-top: 1px solid rgba(171,100,35,.15);
 }
 .capacitate-cta h2 {
   font-family: 'Playfair Display', serif;
   font-size: clamp(26px, 3vw, 40px);
   font-weight: 700;
-  color: #fff;
+  color: var(--forest);
   margin-bottom: 12px;
 }
 .capacitate-cta h2 em { color: var(--gold2); font-style: italic; }
 .capacitate-cta p {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--muted);
   margin-bottom: 28px;
 }
 .capacitate-cta-actions {
@@ -95,8 +96,8 @@
   flex-wrap: wrap;
 }
 .capacitate-cta .btn-cta-ghost {
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
-  color: #fff;
+  border: 1.5px solid rgba(65,36,4,.3);
+  color: var(--forest);
   padding: 14px 28px;
   border-radius: 10px;
   text-decoration: none;
@@ -104,7 +105,7 @@
   font-size: 15px;
   transition: background 0.2s;
 }
-.capacitate-cta .btn-cta-ghost:hover { background: rgba(255, 255, 255, 0.1); }
+.capacitate-cta .btn-cta-ghost:hover { background: rgba(171,100,35,.08); }
 
 @media (max-width: 700px) {
   .capacitate-intro, .capacitate-programas, .capacitate-cta { padding: 56px 6vw; }

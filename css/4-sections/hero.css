@@ -4,7 +4,7 @@
 .hero {
   min-height:100vh;
   display:grid; grid-template-columns:1fr 1fr;
-  background:var(--forest);
+  background:var(--ceevs-brown);
   position:relative; overflow:hidden;
   padding-top:70px;
 }

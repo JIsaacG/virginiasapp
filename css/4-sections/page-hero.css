@@ -2,7 +2,7 @@
    PAGE HERO (subpages)
 ═══════════════════════════════════════ */
 .page-hero {
-  background:var(--forest); padding:160px 8vw 80px;
+  background:var(--ceevs-brown); padding:160px 8vw 80px;
   position:relative; overflow:hidden;
 }
 .page-hero::before {
