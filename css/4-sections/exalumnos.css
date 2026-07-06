@@ -13,7 +13,7 @@
 .faq-list { display:flex; flex-direction:column; gap:6px; }
 .faq-item {
   border:1px solid rgba(65,36,4,.1); border-radius:var(--r);
-  background:#fff; overflow:hidden;
+  background:#F7F5F2; overflow:hidden;
   transition:border-color .2s, box-shadow .2s;
 }
 .faq-item.open { border-color:rgba(171,100,35,.35); box-shadow:0 4px 20px rgba(65,36,4,.07); }

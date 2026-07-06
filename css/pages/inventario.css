@@ -60,7 +60,7 @@
 
 .inv-filters {
   padding: 50px 8vw;
-  background: #fff;
+  background: #F7F5F2;
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
@@ -121,7 +121,7 @@
 }
 
 .inv-card {
-  background: #fff;
+  background: #F7F5F2;
   border-radius: var(--rl);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);

@@ -103,7 +103,7 @@
   background:linear-gradient(135deg, var(--forest) 0%, #2a1802 100%);
 }
 .login-card {
-  background:#fff; border-radius:20px; padding:48px 40px;
+  background:#F7F5F2; border-radius:20px; padding:48px 40px;
   max-width:420px; width:100%;
   box-shadow:0 20px 60px rgba(0,0,0,.3);
   text-align:center;

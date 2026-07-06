@@ -26,7 +26,7 @@
       background: linear-gradient(135deg, var(--forest) 0%, #2a1802 100%);
     }
     .login-card {
-      background: #fff;
+      background: #F7F5F2;
       border-radius: 20px;
       padding: 48px 40px;
       max-width: 420px;
@@ -231,7 +231,7 @@
     }
 
     .admin-card {
-      background: #fff;
+      background: #F7F5F2;
       border-radius: var(--rl);
       padding: 20px;
       margin-bottom: 16px;
@@ -404,7 +404,7 @@
       font-size: 13px;
       font-family: inherit;
       color: var(--ink);
-      background: #fff;
+      background: #F7F5F2;
       cursor: pointer;
     }
     .admin-select:focus {
@@ -414,7 +414,7 @@
     .admin-btn-quick {
       flex: 1;
       padding: 6px 4px;
-      background: #fff;
+      background: #F7F5F2;
       color: var(--forest);
       border: 1px solid #e8ddd0;
       border-radius: 6px;
@@ -537,7 +537,7 @@
 ═══════════════════════════════════════ */
 
 .admin-tabs-bar {
-  background: #fff;
+  background: #F7F5F2;
   border-bottom: 2px solid rgba(65, 36, 4, 0.08);
   position: sticky;
   top: 0;
@@ -608,7 +608,7 @@
 }
 
 .palette-card {
-  background: #fff;
+  background: #F7F5F2;
   border: 2px solid rgba(65, 36, 4, 0.08);
   border-radius: 12px;
   padding: 24px;
@@ -811,7 +811,7 @@
   font-family: 'Outfit', sans-serif;
   font-size: 14px;
   color: var(--forest, #412404);
-  background: #fff;
+  background: #F7F5F2;
   resize: vertical;
   transition: border-color 0.2s ease;
 }

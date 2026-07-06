@@ -9,7 +9,7 @@
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%) translateY(4px);
-  background: #fff;
+  background: #F7F5F2;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(11, 103, 165, 0.14);
   border-radius: 10px;
