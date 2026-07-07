@@ -256,10 +256,6 @@
   color: rgba(255, 255, 255, 0.82);
 }
 
-.mascota {
-  display: none !important;
-}
-
 #game-hud {
   bottom: 16px;
   right: 16px;
