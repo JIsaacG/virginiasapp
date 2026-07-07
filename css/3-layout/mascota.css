@@ -25,6 +25,9 @@
 /* Flip horizontal según la dirección de marcha */
 .mascota__inner {
   position: relative;
+}
+
+.mascota__sprite {
   transform: scaleX(1);
   transform-origin: center bottom;
 }

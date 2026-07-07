@@ -27,12 +27,13 @@ const Mascota = (function () {
   const PAUSE_MIN = 9000;       // pausa mínima entre apariciones
   const PAUSE_MAX = 20000;      // pausa máxima
 
-  let wrap, inner, img, bubble;
+  let wrap, inner, sprite, img, bubble;
   let raf = null, frameTimer = null, waveTimer = null, nextTimer = null;
   let token = 0;                // testigo de cancelación
   let curX = 0, curDir = 1;     // posición/dirección actuales
   let speed = BASE_SPEED;       // velocidad de la escena en curso
   let started = false;
+  let preloadReady = null;
 
   const ASSET_VER = '2';   // súbelo si vuelves a editar los PNG (rompe caché)
   const rnd = (a, b) => a + Math.random() * (b - a);
@@ -46,8 +47,33 @@ const Mascota = (function () {
     inOut:  (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
   };
 
+  function preloadFrame(n) {
+    return new Promise((resolve) => {
+      const frame = new Image();
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        resolve();
+      };
+
+      frame.onload = finish;
+      frame.onerror = finish;
+      frame.src = src(n);
+
+      if (frame.complete) {
+        finish();
+      } else if (typeof frame.decode === 'function') {
+        frame.decode().then(finish).catch(() => {});
+      }
+    });
+  }
+
   function preload() {
-    [...RUN, ...WAVE, IDLE].forEach((n) => { const i = new Image(); i.src = src(n); });
+    if (!preloadReady) {
+      preloadReady = Promise.all([...RUN, ...WAVE, IDLE].map(preloadFrame));
+    }
+    return preloadReady;
   }
 
   function build() {
@@ -59,6 +85,9 @@ const Mascota = (function () {
     inner = document.createElement('div');
     inner.className = 'mascota__inner';
 
+    sprite = document.createElement('div');
+    sprite.className = 'mascota__sprite';
+
     img = document.createElement('img');
     img.className = 'mascota__img';
     img.alt = '';
@@ -69,7 +98,8 @@ const Mascota = (function () {
     bubble.className = 'mascota__bubble';
     bubble.textContent = 'Bienvenido al portal Virginia Sapp';
 
-    inner.appendChild(img);
+    sprite.appendChild(img);
+    inner.appendChild(sprite);
     inner.appendChild(bubble);
     wrap.appendChild(inner);
     document.body.appendChild(wrap);
@@ -79,7 +109,7 @@ const Mascota = (function () {
 
   function setStart(x) { curX = x; setX(x); }
   function setX(x) { wrap.style.transform = 'translateX(' + x + 'px)'; }
-  function face(dir) { inner.style.transform = dir < 0 ? 'scaleX(-1)' : 'scaleX(1)'; }
+  function face(dir) { sprite.style.transform = dir < 0 ? 'scaleX(-1)' : 'scaleX(1)'; }
   function setBubble(visible) { if (bubble) bubble.classList.toggle('is-visible', visible); }
 
   function startFrames(frames, ms) {
@@ -225,6 +255,8 @@ const Mascota = (function () {
   async function runScene() {
     const my = ++token;            // nueva escena cancela la anterior
     setBubble(false);
+    await preload();
+    if (my !== token) return;
     wrap.classList.add('is-active');
     speed = BASE_SPEED * rnd(0.8, 1.3);
     const fromLeft = Math.random() < 0.5;   // lado aleatorio
@@ -265,13 +297,14 @@ const Mascota = (function () {
     init() {
       if (started) return;
       started = true;
-      if (!document.querySelector('.mascota')) { preload(); build(); }
+      if (!document.querySelector('.mascota')) { build(); }
+      preload();
       console.log('🦁 Mascota lista. Clic = saluda · forzar: Mascota.test()');
       nextTimer = setTimeout(runScene, FIRST_DELAY);
     },
     // Disparo manual desde la consola
     test() {
-      if (!document.querySelector('.mascota')) { preload(); build(); }
+      if (!document.querySelector('.mascota')) { build(); }
       runScene();
     },
   };
