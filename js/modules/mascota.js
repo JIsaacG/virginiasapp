@@ -27,7 +27,7 @@ const Mascota = (function () {
   const PAUSE_MIN = 9000;       // pausa mínima entre apariciones
   const PAUSE_MAX = 20000;      // pausa máxima
 
-  let wrap, inner, img;
+  let wrap, inner, img, bubble;
   let raf = null, frameTimer = null, waveTimer = null, nextTimer = null;
   let token = 0;                // testigo de cancelación
   let curX = 0, curDir = 1;     // posición/dirección actuales
@@ -65,7 +65,12 @@ const Mascota = (function () {
     img.decoding = 'async';
     img.src = src(IDLE);
 
+    bubble = document.createElement('div');
+    bubble.className = 'mascota__bubble';
+    bubble.textContent = 'Bienvenido al portal Virginia Sapp';
+
     inner.appendChild(img);
+    inner.appendChild(bubble);
     wrap.appendChild(inner);
     document.body.appendChild(wrap);
 
@@ -75,6 +80,7 @@ const Mascota = (function () {
   function setStart(x) { curX = x; setX(x); }
   function setX(x) { wrap.style.transform = 'translateX(' + x + 'px)'; }
   function face(dir) { inner.style.transform = dir < 0 ? 'scaleX(-1)' : 'scaleX(1)'; }
+  function setBubble(visible) { if (bubble) bubble.classList.toggle('is-visible', visible); }
 
   function startFrames(frames, ms) {
     stopFrames();
@@ -91,6 +97,7 @@ const Mascota = (function () {
     if (raf) { cancelAnimationFrame(raf); raf = null; }
     if (waveTimer) { clearTimeout(waveTimer); waveTimer = null; }
     stopFrames();
+    setBubble(false);
   }
 
   const vw = () => window.innerWidth;
@@ -106,6 +113,7 @@ const Mascota = (function () {
       const dur = Math.max(Math.abs(x1 - x0) / spd, 1);
       curDir = dir;
       face(dir);
+      setBubble(false);
       wrap.classList.add('is-running');
       startFrames(RUN, RUN_FRAME_MS);
 
@@ -133,6 +141,7 @@ const Mascota = (function () {
   function doWave(ms) {
     return new Promise((resolve) => {
       const my = token;
+      setBubble(true);
       startFrames(WAVE, WAVE_FRAME_MS);
       waveTimer = setTimeout(() => {
         waveTimer = null;
@@ -149,7 +158,9 @@ const Mascota = (function () {
     const my = token;
     stopFrames();
     img.src = src(IDLE);
+    setBubble(true);
     await sleep(ms);
+    if (my === token) setBubble(false);
     return my === token;
   }
 
@@ -213,6 +224,7 @@ const Mascota = (function () {
 
   async function runScene() {
     const my = ++token;            // nueva escena cancela la anterior
+    setBubble(false);
     wrap.classList.add('is-active');
     speed = BASE_SPEED * rnd(0.8, 1.3);
     const fromLeft = Math.random() < 0.5;   // lado aleatorio
@@ -243,6 +255,7 @@ const Mascota = (function () {
     const goLeft = (curX + w / 2) < vw() / 2;
     await moveTo(goLeft ? -w - 40 : vw() + 40, speed * 1.1, ease.in);
     if (my !== token) return;
+    setBubble(false);
     wrap.classList.remove('is-active');
     scheduleNext();
   }
