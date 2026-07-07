@@ -196,3 +196,61 @@
   .empleos-section{ padding:32px 4vw; }
 }
 
+/* ═══════════════════════════════════════
+   GLOBAL HUD + MASCOTA GUARDRAILS
+   Se aplican al final para evitar conflictos entre secciones.
+═══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  #game-hud {
+    bottom: 14px;
+    right: 14px;
+    left: auto;
+    width: auto;
+    min-width: 176px;
+    max-width: min(240px, calc(100vw - 24px));
+    border-radius: 14px;
+    padding: 10px 12px;
+  }
+
+  .hud-header { margin-bottom: 8px; }
+  .hud-title { font-size: 10px; letter-spacing: 0.08em; }
+  .hud-score { font-size: 17px; }
+  .hud-xp-label { font-size: 10px; }
+  .hud-badges { gap: 5px; }
+  .hud-badge { width: 24px; height: 24px; font-size: 12px; }
+
+  #toast {
+    right: 12px;
+    left: auto;
+    max-width: min(220px, calc(100vw - 24px));
+    bottom: 96px;
+  }
+
+  .mascota {
+    z-index: 520;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+  }
+}
+
+@media (max-width: 600px) {
+  #game-hud {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+    right: 10px;
+    min-width: 162px;
+    max-width: min(210px, calc(100vw - 20px));
+    padding: 9px 10px;
+    border-radius: 12px;
+  }
+
+  .hud-title { font-size: 9px; }
+  .hud-score { font-size: 15px; }
+  .hud-badge { width: 22px; height: 22px; font-size: 11px; }
+
+  #toast {
+    right: 10px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 86px);
+    max-width: min(190px, calc(100vw - 20px));
+    padding: 8px 10px;
+  }
+}
+

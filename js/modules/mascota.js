@@ -23,9 +23,12 @@ const Mascota = (function () {
   const BASE_SPEED = 0.085;     // px por ms — LENTO (antes 0.34)
   const RUN_FRAME_MS = 150;     // cambio de frame al correr
   const WAVE_FRAME_MS = 300;    // cambio de frame al saludar
-  const FIRST_DELAY = 900;      // espera inicial
-  const PAUSE_MIN = 9000;       // pausa mínima entre apariciones
-  const PAUSE_MAX = 20000;      // pausa máxima
+  const FIRST_DELAY = 900;      // espera inicial (desktop)
+  const FIRST_DELAY_MOBILE = 450;
+  const PAUSE_MIN = 9000;       // pausa mínima entre apariciones (desktop)
+  const PAUSE_MAX = 20000;      // pausa máxima (desktop)
+  const PAUSE_MIN_MOBILE = 4200;
+  const PAUSE_MAX_MOBILE = 8500;
 
   let wrap, inner, sprite, img, bubble;
   let raf = null, frameTimer = null, waveTimer = null, nextTimer = null;
@@ -133,6 +136,7 @@ const Mascota = (function () {
   const vw = () => window.innerWidth;
   const offW = () => wrap.offsetWidth || 95;
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const isMobileViewport = () => window.matchMedia('(max-width: 768px)').matches;
 
   // Mueve de la posición actual a x1; devuelve false si fue cancelado
   function moveTo(x1, spd, easing) {
@@ -268,7 +272,9 @@ const Mascota = (function () {
 
   function scheduleNext() {
     clearTimeout(nextTimer);
-    nextTimer = setTimeout(runScene, rnd(PAUSE_MIN, PAUSE_MAX));
+    const min = isMobileViewport() ? PAUSE_MIN_MOBILE : PAUSE_MIN;
+    const max = isMobileViewport() ? PAUSE_MAX_MOBILE : PAUSE_MAX;
+    nextTimer = setTimeout(runScene, rnd(min, max));
   }
 
   // Clic: interrumpe, saluda con brinquito y se va
@@ -300,7 +306,8 @@ const Mascota = (function () {
       if (!document.querySelector('.mascota')) { build(); }
       preload();
       console.log('🦁 Mascota lista. Clic = saluda · forzar: Mascota.test()');
-      nextTimer = setTimeout(runScene, FIRST_DELAY);
+      const firstDelay = isMobileViewport() ? FIRST_DELAY_MOBILE : FIRST_DELAY;
+      nextTimer = setTimeout(runScene, firstDelay);
     },
     // Disparo manual desde la consola
     test() {
