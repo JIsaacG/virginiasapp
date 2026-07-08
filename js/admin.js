@@ -8,47 +8,116 @@
 
   var ADMIN_PASS = 'ceevs2026';
 
+  /* Catálogo completo de imágenes editables del sitio.
+     Cada key corresponde a un data-img-key en el HTML (aplicado por image-manager.js). */
+
+  var WP = 'https://virginiasapp.edu.hn/wp-content/uploads/';
+  var UNSPLASH = 'https://images.unsplash.com/';
+
+  function albumSection(num, title, urls) {
+    return {
+      page: '📸 Recuerdos — ' + title,
+      images: urls.map(function (u, i) {
+        return {
+          key: 'album-' + num + '-' + (i + 1),
+          label: i === 0 ? 'Foto 1 (grande, principal)' : 'Foto ' + (i + 1),
+          defaultUrl: u
+        };
+      })
+    };
+  }
+
   var IMAGE_CATALOG = [
     {
-      page: 'Inicio (index.html)',
+      page: '🌐 Global (todas las páginas)',
       images: [
-        { key: 'hero-bg', label: 'Hero — Fondo parallax', defaultUrl: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1600&q=75&auto=format', type: 'bg' },
-        { key: 'hero-main', label: 'Hero — Foto principal (derecha)', defaultUrl: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600&q=75&auto=format' },
-        { key: 'hero-float', label: 'Hero — Foto secundaria (flotante)', defaultUrl: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=400&q=75&auto=format' },
-        { key: 'index-historia', label: 'Sección Historia — Foto', defaultUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=700&q=75&auto=format' },
-        { key: 'testi-featured', label: 'Testimonios — Foto destacada', defaultUrl: 'https://images.unsplash.com/photo-1590650153855-d9e808231d41?w=400&q=75&auto=format' },
-        { key: 'footer-logo', label: 'Footer — Logo del colegio', defaultUrl: '', type: 'logo' }
+        { key: 'nav-logo', label: 'Logo de la barra de navegación', defaultUrl: 'assets/logo principal.png' },
+        { key: 'footer-logo', label: 'Logo del pie de página', defaultUrl: 'assets/logo.jpg' },
+        { key: 'page-hero-bg', label: 'Fondo del encabezado en páginas internas (admisiones, quiénes somos, contacto, recuerdos, etc.)', defaultUrl: UNSPLASH + 'photo-1580582932707-520aed937b7b?w=1600&q=75&auto=format', type: 'bg' }
       ]
     },
     {
-      page: 'Admisiones (admisiones.html)',
+      page: '🏠 Inicio (index.html)',
       images: [
-        { key: 'nivel-preescolar', label: 'Nivel Preescolar — Foto tarjeta', defaultUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&q=70&auto=format' },
-        { key: 'nivel-primaria', label: 'Nivel Primaria — Foto tarjeta', defaultUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=700&q=70&auto=format' },
-        { key: 'nivel-secundaria', label: 'Nivel Secundaria — Foto tarjeta', defaultUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=700&q=70&auto=format' }
+        { key: 'hero-bg', label: 'Hero — Fondo (imagen parallax y portada del video)', defaultUrl: UNSPLASH + 'photo-1580582932707-520aed937b7b?w=1600&q=75&auto=format', type: 'bg' },
+        { key: 'hero-slide-1', label: 'Galería del hero — Foto 1: Vida escolar', defaultUrl: WP + '2025/10/IMG_1816-1400x786.jpg' },
+        { key: 'hero-slide-2', label: 'Galería del hero — Foto 2: Aula dinámica', defaultUrl: WP + '2026/01/IMG_5896.jpg' },
+        { key: 'hero-slide-3', label: 'Galería del hero — Foto 3: Momentos de estudio', defaultUrl: WP + '2025/12/IMG_4411.jpg' },
+        { key: 'hero-slide-4', label: 'Galería del hero — Foto 4: Campus y comunidad', defaultUrl: WP + '2025/12/IMG_2006.jpg' },
+        { key: 'hero-slide-5', label: 'Galería del hero — Foto 5: Biblioteca', defaultUrl: WP + '2026/03/IMG_7464.JPG-712x400.jpeg' },
+        { key: 'hero-slide-6', label: 'Galería del hero — Foto 6: Aula activa', defaultUrl: WP + '2026/01/IMG_8171.jpg' }
       ]
     },
     {
-      page: 'Quiénes Somos (quienes-somos.html)',
+      page: '🎓 Admisiones (admisiones.html)',
       images: [
-        { key: 'qs-historia', label: 'Historia — Foto principal', defaultUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=700&q=75&auto=format' }
+        { key: 'nivel-preescolar', label: 'Nivel Preescolar — Foto tarjeta', defaultUrl: UNSPLASH + 'photo-1503676260728-1c00da094a0b?w=700&q=70&auto=format' },
+        { key: 'nivel-primaria', label: 'Nivel Primaria — Foto tarjeta', defaultUrl: UNSPLASH + 'photo-1497633762265-9d179a990aa6?w=700&q=70&auto=format' },
+        { key: 'nivel-secundaria', label: 'Nivel Secundaria — Foto tarjeta', defaultUrl: UNSPLASH + 'photo-1524178232363-1fb2b075b655?w=700&q=70&auto=format' }
       ]
     },
     {
-      page: 'Páginas Internas (hero compartido)',
+      page: '🏛️ Quiénes Somos (quienes-somos.html)',
       images: [
-        { key: 'page-hero-bg', label: 'Hero interno — Fondo (admisiones, quiénes somos, contacto)', defaultUrl: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1600&q=75&auto=format', type: 'bg' }
+        { key: 'qs-bienvenida-estudiantes', label: 'Bienvenida — Estudiantes en clase', defaultUrl: WP + '2026/01/IMG_5958.jpg' },
+        { key: 'qs-bienvenida-docentes', label: 'Bienvenida — Docentes', defaultUrl: WP + '2026/01/IMG_9784.jpg' },
+        { key: 'qs-bienvenida-comunidad', label: 'Bienvenida — Comunidad educativa', defaultUrl: WP + '2025/10/WhatsApp-Image-2025-10-22-at-3.37.19-PM-2-533x400.jpeg' },
+        { key: 'qs-bienvenida-ninos', label: 'Bienvenida — Niños', defaultUrl: WP + '2026/01/IMG_5896.jpg' },
+        { key: 'qs-acsi-cert', label: 'Acordeón ACSI — Certificación', defaultUrl: WP + '2026/03/IMG_7464.JPG-712x400.jpeg' },
+        { key: 'qs-declaracion-logo', label: 'Declaración institucional — Logo', defaultUrl: 'assets/logo principal.png' }
       ]
     },
     {
-      page: 'Grados Académicos (inicio)',
+      page: '✝️ Misión Evangelística (mision-evangelistica.html)',
       images: [
-        { key: 'grado-preescolar', label: 'Grados — Preescolar (Kinder 1–3)', defaultUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&q=75&auto=format' },
-        { key: 'grado-primaria',   label: 'Grados — Primaria Bilingüe (1ro–6to)', defaultUrl: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=700&q=75&auto=format' },
-        { key: 'grado-sec-esp',   label: 'Grados — Secundaria Español (7mo–9no)', defaultUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=700&q=75&auto=format' },
-        { key: 'grado-sec-bil',   label: 'Grados — Secundaria Bilingüe (10mo–11vo)', defaultUrl: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=700&q=75&auto=format' }
+        { key: 'me-portada-estudiantes', label: 'Portada — Estudiantes en clase', defaultUrl: WP + '2026/01/IMG_5958.jpg' },
+        { key: 'me-portada-docentes', label: 'Portada — Docentes (flotante)', defaultUrl: WP + '2026/01/IMG_9784.jpg' },
+        { key: 'me-momento-1', label: 'Momentos — Foto 1: Actividades escolares', defaultUrl: WP + '2025/10/IMG_1816-1400x786.jpg' },
+        { key: 'me-momento-2', label: 'Momentos — Foto 2: Niños', defaultUrl: WP + '2026/01/IMG_5896.jpg' },
+        { key: 'me-momento-3', label: 'Momentos — Foto 3: Campus', defaultUrl: WP + '2025/12/IMG_2006.jpg' },
+        { key: 'me-tarjeta-1', label: 'Tarjetas — Foto 1: Biblioteca', defaultUrl: WP + '2026/03/IMG_7464.JPG-712x400.jpeg' },
+        { key: 'me-tarjeta-2', label: 'Tarjetas — Foto 2: Clases', defaultUrl: WP + '2026/01/IMG_8171.jpg' },
+        { key: 'me-tarjeta-3', label: 'Tarjetas — Foto 3: Convivencia', defaultUrl: WP + '2025/12/IMG_4411.jpg' },
+        { key: 'me-tarjeta-4', label: 'Tarjetas — Foto 4: Comunidad', defaultUrl: WP + '2025/10/WhatsApp-Image-2025-10-22-at-3.37.19-PM-2-533x400.jpeg' },
+        { key: 'me-articulo-docentes', label: 'Artículo — Docentes', defaultUrl: WP + '2026/01/IMG_9784.jpg' }
       ]
-    }
+    },
+    albumSection(1, 'Graduación 2023 (11vo B y C Bilingüe)', [
+      UNSPLASH + 'photo-1523580846011-d3a5bc25702b?w=800&q=75&auto=format',
+      UNSPLASH + 'photo-1540575467063-178a50c2df87?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1559223607-a43c990c692c?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1564981797816-1043664bf78d?w=500&q=70&auto=format'
+    ]),
+    albumSection(2, 'Graduación 2023 (Prom. Dr. Juan Almendares)', [
+      UNSPLASH + 'photo-1627556704302-624286467c65?w=800&q=75&auto=format',
+      UNSPLASH + 'photo-1607453998774-d533f65dac99?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1525921429824-6b2f5e936ebc?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1541339907198-e08756dedf3f?w=500&q=70&auto=format'
+    ]),
+    albumSection(3, 'Honor Roll 2023 (Primaria)', [
+      UNSPLASH + 'photo-1577896851231-70ef18881754?w=800&q=75&auto=format',
+      UNSPLASH + 'photo-1503676260728-1c00da094a0b?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1580582932707-520aed937b7b?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1546410531-bb4caa6b424d?w=500&q=70&auto=format'
+    ]),
+    albumSection(4, 'Clausura Noveno Grado 2023', [
+      UNSPLASH + 'photo-1529390079861-591de354faf5?w=800&q=75&auto=format',
+      UNSPLASH + 'photo-1497633762265-9d179a990aa6?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1509062522246-3755977927d7?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1427504494785-3a9ca7044f45?w=500&q=70&auto=format'
+    ]),
+    albumSection(5, 'Día del Estudiante', [
+      UNSPLASH + 'photo-1511578314322-379afb476865?w=800&q=75&auto=format',
+      UNSPLASH + 'photo-1524178232363-1fb2b075b655?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1590650153855-d9e808231d41?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1588072432836-e10032774350?w=500&q=70&auto=format'
+    ]),
+    albumSection(6, 'Festival Cultural', [
+      UNSPLASH + 'photo-1513364776144-60967b0f800f?w=800&q=75&auto=format',
+      UNSPLASH + 'photo-1598488035139-bdbb2231ce04?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1514320291840-2e0a9bf2a9ae?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1505236858219-8359eb29e329?w=500&q=70&auto=format'
+    ])
   ];
 
   /* ─── Login ─── */
@@ -120,19 +189,36 @@
   }
 
   /* ─── Render ─── */
+
+  // Secciones abiertas (se conserva al re-renderizar). La primera inicia abierta.
+  var openSections = {};
+  openSections[IMAGE_CATALOG[0].page] = true;
+
+  function rememberOpenState() {
+    document.querySelectorAll('#images-grid details.admin-section').forEach(function (d) {
+      openSections[d.getAttribute('data-page')] = d.open;
+    });
+  }
+
   function renderDashboard() {
     var container = document.getElementById('images-grid');
     container.innerHTML = '';
     var saved = mgr().getSavedImages ? mgr().getSavedImages() : {};
 
     IMAGE_CATALOG.forEach(function (section) {
-      var sectionEl = document.createElement('div');
-      sectionEl.className = 'admin-section';
+      var customCount = section.images.filter(function (img) { return saved[img.key]; }).length;
 
-      var sectionTitle = document.createElement('h3');
-      sectionTitle.className = 'admin-section-title';
-      sectionTitle.textContent = section.page;
-      sectionEl.appendChild(sectionTitle);
+      var sectionEl = document.createElement('details');
+      sectionEl.className = 'admin-section';
+      sectionEl.setAttribute('data-page', section.page);
+      if (openSections[section.page]) sectionEl.open = true;
+
+      var summary = document.createElement('summary');
+      summary.className = 'admin-section-title';
+      summary.innerHTML = '<span class="admin-section-name">' + section.page + '</span>' +
+        '<span class="admin-section-count">' + section.images.length + ' foto' + (section.images.length !== 1 ? 's' : '') +
+        (customCount ? ' · ' + customCount + ' personalizada' + (customCount !== 1 ? 's' : '') : '') + '</span>';
+      sectionEl.appendChild(summary);
 
       section.images.forEach(function (img) {
         var currentUrl = saved[img.key] || img.defaultUrl;
@@ -141,6 +227,7 @@
 
         var card = document.createElement('div');
         card.className = 'admin-card';
+        card.setAttribute('data-search', normalizeText(section.page + ' ' + img.label + ' ' + img.key));
 
         card.innerHTML =
           /* Header */
@@ -226,7 +313,16 @@
       container.appendChild(sectionEl);
     });
 
-    // ─── Event delegation ───
+    bindGridEvents(container);
+    applySearchFilter();
+    updateStats(saved);
+  }
+
+  /* ─── Event delegation (se vincula una sola vez) ─── */
+  function bindGridEvents(container) {
+    if (container.dataset.gridBound) return;
+    container.dataset.gridBound = 'true';
+
     container.addEventListener('input', function (e) {
       var el = e.target;
       if (el.classList.contains('admin-slider') || el.tagName === 'SELECT') {
@@ -242,6 +338,13 @@
         if (k) livePreview(k);
       }
     });
+
+    container.addEventListener('toggle', function (e) {
+      var d = e.target;
+      if (d.tagName === 'DETAILS' && d.hasAttribute('data-page') && !isSearching()) {
+        openSections[d.getAttribute('data-page')] = d.open;
+      }
+    }, true);
 
     container.addEventListener('click', function (e) {
       var btn = e.target;
@@ -266,6 +369,7 @@
       // Save
       if (btn.classList.contains('admin-btn-save')) {
         var key = btn.getAttribute('data-key');
+        if (!key) return;
         var input = document.getElementById('input-' + key);
         var url = input.value.trim();
 
@@ -280,19 +384,57 @@
         if (mgr().saveSetting) mgr().saveSetting(key, setting);
 
         showToast('Imagen y ajustes guardados');
+        rememberOpenState();
         renderDashboard();
       }
 
       // Reset
       if (btn.classList.contains('admin-btn-reset')) {
         var key2 = btn.getAttribute('data-key');
+        if (!key2) return;
         if (mgr().resetImage) mgr().resetImage(key2);
         showToast('Imagen restaurada al original');
+        rememberOpenState();
         renderDashboard();
       }
     });
+  }
 
-    updateStats(saved);
+  /* ─── Buscador de imágenes ─── */
+
+  // Minúsculas y sin tildes, para que "álbum" encuentre "album"
+  function normalizeText(str) {
+    return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  function isSearching() {
+    var input = document.getElementById('img-search');
+    return !!(input && input.value.trim());
+  }
+
+  function applySearchFilter() {
+    var input = document.getElementById('img-search');
+    if (!input) return;
+    var term = normalizeText(input.value.trim());
+    var sections = document.querySelectorAll('#images-grid details.admin-section');
+
+    sections.forEach(function (d) {
+      var cards = d.querySelectorAll('.admin-card[data-search]');
+      if (!term) {
+        cards.forEach(function (c) { c.style.display = ''; });
+        d.style.display = '';
+        d.open = !!openSections[d.getAttribute('data-page')];
+        return;
+      }
+      var matches = 0;
+      cards.forEach(function (c) {
+        var hit = c.getAttribute('data-search').indexOf(term) !== -1;
+        c.style.display = hit ? '' : 'none';
+        if (hit) matches++;
+      });
+      d.style.display = matches ? '' : 'none';
+      if (matches) d.open = true;
+    });
   }
 
   function updateStats(saved) {
@@ -341,7 +483,8 @@
         if (panel) panel.classList.add('active');
         if (tabName === 'paleta') renderPalettePanel();
         if (tabName === 'inventario') renderInventoryList();
-        if (tabName === 'video') loadVideoSettings();
+        if (tabName === 'video') { loadVideoSettings(); loadHubVideoSettings(); }
+        if (tabName === 'respaldo') renderBackupStatus();
       });
     });
   }
@@ -453,6 +596,157 @@
     loadVideoSettings();
   }
 
+  /* ─── Video de presentación (hub) ─── */
+  function getHubConfig() {
+    if (window.ceevsVideoLoader && window.ceevsVideoLoader.getHub) return window.ceevsVideoLoader.getHub();
+    try { return JSON.parse(localStorage.getItem('ceevs_hub_video')) || {}; } catch (e) { return {}; }
+  }
+
+  function loadHubVideoSettings() {
+    var cfg = getHubConfig();
+    var urlInput = document.getElementById('hub-video-url-input');
+    var posterInput = document.getElementById('hub-video-poster-input');
+    var box = document.getElementById('hub-video-status-box');
+    if (urlInput) urlInput.value = cfg.url || '';
+    if (posterInput) posterInput.value = cfg.poster || '';
+    if (box) {
+      if (cfg.url || cfg.poster) {
+        box.innerHTML = '<p>✅ Personalizado. ' +
+          (cfg.url ? 'Video: <code>' + cfg.url.substring(0, 55) + '…</code>' : 'Video: archivo local del sitio.') +
+          (cfg.poster ? '<br>Portada personalizada configurada.' : '') + '</p>';
+      } else {
+        box.innerHTML = '<p>Usando el video local del sitio (<code>assets/videos/presentacion-virginia-sapp-2026.mp4</code>).</p>';
+      }
+    }
+  }
+
+  function saveHubVideoSettings() {
+    var url = (document.getElementById('hub-video-url-input') || {}).value || '';
+    var poster = (document.getElementById('hub-video-poster-input') || {}).value || '';
+    url = url.trim(); poster = poster.trim();
+    if ((url && !url.startsWith('http')) || (poster && !poster.startsWith('http'))) {
+      showToast('Ingresa URLs válidas (http:// o https://)');
+      return;
+    }
+    if (window.ceevsVideoLoader && window.ceevsVideoLoader.saveHub) {
+      window.ceevsVideoLoader.saveHub(url, poster);
+    } else {
+      try { localStorage.setItem('ceevs_hub_video', JSON.stringify({ url: url, poster: poster })); } catch (e) {}
+    }
+    showToast('Video de presentación guardado');
+    loadHubVideoSettings();
+  }
+
+  function resetHubVideoSettings() {
+    if (window.ceevsVideoLoader && window.ceevsVideoLoader.resetHub) {
+      window.ceevsVideoLoader.resetHub();
+    } else {
+      try { localStorage.removeItem('ceevs_hub_video'); } catch (e) {}
+    }
+    showToast('Restaurado al video local del sitio');
+    loadHubVideoSettings();
+  }
+
+  /* ─── Respaldo (exportar / importar / borrar) ─── */
+  var CONFIG_KEYS = [
+    { key: 'ceevs_images', label: 'Imágenes personalizadas (URLs)' },
+    { key: 'ceevs_image_settings', label: 'Ajustes de posición y zoom de imágenes' },
+    { key: 'ceevs_video_settings', label: 'Video de fondo del hero' },
+    { key: 'ceevs_hub_video', label: 'Video de presentación' },
+    { key: 'ceevs_theme', label: 'Paleta de colores' },
+    { key: 'ceevs_inventory', label: 'Inventario de productos' }
+  ];
+
+  function exportBackup() {
+    var payload = { app: 'ceevs-admin', version: 1, exportedAt: new Date().toISOString(), data: {} };
+    CONFIG_KEYS.forEach(function (item) {
+      var raw = localStorage.getItem(item.key);
+      if (raw !== null) payload.data[item.key] = raw;
+    });
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'ceevs-respaldo-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+    showToast('Respaldo descargado');
+  }
+
+  function importBackup() {
+    var fileInput = document.getElementById('backup-file-input');
+    var file = fileInput && fileInput.files && fileInput.files[0];
+    if (!file) {
+      showToast('Selecciona primero un archivo de respaldo (.json)');
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var payload = JSON.parse(reader.result);
+        if (!payload || payload.app !== 'ceevs-admin' || typeof payload.data !== 'object') {
+          showToast('El archivo no es un respaldo válido del panel CEEVS');
+          return;
+        }
+        var applied = 0;
+        CONFIG_KEYS.forEach(function (item) {
+          var val = payload.data[item.key];
+          if (val === undefined || val === null) return;
+          localStorage.setItem(item.key, typeof val === 'string' ? val : JSON.stringify(val));
+          applied++;
+        });
+        showToast('Respaldo importado (' + applied + ' apartados)');
+        fileInput.value = '';
+        renderBackupStatus();
+        renderDashboard();
+        loadVideoSettings();
+        loadHubVideoSettings();
+      } catch (e) {
+        showToast('No se pudo leer el archivo: ¿es un respaldo válido?');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function renderBackupStatus() {
+    var list = document.getElementById('backup-status-list');
+    if (!list) return;
+    var html = '<ul class="backup-status">';
+    CONFIG_KEYS.forEach(function (item) {
+      var raw = localStorage.getItem(item.key);
+      var detail = '';
+      if (raw) {
+        try {
+          var parsed = JSON.parse(raw);
+          if (item.key === 'ceevs_images' || item.key === 'ceevs_image_settings') {
+            detail = ' (' + Object.keys(parsed).length + ')';
+          } else if (item.key === 'ceevs_inventory' && Array.isArray(parsed)) {
+            detail = ' (' + parsed.length + ' productos)';
+          }
+        } catch (e) {}
+      }
+      html += '<li class="' + (raw ? 'has-data' : 'no-data') + '">' +
+        (raw ? '✅ ' : '▫️ ') + item.label +
+        (raw ? ' — <strong>personalizado' + detail + '</strong>' : ' — sin cambios') + '</li>';
+    });
+    html += '</ul>';
+    list.innerHTML = html;
+  }
+
+  function wipeConfig() {
+    if (!confirm('¿Borrar TODA la personalización de este navegador?\n\nImágenes, videos, paleta e inventario volverán a sus valores originales.')) return;
+    if (!confirm('Última confirmación: esta acción NO se puede deshacer.\n\n¿Deseas continuar?')) return;
+    CONFIG_KEYS.forEach(function (item) {
+      try { localStorage.removeItem(item.key); } catch (e) {}
+    });
+    showToast('Configuración borrada — el sitio usa los valores originales');
+    renderBackupStatus();
+    renderDashboard();
+    loadVideoSettings();
+    loadHubVideoSettings();
+  }
+
   /* ─── Inventory Panel ─── */
   var currentEditingId = null;
 
@@ -492,15 +786,18 @@
     html += '</tbody></table>';
     list.innerHTML = html;
 
-    // Event delegation on the list
-    list.addEventListener('click', function(e) {
-      var editBtn = e.target.closest('[data-inv-edit]');
-      var deactivateBtn = e.target.closest('[data-inv-deactivate]');
-      var deleteBtn = e.target.closest('[data-inv-delete]');
-      if (editBtn) { editInventoryProduct(editBtn.getAttribute('data-inv-edit')); }
-      if (deactivateBtn) { toggleInventoryProduct(deactivateBtn.getAttribute('data-inv-deactivate')); }
-      if (deleteBtn) { deleteInventoryProduct(deleteBtn.getAttribute('data-inv-delete')); }
-    });
+    // Event delegation on the list (se vincula una sola vez)
+    if (!list.dataset.invBound) {
+      list.dataset.invBound = 'true';
+      list.addEventListener('click', function(e) {
+        var editBtn = e.target.closest('[data-inv-edit]');
+        var deactivateBtn = e.target.closest('[data-inv-deactivate]');
+        var deleteBtn = e.target.closest('[data-inv-delete]');
+        if (editBtn) { editInventoryProduct(editBtn.getAttribute('data-inv-edit')); }
+        if (deactivateBtn) { toggleInventoryProduct(deactivateBtn.getAttribute('data-inv-deactivate')); }
+        if (deleteBtn) { deleteInventoryProduct(deleteBtn.getAttribute('data-inv-delete')); }
+      });
+    }
   }
 
   function getInventoryFormValues() {
@@ -620,6 +917,24 @@
 
     var resetVideoBtn = document.getElementById('btn-reset-video');
     if (resetVideoBtn) resetVideoBtn.addEventListener('click', resetVideoSettings);
+
+    var saveHubBtn = document.getElementById('btn-save-hub-video');
+    if (saveHubBtn) saveHubBtn.addEventListener('click', saveHubVideoSettings);
+
+    var resetHubBtn = document.getElementById('btn-reset-hub-video');
+    if (resetHubBtn) resetHubBtn.addEventListener('click', resetHubVideoSettings);
+
+    var searchInput = document.getElementById('img-search');
+    if (searchInput) searchInput.addEventListener('input', applySearchFilter);
+
+    var exportBtn = document.getElementById('btn-export-backup');
+    if (exportBtn) exportBtn.addEventListener('click', exportBackup);
+
+    var importBtn = document.getElementById('btn-import-backup');
+    if (importBtn) importBtn.addEventListener('click', importBackup);
+
+    var wipeBtn = document.getElementById('btn-wipe-config');
+    if (wipeBtn) wipeBtn.addEventListener('click', wipeConfig);
 
     var invForm = document.getElementById('inv-form');
     if (invForm) invForm.addEventListener('submit', handleInventoryFormSubmit);

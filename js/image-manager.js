@@ -28,26 +28,30 @@
     var imgs = document.querySelectorAll('[data-img-key]');
 
     for (var i = 0; i < imgs.length; i++) {
-      var key = imgs[i].getAttribute('data-img-key');
+      var el = imgs[i];
+      var key = el.getAttribute('data-img-key');
+      // data-img-attr permite sobrescribir otros atributos (data-src, poster…)
+      var attr = el.getAttribute('data-img-attr') || 'src';
 
       // URL override
       if (saved[key]) {
-        imgs[i].setAttribute('src', saved[key]);
+        el.setAttribute(attr, saved[key]);
       }
 
-      // Position & fit settings
+      // Position & fit settings — solo aplican a <img> reales
+      if (el.tagName !== 'IMG') continue;
       var s = settings[key];
       if (s) {
         var posX = s.posX != null ? s.posX : 50;
         var posY = s.posY != null ? s.posY : 50;
-        imgs[i].style.objectPosition = posX + '% ' + posY + '%';
+        el.style.objectPosition = posX + '% ' + posY + '%';
 
-        if (s.fit) imgs[i].style.objectFit = s.fit;
+        if (s.fit) el.style.objectFit = s.fit;
 
         var zoom = s.zoom != null ? s.zoom : 100;
         if (zoom !== 100) {
-          imgs[i].style.transform = 'scale(' + (zoom / 100) + ')';
-          imgs[i].style.transformOrigin = posX + '% ' + posY + '%';
+          el.style.transform = 'scale(' + (zoom / 100) + ')';
+          el.style.transformOrigin = posX + '% ' + posY + '%';
         }
       }
     }

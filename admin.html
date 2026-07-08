@@ -57,10 +57,13 @@
         <span class="admin-tab-icon">🎨</span> Paleta
       </button>
       <button class="admin-tab-btn" data-tab="video">
-        <span class="admin-tab-icon">🎬</span> Video Hero
+        <span class="admin-tab-icon">🎬</span> Videos
       </button>
       <button class="admin-tab-btn" data-tab="inventario">
         <span class="admin-tab-icon">📦</span> Inventario
+      </button>
+      <button class="admin-tab-btn" data-tab="respaldo">
+        <span class="admin-tab-icon">💾</span> Respaldo
       </button>
     </div>
   </div>
@@ -75,6 +78,9 @@
       <div class="admin-stats-bar">
         <span id="admin-stats">Cargando...</span>
         <button class="admin-btn-danger" id="btn-reset-all">Restaurar todas las originales</button>
+      </div>
+      <div class="admin-search-bar">
+        <input type="search" id="img-search" class="admin-input" placeholder="🔍 Buscar imagen… (ej: logo, hero, álbum, portada)">
       </div>
       <div id="images-grid"></div>
       <div class="admin-help">
@@ -111,18 +117,19 @@
     </div>
   </div>
 
-  <!-- ─── PANEL: Video Hero ─── -->
+  <!-- ─── PANEL: Videos ─── -->
   <div class="admin-tab-panel" id="panel-video">
     <div class="admin-main">
       <div class="admin-header">
-        <h2>Video Principal (Hero)</h2>
-        <p>Configura el video que aparece en el fondo del hero de inicio. Soporta MP4, WebM y otros formatos web.</p>
+        <h2>Videos del Sitio</h2>
+        <p>Administra los dos videos de la página de inicio: el video de fondo del hero y el video de presentación institucional.</p>
       </div>
 
       <div class="admin-card">
         <div class="admin-card-header">
-          <h3>Configuración del Video</h3>
+          <h3>🎥 Video de fondo (Hero)</h3>
         </div>
+        <p class="admin-card-desc">Se reproduce en silencio detrás del título principal de la página de inicio. Si está desactivado, se muestra la imagen de fondo.</p>
 
         <div class="admin-form-group">
           <label class="admin-input-label" for="video-url-input">URL del Video</label>
@@ -146,6 +153,37 @@
         <div class="video-preview-section">
           <h3>Estado actual</h3>
           <div class="video-preview-box" id="video-status-box">
+            <p>Cargando configuración...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>🎬 Video de presentación (Conócenos en video)</h3>
+        </div>
+        <p class="admin-card-desc">Video institucional con controles en la sección «Vive la experiencia Virginia Sapp» del inicio. Si no configuras nada, se usa el archivo local <code>assets/videos/presentacion-virginia-sapp-2026.mp4</code>.</p>
+
+        <div class="admin-form-group">
+          <label class="admin-input-label" for="hub-video-url-input">URL del Video (opcional)</label>
+          <input type="url" id="hub-video-url-input" class="admin-input" placeholder="https://ejemplo.com/presentacion.mp4">
+          <small class="admin-input-hint">Déjalo vacío para usar el video local del sitio.</small>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-input-label" for="hub-video-poster-input">URL de la portada / miniatura (opcional)</label>
+          <input type="url" id="hub-video-poster-input" class="admin-input" placeholder="https://ejemplo.com/portada.jpg">
+          <small class="admin-input-hint">Imagen que se muestra antes de reproducir el video.</small>
+        </div>
+
+        <div class="admin-form-actions">
+          <button class="admin-btn-save" id="btn-save-hub-video">💾 Guardar</button>
+          <button class="admin-btn-secondary" id="btn-reset-hub-video">↺ Volver al video local</button>
+        </div>
+
+        <div class="video-preview-section">
+          <h3>Estado actual</h3>
+          <div class="video-preview-box" id="hub-video-status-box">
             <p>Cargando configuración...</p>
           </div>
         </div>
@@ -243,6 +281,65 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ─── PANEL: Respaldo ─── -->
+  <div class="admin-tab-panel" id="panel-respaldo">
+    <div class="admin-main">
+      <div class="admin-header">
+        <h2>Respaldo y Restauración</h2>
+        <p>Los cambios del panel se guardan <strong>en este navegador</strong>. Usa el respaldo para no perderlos y para copiarlos a otra computadora o compartirlos con otra persona del equipo.</p>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>⬇️ Exportar configuración</h3>
+        </div>
+        <p class="admin-card-desc">Descarga un archivo con toda tu personalización actual: imágenes, videos, paleta de colores e inventario. Guárdalo como copia de seguridad.</p>
+        <div class="admin-form-actions">
+          <button class="admin-btn-save" id="btn-export-backup">⬇️ Descargar respaldo</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>⬆️ Importar configuración</h3>
+        </div>
+        <p class="admin-card-desc">Carga un archivo de respaldo descargado previamente. Reemplazará la configuración actual de este navegador.</p>
+        <div class="admin-form-group">
+          <input type="file" id="backup-file-input" class="admin-file-input" accept=".json,application/json">
+        </div>
+        <div class="admin-form-actions">
+          <button class="admin-btn-save" id="btn-import-backup">⬆️ Importar respaldo</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>📋 Estado de la configuración</h3>
+        </div>
+        <div id="backup-status-list"></div>
+      </div>
+
+      <div class="admin-card admin-card--danger">
+        <div class="admin-card-header">
+          <h3>⚠️ Zona de riesgo</h3>
+        </div>
+        <p class="admin-card-desc">Borra TODA la personalización de este navegador (imágenes, videos, paleta e inventario). El sitio volverá a sus valores originales. Esta acción no se puede deshacer — exporta un respaldo antes.</p>
+        <div class="admin-form-actions">
+          <button class="admin-btn-danger" id="btn-wipe-config">🗑️ Borrar toda la configuración</button>
+        </div>
+      </div>
+
+      <div class="admin-help">
+        <h3>¿Cómo pasar los cambios a otra computadora?</h3>
+        <ol>
+          <li>En esta computadora: pestaña <strong>Respaldo</strong> → <strong>Descargar respaldo</strong>.</li>
+          <li>Envía el archivo <code>.json</code> por correo, USB o WhatsApp.</li>
+          <li>En la otra computadora: abre el panel admin → <strong>Respaldo</strong> → selecciona el archivo → <strong>Importar respaldo</strong>.</li>
+        </ol>
+      </div>
     </div>
   </div>
 
