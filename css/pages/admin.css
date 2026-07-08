@@ -1024,6 +1024,89 @@ details.admin-section > .admin-card { margin-top: 14px; }
   color: #2e6b38;
 }
 
+/* ═══════════════════════════════════════
+   PANEL GALERÍA (fotos/álbumes extra)
+═══════════════════════════════════════ */
+
+.gal-group {
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #ece4d8;
+}
+.gal-group:last-child { border-bottom: none; margin-bottom: 0; }
+.gal-group-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--forest);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.gal-group-title span {
+  font-weight: 400;
+  font-size: 12px;
+  color: #8a7a6a;
+}
+.gal-del-album {
+  margin-left: auto;
+  padding: 4px 12px;
+  font-size: 11px;
+}
+.gal-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+.gal-thumb {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--cream);
+  border: 1px solid #e8ddd0;
+  aspect-ratio: 4/3;
+}
+.gal-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.gal-thumb-caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  background: rgba(26,12,2,.72);
+  color: #fff;
+  font-size: 10px;
+  padding: 3px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gal-thumb-del {
+  position: absolute;
+  top: 5px; right: 5px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(196,48,48,.92);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .15s;
+}
+.gal-thumb-del:hover { transform: scale(1.15); }
+.gal-empty {
+  font-size: 13px;
+  color: #8a7a6a;
+  padding: 8px 0;
+}
+
 /* ─── Responsive nuevos paneles ─── */
 @media (max-width: 768px) {
   .admin-tabs-container { padding: 0 12px; }

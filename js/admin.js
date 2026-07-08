@@ -483,6 +483,7 @@
         if (panel) panel.classList.add('active');
         if (tabName === 'paleta') renderPalettePanel();
         if (tabName === 'inventario') renderInventoryList();
+        if (tabName === 'galeria') renderGalleryPanel();
         if (tabName === 'video') { loadVideoSettings(); loadHubVideoSettings(); }
         if (tabName === 'respaldo') renderBackupStatus();
       });
@@ -647,10 +648,158 @@
     loadHubVideoSettings();
   }
 
+  /* ─── Galería de Recuerdos (fotos y álbumes extra) ─── */
+  function gal() { return window.ceevsGalleryExtra || null; }
+
+  function renderGalleryPanel() {
+    var api = gal();
+    if (!api) return;
+    var data = api.getData();
+
+    // Poblar el selector de álbum destino (fijos + personalizados)
+    var select = document.getElementById('gal-album-select');
+    if (select) {
+      var current = select.value;
+      var html = '';
+      api.FIXED_ALBUMS.forEach(function (a) {
+        html += '<option value="' + a.id + '">Álbum ' + a.id + ' — ' + a.title + '</option>';
+      });
+      data.albums.forEach(function (a) {
+        html += '<option value="' + a.id + '">Álbum nuevo — ' + escapeHtml(a.title) + '</option>';
+      });
+      select.innerHTML = html;
+      if (current) select.value = current;
+    }
+
+    // Contador
+    var countEl = document.getElementById('gal-count');
+    if (countEl) {
+      countEl.textContent = data.photos.length + ' foto' + (data.photos.length !== 1 ? 's' : '') +
+        (data.albums.length ? ' · ' + data.albums.length + ' álbum' + (data.albums.length !== 1 ? 'es' : '') + ' nuevo' + (data.albums.length !== 1 ? 's' : '') : '');
+    }
+
+    // Lista agrupada
+    var list = document.getElementById('gal-extra-list');
+    if (!list) return;
+
+    if (!data.photos.length && !data.albums.length) {
+      list.innerHTML = '<p class="empty-state">Aún no has agregado fotos ni álbumes.</p>';
+      return;
+    }
+
+    var out = '';
+
+    api.FIXED_ALBUMS.forEach(function (album) {
+      var photos = data.photos.filter(function (p) { return p.album === album.id; });
+      if (!photos.length) return;
+      out += '<div class="gal-group">' +
+        '<div class="gal-group-title">Álbum ' + album.id + ' — ' + album.title + ' <span>(' + photos.length + ' agregada' + (photos.length !== 1 ? 's' : '') + ')</span></div>' +
+        galThumbs(photos) + '</div>';
+    });
+
+    data.albums.forEach(function (album) {
+      var photos = data.photos.filter(function (p) { return p.album === album.id; });
+      out += '<div class="gal-group gal-group--custom">' +
+        '<div class="gal-group-title">🗂️ ' + escapeHtml(album.title) +
+          (album.date ? ' <span>· ' + escapeHtml(album.date) + '</span>' : '') +
+          ' <span>(' + photos.length + ' foto' + (photos.length !== 1 ? 's' : '') + ')</span>' +
+          '<button class="admin-btn-danger gal-del-album" data-gal-del-album="' + album.id + '">Eliminar álbum</button>' +
+        '</div>' +
+        (photos.length ? galThumbs(photos) : '<p class="gal-empty">Sin fotos aún — agrégalas con el formulario de arriba.</p>') +
+        '</div>';
+    });
+
+    list.innerHTML = out;
+  }
+
+  function galThumbs(photos) {
+    var h = '<div class="gal-thumbs">';
+    photos.forEach(function (p) {
+      h += '<div class="gal-thumb">' +
+        '<img src="' + escapeHtml(p.url) + '" alt="" loading="lazy" onerror="this.style.opacity=.25">' +
+        (p.caption ? '<div class="gal-thumb-caption">' + escapeHtml(p.caption) + '</div>' : '') +
+        '<button class="gal-thumb-del" data-gal-del-photo="' + p.id + '" title="Eliminar esta foto">✕</button>' +
+        '</div>';
+    });
+    return h + '</div>';
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function galAddPhoto() {
+    var api = gal();
+    if (!api) return;
+    var select = document.getElementById('gal-album-select');
+    var urlInput = document.getElementById('gal-photo-url');
+    var captionInput = document.getElementById('gal-photo-caption');
+    var url = (urlInput && urlInput.value || '').trim();
+    if (!url || !url.startsWith('http')) {
+      showToast('Ingresa la URL de la foto (http:// o https://)');
+      return;
+    }
+    api.addPhoto(select.value, url, (captionInput && captionInput.value || '').trim());
+    if (urlInput) urlInput.value = '';
+    if (captionInput) captionInput.value = '';
+    showToast('Foto agregada a la galería');
+    renderGalleryPanel();
+  }
+
+  function galAddAlbum() {
+    var api = gal();
+    if (!api) return;
+    var titleInput = document.getElementById('gal-album-title');
+    var dateInput = document.getElementById('gal-album-date');
+    var title = (titleInput && titleInput.value || '').trim();
+    if (!title) {
+      showToast('Escribe el título del álbum');
+      return;
+    }
+    var id = api.addAlbum(title, (dateInput && dateInput.value || '').trim());
+    if (titleInput) titleInput.value = '';
+    if (dateInput) dateInput.value = '';
+    showToast('Álbum "' + title + '" creado');
+    renderGalleryPanel();
+    // Dejar el nuevo álbum seleccionado para agregarle fotos de inmediato
+    var select = document.getElementById('gal-album-select');
+    if (select) select.value = id;
+  }
+
+  function bindGalleryEvents() {
+    var addPhotoBtn = document.getElementById('btn-gal-add-photo');
+    if (addPhotoBtn) addPhotoBtn.addEventListener('click', galAddPhoto);
+
+    var addAlbumBtn = document.getElementById('btn-gal-add-album');
+    if (addAlbumBtn) addAlbumBtn.addEventListener('click', galAddAlbum);
+
+    var list = document.getElementById('gal-extra-list');
+    if (list && !list.dataset.galBound) {
+      list.dataset.galBound = 'true';
+      list.addEventListener('click', function (e) {
+        var delPhoto = e.target.closest('[data-gal-del-photo]');
+        if (delPhoto) {
+          gal().removePhoto(delPhoto.getAttribute('data-gal-del-photo'));
+          showToast('Foto eliminada');
+          renderGalleryPanel();
+          return;
+        }
+        var delAlbum = e.target.closest('[data-gal-del-album]');
+        if (delAlbum) {
+          if (!confirm('¿Eliminar este álbum y todas sus fotos?')) return;
+          gal().removeAlbum(delAlbum.getAttribute('data-gal-del-album'));
+          showToast('Álbum eliminado');
+          renderGalleryPanel();
+        }
+      });
+    }
+  }
+
   /* ─── Respaldo (exportar / importar / borrar) ─── */
   var CONFIG_KEYS = [
     { key: 'ceevs_images', label: 'Imágenes personalizadas (URLs)' },
     { key: 'ceevs_image_settings', label: 'Ajustes de posición y zoom de imágenes' },
+    { key: 'ceevs_gallery', label: 'Fotos y álbumes extra de la galería' },
     { key: 'ceevs_video_settings', label: 'Video de fondo del hero' },
     { key: 'ceevs_hub_video', label: 'Video de presentación' },
     { key: 'ceevs_theme', label: 'Paleta de colores' },
@@ -700,6 +849,7 @@
         fileInput.value = '';
         renderBackupStatus();
         renderDashboard();
+        renderGalleryPanel();
         loadVideoSettings();
         loadHubVideoSettings();
       } catch (e) {
@@ -723,6 +873,8 @@
             detail = ' (' + Object.keys(parsed).length + ')';
           } else if (item.key === 'ceevs_inventory' && Array.isArray(parsed)) {
             detail = ' (' + parsed.length + ' productos)';
+          } else if (item.key === 'ceevs_gallery') {
+            detail = ' (' + ((parsed.photos || []).length) + ' fotos, ' + ((parsed.albums || []).length) + ' álbumes)';
           }
         } catch (e) {}
       }
@@ -743,6 +895,7 @@
     showToast('Configuración borrada — el sitio usa los valores originales');
     renderBackupStatus();
     renderDashboard();
+    renderGalleryPanel();
     loadVideoSettings();
     loadHubVideoSettings();
   }
@@ -935,6 +1088,8 @@
 
     var wipeBtn = document.getElementById('btn-wipe-config');
     if (wipeBtn) wipeBtn.addEventListener('click', wipeConfig);
+
+    bindGalleryEvents();
 
     var invForm = document.getElementById('inv-form');
     if (invForm) invForm.addEventListener('submit', handleInventoryFormSubmit);

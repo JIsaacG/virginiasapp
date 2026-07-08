@@ -356,6 +356,7 @@
 <script src="js/site-settings.js"></script>
 <script src="js/themes.js"></script>
 <script src="js/image-manager.js"></script>
+<script src="js/gallery-extra.js"></script>
 <script>
 /* Recuerdos lightbox — event-delegation pattern */
 (function() {
@@ -365,7 +366,8 @@
   var lbImg = document.getElementById('rec-lb-img');
 
   function open(photoDiv) {
-    var album = photoDiv.closest('.album-photos');
+    // Alcance: todo el álbum (mosaico + fotos extra agregadas desde el admin)
+    var album = photoDiv.closest('.album-block') || photoDiv.closest('.album-photos');
     photos = Array.from(album.querySelectorAll('.album-photo img')).map(function(i) { return i.src; });
     idx = photos.indexOf(photoDiv.querySelector('img').src);
     if (idx < 0) idx = 0;

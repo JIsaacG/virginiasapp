@@ -56,6 +56,9 @@
       <button class="admin-tab-btn" data-tab="paleta">
         <span class="admin-tab-icon">🎨</span> Paleta
       </button>
+      <button class="admin-tab-btn" data-tab="galeria">
+        <span class="admin-tab-icon">📸</span> Galería
+      </button>
       <button class="admin-tab-btn" data-tab="video">
         <span class="admin-tab-icon">🎬</span> Videos
       </button>
@@ -112,6 +115,73 @@
         <p class="palette-footer-note" id="palette-global-note">Todos los presets ya están precargados. Aplicar cambia solo este navegador y no modifica el repositorio.</p>
         <div class="palette-footer-actions">
           <button class="admin-btn-danger" id="btn-reset-theme">Restaurar preset predeterminado</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PANEL: Galería (Recuerdos) ─── -->
+  <div class="admin-tab-panel" id="panel-galeria">
+    <div class="admin-main">
+      <div class="admin-header">
+        <h2>Galería de Recuerdos</h2>
+        <p>Agrega más fotos a los álbumes de <a href="recuerdos.html" target="_blank" rel="noopener">recuerdos.html</a> o crea álbumes nuevos. La galería se actualiza automáticamente — incluso si está abierta en otra pestaña. Las 24 fotos originales se editan en la pestaña <strong>Imágenes</strong>.</p>
+      </div>
+
+      <!-- Agregar foto -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>➕ Agregar foto a un álbum</h3>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="admin-input-label" for="gal-album-select">Álbum de destino *</label>
+            <select id="gal-album-select" class="admin-select"></select>
+          </div>
+          <div class="form-group">
+            <label class="admin-input-label" for="gal-photo-caption">Descripción (opcional)</label>
+            <input type="text" id="gal-photo-caption" class="admin-input" placeholder="Ej: Entrega de diplomas">
+          </div>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-input-label" for="gal-photo-url">URL de la foto *</label>
+          <input type="url" id="gal-photo-url" class="admin-input" placeholder="https://ejemplo.com/foto.jpg">
+          <small class="admin-input-hint">Igual que en Imágenes: URL directa que termine en .jpg, .png o .webp.</small>
+        </div>
+        <div class="admin-form-actions">
+          <button class="admin-btn-save" id="btn-gal-add-photo">➕ Agregar foto</button>
+        </div>
+      </div>
+
+      <!-- Crear álbum -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>🗂️ Crear álbum nuevo</h3>
+        </div>
+        <p class="admin-card-desc">El álbum aparecerá al final de la galería. Después de crearlo, agrégale fotos con el formulario de arriba.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="admin-input-label" for="gal-album-title">Título del álbum *</label>
+            <input type="text" id="gal-album-title" class="admin-input" placeholder="Ej: Excursión 2026">
+          </div>
+          <div class="form-group">
+            <label class="admin-input-label" for="gal-album-date">Fecha (texto, opcional)</label>
+            <input type="text" id="gal-album-date" class="admin-input" placeholder="Ej: 12 de marzo, 2026">
+          </div>
+        </div>
+        <div class="admin-form-actions">
+          <button class="admin-btn-save" id="btn-gal-add-album">🗂️ Crear álbum</button>
+        </div>
+      </div>
+
+      <!-- Contenido agregado -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>📋 Fotos y álbumes agregados</h3>
+          <span class="product-count" id="gal-count">0 fotos</span>
+        </div>
+        <div id="gal-extra-list">
+          <p class="empty-state">Aún no has agregado fotos ni álbumes.</p>
         </div>
       </div>
     </div>
@@ -354,6 +424,7 @@
 <script src="js/video-loader.js"></script>
 <script src="js/inventory.js"></script>
 <script src="js/image-manager.js"></script>
+<script src="js/gallery-extra.js"></script>
 <script src="js/admin.js"></script>
 </body>
 </html>
