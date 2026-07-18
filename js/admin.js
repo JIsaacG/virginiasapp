@@ -1,11 +1,14 @@
 /**
  * admin.js — Panel de administración CEEVS
  * Gestión de imágenes con controles de posición, ajuste y zoom.
+ * El login y la publicación al servidor los maneja admin-sync.js (api/).
  */
 
 (function () {
   'use strict';
 
+  // Contraseña de EMERGENCIA solo para "modo local" (sitio abierto sin PHP).
+  // Con el sitio publicado, la contraseña real se crea y verifica en el servidor.
   var ADMIN_PASS = 'ceevs2026';
 
   /* Catálogo completo de imágenes editables del sitio.
@@ -121,39 +124,104 @@
   ];
 
   /* ─── Login ─── */
+  function sync() { return window.ceevsSync || null; }
+
+  function enterDashboard() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-dashboard').style.display = 'block';
+    renderDashboard();
+  }
+
+  function showLoginError(msg) {
+    var errorEl = document.getElementById('login-error');
+    var passInput = document.getElementById('admin-pass');
+    errorEl.textContent = msg;
+    errorEl.style.display = 'block';
+    passInput.value = '';
+    passInput.focus();
+  }
+
+  /** Ajusta el texto de la pantalla de login según el estado del servidor. */
+  function refreshLoginScreen() {
+    var s = sync();
+    var hint = document.getElementById('login-hint');
+    var btn = document.querySelector('#login-form .login-btn');
+    if (!hint || !s) return;
+    if (s.state.available === false) {
+      hint.textContent = 'Aviso: no se encontró el servidor (PHP). Entrarás en modo local y los cambios solo se verán en este navegador.';
+      hint.style.display = 'block';
+    } else if (s.state.needsSetup) {
+      hint.textContent = 'Primer uso: escribe la contraseña que usará el administrador del sitio (mínimo 8 caracteres). Guárdala en un lugar seguro.';
+      hint.style.display = 'block';
+      if (btn) btn.textContent = 'Crear contraseña';
+    } else {
+      hint.style.display = 'none';
+      if (btn) btn.textContent = 'Ingresar';
+    }
+  }
+
   function handleLogin(e) {
     e.preventDefault();
     var passInput = document.getElementById('admin-pass');
-    var errorEl = document.getElementById('login-error');
-    if (passInput.value === ADMIN_PASS) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('admin-dashboard').style.display = 'block';
+    var pass = passInput.value;
+    var s = sync();
+
+    // Login real contra el servidor (sesión PHP)
+    if (s && s.state.available) {
+      var req = s.state.needsSetup ? s.setup(pass) : s.login(pass);
+      req.then(function (res) {
+        if (res.ok) {
+          enterDashboard();
+          s.pull();
+        } else {
+          refreshLoginScreen();
+          showLoginError(res.error || 'Contraseña incorrecta');
+        }
+      });
+      return;
+    }
+
+    // Modo local (sin PHP): los cambios solo se ven en este navegador.
+    if (pass === ADMIN_PASS) {
       sessionStorage.setItem('ceevs_admin', '1');
-      renderDashboard();
+      enterDashboard();
     } else {
-      errorEl.textContent = 'Contraseña incorrecta';
-      errorEl.style.display = 'block';
-      passInput.value = '';
-      passInput.focus();
+      showLoginError('Contraseña incorrecta');
     }
   }
 
   function checkSession() {
-    if (sessionStorage.getItem('ceevs_admin') === '1') {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('admin-dashboard').style.display = 'block';
-      renderDashboard();
+    var s = sync();
+    if (s) {
+      s.checkStatus().then(function (st) {
+        refreshLoginScreen();
+        if (st.available && st.authed) {
+          enterDashboard();
+          s.pull();
+        } else if (st.available === false && sessionStorage.getItem('ceevs_admin') === '1') {
+          enterDashboard();
+        }
+      });
+      return;
     }
+    if (sessionStorage.getItem('ceevs_admin') === '1') enterDashboard();
   }
 
   function logout() {
+    if (sync()) sync().logout();
     sessionStorage.removeItem('ceevs_admin');
     document.getElementById('admin-dashboard').style.display = 'none';
     document.getElementById('login-screen').style.display = 'flex';
+    refreshLoginScreen();
   }
 
   /* ─── Helpers ─── */
   function mgr() { return window.ceevsImageManager || {}; }
+
+  /** Acepta URLs externas (http/https) y rutas del propio sitio (uploads/, assets/). */
+  function isMediaUrl(u) {
+    return /^https?:\/\//i.test(u) || /^(uploads|assets)\//i.test(u);
+  }
 
   function getSettingFor(key) {
     var all = mgr().getSettings ? mgr().getSettings() : {};
@@ -247,10 +315,13 @@
             '<div class="admin-preview-empty" style="' + (currentUrl ? 'display:none' : 'display:flex') + '">Sin imagen</div>' +
           '</div>' +
 
-          /* URL input */
+          /* URL input + subida */
           '<div class="admin-input-group">' +
-            '<label class="admin-input-label">URL de la imagen (hipervínculo)</label>' +
-            '<input type="url" class="admin-input" id="input-' + img.key + '" value="' + (saved[img.key] || '') + '" placeholder="https://ejemplo.com/foto.jpg">' +
+            '<label class="admin-input-label">Imagen (sube un archivo o pega su URL)</label>' +
+            '<div class="admin-input-row">' +
+              '<input type="text" class="admin-input" id="input-' + img.key + '" value="' + (saved[img.key] || '') + '" placeholder="https://ejemplo.com/foto.jpg">' +
+              '<button type="button" class="admin-btn-upload" data-upload-key="' + img.key + '" title="Subir una imagen desde tu computadora">📤 Subir</button>' +
+            '</div>' +
           '</div>' +
 
           /* Position controls */
@@ -348,6 +419,21 @@
 
     container.addEventListener('click', function (e) {
       var btn = e.target;
+
+      // Subir imagen desde la computadora → guarda y publica automáticamente
+      if (btn.classList.contains('admin-btn-upload')) {
+        var upKey = btn.getAttribute('data-upload-key');
+        if (!upKey || !window.ceevsSync) return;
+        window.ceevsSync.pickAndUpload('image/*', function (res) {
+          if (!res.ok) { showToast(res.error); return; }
+          var inp = document.getElementById('input-' + upKey);
+          if (inp) inp.value = res.url;
+          var saveBtn = document.querySelector('.admin-btn-save[data-key="' + upKey + '"]');
+          if (saveBtn) saveBtn.click();
+          else showToast('Imagen subida');
+        }, function () { showToast('Subiendo archivo…'); });
+        return;
+      }
 
       // Quick position buttons
       if (btn.classList.contains('admin-btn-quick')) {
@@ -508,7 +594,7 @@
     var current = window.ceevsThemes ? window.ceevsThemes.getCurrent() : 'institucional_balanceado';
     var footerNote = document.getElementById('palette-global-note');
     if (footerNote) {
-      footerNote.textContent = 'Todos los presets ya están precargados. "Aplicar" cambia solo este navegador y no modifica el repositorio.';
+      footerNote.textContent = 'La paleta elegida se publica junto con el resto de la configuración: con el sitio en línea, todos los visitantes la verán.';
     }
     var html = '';
     Object.keys(palettes).forEach(function(id) {
@@ -568,8 +654,8 @@
   function saveVideoSettings() {
     var url = (document.getElementById('video-url-input') || {}).value || '';
     var enabled = (document.getElementById('video-enabled-check') || {}).checked || false;
-    if (url && !url.startsWith('http')) {
-      showToast('Ingresa una URL válida (http:// o https://)');
+    if (url && !isMediaUrl(url)) {
+      showToast('Ingresa una URL válida o sube el archivo con el botón 📤');
       return;
     }
     if (window.ceevsVideoLoader) {
@@ -625,8 +711,8 @@
     var url = (document.getElementById('hub-video-url-input') || {}).value || '';
     var poster = (document.getElementById('hub-video-poster-input') || {}).value || '';
     url = url.trim(); poster = poster.trim();
-    if ((url && !url.startsWith('http')) || (poster && !poster.startsWith('http'))) {
-      showToast('Ingresa URLs válidas (http:// o https://)');
+    if ((url && !isMediaUrl(url)) || (poster && !isMediaUrl(poster))) {
+      showToast('Ingresa URLs válidas o sube los archivos con el botón 📤');
       return;
     }
     if (window.ceevsVideoLoader && window.ceevsVideoLoader.saveHub) {
@@ -735,8 +821,8 @@
     var urlInput = document.getElementById('gal-photo-url');
     var captionInput = document.getElementById('gal-photo-caption');
     var url = (urlInput && urlInput.value || '').trim();
-    if (!url || !url.startsWith('http')) {
-      showToast('Ingresa la URL de la foto (http:// o https://)');
+    if (!url || !isMediaUrl(url)) {
+      showToast('Ingresa la URL de la foto o súbela con el botón 📤');
       return;
     }
     api.addPhoto(select.value, url, (captionInput && captionInput.value || '').trim());
@@ -887,7 +973,7 @@
   }
 
   function wipeConfig() {
-    if (!confirm('¿Borrar TODA la personalización de este navegador?\n\nImágenes, videos, paleta e inventario volverán a sus valores originales.')) return;
+    if (!confirm('¿Borrar TODA la personalización del sitio?\n\nImágenes, videos, paleta e inventario volverán a sus valores originales. Si el sitio está publicado, el cambio lo verán TODOS los visitantes.')) return;
     if (!confirm('Última confirmación: esta acción NO se puede deshacer.\n\n¿Deseas continuar?')) return;
     CONFIG_KEYS.forEach(function (item) {
       try { localStorage.removeItem(item.key); } catch (e) {}
@@ -1096,6 +1182,55 @@
 
     var invResetBtn = document.getElementById('btn-inv-reset-form');
     if (invResetBtn) invResetBtn.addEventListener('click', resetInventoryForm);
+
+    // Botones "Subir" junto a los campos de URL fijos (galería, inventario, videos)
+    document.querySelectorAll('[data-upload-target]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (!window.ceevsSync) return;
+        var target = document.getElementById(btn.getAttribute('data-upload-target'));
+        window.ceevsSync.pickAndUpload(btn.getAttribute('data-upload-accept') || 'image/*', function (res) {
+          if (!res.ok) { showToast(res.error); return; }
+          if (target) target.value = res.url;
+          showToast('Archivo subido — ahora haz clic en Guardar/Agregar');
+        }, function () { showToast('Subiendo archivo…'); });
+      });
+    });
+
+    // Cambio de contraseña del panel (pestaña Respaldo)
+    var changePassBtn = document.getElementById('btn-change-pass');
+    if (changePassBtn) changePassBtn.addEventListener('click', function () {
+      var s = window.ceevsSync;
+      var curEl = document.getElementById('pass-current');
+      var nextEl = document.getElementById('pass-new');
+      var cur = (curEl && curEl.value) || '';
+      var next = (nextEl && nextEl.value) || '';
+      if (!s || !s.state.available) { showToast('Disponible solo con el sitio publicado (con PHP)'); return; }
+      if (next.length < 8) { showToast('La nueva contraseña debe tener al menos 8 caracteres'); return; }
+      s.changePassword(cur, next).then(function (res) {
+        if (res.ok) {
+          showToast('Contraseña actualizada');
+          if (curEl) curEl.value = '';
+          if (nextEl) nextEl.value = '';
+        } else {
+          showToast(res.error);
+        }
+      });
+    });
+
+    // Cuando llega configuración nueva del servidor, refrescar los paneles
+    document.addEventListener('ceevs:remote-config', function (e) {
+      if (!e.detail || !e.detail.changed) return;
+      var dash = document.getElementById('admin-dashboard');
+      if (!dash || dash.style.display !== 'block') return;
+      rememberOpenState();
+      renderDashboard();
+      renderGalleryPanel();
+      loadVideoSettings();
+      loadHubVideoSettings();
+      renderBackupStatus();
+      renderInventoryList();
+      renderPalettePanel();
+    });
 
     initTabSystem();
     checkSession();

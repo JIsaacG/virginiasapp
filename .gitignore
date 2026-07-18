@@ -2,3 +2,7 @@ CLAUDE.md
 *.tmp
 Thumbs.db
 .DS_Store
+
+# Datos del panel admin (viven en el servidor, no en el repo)
+server-data/
+uploads/

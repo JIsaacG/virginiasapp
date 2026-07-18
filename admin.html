@@ -22,6 +22,7 @@
     <h1>Panel de Administración</h1>
     <p>Instituto Evangélico Virginia Sapp — CEEVS</p>
     <div class="login-error" id="login-error"></div>
+    <p class="login-hint" id="login-hint"></p>
     <form id="login-form">
       <div class="login-field">
         <input type="password" id="admin-pass" placeholder="Contraseña de administrador" required autocomplete="off">
@@ -42,6 +43,7 @@
       <small>Panel de personalización</small>
     </div>
     <div class="admin-topbar-actions">
+      <span class="sync-chip" id="sync-chip">Conectando…</span>
       <a href="index.html">Ver sitio</a>
       <button class="btn-logout" id="btn-logout">Cerrar sesión</button>
     </div>
@@ -76,7 +78,7 @@
     <div class="admin-main">
       <div class="admin-header">
         <h2>Gestión de Imágenes</h2>
-        <p>Personaliza las imágenes del sitio pegando la URL directa de cada imagen. Los cambios se aplican instantáneamente.</p>
+        <p>Personaliza las imágenes del sitio subiendo un archivo desde tu computadora (botón <strong>📤 Subir</strong>) o pegando la URL directa. Los cambios se publican automáticamente para todos los visitantes.</p>
       </div>
       <div class="admin-stats-bar">
         <span id="admin-stats">Cargando...</span>
@@ -89,12 +91,12 @@
       <div class="admin-help">
         <h3>¿Cómo actualizar una imagen?</h3>
         <ol>
-          <li>Sube tu foto a <strong>Facebook</strong>, <strong>Google Drive</strong> (enlace público), <strong>Imgur</strong>, o el servidor del colegio.</li>
-          <li>Copia la <strong>URL directa</strong> de la imagen (debe terminar en <code>.jpg</code>, <code>.png</code>, <code>.webp</code>).</li>
-          <li>Pega la URL en el campo y haz clic en <strong>"Guardar"</strong>.</li>
+          <li>Busca la imagen con el buscador (ej: "logo", "hero", "álbum").</li>
+          <li>Haz clic en <strong>📤 Subir</strong> y elige la foto desde tu computadora (también puedes pegar una URL directa que termine en <code>.jpg</code>, <code>.png</code> o <code>.webp</code>).</li>
+          <li>Ajusta posición y zoom si hace falta, y haz clic en <strong>"Guardar todo"</strong>.</li>
           <li>Abre el sitio en otra pestaña para verificar que se ve correctamente.</li>
         </ol>
-        <p><strong>Nota:</strong> Las imágenes se guardan en el navegador local. Cada navegador/dispositivo es independiente.</p>
+        <p><strong>Nota:</strong> Cuando el indicador de arriba dice <strong>✓ Publicado en el sitio</strong>, el cambio ya lo ven todos los visitantes desde cualquier dispositivo.</p>
       </div>
     </div>
   </div>
@@ -144,9 +146,12 @@
           </div>
         </div>
         <div class="admin-form-group">
-          <label class="admin-input-label" for="gal-photo-url">URL de la foto *</label>
-          <input type="url" id="gal-photo-url" class="admin-input" placeholder="https://ejemplo.com/foto.jpg">
-          <small class="admin-input-hint">Igual que en Imágenes: URL directa que termine en .jpg, .png o .webp.</small>
+          <label class="admin-input-label" for="gal-photo-url">Foto *</label>
+          <div class="admin-input-row">
+            <input type="text" id="gal-photo-url" class="admin-input" placeholder="https://ejemplo.com/foto.jpg">
+            <button type="button" class="admin-btn-upload" data-upload-target="gal-photo-url" data-upload-accept="image/*">📤 Subir</button>
+          </div>
+          <small class="admin-input-hint">Sube la foto desde tu computadora o pega una URL directa (.jpg, .png, .webp).</small>
         </div>
         <div class="admin-form-actions">
           <button class="admin-btn-save" id="btn-gal-add-photo">➕ Agregar foto</button>
@@ -202,8 +207,11 @@
         <p class="admin-card-desc">Se reproduce en silencio detrás del título principal de la página de inicio. Si está desactivado, se muestra la imagen de fondo.</p>
 
         <div class="admin-form-group">
-          <label class="admin-input-label" for="video-url-input">URL del Video</label>
-          <input type="url" id="video-url-input" class="admin-input" placeholder="https://ejemplo.com/video.mp4">
+          <label class="admin-input-label" for="video-url-input">Video</label>
+          <div class="admin-input-row">
+            <input type="text" id="video-url-input" class="admin-input" placeholder="https://ejemplo.com/video.mp4">
+            <button type="button" class="admin-btn-upload" data-upload-target="video-url-input" data-upload-accept="video/mp4,video/webm">📤 Subir</button>
+          </div>
           <small class="admin-input-hint">Soporta MP4, WebM. Máx. recomendado: 5MB para carga rápida.</small>
         </div>
 
@@ -235,14 +243,20 @@
         <p class="admin-card-desc">Video institucional con controles en la sección «Vive la experiencia Virginia Sapp» del inicio. Si no configuras nada, se usa el archivo local <code>assets/videos/presentacion-virginia-sapp-2026.mp4</code>.</p>
 
         <div class="admin-form-group">
-          <label class="admin-input-label" for="hub-video-url-input">URL del Video (opcional)</label>
-          <input type="url" id="hub-video-url-input" class="admin-input" placeholder="https://ejemplo.com/presentacion.mp4">
+          <label class="admin-input-label" for="hub-video-url-input">Video (opcional)</label>
+          <div class="admin-input-row">
+            <input type="text" id="hub-video-url-input" class="admin-input" placeholder="https://ejemplo.com/presentacion.mp4">
+            <button type="button" class="admin-btn-upload" data-upload-target="hub-video-url-input" data-upload-accept="video/mp4,video/webm">📤 Subir</button>
+          </div>
           <small class="admin-input-hint">Déjalo vacío para usar el video local del sitio.</small>
         </div>
 
         <div class="admin-form-group">
-          <label class="admin-input-label" for="hub-video-poster-input">URL de la portada / miniatura (opcional)</label>
-          <input type="url" id="hub-video-poster-input" class="admin-input" placeholder="https://ejemplo.com/portada.jpg">
+          <label class="admin-input-label" for="hub-video-poster-input">Portada / miniatura (opcional)</label>
+          <div class="admin-input-row">
+            <input type="text" id="hub-video-poster-input" class="admin-input" placeholder="https://ejemplo.com/portada.jpg">
+            <button type="button" class="admin-btn-upload" data-upload-target="hub-video-poster-input" data-upload-accept="image/*">📤 Subir</button>
+          </div>
           <small class="admin-input-hint">Imagen que se muestra antes de reproducir el video.</small>
         </div>
 
@@ -305,8 +319,11 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label class="admin-input-label" for="inv-imagen">URL de Imagen</label>
-              <input type="url" id="inv-imagen" class="admin-input" placeholder="https://ejemplo.com/imagen.jpg">
+              <label class="admin-input-label" for="inv-imagen">Imagen del producto</label>
+              <div class="admin-input-row">
+                <input type="text" id="inv-imagen" class="admin-input" placeholder="https://ejemplo.com/imagen.jpg">
+                <button type="button" class="admin-btn-upload" data-upload-target="inv-imagen" data-upload-accept="image/*">📤 Subir</button>
+              </div>
             </div>
             <div class="form-group">
               <label class="admin-input-label" for="inv-disponibilidad">Disponibilidad *</label>
@@ -359,7 +376,27 @@
     <div class="admin-main">
       <div class="admin-header">
         <h2>Respaldo y Restauración</h2>
-        <p>Los cambios del panel se guardan <strong>en este navegador</strong>. Usa el respaldo para no perderlos y para copiarlos a otra computadora o compartirlos con otra persona del equipo.</p>
+        <p>Con el sitio publicado, los cambios del panel se guardan <strong>en el servidor</strong> y los ven todos los visitantes. Aun así, es buena idea descargar un respaldo de vez en cuando como copia de seguridad.</p>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>🔑 Cambiar contraseña del panel</h3>
+        </div>
+        <p class="admin-card-desc">Cambia la contraseña con la que se entra a este panel de administración.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="admin-input-label" for="pass-current">Contraseña actual</label>
+            <input type="password" id="pass-current" class="admin-input" autocomplete="current-password">
+          </div>
+          <div class="form-group">
+            <label class="admin-input-label" for="pass-new">Nueva contraseña (mínimo 8 caracteres)</label>
+            <input type="password" id="pass-new" class="admin-input" autocomplete="new-password">
+          </div>
+        </div>
+        <div class="admin-form-actions">
+          <button class="admin-btn-save" id="btn-change-pass">🔑 Cambiar contraseña</button>
+        </div>
       </div>
 
       <div class="admin-card">
@@ -403,12 +440,8 @@
       </div>
 
       <div class="admin-help">
-        <h3>¿Cómo pasar los cambios a otra computadora?</h3>
-        <ol>
-          <li>En esta computadora: pestaña <strong>Respaldo</strong> → <strong>Descargar respaldo</strong>.</li>
-          <li>Envía el archivo <code>.json</code> por correo, USB o WhatsApp.</li>
-          <li>En la otra computadora: abre el panel admin → <strong>Respaldo</strong> → selecciona el archivo → <strong>Importar respaldo</strong>.</li>
-        </ol>
+        <h3>¿Y si administro desde otra computadora?</h3>
+        <p>Ya no necesitas mover archivos: entra al panel desde cualquier computadora con la misma contraseña y verás la configuración publicada. El respaldo <code>.json</code> queda como copia de seguridad extra (al importarlo, se publica automáticamente).</p>
       </div>
     </div>
   </div>
@@ -418,7 +451,8 @@
 <!-- Toast de confirmación -->
 <div id="admin-toast"></div>
 
-<!-- Scripts -->
+<!-- Scripts (admin-sync.js debe ir antes de image-manager.js) -->
+<script src="js/admin-sync.js"></script>
 <script src="js/site-settings.js"></script>
 <script src="js/themes.js"></script>
 <script src="js/video-loader.js"></script>

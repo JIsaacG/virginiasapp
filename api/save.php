@@ -1,0 +1,49 @@
+<?php
+/**
+ * save.php — Publica la configuración del panel (requiere sesión).
+ *
+ * POST JSON { data: { ceevs_images: "<json>", ceevs_theme: "clasico", ... } }
+ * Cada valor es la cadena cruda tal como vive en localStorage. Las claves que
+ * no se envían se eliminan de la configuración publicada (restaurar original).
+ */
+
+require __DIR__ . '/bootstrap.php';
+
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+  json_fail('Método no permitido.', 405);
+}
+
+require_auth();
+
+$body = read_json_body();
+$data = isset($body['data']) && is_array($body['data']) ? $body['data'] : null;
+if ($data === null) {
+  json_fail('Formato inválido: falta el objeto "data".');
+}
+
+$clean = array();
+$total = 0;
+foreach (CEEVS_CONFIG_KEYS as $key) {
+  if (!isset($data[$key])) {
+    continue;
+  }
+  if (!is_string($data[$key])) {
+    json_fail('Valor inválido para "' . $key . '" (se esperaba texto).');
+  }
+  $size = strlen($data[$key]);
+  if ($size > CEEVS_MAX_VALUE_BYTES) {
+    json_fail('El apartado "' . $key . '" es demasiado grande. Usa URLs o archivos subidos, no imágenes pegadas.');
+  }
+  $total += $size;
+  $clean[$key] = $data[$key];
+}
+
+if ($total > CEEVS_MAX_VALUE_BYTES * 3) {
+  json_fail('La configuración total es demasiado grande.');
+}
+
+if (!ceevs_write_config($clean)) {
+  json_fail('No se pudo escribir la configuración en el servidor.', 500);
+}
+
+json_out(array('ok' => true, 'saved' => count($clean)));

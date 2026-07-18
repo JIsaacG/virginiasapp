@@ -108,11 +108,87 @@
     applyImageOverrides();
   }
 
+  /* ─── Configuración remota (api/config.php) ───
+     Con el sitio publicado en un hosting con PHP, la configuración del panel
+     vive en el servidor y es la misma para todos los visitantes. localStorage
+     pasa a ser una copia local que se refresca en cada visita. Sin PHP
+     (uso local o hosting estático), todo sigue funcionando como antes. */
+
+  var REMOTE_CONFIG_KEYS = [
+    'ceevs_images', 'ceevs_image_settings', 'ceevs_gallery',
+    'ceevs_video_settings', 'ceevs_hub_video', 'ceevs_theme', 'ceevs_inventory'
+  ];
+
+  /** Re-aplica toda la configuración visible en la página actual. */
+  function reapplyAll() {
+    applyImageOverrides();
+    try { if (window.ceevsThemes) window.ceevsThemes.loadSaved(); } catch (e) {}
+    try {
+      if (window.ceevsVideoLoader) {
+        window.ceevsVideoLoader.load();
+        window.ceevsVideoLoader.loadHub();
+      }
+    } catch (e) {}
+    try { if (window.ceevsGalleryExtra) window.ceevsGalleryExtra.apply(); } catch (e) {}
+    try {
+      // El catálogo público de inventario se re-renderiza pulsando el filtro activo
+      var invBtn = document.querySelector('.inv-filter-btn.active');
+      if (invBtn && document.getElementById('inv-grid')) invBtn.click();
+    } catch (e) {}
+  }
+
+  /** Vuelca la configuración del servidor en localStorage. Devuelve true si algo cambió. */
+  function applyRemoteData(data) {
+    var changed = false;
+    window.__ceevsApplyingRemote = true;
+    for (var j = 0; j < REMOTE_CONFIG_KEYS.length; j++) {
+      var key = REMOTE_CONFIG_KEYS[j];
+      var value = data ? data[key] : undefined;
+      try {
+        if (typeof value === 'string') {
+          if (localStorage.getItem(key) !== value) {
+            localStorage.setItem(key, value);
+            changed = true;
+          }
+        } else if (localStorage.getItem(key) !== null) {
+          localStorage.removeItem(key);
+          changed = true;
+        }
+      } catch (e) {}
+    }
+    window.__ceevsApplyingRemote = false;
+    return changed;
+  }
+
+  function syncFromServer() {
+    // En admin.html la sincronización la dirige admin-sync.js (decide si baja o publica).
+    if (window.CEEVS_ADMIN_PAGE) return;
+    if (typeof fetch !== 'function' || location.protocol === 'file:') return;
+    fetch('api/config.php', { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok || (r.headers.get('content-type') || '').indexOf('json') === -1) return null;
+        return r.json();
+      })
+      .then(function (cfg) {
+        if (!cfg || cfg.app !== 'ceevs-admin' || typeof cfg.data !== 'object' || cfg.data === null) return;
+        // Sin configuración publicada todavía: no tocar lo guardado localmente.
+        if (!cfg.updatedAt) return;
+        var changed = applyRemoteData(cfg.data);
+        if (changed) reapplyAll();
+        document.dispatchEvent(new CustomEvent('ceevs:remote-config', { detail: { changed: changed } }));
+      })
+      .catch(function () { /* sin PHP: el sitio sigue con localStorage */ });
+  }
+
+  syncFromServer();
+
   // API pública
   window.ceevsImageManager = {
     getSavedImages: getSavedImages,
     getSettings: getSettings,
     applyImageOverrides: applyImageOverrides,
+    applyRemoteData: applyRemoteData,
+    reapplyAll: reapplyAll,
 
     saveImage: function (key, url) {
       var saved = getSavedImages();

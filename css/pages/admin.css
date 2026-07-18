@@ -1118,3 +1118,62 @@ details.admin-section > .admin-card { margin-top: 14px; }
   .form-actions { flex-direction: column; }
   .inventory-table th, .inventory-table td { padding: 8px 10px; }
 }
+
+/* ─── Sincronización con el servidor (admin-sync.js) ─── */
+.login-hint {
+  display: none;
+  background: #fdf6ec;
+  color: #6a4a1a;
+  padding: 10px 14px;
+  border-radius: var(--r);
+  font-size: 13px;
+  margin-bottom: 14px;
+  border: 1px solid #ecd9b8;
+  text-align: left;
+}
+.sync-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  white-space: nowrap;
+  max-width: 46vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sync-chip--ok    { background: rgba(46,125,50,.35);  border-color: rgba(129,199,132,.6); }
+.sync-chip--busy  { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.35); }
+.sync-chip--warn  { background: rgba(230,145,20,.35); border-color: rgba(255,193,90,.6); }
+.sync-chip--error { background: rgba(198,40,40,.4);   border-color: rgba(255,138,128,.6); }
+
+/* Campo de URL + botón de subida */
+.admin-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.admin-input-row .admin-input { flex: 1; min-width: 0; }
+.admin-btn-upload {
+  flex-shrink: 0;
+  background: var(--cream);
+  color: var(--forest);
+  border: 1px solid var(--gold);
+  padding: 0 14px;
+  border-radius: var(--r);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 600;
+  transition: background .2s, transform .1s;
+}
+.admin-btn-upload:hover { background: var(--cream2); }
+.admin-btn-upload:active { transform: scale(.97); }
+
+@media (max-width: 600px) {
+  .admin-topbar-actions .sync-chip { display: none; }
+}
