@@ -14,7 +14,13 @@
       background: #f8f4ef;
       color: var(--ink);
       min-height: 100vh;
+      cursor: auto;
     }
+
+    /* El admin no incluye el cursor personalizado (#cursor) ni su JS,
+       así que restauramos el cursor nativo del sistema */
+    #cursor, #cursor-ring { display: none !important; }
+    button { cursor: pointer; }
 
     /* ─── LOGIN SCREEN ─── */
     #login-screen {
