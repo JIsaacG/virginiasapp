@@ -1,69 +1,106 @@
 /* ═══════════════════════════════════════
    MISIÓN EVANGELÍSTICA — Aula virtual
-   Avisos, catálogo de cursos, visor de lecciones y progreso.
+   Dirección visual: "santuario editorial" — la identidad Playfair +
+   café/dorado del sitio con acabado de manuscrito iluminado:
+   patrón de estrellas ✦, numerales en anillo dorado tipo sello,
+   revelado escalonado y visor con entrada animada.
 ═══════════════════════════════════════ */
+
+/* Patrón manuscrito reutilizable (✦ dorado, muy tenue) */
+:root {
+  --aula-stars: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='11' fill='%23D7AF4A' opacity='.35'%3E%E2%9C%A6%3C/text%3E%3Ctext x='48' y='54' text-anchor='middle' font-size='8' fill='%23D7AF4A' opacity='.22'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E");
+}
 
 /* ── Avisos para las familias ── */
 
 .aula-avisos {
-  padding-bottom: 40px;
+  padding-bottom: 44px;
 }
 
 .aula-avisos-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 .aula-aviso {
-  background: var(--cream2, #F6F1EA);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #FDFBF7 0%, var(--cream2, #F6F1EA) 100%);
   border: 1px solid var(--parch, #E8DDD1);
-  border-left: 5px solid var(--gold, #D7AF4A);
+  border-left: 4px solid var(--gold, #D7AF4A);
   border-radius: var(--rl, 20px);
-  padding: 22px 24px;
-  box-shadow: 0 10px 26px rgba(30, 30, 30, 0.06);
+  padding: 24px 26px 22px;
+  box-shadow: 0 12px 30px rgba(106, 36, 7, 0.07);
+  animation: aulaRise 0.55s cubic-bezier(0.22, 0.9, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.aula-aviso:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(106, 36, 7, 0.11);
+}
+
+.aula-aviso-orn {
+  position: absolute;
+  top: -14px;
+  right: 2px;
+  font-size: 74px;
+  line-height: 1;
+  color: var(--gold, #D7AF4A);
+  opacity: 0.14;
+  pointer-events: none;
 }
 
 .aula-aviso-date {
   display: inline-block;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--moss, #8F3A10);
-  margin-bottom: 8px;
+  border-bottom: 1.5px solid rgba(215, 175, 74, 0.55);
+  padding-bottom: 4px;
+  margin-bottom: 12px;
 }
 
 .aula-aviso h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.15rem;
+  font-size: 1.22rem;
   color: var(--ceevs-brown, #6A2407);
-  margin-bottom: 6px;
-  line-height: 1.3;
+  margin-bottom: 8px;
+  line-height: 1.28;
 }
 
 .aula-aviso p {
   margin-bottom: 0;
   font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* ── Sección del aula: atmósfera ── */
+
+.aula-section {
+  padding-top: 48px;
+  background:
+    var(--aula-stars),
+    linear-gradient(180deg, #FBF7F0 0%, var(--cream, #F7F5F2) 55%);
 }
 
 /* ── Barra de búsqueda y filtros ── */
 
-.aula-section {
-  padding-top: 40px;
-}
-
 .aula-toolbar {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 10px;
+  gap: 18px;
+  margin-bottom: 12px;
 }
 
 .aula-search {
   width: 100%;
-  max-width: 460px;
-  padding: 13px 18px;
+  max-width: 480px;
+  padding: 14px 22px;
   border: 1.5px solid var(--parch, #E8DDD1);
   border-radius: 999px;
   background: #fff;
@@ -71,12 +108,13 @@
   font-size: 0.95rem;
   color: var(--ink, #1E1E1E);
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(106, 36, 7, 0.05);
+  transition: border-color 0.25s, box-shadow 0.25s;
 }
 
 .aula-search:focus {
   border-color: var(--gold, #D7AF4A);
-  box-shadow: 0 0 0 4px rgba(215, 175, 74, 0.18);
+  box-shadow: 0 0 0 4px rgba(215, 175, 74, 0.2), 0 4px 14px rgba(106, 36, 7, 0.05);
 }
 
 .aula-chips {
@@ -86,7 +124,7 @@
 }
 
 .aula-chip {
-  padding: 9px 18px;
+  padding: 10px 20px;
   border: 1.5px solid var(--parch, #E8DDD1);
   border-radius: 999px;
   background: #fff;
@@ -101,28 +139,43 @@
 .aula-chip:hover {
   border-color: var(--gold, #D7AF4A);
   color: var(--ceevs-brown, #6A2407);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(106, 36, 7, 0.1);
 }
 
 .aula-chip.active {
   background: var(--ceevs-brown, #6A2407);
   border-color: var(--ceevs-brown, #6A2407);
-  color: #fff;
+  color: var(--cream, #F7F5F2);
+  box-shadow: 0 10px 22px rgba(106, 36, 7, 0.28);
+}
+
+.aula-chip.active::before {
+  content: '✦ ';
+  color: var(--gold, #D7AF4A);
 }
 
 .aula-count {
   min-height: 1.2em;
-  font-size: 0.85rem;
-  color: var(--muted, #5E5145);
-  margin-bottom: 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sage, #C68437);
+  margin-bottom: 18px;
 }
 
 /* ── Tarjetas de curso ── */
 
 .aula-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 26px;
+}
+
+@keyframes aulaRise {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .aula-card {
@@ -132,13 +185,16 @@
   border: 1px solid var(--parch, #E8DDD1);
   border-radius: var(--rxl, 32px);
   overflow: hidden;
-  box-shadow: 0 14px 34px rgba(30, 30, 30, 0.07);
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 16px 38px rgba(106, 36, 7, 0.08);
+  animation: aulaRise 0.55s cubic-bezier(0.22, 0.9, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 80ms);
+  transition: transform 0.35s cubic-bezier(0.22, 0.9, 0.36, 1), box-shadow 0.35s, border-color 0.35s;
 }
 
 .aula-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 48px rgba(30, 30, 30, 0.12);
+  transform: translateY(-8px);
+  border-color: rgba(215, 175, 74, 0.65);
+  box-shadow: 0 30px 60px rgba(106, 36, 7, 0.16);
 }
 
 .aula-card--done {
@@ -148,7 +204,7 @@
 .aula-card-cover {
   position: relative;
   aspect-ratio: 16 / 9;
-  background: linear-gradient(135deg, var(--ceevs-brown, #6A2407), var(--moss, #8F3A10));
+  background: linear-gradient(135deg, var(--forest3, #4F1B05) 0%, var(--ceevs-brown, #6A2407) 55%, var(--moss, #8F3A10) 100%);
   overflow: hidden;
 }
 
@@ -157,51 +213,95 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.6s cubic-bezier(0.22, 0.9, 0.36, 1);
 }
 
+.aula-card:hover .aula-card-cover img {
+  transform: scale(1.06);
+}
+
+/* Portada institucional cuando el curso no tiene imagen:
+   pergamino nocturno con estrellas ✦ y sello dorado central */
 .aula-card-cover-ph {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 52px;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.3));
+  background:
+    var(--aula-stars),
+    radial-gradient(circle at 50% 120%, rgba(215, 175, 74, 0.35) 0%, transparent 55%);
+}
+
+.aula-ph-ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  font-size: 38px;
+  background: rgba(247, 245, 242, 0.12);
+  border: 1.5px solid rgba(215, 175, 74, 0.75);
+  box-shadow:
+    0 0 0 6px rgba(215, 175, 74, 0.12),
+    0 14px 34px rgba(0, 0, 0, 0.35);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.aula-card:hover .aula-ph-ring {
+  transform: scale(1.1) rotate(-4deg);
 }
 
 .aula-card-cat {
   position: absolute;
   top: 14px;
   left: 14px;
-  padding: 5px 12px;
+  padding: 6px 13px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(247, 245, 242, 0.94);
   color: var(--ceevs-brown, #6A2407);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.aula-card-donebadge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: var(--gold, #D7AF4A);
+  color: var(--forest3, #4F1B05);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
 }
 
 .aula-card-body {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 22px 24px 24px;
+  padding: 24px 26px 26px;
 }
 
 .aula-card-body h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.22rem;
+  font-size: 1.28rem;
   color: var(--ceevs-brown, #6A2407);
-  line-height: 1.3;
+  line-height: 1.28;
   margin-bottom: 8px;
 }
 
 .aula-card-desc {
   font-size: 0.92rem;
-  line-height: 1.6;
-  margin-bottom: 14px;
+  line-height: 1.65;
+  margin-bottom: 16px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -211,38 +311,63 @@
 .aula-card-meta {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   gap: 10px;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--muted, #5E5145);
   margin: auto 0 8px;
 }
 
+.aula-card-metapct {
+  color: var(--moss, #8F3A10);
+  letter-spacing: 0.04em;
+}
+
 .aula-progress {
+  position: relative;
   height: 8px;
   border-radius: 999px;
   background: var(--parch, #E8DDD1);
   overflow: hidden;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .aula-progress-fill {
   height: 100%;
   width: 0;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--gold, #D7AF4A), var(--gold2, #F57C00));
-  transition: width 0.5s ease;
+  background: linear-gradient(90deg, var(--gold, #D7AF4A) 0%, var(--gold2, #F57C00) 130%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  transition: width 0.6s cubic-bezier(0.22, 0.9, 0.36, 1);
 }
 
 .aula-card-btn {
   align-self: flex-start;
 }
 
+.aula-card-btn span {
+  display: inline-block;
+  transition: transform 0.25s;
+}
+
+.aula-card-btn:hover span {
+  transform: translateX(5px);
+}
+
 .aula-note {
-  margin-top: 26px;
+  margin-top: 30px;
   font-size: 0.85rem;
   text-align: center;
   color: var(--muted, #5E5145);
+}
+
+.aula-note::before {
+  content: '✦';
+  display: block;
+  color: var(--gold, #D7AF4A);
+  font-size: 0.9rem;
+  margin-bottom: 6px;
 }
 
 /* ── Estado vacío ── */
@@ -250,20 +375,20 @@
 .aula-empty {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 60px 20px;
-  background: var(--cream2, #F6F1EA);
-  border: 1.5px dashed var(--parch, #E8DDD1);
+  padding: 70px 24px;
+  background: var(--aula-stars), #FDFBF7;
+  border: 1.5px dashed rgba(198, 132, 55, 0.5);
   border-radius: var(--rxl, 32px);
 }
 
 .aula-empty-icon {
-  font-size: 44px;
-  margin-bottom: 12px;
+  font-size: 46px;
+  margin-bottom: 14px;
 }
 
 .aula-empty-title {
   font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   color: var(--ceevs-brown, #6A2407);
   margin-bottom: 6px;
 }
@@ -271,40 +396,53 @@
 /* ── Pasos "cómo funciona" ── */
 
 .aula-steps {
-  padding-top: 20px;
+  padding-top: 24px;
 }
 
 .aula-steps-grid {
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  counter-reset: aula-paso;
 }
 
 .aula-step {
   position: relative;
   background: #fff;
   border: 1px solid var(--parch, #E8DDD1);
+  border-top: 3px solid var(--gold, #D7AF4A);
   border-radius: var(--rl, 20px);
-  padding: 28px 26px 24px;
-  box-shadow: 0 10px 26px rgba(30, 30, 30, 0.06);
+  padding: 30px 28px 26px;
+  box-shadow: 0 12px 30px rgba(106, 36, 7, 0.07);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
+.aula-step:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 22px 46px rgba(106, 36, 7, 0.12);
+}
+
+/* Numeral tipo sello de cera dorado */
 .aula-step-num {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   background: var(--ceevs-brown, #6A2407);
   color: var(--gold, #D7AF4A);
   font-family: 'Playfair Display', serif;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 4.5px var(--gold, #D7AF4A),
+    0 8px 18px rgba(106, 36, 7, 0.25);
 }
 
 .aula-step h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.1rem;
+  font-size: 1.12rem;
   color: var(--ceevs-brown, #6A2407);
   margin-bottom: 8px;
 }
@@ -315,6 +453,16 @@
 }
 
 /* ── Visor de curso (overlay) ── */
+
+@keyframes aulaFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes aulaPanelIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 .aula-viewer {
   position: fixed;
@@ -337,20 +485,22 @@ body.aula-viewer-open {
 .aula-viewer-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(30, 20, 10, 0.62);
-  backdrop-filter: blur(4px);
+  background: rgba(35, 18, 6, 0.66);
+  backdrop-filter: blur(5px);
   cursor: pointer;
+  animation: aulaFade 0.3s both;
 }
 
 .aula-viewer-panel {
   position: relative;
-  width: min(860px, 100%);
+  width: min(880px, 100%);
   max-height: 92vh;
   overflow-y: auto;
   background: var(--cream, #F7F5F2);
   border-radius: var(--rxl, 32px);
-  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.35);
-  padding: 0 0 30px;
+  box-shadow: 0 46px 100px rgba(0, 0, 0, 0.4);
+  padding: 0 0 34px;
+  animation: aulaPanelIn 0.4s cubic-bezier(0.22, 0.9, 0.36, 1) both;
 }
 
 .aula-viewer-topbar {
@@ -361,50 +511,52 @@ body.aula-viewer-open {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 16px 24px;
-  background: var(--ceevs-brown, #6A2407);
+  padding: 16px 26px;
+  background: linear-gradient(120deg, var(--forest3, #4F1B05), var(--ceevs-brown, #6A2407));
+  border-bottom: 1px solid rgba(215, 175, 74, 0.45);
   color: #fff;
 }
 
 .aula-viewer-kicker {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gold, #D7AF4A);
 }
 
 .aula-viewer-close {
-  width: 36px;
-  height: 36px;
-  border: none;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(215, 175, 74, 0.4);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.1);
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.2s, transform 0.25s;
 }
 
 .aula-viewer-close:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: rgba(215, 175, 74, 0.35);
   transform: rotate(90deg);
 }
 
 .aula-viewer-head {
-  padding: 26px 30px 6px;
+  padding: 30px 34px 8px;
 }
 
 .aula-viewer-head .aula-card-cat {
   position: static;
   display: inline-block;
   background: var(--parch, #E8DDD1);
-  margin-bottom: 12px;
+  box-shadow: none;
+  margin-bottom: 14px;
 }
 
 .aula-viewer-head h3 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(22px, 3vw, 30px);
+  font-size: clamp(23px, 3vw, 32px);
   color: var(--ceevs-brown, #6A2407);
   line-height: 1.2;
   margin-bottom: 10px;
@@ -413,7 +565,7 @@ body.aula-viewer-open {
 .aula-viewer-head p {
   color: var(--muted, #5E5145);
   line-height: 1.7;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .aula-viewer-progress {
@@ -429,9 +581,11 @@ body.aula-viewer-open {
 }
 
 .aula-viewer-progress span {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--muted, #5E5145);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--moss, #8F3A10);
   white-space: nowrap;
 }
 
@@ -439,7 +593,7 @@ body.aula-viewer-open {
 
 .aula-lessons {
   list-style: none;
-  margin: 14px 30px 0;
+  margin: 16px 34px 0;
   padding: 0;
   display: grid;
   gap: 12px;
@@ -455,12 +609,7 @@ body.aula-viewer-open {
 
 .aula-lesson.is-open {
   border-color: var(--gold, #D7AF4A);
-  box-shadow: 0 12px 30px rgba(30, 30, 30, 0.09);
-}
-
-.aula-lesson.is-done .aula-lesson-num {
-  background: var(--gold, #D7AF4A);
-  color: var(--ceevs-brown, #6A2407);
+  box-shadow: 0 14px 34px rgba(106, 36, 7, 0.1);
 }
 
 .aula-lesson-toggle {
@@ -468,7 +617,7 @@ body.aula-viewer-open {
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 16px 20px;
+  padding: 17px 22px;
   border: none;
   background: none;
   text-align: left;
@@ -476,18 +625,33 @@ body.aula-viewer-open {
   font-family: 'Outfit', sans-serif;
 }
 
+.aula-lesson-toggle:hover .aula-lesson-num {
+  border-color: var(--gold, #D7AF4A);
+}
+
+/* Numeral de lección: anillo sello */
 .aula-lesson-num {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--cream2, #F6F1EA);
   border: 1.5px solid var(--parch, #E8DDD1);
   color: var(--ceevs-brown, #6A2407);
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
   font-weight: 700;
+  transition: all 0.3s;
+}
+
+.aula-lesson.is-done .aula-lesson-num {
+  background: var(--gold, #D7AF4A);
+  border-color: var(--gold, #D7AF4A);
+  color: var(--forest3, #4F1B05);
+  box-shadow: 0 0 0 4px rgba(215, 175, 74, 0.22);
 }
 
 .aula-lesson-info {
@@ -514,26 +678,32 @@ body.aula-viewer-open {
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--gold2, #F57C00);
+  transition: transform 0.3s;
+}
+
+.aula-lesson.is-open .aula-lesson-state {
+  transform: rotate(90deg);
 }
 
 .aula-lesson.is-done .aula-lesson-state {
   color: var(--gold, #D7AF4A);
+  transform: none;
 }
 
 .aula-lesson-content {
-  padding: 4px 22px 20px;
-  border-top: 1px dashed var(--parch, #E8DDD1);
+  padding: 4px 24px 22px;
+  border-top: 1px dashed rgba(198, 132, 55, 0.4);
 }
 
 .aula-lesson-text p {
-  margin: 14px 0 0;
+  margin: 15px 0 0;
   color: var(--ink, #1E1E1E);
-  font-size: 0.95rem;
-  line-height: 1.75;
+  font-size: 0.96rem;
+  line-height: 1.8;
 }
 
 .aula-lesson-empty {
-  padding: 16px 30px;
+  padding: 18px 34px;
   color: var(--muted, #5E5145);
   font-style: italic;
 }
@@ -545,6 +715,7 @@ body.aula-viewer-open {
   border-radius: var(--r, 10px);
   overflow: hidden;
   background: #000;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
 }
 
 .aula-embed iframe {
@@ -561,10 +732,12 @@ body.aula-viewer-open {
   margin-top: 16px;
   border-radius: var(--r, 10px);
   background: #000;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
 }
 
 .aula-media-audio {
   background: none;
+  box-shadow: none;
 }
 
 .aula-resource-btn {
@@ -575,22 +748,35 @@ body.aula-viewer-open {
 .aula-done-label {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 18px;
-  padding: 12px 16px;
-  border-radius: var(--r, 10px);
+  gap: 11px;
+  margin-top: 20px;
+  padding: 13px 18px;
+  border: 1.5px solid var(--parch, #E8DDD1);
+  border-radius: 999px;
   background: var(--cream2, #F6F1EA);
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--ceevs-brown, #6A2407);
   cursor: pointer;
   user-select: none;
+  transition: all 0.3s;
+}
+
+.aula-done-label:hover {
+  border-color: var(--gold, #D7AF4A);
+}
+
+.aula-done-label:has(input:checked) {
+  background: var(--gold, #D7AF4A);
+  border-color: var(--gold, #D7AF4A);
+  color: var(--forest3, #4F1B05);
+  box-shadow: 0 8px 20px rgba(215, 175, 74, 0.35);
 }
 
 .aula-done-label input {
   width: 18px;
   height: 18px;
-  accent-color: var(--ceevs-orange, #F57C00);
+  accent-color: var(--ceevs-brown, #6A2407);
   cursor: pointer;
 }
 
@@ -612,17 +798,22 @@ body.aula-viewer-open {
     border-radius: 0;
   }
 
-  .aula-viewer-head,
+  .aula-viewer-head {
+    padding: 24px 18px 6px;
+  }
+
   .aula-lessons {
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 18px;
-    padding-right: 18px;
+    margin-left: 14px;
+    margin-right: 14px;
   }
 
   .aula-lesson-toggle {
     padding: 14px 14px;
     gap: 12px;
+  }
+
+  .aula-lesson-content {
+    padding: 4px 16px 18px;
   }
 
   .aula-viewer-progress {
