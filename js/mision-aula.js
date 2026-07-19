@@ -455,9 +455,10 @@
           return;
         }
         section.style.display = '';
-        list.innerHTML = avisos.map(function (a) {
-          return '<article class="aula-aviso">' +
-            '<span class="aula-aviso-date">📅 ' + escapeHtml(formatFecha(a.fecha)) + '</span>' +
+        list.innerHTML = avisos.map(function (a, i) {
+          return '<article class="aula-aviso" style="--i:' + i + '">' +
+            '<span class="aula-aviso-orn" aria-hidden="true">✦</span>' +
+            '<span class="aula-aviso-date">' + escapeHtml(formatFecha(a.fecha)) + '</span>' +
             '<h3>' + escapeHtml(a.titulo) + '</h3>' +
             (a.texto ? '<p>' + escapeHtml(a.texto) + '</p>' : '') +
             '</article>';
@@ -505,27 +506,29 @@
           return;
         }
 
-        grid.innerHTML = cursos.map(function (c) {
+        grid.innerHTML = cursos.map(function (c, i) {
           var lecciones = Array.isArray(c.lecciones) ? c.lecciones : [];
           var done = countDone(c);
           var pct = lecciones.length ? Math.round((done / lecciones.length) * 100) : 0;
+          var completo = pct === 100 && lecciones.length > 0;
           var img = safeUrl(c.imagenUrl);
           var cover = img
             ? '<img src="' + escapeHtml(img) + '" alt="' + escapeHtml(c.titulo) + '" loading="lazy">'
-            : '<div class="aula-card-cover-ph" aria-hidden="true">' + (CAT_EMOJI[c.categoria] || '📖') + '</div>';
-          return '<article class="aula-card' + (pct === 100 && lecciones.length ? ' aula-card--done' : '') + '">' +
+            : '<div class="aula-card-cover-ph" aria-hidden="true"><span class="aula-ph-ring">' + (CAT_EMOJI[c.categoria] || '📖') + '</span></div>';
+          return '<article class="aula-card' + (completo ? ' aula-card--done' : '') + '" style="--i:' + i + '">' +
             '<div class="aula-card-cover">' + cover +
               '<span class="aula-card-cat">' + escapeHtml(c.categoria) + '</span>' +
+              (completo ? '<span class="aula-card-donebadge">✓ Completado</span>' : '') +
             '</div>' +
             '<div class="aula-card-body">' +
               '<h3>' + escapeHtml(c.titulo) + '</h3>' +
               (c.descripcion ? '<p class="aula-card-desc">' + escapeHtml(c.descripcion) + '</p>' : '') +
               '<div class="aula-card-meta">' +
                 '<span>📚 ' + lecciones.length + ' ' + (lecciones.length === 1 ? 'lección' : 'lecciones') + '</span>' +
-                '<span>' + (pct === 100 && lecciones.length ? '✓ Completado' : done + ' de ' + lecciones.length) + '</span>' +
+                '<span class="aula-card-metapct">' + (completo ? '✓ Completado' : done + ' de ' + lecciones.length) + '</span>' +
               '</div>' +
               '<div class="aula-progress"><div class="aula-progress-fill" style="width:' + pct + '%"></div></div>' +
-              '<button type="button" class="btn-cta-main aula-card-btn" data-aula-open="' + escapeHtml(c.id) + '">Entrar al curso</button>' +
+              '<button type="button" class="btn-cta-main aula-card-btn" data-aula-open="' + escapeHtml(c.id) + '">Entrar al curso <span aria-hidden="true">→</span></button>' +
             '</div>' +
             '</article>';
         }).join('');
