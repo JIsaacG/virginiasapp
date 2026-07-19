@@ -33,7 +33,8 @@ const CEEVS_CONFIG_KEYS = array(
   'ceevs_video_settings',
   'ceevs_hub_video',
   'ceevs_theme',
-  'ceevs_inventory'
+  'ceevs_inventory',
+  'ceevs_mision_aula'
 );
 
 define('CEEVS_DATA_DIR', dirname(__DIR__) . '/server-data');

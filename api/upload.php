@@ -1,6 +1,6 @@
 <?php
 /**
- * upload.php — Sube una imagen o video al servidor (requiere sesión).
+ * upload.php — Sube una imagen, video, PDF o audio al servidor (requiere sesión).
  *
  * POST multipart con el campo "file". El archivo queda en uploads/AAAA/MM/ y
  * se responde { ok: true, url: 'uploads/AAAA/MM/nombre.ext' }. El tipo real
@@ -43,12 +43,16 @@ $allowed = array(
   'video/mp4'       => 'mp4',
   'video/webm'      => 'webm',
   'video/quicktime' => 'mov',
+  'application/pdf' => 'pdf',
+  'audio/mpeg'      => 'mp3',
+  'audio/mp4'       => 'm4a',
+  'audio/ogg'       => 'ogg',
 );
 
 $finfo = new finfo(FILEINFO_MIME_TYPE);
 $mime = $finfo->file($file['tmp_name']);
 if (!isset($allowed[$mime])) {
-  json_fail('Tipo de archivo no permitido (' . $mime . '). Usa JPG, PNG, WebP, GIF, AVIF, MP4 o WebM.');
+  json_fail('Tipo de archivo no permitido (' . $mime . '). Usa JPG, PNG, WebP, GIF, AVIF, MP4, WebM, PDF o MP3.');
 }
 $ext = $allowed[$mime];
 

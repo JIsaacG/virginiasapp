@@ -116,7 +116,8 @@
 
   var REMOTE_CONFIG_KEYS = [
     'ceevs_images', 'ceevs_image_settings', 'ceevs_gallery',
-    'ceevs_video_settings', 'ceevs_hub_video', 'ceevs_theme', 'ceevs_inventory'
+    'ceevs_video_settings', 'ceevs_hub_video', 'ceevs_theme', 'ceevs_inventory',
+    'ceevs_mision_aula'
   ];
 
   /** Re-aplica toda la configuración visible en la página actual. */

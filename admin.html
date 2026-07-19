@@ -85,6 +85,9 @@
       <button class="admin-tab-btn" data-tab="inventario">
         <span class="admin-tab-icon">📦</span> Inventario
       </button>
+      <button class="admin-tab-btn" data-tab="mision">
+        <span class="admin-tab-icon">✝️</span> Misión
+      </button>
       <button class="admin-tab-btn" data-tab="respaldo">
         <span class="admin-tab-icon">💾</span> Respaldo
       </button>
@@ -403,6 +406,162 @@
     </div>
   </div>
 
+  <!-- ─── PANEL: Misión (aula virtual) ─── -->
+  <div class="admin-tab-panel" id="panel-mision">
+    <div class="admin-main">
+      <div class="admin-header">
+        <h2>Misión Evangelística — Aula virtual</h2>
+        <p>Administra el contenido del Evangelio que ven las familias en <a href="mision-evangelistica.html" target="_blank" rel="noopener">mision-evangelistica.html</a>: avisos, cursos y sus lecciones (lecturas, videos, audios, documentos y enlaces). Los cambios se publican automáticamente.</p>
+      </div>
+
+      <!-- Avisos -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>📢 Avisos para las familias</h3>
+        </div>
+        <p class="admin-card-desc">Mensajes cortos que aparecen al inicio del aula (fechas, novedades, recordatorios). La fecha se registra automáticamente.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="admin-input-label" for="ma-aviso-titulo">Título del aviso *</label>
+            <input type="text" id="ma-aviso-titulo" class="admin-input" placeholder="Ej: Nueva serie de devocionales disponible">
+          </div>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-input-label" for="ma-aviso-texto">Texto (opcional)</label>
+          <textarea id="ma-aviso-texto" class="admin-textarea" rows="2" placeholder="Detalle breve del aviso"></textarea>
+        </div>
+        <div class="admin-form-actions">
+          <button class="admin-btn-save" id="btn-ma-add-aviso">📢 Publicar aviso</button>
+        </div>
+        <div id="ma-avisos-list">
+          <p class="empty-state">No hay avisos publicados.</p>
+        </div>
+      </div>
+
+      <!-- Crear / editar curso -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 id="ma-curso-form-title">📘 Crear curso nuevo</h3>
+        </div>
+        <p class="admin-card-desc">Un curso agrupa lecciones sobre un tema (ej: «Devocionales para hacer en casa»). Después de crearlo, agrégale contenido en la tarjeta «Contenido del curso».</p>
+        <form id="ma-curso-form">
+          <input type="hidden" id="ma-curso-id" value="">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="admin-input-label" for="ma-curso-titulo">Título del curso *</label>
+              <input type="text" id="ma-curso-titulo" class="admin-input" placeholder="Ej: Fundamentos del Evangelio" required>
+            </div>
+            <div class="form-group">
+              <label class="admin-input-label" for="ma-curso-categoria">Dirigido a *</label>
+              <select id="ma-curso-categoria" class="admin-select" required>
+                <option value="">Selecciona el público</option>
+                <option value="Niñez">Niñez</option>
+                <option value="Preadolescentes">Preadolescentes</option>
+                <option value="Adolescentes">Adolescentes</option>
+                <option value="Familias">Familias</option>
+                <option value="Docentes y líderes">Docentes y líderes</option>
+              </select>
+            </div>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-input-label" for="ma-curso-desc">Descripción</label>
+            <textarea id="ma-curso-desc" class="admin-textarea" rows="2" placeholder="¿De qué trata este curso y para quién es?"></textarea>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-input-label" for="ma-curso-imagen">Imagen de portada (opcional)</label>
+            <div class="admin-input-row">
+              <input type="text" id="ma-curso-imagen" class="admin-input" placeholder="https://ejemplo.com/portada.jpg">
+              <button type="button" class="admin-btn-upload" data-upload-target="ma-curso-imagen" data-upload-accept="image/*">📤 Subir</button>
+            </div>
+            <small class="admin-input-hint">Si no pones imagen, se muestra una portada institucional con el ícono de la categoría.</small>
+          </div>
+          <div class="admin-form-actions">
+            <button type="submit" class="admin-btn-save">💾 Guardar curso</button>
+            <button type="button" class="admin-btn-secondary" id="btn-ma-curso-reset">↺ Limpiar</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Lista de cursos -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>🎒 Cursos del aula</h3>
+          <span class="product-count" id="ma-cursos-count">0 cursos</span>
+        </div>
+        <p class="admin-card-desc">«Ocultar» retira el curso del aula sin borrarlo. Usa las flechas para cambiar el orden en que aparecen.</p>
+        <div id="ma-cursos-list">
+          <p class="empty-state">No hay cursos. Crea uno con el formulario.</p>
+        </div>
+      </div>
+
+      <!-- Contenido del curso (lecciones) -->
+      <div class="admin-card" id="ma-lecciones-card">
+        <div class="admin-card-header">
+          <h3 id="ma-lec-form-title">➕ Agregar lección o material</h3>
+        </div>
+        <div class="admin-form-group">
+          <label class="admin-input-label" for="ma-lec-curso">Curso *</label>
+          <select id="ma-lec-curso" class="admin-select"></select>
+        </div>
+        <form id="ma-lec-form">
+          <input type="hidden" id="ma-lec-id" value="">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="admin-input-label" for="ma-lec-tipo">Tipo de contenido *</label>
+              <select id="ma-lec-tipo" class="admin-select">
+                <option value="leccion">📝 Lección de lectura (texto)</option>
+                <option value="video">🎬 Video (YouTube o archivo)</option>
+                <option value="documento">📄 Documento (PDF u otro)</option>
+                <option value="audio">🎧 Audio</option>
+                <option value="enlace">🔗 Enlace externo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="admin-input-label" for="ma-lec-titulo">Título *</label>
+              <input type="text" id="ma-lec-titulo" class="admin-input" placeholder="Ej: Devocional 1 — El amor de Dios">
+            </div>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-input-label" for="ma-lec-url">Archivo o enlace (para video, documento, audio o enlace)</label>
+            <div class="admin-input-row">
+              <input type="text" id="ma-lec-url" class="admin-input" placeholder="https://youtube.com/watch?v=… o sube un archivo">
+              <button type="button" class="admin-btn-upload" data-upload-target="ma-lec-url" data-upload-accept="application/pdf,video/*,audio/*,image/*">📤 Subir</button>
+            </div>
+            <small class="admin-input-hint">Acepta enlaces de YouTube/Vimeo, o archivos subidos al sitio (PDF, MP4, MP3…).</small>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-input-label" for="ma-lec-texto">Texto de la lección (para lecturas; opcional en los demás tipos)</label>
+            <textarea id="ma-lec-texto" class="admin-textarea" rows="6" placeholder="Escribe aquí el contenido. Deja una línea en blanco para separar párrafos."></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="admin-input-label" for="ma-lec-nota">Nota corta (opcional)</label>
+              <input type="text" id="ma-lec-nota" class="admin-input" placeholder="Ej: Lectura de 5 minutos · Juan 3:16">
+            </div>
+          </div>
+          <div class="admin-form-actions">
+            <button type="submit" class="admin-btn-save">💾 Guardar lección</button>
+            <button type="button" class="admin-btn-secondary" id="btn-ma-lec-reset">↺ Limpiar</button>
+          </div>
+        </form>
+        <div id="ma-lecciones-list">
+          <p class="empty-state">Selecciona un curso para ver sus lecciones.</p>
+        </div>
+      </div>
+
+      <div class="admin-help">
+        <h3>¿Cómo publico contenido del Evangelio?</h3>
+        <ol>
+          <li>Crea un curso con título, público y descripción (ej: «Devocionales para hacer en casa»).</li>
+          <li>En «Agregar lección o material», selecciona el curso y agrega lecciones: texto, videos, PDF, audios o enlaces.</li>
+          <li>Ordena las lecciones con las flechas ▲▼ — los padres las verán numeradas en ese orden.</li>
+          <li>Abre <a href="mision-evangelistica.html" target="_blank" rel="noopener">la página del aula</a> en otra pestaña para verificar cómo se ve.</li>
+        </ol>
+        <p><strong>Nota:</strong> los visitantes marcan su propio avance en cada dispositivo; eso no afecta el contenido que administras aquí.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── PANEL: Respaldo ─── -->
   <div class="admin-tab-panel" id="panel-respaldo">
     <div class="admin-main">
@@ -513,6 +672,7 @@
 <script src="js/themes.js?v=20260719"></script>
 <script src="js/video-loader.js?v=20260719"></script>
 <script src="js/inventory.js?v=20260719"></script>
+<script src="js/mision-aula.js?v=20260719"></script>
 <script src="js/image-manager.js?v=20260719"></script>
 <script src="js/gallery-extra.js?v=20260719"></script>
 <script src="js/admin.js?v=20260719"></script>

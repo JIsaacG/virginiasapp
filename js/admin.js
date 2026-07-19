@@ -77,12 +77,7 @@
         { key: 'me-portada-docentes', label: 'Portada — Docentes (flotante)', defaultUrl: WP + '2026/01/IMG_9784.jpg' },
         { key: 'me-momento-1', label: 'Momentos — Foto 1: Actividades escolares', defaultUrl: WP + '2025/10/IMG_1816-1400x786.jpg' },
         { key: 'me-momento-2', label: 'Momentos — Foto 2: Niños', defaultUrl: WP + '2026/01/IMG_5896.jpg' },
-        { key: 'me-momento-3', label: 'Momentos — Foto 3: Campus', defaultUrl: WP + '2025/12/IMG_2006.jpg' },
-        { key: 'me-tarjeta-1', label: 'Tarjetas — Foto 1: Biblioteca', defaultUrl: WP + '2026/03/IMG_7464.JPG-712x400.jpeg' },
-        { key: 'me-tarjeta-2', label: 'Tarjetas — Foto 2: Clases', defaultUrl: WP + '2026/01/IMG_8171.jpg' },
-        { key: 'me-tarjeta-3', label: 'Tarjetas — Foto 3: Convivencia', defaultUrl: WP + '2025/12/IMG_4411.jpg' },
-        { key: 'me-tarjeta-4', label: 'Tarjetas — Foto 4: Comunidad', defaultUrl: WP + '2025/10/WhatsApp-Image-2025-10-22-at-3.37.19-PM-2-533x400.jpeg' },
-        { key: 'me-articulo-docentes', label: 'Artículo — Docentes', defaultUrl: WP + '2026/01/IMG_9784.jpg' }
+        { key: 'me-momento-3', label: 'Momentos — Foto 3: Campus', defaultUrl: WP + '2025/12/IMG_2006.jpg' }
       ]
     },
     albumSection(1, 'Graduación 2023 (11vo B y C Bilingüe)', [
@@ -311,7 +306,8 @@
     ceevs_video_settings: 'Videos',
     ceevs_hub_video: 'Video del portal',
     ceevs_theme: 'Paleta de colores',
-    ceevs_inventory: 'Inventario'
+    ceevs_inventory: 'Inventario',
+    ceevs_mision_aula: 'Aula virtual (Misión Evangelística)'
   };
 
   function friendlyAuditDetail(d) {
@@ -735,6 +731,7 @@
         if (panel) panel.classList.add('active');
         if (tabName === 'paleta') renderPalettePanel();
         if (tabName === 'inventario') renderInventoryList();
+        if (tabName === 'mision' && window.ceevsMisionAula && window.ceevsMisionAula.renderAdmin) window.ceevsMisionAula.renderAdmin();
         if (tabName === 'galeria') renderGalleryPanel();
         if (tabName === 'video') { loadVideoSettings(); loadHubVideoSettings(); }
         if (tabName === 'respaldo') renderBackupStatus();
@@ -1055,7 +1052,8 @@
     { key: 'ceevs_video_settings', label: 'Video de fondo del hero' },
     { key: 'ceevs_hub_video', label: 'Video de presentación' },
     { key: 'ceevs_theme', label: 'Paleta de colores' },
-    { key: 'ceevs_inventory', label: 'Inventario de productos' }
+    { key: 'ceevs_inventory', label: 'Inventario de productos' },
+    { key: 'ceevs_mision_aula', label: 'Aula virtual de la Misión Evangelística' }
   ];
 
   function exportBackup() {
@@ -1127,6 +1125,8 @@
             detail = ' (' + parsed.length + ' productos)';
           } else if (item.key === 'ceevs_gallery') {
             detail = ' (' + ((parsed.photos || []).length) + ' fotos, ' + ((parsed.albums || []).length) + ' álbumes)';
+          } else if (item.key === 'ceevs_mision_aula') {
+            detail = ' (' + ((parsed.cursos || []).length) + ' cursos, ' + ((parsed.avisos || []).length) + ' avisos)';
           }
         } catch (e) {}
       }
@@ -1572,6 +1572,7 @@
       renderBackupStatus();
       renderInventoryList();
       renderPalettePanel();
+      if (window.ceevsMisionAula && window.ceevsMisionAula.renderAdmin) window.ceevsMisionAula.renderAdmin();
     });
 
     initTabSystem();
