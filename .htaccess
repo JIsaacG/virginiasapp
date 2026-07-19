@@ -1,0 +1,9 @@
+# Hostinger cachea CSS/JS con max-age=604800 (7 días), lo que hace que los
+# navegadores sigan usando versiones viejas hasta una semana después de un cambio.
+# "no-cache" obliga a revalidar con el servidor (ETag -> 304 si no cambió),
+# así los arreglos se ven de inmediato sin sacrificar todo el caché.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
