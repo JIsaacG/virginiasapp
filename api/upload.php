@@ -14,6 +14,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 }
 
 require_auth();
+ceevs_require_csrf();
 
 if (empty($_FILES['file'])) {
   json_fail('No se recibió ningún archivo.');
@@ -70,6 +71,8 @@ if (!@move_uploaded_file($file['tmp_name'], $dest)) {
   json_fail('No se pudo guardar el archivo en el servidor.', 500);
 }
 @chmod($dest, 0644);
+
+ceevs_audit('file_uploaded', 'Subió "' . $file['name'] . '" (' . $mime . ', ' . round($file['size'] / 1024) . ' KB) → uploads/' . $subdir . '/' . $name);
 
 json_out(array(
   'ok'   => true,

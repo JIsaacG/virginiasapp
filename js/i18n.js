@@ -17,12 +17,14 @@ const I18n = {
   _textNodes: [],     // [{ node, es }]
   _attrNodes: [],     // [{ el, attr, es }]
   _seen: null,        // WeakSet de nodos de texto ya registrados
+  _seenAttrEls: null, // WeakSet de elementos con atributos ya registrados
 
   init() {
     this.lang = localStorage.getItem(this.STORAGE_KEY) === 'en' ? 'en' : 'es';
     this.map = (window.CEEVS_I18N && window.CEEVS_I18N.en) || {};
 
     this._seen = new WeakSet();
+    this._seenAttrEls = new WeakSet();
     this._collect();
     this._buildSwitchers();
     this._reflectActive();
@@ -58,11 +60,26 @@ const I18n = {
       this._seen.add(n);
       this._textNodes.push({ node: n, es: n.nodeValue });
     }
+    document.querySelectorAll(this._attrSelector()).forEach((el) => this._registerAttrEl(el));
+  },
+
+  _attrSelector() {
+    return this.ATTRS.map((a) => '[' + a + ']').join(',');
+  },
+
+  // Registra los atributos traducibles de un elemento (y traduce si ya estamos en EN)
+  _registerAttrEl(el) {
+    if (this._seenAttrEls.has(el)) return;
+    this._seenAttrEls.add(el);
     this.ATTRS.forEach((attr) => {
-      document.querySelectorAll('[' + attr + ']').forEach((el) => {
-        const v = el.getAttribute(attr);
-        if (v && v.trim()) this._attrNodes.push({ el, attr, es: v });
-      });
+      const v = el.getAttribute(attr);
+      if (v && v.trim()) {
+        this._attrNodes.push({ el, attr, es: v });
+        if (this.lang === 'en') {
+          const en = this.map[this._key(v)];
+          if (en) el.setAttribute(attr, en);
+        }
+      }
     });
   },
 
@@ -124,6 +141,9 @@ const I18n = {
       return;
     }
     if (node.nodeType !== Node.ELEMENT_NODE) return;
+    const sel = this._attrSelector();
+    if (node.matches && node.matches(sel)) this._registerAttrEl(node);
+    node.querySelectorAll(sel).forEach((el) => this._registerAttrEl(el));
     const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null);
     let n;
     while ((n = walker.nextNode())) this._consider(n);

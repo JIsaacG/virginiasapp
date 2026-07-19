@@ -193,9 +193,17 @@
   <div class="inv-page-hero-bg"></div>
 </section>
 
-<!-- ─── FILTROS ─── -->
+<!-- ─── FILTROS Y BÚSQUEDA ─── -->
 <section class="inv-filters-section">
   <div class="inv-filters-wrap">
+    <input
+      type="search"
+      id="inv-search"
+      class="inv-search-input"
+      placeholder="🔍 Buscar producto, talla, color…"
+      aria-label="Buscar producto en el inventario"
+      autocomplete="off"
+    >
     <p class="inv-filters-label">Filtrar por categoría:</p>
     <div class="inv-filters" id="inv-filters">
       <button class="inv-filter-btn active" data-category="todos">Todos</button>
@@ -205,6 +213,7 @@
       <button class="inv-filter-btn" data-category="Libros">Libros</button>
       <button class="inv-filter-btn" data-category="Otros">Otros</button>
     </div>
+    <p class="inv-results-count" id="inv-results-count" aria-live="polite"></p>
   </div>
 </section>
 

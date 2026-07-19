@@ -25,10 +25,28 @@
     <p class="login-hint" id="login-hint"></p>
     <form id="login-form">
       <div class="login-field">
-        <input type="password" id="admin-pass" placeholder="Contraseña de administrador" required autocomplete="off">
+        <input type="email" id="admin-email" placeholder="Correo del administrador" required autocomplete="username">
+      </div>
+      <div class="login-field">
+        <input type="password" id="admin-pass" placeholder="Contraseña" required autocomplete="current-password">
       </div>
       <button type="submit" class="login-btn">Ingresar</button>
     </form>
+    <form id="recovery-form" hidden>
+      <p class="login-recovery-info">Pide un código a tu correo (vence en 15 minutos) o usa tu <strong>clave maestra de recuperación</strong> para crear una contraseña nueva.</p>
+      <div class="login-field">
+        <input type="email" id="rec-email" placeholder="Correo del administrador" autocomplete="username">
+      </div>
+      <button type="button" class="login-btn login-btn--ghost" id="btn-send-code">📧 Enviarme un código</button>
+      <div class="login-field">
+        <input type="text" id="rec-code" placeholder="Código del correo o clave maestra" autocomplete="one-time-code">
+      </div>
+      <div class="login-field">
+        <input type="password" id="rec-pass" placeholder="Nueva contraseña (mínimo 8 caracteres)" autocomplete="new-password">
+      </div>
+      <button type="submit" class="login-btn">Restablecer contraseña</button>
+    </form>
+    <button type="button" class="login-link" id="btn-toggle-recovery">¿Olvidaste tu contraseña?</button>
     <a href="index.html" class="login-back">&larr; Volver al sitio</a>
   </div>
 </div>
@@ -324,6 +342,9 @@
                 <input type="text" id="inv-imagen" class="admin-input" placeholder="https://ejemplo.com/imagen.jpg">
                 <button type="button" class="admin-btn-upload" data-upload-target="inv-imagen" data-upload-accept="image/*">📤 Subir</button>
               </div>
+              <div class="inv-img-preview" id="inv-img-preview" hidden>
+                <img id="inv-img-preview-img" src="" alt="Vista previa del producto">
+              </div>
             </div>
             <div class="form-group">
               <label class="admin-input-label" for="inv-disponibilidad">Disponibilidad *</label>
@@ -363,6 +384,17 @@
           <h3>Productos Registrados</h3>
           <span class="product-count" id="inv-count">0 productos</span>
         </div>
+        <div class="inventory-toolbar">
+          <input type="search" id="inv-admin-search" class="admin-input" placeholder="🔍 Buscar producto…" autocomplete="off" aria-label="Buscar producto en la lista">
+          <select id="inv-admin-cat" class="admin-select" aria-label="Filtrar lista por categoría">
+            <option value="">Todas las categorías</option>
+            <option value="Uniformes">Uniformes</option>
+            <option value="Útiles">Útiles</option>
+            <option value="Souvenirs">Souvenirs</option>
+            <option value="Libros">Libros</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
         <div class="inventory-list" id="inv-list">
           <p class="empty-state">No hay productos. Crea uno con el formulario.</p>
         </div>
@@ -381,21 +413,45 @@
 
       <div class="admin-card">
         <div class="admin-card-header">
-          <h3>🔑 Cambiar contraseña del panel</h3>
+          <h3>🔐 Seguridad de la cuenta</h3>
         </div>
-        <p class="admin-card-desc">Cambia la contraseña con la que se entra a este panel de administración.</p>
+        <p class="admin-card-desc">Sesión iniciada como <strong id="sec-current-email">—</strong>. Para cualquier cambio de seguridad escribe primero tu contraseña actual.</p>
         <div class="form-row">
           <div class="form-group">
-            <label class="admin-input-label" for="pass-current">Contraseña actual</label>
+            <label class="admin-input-label" for="pass-current">Contraseña actual (obligatoria)</label>
             <input type="password" id="pass-current" class="admin-input" autocomplete="current-password">
           </div>
+        </div>
+        <div class="form-row">
           <div class="form-group">
             <label class="admin-input-label" for="pass-new">Nueva contraseña (mínimo 8 caracteres)</label>
             <input type="password" id="pass-new" class="admin-input" autocomplete="new-password">
           </div>
+          <div class="form-group">
+            <label class="admin-input-label" for="email-new">Nuevo correo del administrador</label>
+            <input type="email" id="email-new" class="admin-input" autocomplete="off" placeholder="correo@ejemplo.com">
+          </div>
         </div>
         <div class="admin-form-actions">
           <button class="admin-btn-save" id="btn-change-pass">🔑 Cambiar contraseña</button>
+          <button class="admin-btn-save" id="btn-change-email">📧 Cambiar correo</button>
+          <button class="admin-btn-save" id="btn-new-recovery">🗝️ Nueva clave maestra</button>
+        </div>
+        <div class="recovery-key-box" id="recovery-key-box" hidden>
+          <p>Tu nueva clave maestra de recuperación (guárdala en un lugar seguro, <strong>no se volverá a mostrar</strong>):</p>
+          <code id="recovery-key-value"></code>
+        </div>
+        <p class="admin-card-desc admin-card-desc--note">La clave maestra permite recuperar el acceso si olvidas la contraseña y el correo falla. Al usarla o regenerarla, la anterior deja de servir.</p>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>📜 Bitácora de movimientos</h3>
+          <button class="audit-refresh" id="btn-audit-refresh">↻ Actualizar</button>
+        </div>
+        <p class="admin-card-desc">Registro guardado en el servidor: inicios de sesión (incluidos los intentos fallidos y su IP), publicaciones de cambios, archivos subidos y eventos de seguridad. Desde el panel solo se puede leer, no editar ni borrar.</p>
+        <div class="audit-list" id="audit-list">
+          <p class="empty-state">Cargando bitácora…</p>
         </div>
       </div>
 
@@ -441,7 +497,7 @@
 
       <div class="admin-help">
         <h3>¿Y si administro desde otra computadora?</h3>
-        <p>Ya no necesitas mover archivos: entra al panel desde cualquier computadora con la misma contraseña y verás la configuración publicada. El respaldo <code>.json</code> queda como copia de seguridad extra (al importarlo, se publica automáticamente).</p>
+        <p>Ya no necesitas mover archivos: entra al panel desde cualquier computadora con tu correo y contraseña de administrador y verás la configuración publicada. El respaldo <code>.json</code> queda como copia de seguridad extra (al importarlo, se publica automáticamente).</p>
       </div>
     </div>
   </div>

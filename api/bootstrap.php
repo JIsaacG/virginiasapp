@@ -2,12 +2,25 @@
 /**
  * bootstrap.php — Núcleo compartido de la mini-API del panel CEEVS.
  *
- * La configuración del sitio vive en ../server-data/site-config.json y la
- * contraseña del panel (solo el hash) en ../server-data/admin-pass.php.
+ * Estado del servidor (todo en ../server-data/, gitignored, protegido con
+ * .htaccess y además con guardas <?php exit; ?> en los archivos sensibles):
+ *  - site-config.json  → configuración publicada del sitio (pública, la sirve config.php)
+ *  - admin-user.php    → cuenta del administrador (correo + hashes, nunca texto plano)
+ *  - login-guard.php   → contador de intentos fallidos (bloqueo por IP y global)
+ *  - audit-log.php     → bitácora de movimientos del panel
+ *
  * OJO: la carpeta data/ del repo es OTRA cosa (JSON públicos del sitio:
- * comunicados, juegos, etc.) — no usarla aquí. server-data/ y uploads/ se
- * crean en el servidor en tiempo de ejecución, están fuera del repositorio
- * (.gitignore) y protegidas con .htaccess.
+ * comunicados, juegos, etc.) — no usarla aquí.
+ *
+ * Seguridad aplicada:
+ *  - Login con correo + contraseña (hash bcrypt, comparación a tiempo constante).
+ *  - Bloqueo progresivo por IP y bloqueo global tras muchos fallos (persistente,
+ *    no depende de la cookie de sesión del atacante).
+ *  - Sesión endurecida: strict mode, cookie HttpOnly/SameSite, regeneración de ID,
+ *    huella del navegador, expiración por inactividad y absoluta.
+ *  - Token CSRF obligatorio en toda escritura autenticada (header X-CEEVS-CSRF).
+ *  - Verificación de origen (Sec-Fetch-Site + header Origin).
+ *  - Recuperación de contraseña: código por correo (15 min) o clave maestra.
  */
 
 declare(strict_types=1);
@@ -26,30 +39,32 @@ const CEEVS_CONFIG_KEYS = array(
 define('CEEVS_DATA_DIR', dirname(__DIR__) . '/server-data');
 define('CEEVS_UPLOADS_DIR', dirname(__DIR__) . '/uploads');
 define('CEEVS_CONFIG_FILE', CEEVS_DATA_DIR . '/site-config.json');
-define('CEEVS_PASS_FILE', CEEVS_DATA_DIR . '/admin-pass.php');
+define('CEEVS_USER_FILE', CEEVS_DATA_DIR . '/admin-user.php');
+define('CEEVS_GUARD_FILE', CEEVS_DATA_DIR . '/login-guard.php');
+define('CEEVS_AUDIT_FILE', CEEVS_DATA_DIR . '/audit-log.php');
 
 const CEEVS_MAX_VALUE_BYTES = 2000000;   // 2 MB por apartado de configuración
 const CEEVS_MAX_UPLOAD_BYTES = 60000000; // 60 MB por archivo subido
 
-function ceevs_session_start(): void {
-  if (session_status() === PHP_SESSION_ACTIVE) {
-    return;
-  }
-  session_name('CEEVSSESSID');
-  session_set_cookie_params(array(
-    'lifetime' => 0,
-    'path'     => '/',
-    'httponly' => true,
-    'samesite' => 'Lax',
-    'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-  ));
-  session_start();
-}
+/* Cuenta inicial del administrador. Solo se usa la PRIMERA vez (cuando aún no
+   existe admin-user.php en el servidor). Aquí no hay contraseñas en texto
+   plano: únicamente hashes bcrypt. */
+const CEEVS_SEED_EMAIL = 'adminwebvs@gmail.com';
+const CEEVS_SEED_PASS_HASH = '$2y$10$O6hiA/RhC.0ZLhY.RUYphueVdHtIZ5a8nlV0apCbpjHQGjWpPfksW';
+const CEEVS_SEED_RECOVERY_HASH = '$2y$10$CgaP7TDOkX23y0UUCwN5HOTsgbnCRgSfH880cSzQJ8GSb97FUXohm';
+
+const CEEVS_SESSION_IDLE_SECS = 7200;   // cierre por inactividad: 2 horas
+const CEEVS_SESSION_MAX_SECS  = 43200;  // duración máxima de la sesión: 12 horas
+const CEEVS_RESET_CODE_TTL    = 900;    // el código enviado por correo vale 15 min
+const CEEVS_RESET_MAX_TRIES   = 5;      // intentos por código antes de invalidarlo
+
+/* ─── Respuestas JSON ─── */
 
 function json_out($data, int $code = 200): void {
   http_response_code($code);
   header('Content-Type: application/json; charset=utf-8');
   header('Cache-Control: no-store');
+  header('X-Content-Type-Options: nosniff');
   echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
   exit;
 }
@@ -63,6 +78,8 @@ function read_json_body(): array {
   $data = json_decode($raw === false ? '' : $raw, true);
   return is_array($data) ? $data : array();
 }
+
+/* ─── Carpetas protegidas ─── */
 
 function ceevs_ensure_data_dir(): void {
   if (!is_dir(CEEVS_DATA_DIR)) {
@@ -88,27 +105,153 @@ function ceevs_ensure_uploads_dir(): void {
   }
 }
 
-/** Hash de la contraseña del panel, o null si aún no se ha configurado. */
-function ceevs_pass_hash(): ?string {
-  if (!file_exists(CEEVS_PASS_FILE)) {
+/* Archivos sensibles guardados como PHP: si el servidor los sirviera por error,
+   el "<?php exit;" impide ver el contenido (defensa extra al .htaccess). */
+
+function ceevs_read_guarded(string $file): ?array {
+  if (!file_exists($file)) {
     return null;
   }
-  $CEEVS_PASS_HASH = null;
-  include CEEVS_PASS_FILE;
-  return (is_string($CEEVS_PASS_HASH) && $CEEVS_PASS_HASH !== '') ? $CEEVS_PASS_HASH : null;
+  $raw = @file_get_contents($file);
+  if ($raw === false) {
+    return null;
+  }
+  $pos = strpos($raw, "\n");
+  $data = json_decode($pos === false ? '' : substr($raw, $pos + 1), true);
+  return is_array($data) ? $data : null;
 }
 
-function ceevs_save_pass(string $password): bool {
+function ceevs_write_guarded(string $file, array $data): bool {
   ceevs_ensure_data_dir();
-  $hash = password_hash($password, PASSWORD_DEFAULT);
-  $php = "<?php\n// Autogenerado por api/auth.php — hash de la contraseña del panel.\n"
-    . "\$CEEVS_PASS_HASH = " . var_export($hash, true) . ";\n";
-  return @file_put_contents(CEEVS_PASS_FILE, $php, LOCK_EX) !== false;
+  $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+  if ($json === false) {
+    return false;
+  }
+  return @file_put_contents($file, "<?php exit; // CEEVS ?>\n" . $json, LOCK_EX) !== false;
+}
+
+/* ─── Cuenta del administrador ─── */
+
+/** Devuelve la cuenta del administrador; la crea desde la semilla la primera vez. */
+function ceevs_user(): array {
+  $u = ceevs_read_guarded(CEEVS_USER_FILE);
+  if (is_array($u) && !empty($u['email']) && !empty($u['hash'])) {
+    return $u;
+  }
+  $u = array(
+    'email'    => CEEVS_SEED_EMAIL,
+    'hash'     => CEEVS_SEED_PASS_HASH,
+    'recovery' => CEEVS_SEED_RECOVERY_HASH,
+    'reset'    => null,
+  );
+  ceevs_write_guarded(CEEVS_USER_FILE, $u);
+  return $u;
+}
+
+function ceevs_save_user(array $u): bool {
+  return ceevs_write_guarded(CEEVS_USER_FILE, $u);
+}
+
+/** Clave legible sin caracteres ambiguos (sin 0/O, 1/I). */
+function ceevs_random_code(int $chars, int $group = 4): string {
+  $alpha = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  $out = '';
+  for ($i = 0; $i < $chars; $i++) {
+    if ($i > 0 && $group > 0 && $i % $group === 0) {
+      $out .= '-';
+    }
+    $out .= $alpha[random_int(0, strlen($alpha) - 1)];
+  }
+  return $out;
+}
+
+/* ─── Cliente / origen ─── */
+
+function ceevs_client_ip(): string {
+  $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+  return is_string($ip) && $ip !== '' ? substr($ip, 0, 64) : 'desconocida';
+}
+
+/** Rechaza peticiones originadas en otros sitios (refuerzo del SameSite y del token CSRF). */
+function ceevs_require_same_origin(): void {
+  $site = $_SERVER['HTTP_SEC_FETCH_SITE'] ?? '';
+  if ($site !== '' && $site !== 'same-origin' && $site !== 'none') {
+    json_fail('Petición rechazada (origen no permitido).', 403);
+  }
+  $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+  if ($origin !== '' && strtolower($origin) !== 'null') {
+    $oHost = parse_url($origin, PHP_URL_HOST);
+    $hHost = preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
+    if (!is_string($oHost) || strcasecmp($oHost, $hHost) !== 0) {
+      json_fail('Petición rechazada (origen no permitido).', 403);
+    }
+  }
+}
+
+/* ─── Sesión endurecida ─── */
+
+function ceevs_session_start(): void {
+  if (session_status() === PHP_SESSION_ACTIVE) {
+    return;
+  }
+  @ini_set('session.use_strict_mode', '1');
+  @ini_set('session.use_only_cookies', '1');
+  session_name('CEEVSSESSID');
+  session_set_cookie_params(array(
+    'lifetime' => 0,
+    'path'     => '/',
+    'httponly' => true,
+    'samesite' => 'Lax',
+    'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+  ));
+  session_start();
+}
+
+function ceevs_browser_fp(): string {
+  return hash('sha256', (string) ($_SERVER['HTTP_USER_AGENT'] ?? ''));
+}
+
+/** Marca la sesión como autenticada y emite un token CSRF nuevo. */
+function ceevs_session_login(string $email): void {
+  session_regenerate_id(true);
+  $_SESSION['ceevs_admin'] = true;
+  $_SESSION['ceevs_email'] = $email;
+  $_SESSION['ceevs_fp']    = ceevs_browser_fp();
+  $_SESSION['ceevs_start'] = time();
+  $_SESSION['ceevs_seen']  = time();
+  $_SESSION['ceevs_csrf']  = bin2hex(random_bytes(32));
+}
+
+function ceevs_session_destroy(): void {
+  $_SESSION = array();
+  if (ini_get('session.use_cookies')) {
+    $p = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+  }
+  if (session_status() === PHP_SESSION_ACTIVE) {
+    session_destroy();
+  }
 }
 
 function is_authed(): bool {
   ceevs_session_start();
-  return !empty($_SESSION['ceevs_admin']);
+  if (empty($_SESSION['ceevs_admin'])) {
+    return false;
+  }
+  $now = time();
+  $fp    = (string) ($_SESSION['ceevs_fp'] ?? '');
+  $start = (int) ($_SESSION['ceevs_start'] ?? 0);
+  $seen  = (int) ($_SESSION['ceevs_seen'] ?? 0);
+  if (
+    !hash_equals($fp, ceevs_browser_fp()) ||
+    ($now - $start) > CEEVS_SESSION_MAX_SECS ||
+    ($now - $seen) > CEEVS_SESSION_IDLE_SECS
+  ) {
+    ceevs_session_destroy();
+    return false;
+  }
+  $_SESSION['ceevs_seen'] = $now;
+  return true;
 }
 
 function require_auth(): void {
@@ -118,13 +261,194 @@ function require_auth(): void {
   }
 }
 
-/** Rechaza peticiones de escritura originadas en otros sitios (refuerzo del SameSite de la cookie). */
-function ceevs_require_same_origin(): void {
-  $site = $_SERVER['HTTP_SEC_FETCH_SITE'] ?? '';
-  if ($site !== '' && $site !== 'same-origin' && $site !== 'none') {
-    json_fail('Petición rechazada (origen no permitido).', 403);
+function ceevs_csrf_token(): string {
+  return (string) ($_SESSION['ceevs_csrf'] ?? '');
+}
+
+/** Toda escritura autenticada debe traer el header X-CEEVS-CSRF de la sesión. */
+function ceevs_require_csrf(): void {
+  $sent = (string) ($_SERVER['HTTP_X_CEEVS_CSRF'] ?? '');
+  $mine = ceevs_csrf_token();
+  if ($mine === '' || $sent === '' || !hash_equals($mine, $sent)) {
+    json_fail('Sesión inválida (token de seguridad). Recarga la página y entra de nuevo.', 403);
   }
 }
+
+/* ─── Freno anti fuerza bruta (persistente, por IP y global) ─── */
+
+function ceevs_guard_load(): array {
+  $g = ceevs_read_guarded(CEEVS_GUARD_FILE);
+  if (!is_array($g)) {
+    $g = array();
+  }
+  $g += array('ips' => array(), 'global' => array('f' => 0, 't' => 0), 'forgot' => array());
+  // Limpieza: entradas sin actividad en 24 h.
+  $now = time();
+  foreach (array('ips', 'forgot') as $bucket) {
+    foreach ($g[$bucket] as $ip => $rec) {
+      if (($now - (int) ($rec['t'] ?? 0)) > 86400) {
+        unset($g[$bucket][$ip]);
+      }
+    }
+  }
+  if (($now - (int) $g['global']['t']) > 86400) {
+    $g['global'] = array('f' => 0, 't' => 0);
+  }
+  return $g;
+}
+
+function ceevs_guard_save(array $g): void {
+  ceevs_write_guarded(CEEVS_GUARD_FILE, $g);
+}
+
+/** Segundos de bloqueo restantes para esta IP (0 = puede intentar). */
+function ceevs_guard_locked(): int {
+  $g = ceevs_guard_load();
+  $now = time();
+  $ip = ceevs_client_ip();
+  $rec = $g['ips'][$ip] ?? array('f' => 0, 't' => 0);
+  $f = (int) ($rec['f'] ?? 0);
+  $t = (int) ($rec['t'] ?? 0);
+  if ($f >= 5) {
+    // Progresivo: 5º fallo = 1 min, se duplica en cada fallo, tope 1 hora.
+    $lock = min(60 * (2 ** min($f - 5, 10)), 3600);
+    if (($t + $lock) > $now) {
+      return ($t + $lock) - $now;
+    }
+  }
+  $gf = (int) $g['global']['f'];
+  $gt = (int) $g['global']['t'];
+  if ($gf >= 20 && ($gt + 900) > $now) {
+    return ($gt + 900) - $now;
+  }
+  return 0;
+}
+
+function ceevs_guard_fail(): void {
+  $g = ceevs_guard_load();
+  $now = time();
+  $ip = ceevs_client_ip();
+  $rec = $g['ips'][$ip] ?? array('f' => 0, 't' => 0);
+  // Racha nueva si el último fallo fue hace más de 30 min y no había bloqueo activo.
+  if ((int) ($rec['f'] ?? 0) < 5 && ($now - (int) ($rec['t'] ?? 0)) > 1800) {
+    $rec = array('f' => 0, 't' => 0);
+  }
+  $g['ips'][$ip] = array('f' => (int) $rec['f'] + 1, 't' => $now);
+  if (($now - (int) $g['global']['t']) > 1800 && (int) $g['global']['f'] < 20) {
+    $g['global'] = array('f' => 0, 't' => 0);
+  }
+  $g['global'] = array('f' => (int) $g['global']['f'] + 1, 't' => $now);
+  ceevs_guard_save($g);
+}
+
+function ceevs_guard_clear(): void {
+  $g = ceevs_guard_load();
+  unset($g['ips'][ceevs_client_ip()]);
+  ceevs_guard_save($g);
+}
+
+/** Límite de solicitudes de recuperación: 3 por IP cada 15 min. */
+function ceevs_guard_forgot_allowed(): bool {
+  $g = ceevs_guard_load();
+  $now = time();
+  $ip = ceevs_client_ip();
+  $rec = $g['forgot'][$ip] ?? array('f' => 0, 't' => 0);
+  if (($now - (int) ($rec['t'] ?? 0)) > 900) {
+    $rec = array('f' => 0, 't' => 0);
+  }
+  if ((int) $rec['f'] >= 3) {
+    return false;
+  }
+  $g['forgot'][$ip] = array('f' => (int) $rec['f'] + 1, 't' => $now);
+  ceevs_guard_save($g);
+  return true;
+}
+
+/* ─── Bitácora de movimientos ─── */
+
+/**
+ * Registra un movimiento en la bitácora del panel.
+ * $action: clave corta (login_ok, config_saved, file_uploaded, …).
+ * $detail: texto libre con el detalle del movimiento.
+ */
+function ceevs_audit(string $action, string $detail = '', bool $ok = true, ?string $who = null): void {
+  ceevs_ensure_data_dir();
+  if ($who === null && session_status() === PHP_SESSION_ACTIVE) {
+    $who = (string) ($_SESSION['ceevs_email'] ?? '');
+  }
+  $entry = array(
+    't'  => gmdate('c'),
+    'a'  => $action,
+    'ok' => $ok,
+    'u'  => (string) $who,
+    'ip' => ceevs_client_ip(),
+    'ua' => substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 120),
+    'd'  => substr($detail, 0, 500),
+  );
+  $line = json_encode($entry, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+  if ($line === false) {
+    return;
+  }
+  // La bitácora es un .php con guarda en la primera línea (una entrada JSON por línea).
+  if (!file_exists(CEEVS_AUDIT_FILE)) {
+    @file_put_contents(CEEVS_AUDIT_FILE, "<?php exit; // CEEVS ?>\n", LOCK_EX);
+  }
+  @file_put_contents(CEEVS_AUDIT_FILE, $line . "\n", FILE_APPEND | LOCK_EX);
+  // Rotación: si pasa de ~400 KB se conservan las últimas 1000 entradas.
+  clearstatcache(true, CEEVS_AUDIT_FILE);
+  $size = @filesize(CEEVS_AUDIT_FILE);
+  if ($size !== false && $size > 400000) {
+    $lines = ceevs_audit_lines();
+    if (count($lines) > 1000) {
+      $keep = array_slice($lines, -1000);
+      @file_put_contents(CEEVS_AUDIT_FILE, "<?php exit; // CEEVS ?>\n" . implode("\n", $keep) . "\n", LOCK_EX);
+    }
+  }
+}
+
+/** Líneas JSON de la bitácora (sin la guarda PHP). */
+function ceevs_audit_lines(): array {
+  if (!file_exists(CEEVS_AUDIT_FILE)) {
+    return array();
+  }
+  $lines = @file(CEEVS_AUDIT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+  if (!is_array($lines)) {
+    return array();
+  }
+  return array_values(array_filter($lines, function ($l) {
+    return strncmp($l, '<?php', 5) !== 0;
+  }));
+}
+
+/** Últimas $limit entradas de la bitácora, la más reciente primero. */
+function ceevs_audit_read(int $limit): array {
+  $lines = ceevs_audit_lines();
+  $out = array();
+  foreach (array_reverse(array_slice($lines, -$limit)) as $line) {
+    $e = json_decode($line, true);
+    if (is_array($e)) {
+      $out[] = $e;
+    }
+  }
+  return $out;
+}
+
+/* ─── Correo ─── */
+
+function ceevs_send_mail(string $to, string $subject, string $text): bool {
+  $host = preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
+  if ($host === '' || filter_var($host, FILTER_VALIDATE_IP)) {
+    $host = 'localhost';
+  }
+  $from = 'no-reply@' . $host;
+  $headers = 'From: Panel CEEVS <' . $from . ">\r\n"
+    . "Content-Type: text/plain; charset=UTF-8\r\n"
+    . "Content-Transfer-Encoding: 8bit\r\n";
+  $encSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+  return @mail($to, $encSubject, $text, $headers);
+}
+
+/* ─── Configuración publicada ─── */
 
 function ceevs_read_config(): array {
   $default = array('app' => 'ceevs-admin', 'updatedAt' => null, 'data' => new stdClass());

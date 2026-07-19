@@ -27,7 +27,8 @@
   var state = {
     available: null,   // null = sin comprobar; true/false tras checkStatus()
     authed: false,
-    needsSetup: false,
+    email: '',         // correo del administrador con sesión activa
+    csrf: '',          // token anti-CSRF exigido por el servidor en toda escritura
     pending: false     // hay cambios locales sin publicar
   };
 
@@ -36,9 +37,11 @@
   /* ─── HTTP ─── */
 
   function postJSON(url, body) {
+    var headers = { 'Content-Type': 'application/json' };
+    if (state.csrf) headers['X-CEEVS-CSRF'] = state.csrf;
     return fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: headers,
       credentials: 'same-origin',
       body: JSON.stringify(body || {})
     }).then(function (r) {
@@ -152,7 +155,8 @@
         if (res.status !== 200 || !res.data || res.data.ok !== true) throw new Error();
         state.available = true;
         state.authed = !!res.data.authenticated;
-        state.needsSetup = !!res.data.needsSetup;
+        state.email = res.data.email || '';
+        state.csrf = res.data.csrf || '';
         return state;
       })
       .catch(function () {
@@ -166,31 +170,67 @@
   function handleAuthResult(res) {
     if (res.status === 200 && res.data && res.data.ok) {
       state.authed = true;
-      state.needsSetup = false;
+      state.email = res.data.email || state.email;
+      state.csrf = res.data.csrf || state.csrf;
       return { ok: true };
     }
-    if (res.data && res.data.needsSetup) state.needsSetup = true;
     return { ok: false, error: (res.data && res.data.error) || 'Error del servidor' };
   }
 
-  function login(password) {
-    return postJSON(API + 'auth.php', { action: 'login', password: password }).then(handleAuthResult);
+  /** Respuesta genérica { ok, error?, ...data } para las acciones del panel. */
+  function simpleResult(res) {
+    if (res.status === 200 && res.data && res.data.ok) return res.data;
+    return { ok: false, error: (res.data && res.data.error) || 'Error del servidor' };
   }
 
-  function setup(password) {
-    return postJSON(API + 'auth.php', { action: 'setup', password: password }).then(handleAuthResult);
+  function login(email, password) {
+    return postJSON(API + 'auth.php', { action: 'login', email: email, password: password }).then(handleAuthResult);
   }
 
   function logout() {
     state.authed = false;
+    state.email = '';
+    state.csrf = '';
     return postJSON(API + 'auth.php', { action: 'logout' }).catch(function () {});
   }
 
   function changePassword(current, next) {
-    return postJSON(API + 'auth.php', { action: 'change', password: current, newPassword: next })
+    return postJSON(API + 'auth.php', { action: 'change', password: current, newPassword: next }).then(simpleResult);
+  }
+
+  function changeEmail(password, newEmail) {
+    return postJSON(API + 'auth.php', { action: 'change_email', password: password, newEmail: newEmail })
       .then(function (res) {
-        if (res.status === 200 && res.data && res.data.ok) return { ok: true };
-        return { ok: false, error: (res.data && res.data.error) || 'Error del servidor' };
+        var out = simpleResult(res);
+        if (out.ok && out.email) state.email = out.email;
+        return out;
+      });
+  }
+
+  /** Pide al servidor enviar un código de recuperación al correo del administrador. */
+  function forgot(email) {
+    return postJSON(API + 'auth.php', { action: 'forgot', email: email }).then(simpleResult);
+  }
+
+  /** Restablece la contraseña con el código del correo o la clave maestra. */
+  function resetPassword(email, code, newPassword) {
+    return postJSON(API + 'auth.php', { action: 'reset', email: email, code: code, newPassword: newPassword }).then(simpleResult);
+  }
+
+  /** Genera una clave maestra de recuperación nueva (requiere la contraseña actual). */
+  function newRecoveryKey(password) {
+    return postJSON(API + 'auth.php', { action: 'recovery_key', password: password }).then(simpleResult);
+  }
+
+  /** Últimos movimientos de la bitácora del servidor (más recientes primero). */
+  function getAudit(limit) {
+    return fetch(API + 'audit.php?limit=' + (limit || 100), { cache: 'no-store', credentials: 'same-origin' })
+      .then(function (r) {
+        return r.json().then(function (d) { return { status: r.status, data: d }; });
+      })
+      .then(simpleResult)
+      .catch(function () {
+        return { ok: false, error: 'No se pudo leer la bitácora del servidor' };
       });
   }
 
@@ -233,7 +273,9 @@
   function uploadFile(file, onDone) {
     var fd = new FormData();
     fd.append('file', file);
-    fetch(API + 'upload.php', { method: 'POST', body: fd, credentials: 'same-origin' })
+    var headers = {};
+    if (state.csrf) headers['X-CEEVS-CSRF'] = state.csrf;
+    fetch(API + 'upload.php', { method: 'POST', body: fd, headers: headers, credentials: 'same-origin' })
       .then(function (r) {
         return r.json().then(function (d) { return { status: r.status, data: d }; });
       })
@@ -286,9 +328,13 @@
     state: state,
     checkStatus: checkStatus,
     login: login,
-    setup: setup,
     logout: logout,
     changePassword: changePassword,
+    changeEmail: changeEmail,
+    forgot: forgot,
+    resetPassword: resetPassword,
+    newRecoveryKey: newRecoveryKey,
+    getAudit: getAudit,
     pull: pull,
     pushNow: pushNow,
     schedulePush: schedulePush,

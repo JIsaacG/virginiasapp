@@ -130,52 +130,57 @@
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-dashboard').style.display = 'block';
     renderDashboard();
+    updateSecurityCard();
+    renderAudit();
   }
 
   function showLoginError(msg) {
     var errorEl = document.getElementById('login-error');
     var passInput = document.getElementById('admin-pass');
+    var loginForm = document.getElementById('login-form');
     errorEl.textContent = msg;
     errorEl.style.display = 'block';
-    passInput.value = '';
-    passInput.focus();
+    if (loginForm && !loginForm.hidden) {
+      passInput.value = '';
+      passInput.focus();
+    }
+  }
+
+  function showLoginNotice(msg) {
+    var hint = document.getElementById('login-hint');
+    if (!hint) return;
+    hint.textContent = msg;
+    hint.style.display = 'block';
   }
 
   /** Ajusta el texto de la pantalla de login según el estado del servidor. */
   function refreshLoginScreen() {
     var s = sync();
     var hint = document.getElementById('login-hint');
-    var btn = document.querySelector('#login-form .login-btn');
     if (!hint || !s) return;
     if (s.state.available === false) {
       hint.textContent = 'Aviso: no se encontró el servidor (PHP). Entrarás en modo local y los cambios solo se verán en este navegador.';
       hint.style.display = 'block';
-    } else if (s.state.needsSetup) {
-      hint.textContent = 'Primer uso: escribe la contraseña que usará el administrador del sitio (mínimo 8 caracteres). Guárdala en un lugar seguro.';
-      hint.style.display = 'block';
-      if (btn) btn.textContent = 'Crear contraseña';
     } else {
       hint.style.display = 'none';
-      if (btn) btn.textContent = 'Ingresar';
     }
   }
 
   function handleLogin(e) {
     e.preventDefault();
+    var email = (document.getElementById('admin-email').value || '').trim();
     var passInput = document.getElementById('admin-pass');
     var pass = passInput.value;
     var s = sync();
 
-    // Login real contra el servidor (sesión PHP)
+    // Login real contra el servidor (sesión PHP, correo + contraseña)
     if (s && s.state.available) {
-      var req = s.state.needsSetup ? s.setup(pass) : s.login(pass);
-      req.then(function (res) {
+      s.login(email, pass).then(function (res) {
         if (res.ok) {
           enterDashboard();
           s.pull();
         } else {
-          refreshLoginScreen();
-          showLoginError(res.error || 'Contraseña incorrecta');
+          showLoginError(res.error || 'Correo o contraseña incorrectos');
         }
       });
       return;
@@ -188,6 +193,63 @@
     } else {
       showLoginError('Contraseña incorrecta');
     }
+  }
+
+  /* ─── Recuperación de contraseña ─── */
+
+  function toggleRecovery(show) {
+    var loginForm = document.getElementById('login-form');
+    var recForm = document.getElementById('recovery-form');
+    var toggleBtn = document.getElementById('btn-toggle-recovery');
+    if (!loginForm || !recForm) return;
+    var showRec = (typeof show === 'boolean') ? show : recForm.hidden;
+    recForm.hidden = !showRec;
+    loginForm.hidden = showRec;
+    if (toggleBtn) toggleBtn.textContent = showRec ? '← Volver a iniciar sesión' : '¿Olvidaste tu contraseña?';
+    document.getElementById('login-error').style.display = 'none';
+    document.getElementById('login-hint').style.display = 'none';
+    if (showRec) {
+      var recEmail = document.getElementById('rec-email');
+      if (recEmail && !recEmail.value) recEmail.value = document.getElementById('admin-email').value;
+    }
+  }
+
+  function handleSendCode() {
+    var s = sync();
+    var email = (document.getElementById('rec-email').value || '').trim();
+    if (!s || !s.state.available) { showLoginError('La recuperación solo funciona con el sitio publicado (con PHP).'); return; }
+    if (!email) { showLoginError('Escribe el correo del administrador.'); return; }
+    var btn = document.getElementById('btn-send-code');
+    if (btn) btn.disabled = true;
+    s.forgot(email).then(function (res) {
+      if (btn) btn.disabled = false;
+      if (res.ok) {
+        showLoginNotice(res.message || 'Si el correo es correcto, recibirás un código en unos minutos.');
+      } else {
+        showLoginError(res.error || 'No se pudo solicitar el código.');
+      }
+    });
+  }
+
+  function handleReset(e) {
+    e.preventDefault();
+    var s = sync();
+    if (!s || !s.state.available) { showLoginError('La recuperación solo funciona con el sitio publicado (con PHP).'); return; }
+    var email = (document.getElementById('rec-email').value || '').trim();
+    var code = (document.getElementById('rec-code').value || '').trim();
+    var pass = document.getElementById('rec-pass').value;
+    if (!email || !code) { showLoginError('Escribe el correo y el código (o tu clave maestra).'); return; }
+    if (pass.length < 8) { showLoginError('La nueva contraseña debe tener al menos 8 caracteres.'); return; }
+    s.resetPassword(email, code, pass).then(function (res) {
+      if (!res.ok) { showLoginError(res.error || 'No se pudo restablecer la contraseña.'); return; }
+      document.getElementById('rec-code').value = '';
+      document.getElementById('rec-pass').value = '';
+      toggleRecovery(false);
+      document.getElementById('admin-email').value = email;
+      showLoginNotice(res.newRecoveryKey
+        ? 'Contraseña restablecida. Tu NUEVA clave maestra es: ' + res.newRecoveryKey + ' — cópiala ahora, no se volverá a mostrar. Ya puedes iniciar sesión.'
+        : 'Contraseña restablecida. Ya puedes iniciar sesión con tu nueva contraseña.');
+    });
   }
 
   function checkSession() {
@@ -213,6 +275,110 @@
     document.getElementById('admin-dashboard').style.display = 'none';
     document.getElementById('login-screen').style.display = 'flex';
     refreshLoginScreen();
+  }
+
+  /* ─── Seguridad de la cuenta y bitácora ─── */
+
+  function updateSecurityCard() {
+    var s = sync();
+    var el = document.getElementById('sec-current-email');
+    if (!el) return;
+    if (s && s.state.email) el.textContent = s.state.email;
+    else el.textContent = (s && s.state.available === false) ? 'modo local (sin servidor)' : '—';
+  }
+
+  var AUDIT_LABELS = {
+    login_ok: '✅ Inicio de sesión',
+    login_fail: '⛔ Intento de acceso fallido',
+    logout: '👋 Cierre de sesión',
+    password_changed: '🔑 Contraseña cambiada',
+    password_change_fail: '⛔ Cambio de contraseña rechazado',
+    email_changed: '📧 Correo del administrador cambiado',
+    email_change_fail: '⛔ Cambio de correo rechazado',
+    recovery_requested: '📨 Solicitud de recuperación',
+    recovery_ok: '🔓 Contraseña restablecida',
+    recovery_fail: '⛔ Intento de recuperación fallido',
+    recovery_key_new: '🗝️ Clave maestra nueva',
+    recovery_key_fail: '⛔ Clave maestra rechazada',
+    config_saved: '📝 Cambios publicados en el sitio',
+    file_uploaded: '🖼️ Archivo subido'
+  };
+
+  var AUDIT_KEY_LABELS = {
+    ceevs_images: 'Imágenes del sitio',
+    ceevs_image_settings: 'Ajustes de imagen (posición/zoom)',
+    ceevs_gallery: 'Galería',
+    ceevs_video_settings: 'Videos',
+    ceevs_hub_video: 'Video del portal',
+    ceevs_theme: 'Paleta de colores',
+    ceevs_inventory: 'Inventario'
+  };
+
+  function friendlyAuditDetail(d) {
+    var out = String(d || '');
+    Object.keys(AUDIT_KEY_LABELS).forEach(function (k) {
+      out = out.split(k).join(AUDIT_KEY_LABELS[k]);
+    });
+    return out;
+  }
+
+  function renderAudit() {
+    var list = document.getElementById('audit-list');
+    if (!list) return;
+    var s = sync();
+
+    function message(msg) {
+      list.textContent = '';
+      var p = document.createElement('p');
+      p.className = 'empty-state';
+      p.textContent = msg;
+      list.appendChild(p);
+    }
+
+    if (!s || !s.state.available) { message('La bitácora solo está disponible con el sitio publicado (con PHP).'); return; }
+    if (!s.state.authed) { message('Inicia sesión para ver la bitácora.'); return; }
+
+    s.getAudit(100).then(function (res) {
+      if (!res.ok) { message(res.error || 'No se pudo leer la bitácora.'); return; }
+      var entries = res.entries || [];
+      if (!entries.length) { message('Aún no hay movimientos registrados.'); return; }
+      // Se construye con textContent (nunca innerHTML): la bitácora puede
+      // contener texto escrito por atacantes (correos de intentos fallidos).
+      list.textContent = '';
+      entries.forEach(function (entry) {
+        var row = document.createElement('div');
+        row.className = 'audit-row' + (entry.ok === false ? ' audit-row--bad' : '');
+
+        var top = document.createElement('div');
+        top.className = 'audit-row-top';
+        var action = document.createElement('span');
+        action.className = 'audit-action';
+        action.textContent = AUDIT_LABELS[entry.a] || entry.a;
+        var when = document.createElement('span');
+        when.className = 'audit-when';
+        var dt = new Date(entry.t);
+        when.textContent = isNaN(dt.getTime())
+          ? String(entry.t || '')
+          : dt.toLocaleString('es-HN', { dateStyle: 'medium', timeStyle: 'short' });
+        top.appendChild(action);
+        top.appendChild(when);
+        row.appendChild(top);
+
+        if (entry.d) {
+          var det = document.createElement('div');
+          det.className = 'audit-detail';
+          det.textContent = friendlyAuditDetail(entry.d);
+          row.appendChild(det);
+        }
+
+        var meta = document.createElement('div');
+        meta.className = 'audit-meta';
+        meta.textContent = (entry.u ? entry.u + ' · ' : '') + 'IP: ' + (entry.ip || '—');
+        row.appendChild(meta);
+
+        list.appendChild(row);
+      });
+    });
   }
 
   /* ─── Helpers ─── */
@@ -988,42 +1154,104 @@
 
   /* ─── Inventory Panel ─── */
   var currentEditingId = null;
+  var invListFilter = { q: '', cat: '' };
+
+  function invEsc(value) {
+    if (window.ceevsInventory && window.ceevsInventory.escapeHtml) {
+      return window.ceevsInventory.escapeHtml(value);
+    }
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function invNorm(value) {
+    if (window.ceevsInventory && window.ceevsInventory.normalize) {
+      return window.ceevsInventory.normalize(value);
+    }
+    return String(value || '').toLowerCase();
+  }
 
   function renderInventoryList() {
     var list = document.getElementById('inv-list');
     var countEl = document.getElementById('inv-count');
     if (!list || !window.ceevsInventory) return;
 
-    var products = window.ceevsInventory.getAll();
-    if (countEl) countEl.textContent = products.length + ' producto' + (products.length !== 1 ? 's' : '');
+    var all = window.ceevsInventory.getAll();
+    var q = invNorm(invListFilter.q);
+    var isFiltered = !!(q || invListFilter.cat);
+    var products = !isFiltered ? all : all.filter(function (p) {
+      if (invListFilter.cat && p.categoria !== invListFilter.cat) return false;
+      if (q) {
+        var hay = invNorm([p.nombre, p.descripcion, p.categoria, p.talla, p.color, p.precio].join(' '));
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
 
-    if (products.length === 0) {
+    if (countEl) {
+      countEl.textContent = (isFiltered ? products.length + ' de ' : '') +
+        all.length + ' producto' + (all.length !== 1 ? 's' : '');
+    }
+
+    if (all.length === 0) {
       list.innerHTML = '<p class="empty-state">No hay productos. Crea uno con el formulario.</p>';
       return;
     }
+    if (products.length === 0) {
+      list.innerHTML = '<p class="empty-state">Ningún producto coincide con la búsqueda o el filtro.</p>';
+      return;
+    }
 
+    var placeholder = window.ceevsInventory.PLACEHOLDER || '';
     var html = '<table class="inventory-table"><thead><tr>' +
-      '<th>Nombre</th><th>Categoría</th><th>Disponibilidad</th><th>Activo</th><th>Acciones</th>' +
+      '<th>Orden</th><th>Producto</th><th>Categoría</th><th>Precio</th><th>Disponibilidad</th><th>Activo</th><th>Acciones</th>' +
       '</tr></thead><tbody>';
 
-    products.forEach(function(p) {
+    products.forEach(function(p, i) {
       var statusLabel = p.disponibilidad === 'disponible' ? 'Disponible' :
                         p.disponibilidad === 'agotado' ? 'Agotado' : 'Próximamente';
-      html += '<tr>' +
-        '<td><span class="product-name">' + p.nombre + '</span></td>' +
-        '<td><span class="product-category">' + p.categoria + '</span></td>' +
-        '<td><span class="product-status status-' + p.disponibilidad + '">' + statusLabel + '</span></td>' +
+      var thumb = (p.imagenUrl || '').trim() || placeholder;
+      var id = invEsc(p.id);
+
+      // Reordenar solo tiene sentido viendo la lista completa
+      var orderCell = isFiltered
+        ? '<span class="inv-order-num" title="Quita la búsqueda o el filtro para reordenar">' +
+            (typeof p.orden === 'number' ? (p.orden + 1) : '—') + '</span>'
+        : '<div class="inv-order-btns">' +
+            '<button type="button" class="action-btn btn-move" data-inv-up="' + id + '"' + (i === 0 ? ' disabled' : '') + ' title="Subir en el catálogo">▲</button>' +
+            '<button type="button" class="action-btn btn-move" data-inv-down="' + id + '"' + (i === products.length - 1 ? ' disabled' : '') + ' title="Bajar en el catálogo">▼</button>' +
+          '</div>';
+
+      html += '<tr' + (p.activo ? '' : ' class="inv-row-inactive"') + '>' +
+        '<td class="inv-order-cell">' + orderCell + '</td>' +
+        '<td><div class="inv-cell-product">' +
+          '<img class="inv-thumb" src="' + invEsc(thumb) + '" alt="" loading="lazy">' +
+          '<span class="product-name">' + invEsc(p.nombre) + '</span>' +
+        '</div></td>' +
+        '<td><span class="product-category">' + invEsc(p.categoria) + '</span></td>' +
+        '<td class="inv-price-cell">' + (p.precio ? invEsc(p.precio) : '—') + '</td>' +
+        '<td><span class="product-status status-' + invEsc(p.disponibilidad) + '">' + statusLabel + '</span></td>' +
         '<td>' + (p.activo ? '✓' : '✗') + '</td>' +
         '<td><div class="inventory-actions">' +
-          '<button class="action-btn btn-edit" data-inv-edit="' + p.id + '">Editar</button>' +
-          '<button class="action-btn btn-deactivate" data-inv-deactivate="' + p.id + '">' + (p.activo ? 'Desactivar' : 'Activar') + '</button>' +
-          '<button class="action-btn btn-delete" data-inv-delete="' + p.id + '">Eliminar</button>' +
+          '<button class="action-btn btn-edit" data-inv-edit="' + id + '">Editar</button>' +
+          '<button class="action-btn btn-deactivate" data-inv-deactivate="' + id + '">' + (p.activo ? 'Desactivar' : 'Activar') + '</button>' +
+          '<button class="action-btn btn-delete" data-inv-delete="' + id + '">Eliminar</button>' +
         '</div></td>' +
       '</tr>';
     });
 
     html += '</tbody></table>';
     list.innerHTML = html;
+
+    // Miniaturas rotas → imagen de respaldo local
+    list.querySelectorAll('.inv-thumb').forEach(function (img) {
+      img.addEventListener('error', function () {
+        if (this.dataset.fbk || !placeholder) return;
+        this.dataset.fbk = '1';
+        this.src = placeholder;
+      });
+    });
 
     // Event delegation on the list (se vincula una sola vez)
     if (!list.dataset.invBound) {
@@ -1032,11 +1260,32 @@
         var editBtn = e.target.closest('[data-inv-edit]');
         var deactivateBtn = e.target.closest('[data-inv-deactivate]');
         var deleteBtn = e.target.closest('[data-inv-delete]');
+        var upBtn = e.target.closest('[data-inv-up]');
+        var downBtn = e.target.closest('[data-inv-down]');
         if (editBtn) { editInventoryProduct(editBtn.getAttribute('data-inv-edit')); }
         if (deactivateBtn) { toggleInventoryProduct(deactivateBtn.getAttribute('data-inv-deactivate')); }
         if (deleteBtn) { deleteInventoryProduct(deleteBtn.getAttribute('data-inv-delete')); }
+        if (upBtn && !upBtn.disabled) { window.ceevsInventory.move(upBtn.getAttribute('data-inv-up'), 'up'); renderInventoryList(); }
+        if (downBtn && !downBtn.disabled) { window.ceevsInventory.move(downBtn.getAttribute('data-inv-down'), 'down'); renderInventoryList(); }
       });
     }
+  }
+
+  /* Vista previa de la imagen en el formulario de producto */
+  function updateInvImagePreview() {
+    var input = document.getElementById('inv-imagen');
+    var box = document.getElementById('inv-img-preview');
+    var img = document.getElementById('inv-img-preview-img');
+    if (!input || !box || !img) return;
+    var url = (input.value || '').trim();
+    if (!url) {
+      box.hidden = true;
+      img.removeAttribute('src');
+      return;
+    }
+    delete img.dataset.fbk;
+    img.src = url;
+    box.hidden = false;
   }
 
   function getInventoryFormValues() {
@@ -1066,6 +1315,7 @@
     var title = document.getElementById('inv-form-title');
     if (title) title.textContent = 'Editar: ' + product.nombre;
     currentEditingId = product.id;
+    updateInvImagePreview();
   }
 
   function resetInventoryForm() {
@@ -1076,6 +1326,7 @@
     var title = document.getElementById('inv-form-title');
     if (title) title.textContent = 'Agregar Nuevo Producto';
     currentEditingId = null;
+    updateInvImagePreview();
   }
 
   function handleInventoryFormSubmit(e) {
@@ -1138,6 +1389,15 @@
     var loginForm = document.getElementById('login-form');
     if (loginForm) loginForm.addEventListener('submit', handleLogin);
 
+    var recoveryForm = document.getElementById('recovery-form');
+    if (recoveryForm) recoveryForm.addEventListener('submit', handleReset);
+
+    var toggleRecoveryBtn = document.getElementById('btn-toggle-recovery');
+    if (toggleRecoveryBtn) toggleRecoveryBtn.addEventListener('click', function () { toggleRecovery(); });
+
+    var sendCodeBtn = document.getElementById('btn-send-code');
+    if (sendCodeBtn) sendCodeBtn.addEventListener('click', handleSendCode);
+
     var logoutBtn = document.getElementById('btn-logout');
     if (logoutBtn) logoutBtn.addEventListener('click', logout);
 
@@ -1183,6 +1443,30 @@
     var invResetBtn = document.getElementById('btn-inv-reset-form');
     if (invResetBtn) invResetBtn.addEventListener('click', resetInventoryForm);
 
+    // Vista previa de imagen del producto
+    var invImgInput = document.getElementById('inv-imagen');
+    if (invImgInput) invImgInput.addEventListener('input', updateInvImagePreview);
+
+    var invPrevImg = document.getElementById('inv-img-preview-img');
+    if (invPrevImg) invPrevImg.addEventListener('error', function () {
+      if (this.dataset.fbk || !window.ceevsInventory) return;
+      this.dataset.fbk = '1';
+      this.src = window.ceevsInventory.PLACEHOLDER;
+    });
+
+    // Búsqueda y filtro de la lista de productos
+    var invSearch = document.getElementById('inv-admin-search');
+    if (invSearch) invSearch.addEventListener('input', function () {
+      invListFilter.q = invSearch.value.trim();
+      renderInventoryList();
+    });
+
+    var invCatSel = document.getElementById('inv-admin-cat');
+    if (invCatSel) invCatSel.addEventListener('change', function () {
+      invListFilter.cat = invCatSel.value;
+      renderInventoryList();
+    });
+
     // Botones "Subir" junto a los campos de URL fijos (galería, inventario, videos)
     document.querySelectorAll('[data-upload-target]').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -1190,13 +1474,16 @@
         var target = document.getElementById(btn.getAttribute('data-upload-target'));
         window.ceevsSync.pickAndUpload(btn.getAttribute('data-upload-accept') || 'image/*', function (res) {
           if (!res.ok) { showToast(res.error); return; }
-          if (target) target.value = res.url;
+          if (target) {
+            target.value = res.url;
+            target.dispatchEvent(new Event('input', { bubbles: true }));
+          }
           showToast('Archivo subido — ahora haz clic en Guardar/Agregar');
         }, function () { showToast('Subiendo archivo…'); });
       });
     });
 
-    // Cambio de contraseña del panel (pestaña Respaldo)
+    // Seguridad de la cuenta (pestaña Respaldo)
     var changePassBtn = document.getElementById('btn-change-pass');
     if (changePassBtn) changePassBtn.addEventListener('click', function () {
       var s = window.ceevsSync;
@@ -1205,17 +1492,72 @@
       var cur = (curEl && curEl.value) || '';
       var next = (nextEl && nextEl.value) || '';
       if (!s || !s.state.available) { showToast('Disponible solo con el sitio publicado (con PHP)'); return; }
+      if (!cur) { showToast('Escribe tu contraseña actual'); return; }
       if (next.length < 8) { showToast('La nueva contraseña debe tener al menos 8 caracteres'); return; }
       s.changePassword(cur, next).then(function (res) {
         if (res.ok) {
           showToast('Contraseña actualizada');
           if (curEl) curEl.value = '';
           if (nextEl) nextEl.value = '';
+          renderAudit();
         } else {
           showToast(res.error);
         }
       });
     });
+
+    var changeEmailBtn = document.getElementById('btn-change-email');
+    if (changeEmailBtn) changeEmailBtn.addEventListener('click', function () {
+      var s = window.ceevsSync;
+      var curEl = document.getElementById('pass-current');
+      var emailEl = document.getElementById('email-new');
+      var cur = (curEl && curEl.value) || '';
+      var next = ((emailEl && emailEl.value) || '').trim();
+      if (!s || !s.state.available) { showToast('Disponible solo con el sitio publicado (con PHP)'); return; }
+      if (!cur) { showToast('Escribe tu contraseña actual'); return; }
+      if (!next) { showToast('Escribe el nuevo correo del administrador'); return; }
+      s.changeEmail(cur, next).then(function (res) {
+        if (res.ok) {
+          showToast('Correo del administrador actualizado');
+          if (curEl) curEl.value = '';
+          if (emailEl) emailEl.value = '';
+          updateSecurityCard();
+          renderAudit();
+        } else {
+          showToast(res.error);
+        }
+      });
+    });
+
+    var newRecoveryBtn = document.getElementById('btn-new-recovery');
+    if (newRecoveryBtn) newRecoveryBtn.addEventListener('click', function () {
+      var s = window.ceevsSync;
+      var curEl = document.getElementById('pass-current');
+      var cur = (curEl && curEl.value) || '';
+      if (!s || !s.state.available) { showToast('Disponible solo con el sitio publicado (con PHP)'); return; }
+      if (!cur) { showToast('Escribe tu contraseña actual'); return; }
+      if (!confirm('¿Generar una clave maestra de recuperación nueva? La anterior dejará de servir.')) return;
+      s.newRecoveryKey(cur).then(function (res) {
+        if (res.ok) {
+          var box = document.getElementById('recovery-key-box');
+          var keyEl = document.getElementById('recovery-key-value');
+          if (keyEl) keyEl.textContent = res.key;
+          if (box) box.hidden = false;
+          if (curEl) curEl.value = '';
+          showToast('Clave maestra generada — guárdala ahora');
+          renderAudit();
+        } else {
+          showToast(res.error);
+        }
+      });
+    });
+
+    var auditRefreshBtn = document.getElementById('btn-audit-refresh');
+    if (auditRefreshBtn) auditRefreshBtn.addEventListener('click', renderAudit);
+
+    // Al abrir la pestaña Respaldo, refrescar la bitácora
+    var respaldoTab = document.querySelector('.admin-tab-btn[data-tab="respaldo"]');
+    if (respaldoTab) respaldoTab.addEventListener('click', renderAudit);
 
     // Cuando llega configuración nueva del servidor, refrescar los paneles
     document.addEventListener('ceevs:remote-config', function (e) {
