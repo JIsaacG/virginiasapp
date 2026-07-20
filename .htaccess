@@ -6,4 +6,18 @@
   <FilesMatch "\.(css|js)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
+
+  # Imágenes, fuentes y video cambian poco y no llevan versión en la URL:
+  # caché largo en el navegador (si se reemplaza una, renombrarla o añadir ?v=).
+  <FilesMatch "\.(png|jpe?g|webp|gif|avif|svg|ico|woff2?|ttf|mp4|webm|mp3|m4a|ogg|pdf)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
+# Compresión de texto (si el servidor no la aplica ya por su cuenta).
+# i18n-data.js pasa de ~120 KB a ~25 KB; el CSS completo de ~400 KB a ~80 KB.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
 </IfModule>

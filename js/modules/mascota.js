@@ -38,9 +38,11 @@ const Mascota = (function () {
   let started = false;
   let preloadReady = null;
 
-  const ASSET_VER = '2';   // súbelo si vuelves a editar los PNG (rompe caché)
+  // Frames servidos como WebP 256px (los PNG 1254px originales quedan como
+  // fuente en assets/animacion/; regenerar con Pillow si se editan).
+  const ASSET_VER = '3';   // súbelo si vuelves a editar los frames (rompe caché)
   const rnd = (a, b) => a + Math.random() * (b - a);
-  const src = (n) => BASE + n + '.png?v=' + ASSET_VER;
+  const src = (n) => BASE + n + '.webp?v=' + ASSET_VER;
 
   // Curvas de aceleración para que no se vea robótico
   const ease = {
