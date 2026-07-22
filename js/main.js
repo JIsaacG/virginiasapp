@@ -4,7 +4,6 @@ const Main = {
   name: 'Main',
 
   init() {
-    this._setupCursor();
     this._setupHeroGallery();
     this._setupParallaxAndNavbar();
     this._setupMobileMenu();
@@ -112,37 +111,6 @@ const Main = {
     });
 
     startAutoScroll();
-  },
-
-  _setupCursor() {
-    const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-    const cursor = document.getElementById('cursor');
-    const cursorRing = document.getElementById('cursor-ring');
-
-    if (!isTouch && cursor && cursorRing) {
-      document.addEventListener('mousemove', e => {
-        const { clientX, clientY } = e;
-        cursor.style.left = clientX + 'px';
-        cursor.style.top = clientY + 'px';
-        cursorRing.style.left = clientX + 'px';
-        cursorRing.style.top = clientY + 'px';
-      });
-
-      document.querySelectorAll('a,button,.valor-card,.nivel-card,.quiz-opt').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-          cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
-          cursorRing.style.opacity = '.2';
-        });
-        el.addEventListener('mouseleave', () => {
-          cursor.style.transform = 'translate(-50%,-50%) scale(1)';
-          cursorRing.style.opacity = '.5';
-        });
-      });
-    } else if (cursor && cursorRing) {
-      cursor.style.display = 'none';
-      cursorRing.style.display = 'none';
-      document.body.style.cursor = 'auto';
-    }
   },
 
   _setupParallaxAndNavbar() {

@@ -39,10 +39,7 @@ body {
   background: var(--cream);
   color: var(--ink);
   overflow-x: hidden;
-  cursor: none;
 }
 
-/* custom cursor */
-#cursor { position:fixed; width:10px; height:10px; background:var(--gold); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .1s; mix-blend-mode:multiply; }
-#cursor-ring { position:fixed; width:36px; height:36px; border:1.5px solid var(--gold); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .2s,height .2s,opacity .2s; opacity:.5; }
-body:hover #cursor { opacity:1; }
+/* El cursor gráfico se aplica al final de main.css. */
+#cursor, #cursor-ring { display: none; }

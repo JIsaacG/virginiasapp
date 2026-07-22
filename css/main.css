@@ -77,3 +77,15 @@
    ✓ -90% tokens en cambios CSS
 
    ═══════════════════════════════════════════════════════════════ */
+
+/* Cursor institucional: solo en las páginas públicas que incluyen #cursor. */
+body:has(#cursor),
+body:has(#cursor) * {
+  cursor: url('../assets/icons/cursor-ceevs.svg') 5 1, auto !important;
+}
+
+body:has(#cursor) input:not([type='button']):not([type='submit']):not([type='reset']),
+body:has(#cursor) textarea,
+body:has(#cursor) [contenteditable='true'] {
+  cursor: text !important;
+}
