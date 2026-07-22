@@ -387,12 +387,24 @@ const Preinscripcion = {
   /* ─── Foto del alumno ─── */
 
   _bindFoto() {
-    const input = document.getElementById('pi-foto-input');
-    document.getElementById('pi-foto-btn').addEventListener('click', () => input.click());
+    const galeria = document.getElementById('pi-foto-input');
+    const camara = document.getElementById('pi-foto-camara-input');
+    const btnCamara = document.getElementById('pi-foto-camara');
+
+    // El botón de cámara solo tiene sentido donde el aparato la puede abrir
+    // (celulares y tabletas). En computadora se deja solo "Subir una foto".
+    if ('capture' in document.createElement('input') && this._esTactil()) {
+      btnCamara.hidden = false;
+      document.getElementById('pi-foto-btn-txt').textContent = 'Elegir de la galería';
+    }
+
+    btnCamara.addEventListener('click', () => camara.click());
+    document.getElementById('pi-foto-btn').addEventListener('click', () => galeria.click());
 
     document.getElementById('pi-foto-clear').addEventListener('click', () => {
       this.data.foto = '';
-      input.value = '';
+      galeria.value = '';
+      camara.value = '';
       document.getElementById('pi-foto-preview').hidden = true;
       document.getElementById('pi-foto-empty').hidden = false;
       document.getElementById('pi-foto-clear').hidden = true;
@@ -400,25 +412,33 @@ const Preinscripcion = {
       this._guardarBorrador();
     });
 
-    input.addEventListener('change', () => {
-      const file = input.files && input.files[0];
-      if (!file) return;
-      const status = document.getElementById('pi-foto-status');
-      status.className = 'preins-hint';
-      status.textContent = 'Preparando la foto…';
-
-      this._reducirImagen(file)
-        .then(dataUrl => {
-          this.data.foto = dataUrl;
-          this._pintarFoto(dataUrl);
-          status.textContent = 'Foto lista ✓ (' + Math.round(dataUrl.length * 0.73 / 1024) + ' KB)';
-          this._guardarBorrador();
-        })
-        .catch(() => {
-          status.className = 'preins-hint err';
-          status.textContent = 'No pudimos leer esa imagen. Prueba con otra foto (JPG o PNG).';
-        });
+    [galeria, camara].forEach(input => {
+      input.addEventListener('change', () => this._recibirFoto(input));
     });
+  },
+
+  _esTactil() {
+    return (navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window;
+  },
+
+  _recibirFoto(input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const status = document.getElementById('pi-foto-status');
+    status.className = 'preins-hint';
+    status.textContent = 'Preparando la foto…';
+
+    this._reducirImagen(file)
+      .then(dataUrl => {
+        this.data.foto = dataUrl;
+        this._pintarFoto(dataUrl);
+        status.textContent = 'Foto lista ✓ (' + Math.round(dataUrl.length * 0.73 / 1024) + ' KB)';
+        this._guardarBorrador();
+      })
+      .catch(() => {
+        status.className = 'preins-hint err';
+        status.textContent = 'No pudimos leer esa imagen. Intenta con otra foto.';
+      });
   },
 
   _pintarFoto(dataUrl) {
@@ -503,16 +523,26 @@ const Preinscripcion = {
     this.maxPaso = Math.max(this.maxPaso, n);
     if (n === this.TOTAL_PASOS) this._pintarRevision();
 
+    // Pasado el primer paso, el encabezado de presentación se encoge: en el
+    // celular estorbaba y obligaba a bajar en cada paso para ver los campos.
+    if (this.maxPaso > 1) document.getElementById('preins').classList.add('avanzado');
+
     this._pintarProgreso();
     this._ocultarError();
     this._guardarBorrador();
 
     if (!silencioso) {
-      const tope = document.getElementById('preins-wizard');
-      const y = tope.getBoundingClientRect().top + window.pageYOffset - 90;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      this._subirALaTarjeta();
       this._premiar(n);
     }
+  },
+
+  /** Deja el formulario justo debajo de la barra de progreso, sin saltos raros. */
+  _subirALaTarjeta() {
+    const barra = document.getElementById('preins-progress');
+    const navAlto = window.innerWidth <= 720 ? 66 : 76;
+    const y = barra.getBoundingClientRect().top + window.pageYOffset - navAlto - 8;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
   },
 
   _pintarProgreso() {
