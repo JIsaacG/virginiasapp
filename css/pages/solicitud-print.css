@@ -323,7 +323,7 @@
   .hoja-p2 { break-before: page; page-break-before: always; }
 
   /* Ninguna tabla debe partirse por la mitad entre dos páginas. */
-  .hoja-t, .hoja-vm, .hoja-numrow { break-inside: avoid; page-break-inside: avoid; }
+  .hoja-t, .hoja-vm, .hoja-numrow, .hoja-bloque { break-inside: avoid; page-break-inside: avoid; }
   .hoja-t tr { break-inside: avoid; page-break-inside: avoid; }
 
   /* Que el navegador no descarte la franja gris ni el rojo del correlativo. */

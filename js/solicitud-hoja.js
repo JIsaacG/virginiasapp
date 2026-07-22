@@ -167,6 +167,7 @@
       + '</div>'
 
       /* Datos del alumno */
+      + '<div class="hoja-bloque">'
       + '<h2 class="hoja-h2">DATOS DEL ALUMNO:</h2>'
       + '<table class="hoja-t">' + cols(12) + '<tbody>'
         + '<tr>' + celdaLbl('Nombre completo', 3) + celdaVal(al.nombre, 9) + '</tr>'
@@ -188,14 +189,17 @@
                 + '&nbsp;&nbsp;&nbsp;&nbsp;Teléfono: <b>' + esc(al.escuelaTel || '') + '</b></td></tr>'
         + '<tr><td class="inline-lbl" colspan="12">¿Grado que va a cursar? <b>' + esc(al.grado || '') + '</b></td></tr>'
       + '</tbody></table>'
+      + '</div>'
 
       /* Datos de los padres */
+      + '<div class="hoja-bloque">'
       + '<h2 class="hoja-h2">DATOS DE LOS PADRES</h2>'
       + '<table class="hoja-t">' + cols(12) + '<tbody>'
         + tablaPadre(rec.padre, 'PADRE')
         + '<tr class="hoja-sep"><td colspan="12"></td></tr>'
         + tablaPadre(rec.madre, 'MADRE')
       + '</tbody></table>'
+      + '</div>'
 
       /* ─── Segunda página ─── */
       + '<div class="hoja-p2">'
@@ -392,8 +396,13 @@
           image:      { type: 'jpeg', quality: 0.96 },
           html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false },
           jsPDF:      { unit: 'mm', format: PAPEL.jsPDF, orientation: 'portrait' },
-          // La segunda parte arranca en página nueva y ninguna fila se parte a la mitad.
-          pagebreak:  { mode: ['css', 'legacy'], before: '.hoja-p2', avoid: ['tr', '.hoja-vm', '.hoja-numrow'] }
+          // La segunda parte arranca en página nueva y ningún bloque (tabla de
+          // alumno, tabla de padres) se parte a la mitad: se mueve entero si no cabe.
+          // Solo 'css' (sin 'legacy'): mezclar los dos modos hace que html2pdf calcule
+          // el corte con las reglas de 'legacy' y lo mueva con las de 'css', y ese
+          // desfase es justo lo que partía la tabla de padres a la mitad en el PDF
+          // (la vista de impresión, que no pasa por html2canvas, siempre salió bien).
+          pagebreak:  { mode: ['css'], before: '.hoja-p2', avoid: ['.hoja-bloque', '.hoja-vm', '.hoja-numrow'] }
         }).from(host.querySelector('.hoja')).save();
       })
       .then(function () { quitar(); })
