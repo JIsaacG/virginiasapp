@@ -25,6 +25,7 @@ const Preinscripcion = {
   FOTO_MAX_BYTES: 2000000, // tope duro que también valida el servidor
 
   data: null,
+  enviada: null,           // solicitud ya enviada, para la copia en PDF
   paso: 1,
   maxPaso: 1,
   enviando: false,
@@ -49,6 +50,8 @@ const Preinscripcion = {
       closed:   id('preins-closed'),
       done:     id('preins-done'),
       doneNum:  id('preins-done-num'),
+      donePdf:  id('preins-done-pdf'),
+      donePdfMsg: id('preins-done-pdf-msg'),
       fill:     id('preins-fill'),
       pct:      id('preins-pct'),
       stepLbl:  id('preins-step-label'),
@@ -315,6 +318,7 @@ const Preinscripcion = {
     });
 
     this._bindFoto();
+    if (this.el.donePdf) this.el.donePdf.addEventListener('click', () => this._descargarPDF());
   },
 
   /** "Todas las anteriores" no convive con las opciones sueltas. */
@@ -777,6 +781,14 @@ const Preinscripcion = {
           throw new Error((res.data && res.data.error) || 'No se pudo enviar la solicitud.');
         }
         this._borrarBorrador();
+
+        // Se guarda lo enviado para que la familia pueda bajarse su copia en PDF
+        // desde esta misma pantalla (el borrador ya se borró).
+        this.enviada = Object.assign({}, JSON.parse(JSON.stringify(this.data)), {
+          num: res.data.num,
+          t: new Date().toISOString()
+        });
+
         this.el.wizard.hidden = true;
         this.el.done.hidden = false;
         this.el.doneNum.textContent = '#' + res.data.num;
@@ -792,6 +804,38 @@ const Preinscripcion = {
         this.enviando = false;
         this.el.send.disabled = false;
         this.el.send.textContent = 'Enviar solicitud';
+      });
+  },
+
+  /* ─── Copia en PDF para la familia ─── */
+
+  /**
+   * Baja la solicitud ya enviada en el formato de la hoja oficial. La arma
+   * js/solicitud-hoja.js, el mismo módulo que usa el panel: así la copia de la
+   * familia y la del colegio son idénticas.
+   */
+  _descargarPDF() {
+    if (!this.enviada || !window.ceevsHoja) return;
+
+    const btn = this.el.donePdf;
+    const msg = this.el.donePdfMsg;
+    const texto = btn.textContent;
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Preparando tu PDF…';
+    msg.className = 'preins-hint';
+    msg.textContent = 'Esto puede tardar unos segundos.';
+
+    window.ceevsHoja.descargar(this.enviada, { fotoSrc: this.enviada.foto || '' })
+      .then(() => { msg.textContent = 'Listo ✓ Busca el archivo en tus descargas.'; })
+      .catch(err => {
+        msg.className = 'preins-hint err';
+        msg.textContent = (err && err.message)
+          || 'No pudimos generar el PDF. Intenta de nuevo o pídelo por WhatsApp.';
+      })
+      .then(() => {
+        btn.disabled = false;
+        btn.textContent = texto;
       });
   }
 };

@@ -5,9 +5,10 @@
    el sitio se archive igual que las que se llenan a mano. El marcado lo genera
    js/preinscripciones-admin.js; aquí solo vive la presentación.
 
-   Se usa en dos lugares:
+   Se usa en tres lugares:
     - vista previa dentro del panel (pantalla),
-    - impresión / "Guardar como PDF" (@media print).
+    - impresión (@media print),
+    - descarga en PDF, que js/solicitud-hoja.js dibuja fuera de la vista.
 
    Medidas en mm y pt a propósito: así el navegador imprime igual en
    cualquier computadora, sin depender del zoom de pantalla.
@@ -280,19 +281,31 @@
 }
 
 /* Contenedor que solo existe al momento de imprimir */
-#preins-print-host { display: none; }
+#ceevs-hoja-print { display: none; }
 
-/* ─── Impresión / Guardar como PDF ─── */
+/* Hoja que se dibuja para el PDF: tiene que estar en la página (si no, el
+   navegador no carga las imágenes ni calcula medidas), pero fuera de la vista. */
+.ceevs-hoja-pdf {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 210mm;
+  background: #fff;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ─── Impresión ─── */
+/* El tamaño de papel (@page) lo inyecta js/solicitud-hoja.js al imprimir, para
+   que el mismo botón sirva lo mismo para carta que para oficio. */
 
 @media print {
-  @page { size: letter portrait; margin: 10mm; }
-
   html, body { background: #fff !important; }
 
   /* Durante la impresión solo debe existir la hoja: el panel se oculta entero. */
   body.ceevs-imprimiendo > * { display: none !important; }
 
-  body.ceevs-imprimiendo > #preins-print-host {
+  body.ceevs-imprimiendo > #ceevs-hoja-print {
     display: block !important;
     position: static;
     width: auto;

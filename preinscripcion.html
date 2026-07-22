@@ -37,7 +37,9 @@
        no traería el @import del formulario. Y por si acaso, la hoja del
        formulario se enlaza también directo, para que nunca dependa del import. -->
   <link rel="stylesheet" href="css/main.css?v=20260722-1">
-  <link rel="stylesheet" href="css/4-sections/preinscripcion.css?v=20260722-1">
+  <link rel="stylesheet" href="css/4-sections/preinscripcion.css?v=20260722-2">
+  <!-- Hoja oficial: la familia se descarga su solicitud en PDF al terminar -->
+  <link rel="stylesheet" href="css/pages/solicitud-print.css?v=20260722-2">
 
   <!-- Datos estructurados (JSON-LD) — ruta de navegación -->
   <script type="application/ld+json">
@@ -727,6 +729,16 @@
         <li><span aria-hidden="true">💬</span> Si necesitas apurar el proceso, escríbenos por WhatsApp.</li>
       </ul>
     </div>
+    <!-- Copia de la solicitud tal como quedó llenada -->
+    <div class="preins-done-pdf">
+      <h3>📄 Guarda tu copia</h3>
+      <p>Descarga la solicitud completa en PDF, con el mismo formato de la hoja oficial. Consérvala o imprímela en papel tamaño oficio para llevarla el día de la entrevista.</p>
+      <div class="preins-done-pdf-row">
+        <button type="button" class="btn-cta-main" id="preins-done-pdf">⬇️ Descargar mi solicitud en PDF</button>
+      </div>
+      <small class="preins-hint" id="preins-done-pdf-msg" aria-live="polite"></small>
+    </div>
+
     <div class="preins-done-btns">
       <a href="index.html" class="btn-cta-main">Volver al inicio</a>
       <a href="https://wa.me/50492215752?text=Hola%2C%20acabo%20de%20enviar%20la%20solicitud%20de%20pre-inscripci%C3%B3n%20en%20l%C3%ADnea." target="_blank" rel="noopener" class="btn-cta-ghost">Avisar por WhatsApp →</a>
@@ -809,7 +821,8 @@
 <script src="js/site-settings.js"></script>
 <script src="js/themes.js"></script>
 <script src="js/image-manager.js"></script>
-<script src="js/preinscripcion.js?v=20260722-1"></script>
+<script src="js/solicitud-hoja.js?v=20260722-2"></script>
+<script src="js/preinscripcion.js?v=20260722-2"></script>
 <script>App.init();</script>
 </body>
 </html>

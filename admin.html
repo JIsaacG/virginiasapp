@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="css/main.css?v=20260719-2">
   <link rel="stylesheet" href="css/pages/admin.css?v=20260719-2">
   <link rel="stylesheet" href="css/pages/preinscripciones-admin.css?v=20260721-1">
-  <link rel="stylesheet" href="css/pages/solicitud-print.css?v=20260721-1">
+  <link rel="stylesheet" href="css/pages/solicitud-print.css?v=20260722-2">
 </head>
 <body>
 
@@ -772,7 +772,8 @@
     </header>
 
     <div class="preins-modal-bar">
-      <button type="button" class="admin-btn-save" id="preins-imprimir">🖨️ Descargar PDF / Imprimir</button>
+      <button type="button" class="admin-btn-save" id="preins-descargar">⬇️ Descargar PDF</button>
+      <button type="button" class="admin-btn-secondary" id="preins-imprimir">🖨️ Imprimir</button>
       <select id="preins-estado" class="admin-select" aria-label="Estado de la solicitud">
         <option value="nueva">🔵 Nueva</option>
         <option value="leida">👁️ Leída</option>
@@ -795,8 +796,7 @@
   </div>
 </div>
 
-<!-- Contenedor que se llena solo al imprimir (ver css/pages/solicitud-print.css) -->
-<div id="preins-print-host"></div>
+<!-- La hoja para imprimir la monta js/solicitud-hoja.js en #ceevs-hoja-print -->
 
 <!-- Scripts (admin-sync.js debe ir antes de image-manager.js) -->
 <script src="js/admin-sync.js?v=20260719-2"></script>
@@ -807,7 +807,8 @@
 <script src="js/mision-aula.js?v=20260719-2"></script>
 <script src="js/image-manager.js?v=20260719-2"></script>
 <script src="js/gallery-extra.js?v=20260719-2"></script>
-<script src="js/preinscripciones-admin.js?v=20260721-1"></script>
+<script src="js/solicitud-hoja.js?v=20260722-2"></script>
+<script src="js/preinscripciones-admin.js?v=20260722-2"></script>
 <script src="js/admin.js?v=20260719-2"></script>
 </body>
 </html>

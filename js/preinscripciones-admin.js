@@ -4,10 +4,11 @@
  * Lee api/preinscripciones.php (requiere sesión de administrador) y arma:
  *  - la lista de solicitudes con su estado,
  *  - la ficha completa en el formato de la hoja oficial impresa,
- *  - la impresión / "Guardar como PDF" de esa hoja,
+ *  - la descarga en PDF (carta u oficio) y la impresión de esa hoja,
  *  - los ajustes del formulario público (correo de aviso, abierto/cerrado…).
  *
- * El marcado de la hoja se genera aquí; su presentación vive en
+ * La hoja en sí (marcado, impresión y PDF) vive en js/solicitud-hoja.js, que
+ * comparte con el formulario público; su presentación, en
  * css/pages/solicitud-print.css. Debe cargarse antes de admin.js.
  */
 
@@ -16,31 +17,12 @@
 
   var API = 'api/preinscripciones.php';
 
-  var LOGOS = {
-    izq:   'assets/images/formulario/logovirginiasapp.png',
-    acsi:  'assets/images/formulario/logo asci.png',
-    // Escudo dorado del león (esquina superior derecha de la hoja).
-    // Si el archivo no existe todavía, el hueco se oculta solo.
-    der:   'assets/images/formulario/logo-lions.png'
-  };
-
-  var VISION = 'Ser una institución líder en servicios educativos, culturales y sociales fundamentada en principios '
-    + 'bíblicos evangélicos que contribuyen a la salvación y formación del hombre, egresando profesionales con '
-    + 'potencial de impulsar el desarrollo integral para la transformación de la sociedad.';
-
-  var MISION = 'Somos una institución educativa evangélica Cristocéntrica que brinda servicios de calidad, integrando '
-    + 'aspectos de orden espiritual, moral, académico, social y físico que glorifican a Dios contribuyendo al '
-    + 'desarrollo de la sociedad.';
-
   var ESTADOS = {
     nueva:      { icon: '🔵', label: 'Nueva' },
     leida:      { icon: '👁️', label: 'Leída' },
     contactada: { icon: '✅', label: 'Contactada' },
     archivada:  { icon: '📁', label: 'Archivada' }
   };
-
-  var MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
-               'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
   var state = {
     items: [],
@@ -100,12 +82,6 @@
     var d = new Date(iso);
     if (isNaN(d.getTime())) return '—';
     return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear();
-  }
-
-  function fechaLarga(iso) {
-    var d = new Date(iso);
-    if (isNaN(d.getTime())) return { dia: '____', mes: '____________', anio: '202__' };
-    return { dia: String(d.getDate()), mes: MESES[d.getMonth()], anio: String(d.getFullYear()) };
   }
 
   function soloDigitos(tel) {
@@ -281,211 +257,40 @@
       mail.hidden = true;
     }
 
-    el('preins-hoja-wrap').innerHTML = hojaHTML(rec);
-    ocultarLogosFaltantes(el('preins-hoja-wrap'));
+    el('preins-hoja-wrap').innerHTML = window.ceevsHoja.html(rec, opcionesHoja(rec));
+    window.ceevsHoja.ocultarLogosFaltantes(el('preins-hoja-wrap'));
   }
 
-  /** Si un escudo aún no se ha subido al servidor, se oculta en lugar de mostrar un icono roto. */
-  function ocultarLogosFaltantes(cont) {
-    cont.querySelectorAll('.hoja-top img').forEach(function (img) {
-      img.addEventListener('error', function () { img.hidden = true; });
-      // Si la imagen ya había fallado antes de enganchar el evento (caché del navegador).
-      if (img.complete && img.naturalWidth === 0) img.hidden = true;
-    });
+  /** Cómo debe armarse la hoja de esta solicitud: la foto la sirve el API. */
+  function opcionesHoja(rec) {
+    return {
+      fotoSrc: rec.foto ? API + '?action=foto&id=' + encodeURIComponent(rec.id) : ''
+    };
   }
 
-  /* ─── La hoja oficial ─── */
+  /* ─── Descargar en PDF / imprimir ─── */
 
-  function celdaVal(v, span) {
-    var vacio = !v && v !== 0;
-    return '<td class="val' + (vacio ? ' vacio' : '') + '"' + (span ? ' colspan="' + span + '"' : '') + '>'
-      + esc(vacio ? '' : v) + '</td>';
+  /** Baja el PDF de una vez, sin pasar por el diálogo de impresión. */
+  function descargar() {
+    if (!state.abierta) return;
+    var btn = el('preins-descargar');
+    var original = btn.textContent;
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Preparando el PDF…';
+
+    window.ceevsHoja.descargar(state.abierta, opcionesHoja(state.abierta))
+      .then(function () { toast('PDF descargado (tamaño oficio)'); })
+      .catch(function (err) { toast((err && err.message) || 'No se pudo generar el PDF.'); })
+      .then(function () {
+        btn.disabled = false;
+        btn.textContent = original;
+      });
   }
-
-  function celdaLbl(txt, span) {
-    return '<td class="lbl"' + (span ? ' colspan="' + span + '"' : '') + '>' + txt + '</td>';
-  }
-
-  function marca(activo) {
-    return '<td class="cx"><span class="hoja-cx">' + (activo ? 'X' : '') + '</span></td>';
-  }
-
-  function cols(n) {
-    var c = '';
-    for (var i = 0; i < n; i++) c += '<col>';
-    return '<colgroup>' + c + '</colgroup>';
-  }
-
-  function tablaPadre(p, titulo) {
-    p = p || {};
-    var vivo = !!p.aplica;
-    var v = function (k) { return vivo ? (p[k] || '') : ''; };
-
-    return '<tr><th colspan="12">' + titulo + '</th></tr>'
-      + '<tr>' + celdaLbl('Nombre completo', 3) + celdaVal(v('nombre'), 9) + '</tr>'
-      + '<tr>' + celdaLbl('Profesión', 3) + celdaVal(v('profesion'), 3)
-              + celdaLbl('Ocupación', 2) + celdaVal(v('ocupacion'), 4) + '</tr>'
-      + '<tr>' + celdaLbl('Dirección completa', 3) + celdaVal(v('direccion'), 9) + '</tr>'
-      + '<tr>' + celdaLbl('Teléfono fijo', 3) + celdaVal(v('telFijo'), 3)
-              + celdaLbl('Celular:', 2) + celdaVal(v('celular'), 4) + '</tr>'
-      + '<tr>' + celdaLbl('Correo electrónico', 3) + celdaVal(v('correo'), 9) + '</tr>'
-      + '<tr>' + celdaLbl('Centro de trabajo', 3) + celdaVal(v('centroTrabajo'), 9) + '</tr>'
-      + '<tr>' + celdaLbl('Iglesia que asiste', 3) + celdaVal(v('iglesia'), 3)
-              + celdaLbl('Nombre del líder espiritual', 3) + celdaVal(v('lider'), 3) + '</tr>'
-      + '<tr>' + celdaLbl('Ingreso mensual', 3) + celdaVal(v('ingreso'), 9) + '</tr>';
-  }
-
-  function hojaHTML(rec) {
-    var al = rec.alumno || {};
-    var f = fechaLarga(rec.t);
-    var motivos = rec.motivo || [];
-    var herm = (rec.hermanos || []).slice();
-
-    // La hoja de papel trae cuatro renglones para hermanos: se respetan.
-    while (herm.length < 4) herm.push({ nombre: '', edad: '', estudia: null, trabaja: null });
-
-    var foto = rec.foto
-      ? '<img src="' + API + '?action=foto&id=' + esc(rec.id) + '" alt="Foto del alumno">'
-      : 'Foto<br>Alumno(a)';
-
-    return '<div class="hoja">'
-
-      /* Encabezado */
-      + '<div class="hoja-top">'
-        + '<div class="hoja-top-izq"><img src="' + LOGOS.izq + '" alt="Instituto Educativo Evangélico Virginia Sapp"></div>'
-        + '<div class="hoja-top-acsi"><img src="' + encodeURI(LOGOS.acsi) + '" alt="Acreditado por ACSI"></div>'
-        + '<div class="hoja-top-der"><img src="' + LOGOS.der + '" alt="Virginia Sapp Lions"></div>'
-      + '</div>'
-
-      + '<h1 class="hoja-titulo">SOLICITUD DE ADMISIÓN PARA PRIMER INGRESO<br>'
-        + 'JARDÍN, ESCUELA E INSTITUTO “EVANGÉLICO VIRGINIA SAPP”</h1>'
-
-      /* Visión y misión */
-      + '<div class="hoja-vm">'
-        + '<h3>VISIÓN</h3><p>' + VISION + '</p>'
-        + '<h3>MISIÓN</h3><p>' + MISION + '</p>'
-      + '</div>'
-
-      /* Número de solicitud y foto */
-      + '<div class="hoja-numrow">'
-        + '<div class="hoja-num"><span>Número de solicitud</span><b>' + esc(rec.num) + '</b></div>'
-        + '<div class="hoja-foto">' + foto + '</div>'
-      + '</div>'
-
-      /* Datos del alumno */
-      + '<h2 class="hoja-h2">DATOS DEL ALUMNO:</h2>'
-      + '<table class="hoja-t">' + cols(12) + '<tbody>'
-        + '<tr>' + celdaLbl('Nombre completo', 3) + celdaVal(al.nombre, 9) + '</tr>'
-        + '<tr>' + celdaLbl('Edad') + celdaVal(al.edad)
-                + celdaLbl('N.º Identidad', 2) + celdaVal(al.identidad, 4)
-                + celdaLbl('Nacionalidad', 2) + celdaVal(al.nacionalidad, 2) + '</tr>'
-        + '<tr>' + celdaLbl('Sexo') + celdaVal(al.sexo, 2)
-                + celdaLbl('Fecha de Nacimiento', 3) + celdaVal(fechaISOaCorta(al.fechaNac), 6) + '</tr>'
-        + '<tr>' + celdaLbl('País') + celdaVal(al.pais, 2)
-                + celdaLbl('Departamento', 2) + celdaVal(al.departamento, 3)
-                + celdaLbl('Ciudad', 2) + celdaVal(al.ciudad, 2) + '</tr>'
-        + '<tr>' + celdaLbl('Vive con:', 2)
-                + celdaLbl('Ambos Padres', 2) + marca(al.viveCon === 'ambos')
-                + celdaLbl('La Madre') + marca(al.viveCon === 'madre')
-                + celdaLbl('El Padre') + marca(al.viveCon === 'padre')
-                + celdaLbl('Otro (especifique)', 2) + celdaVal(al.viveCon === 'otro' ? (al.viveConOtro || 'Sí') : '') + '</tr>'
-        + '<tr><td class="inline-lbl" colspan="12">Escuela de procedencia: <b>' + esc(al.escuela || '') + '</b>'
-                + '&nbsp;&nbsp;&nbsp;&nbsp;Lugar: <b>' + esc(al.escuelaLugar || '') + '</b>'
-                + '&nbsp;&nbsp;&nbsp;&nbsp;Teléfono: <b>' + esc(al.escuelaTel || '') + '</b></td></tr>'
-        + '<tr><td class="inline-lbl" colspan="12">¿Grado que va a cursar? <b>' + esc(al.grado || '') + '</b></td></tr>'
-      + '</tbody></table>'
-
-      /* Datos de los padres */
-      + '<h2 class="hoja-h2">DATOS DE LOS PADRES</h2>'
-      + '<table class="hoja-t">' + cols(12) + '<tbody>'
-        + tablaPadre(rec.padre, 'PADRE')
-        + '<tr class="hoja-sep"><td colspan="12"></td></tr>'
-        + tablaPadre(rec.madre, 'MADRE')
-      + '</tbody></table>'
-
-      /* ─── Segunda página ─── */
-      + '<div class="hoja-p2">'
-        + '<h2 class="hoja-h2">DATOS DE LOS HERMANOS</h2>'
-        + '<table class="hoja-t hoja-t--herm">' + cols(12) + '<tbody>'
-          + '<tr><th colspan="7">Nombre completo</th><th colspan="2">Edad</th>'
-            + '<th colspan="2">Estudia</th><th>Trabaja</th></tr>'
-          + herm.map(function (h) {
-              return '<tr>' + celdaVal(h.nombre, 7) + celdaVal(h.edad, 2)
-                + (h.estudia === null ? '<td colspan="2"></td>' : '<td class="cx" colspan="2"><span class="hoja-cx">' + (h.estudia ? 'X' : '') + '</span></td>')
-                + (h.trabaja === null ? '<td></td>' : marca(h.trabaja))
-                + '</tr>';
-            }).join('')
-        + '</tbody></table>'
-
-        + '<p class="hoja-pregunta">¿Por qué medio se enteró de nuestro centro educativo?</p>'
-        + '<ul class="hoja-lista">'
-          + opcion('Pariente', rec.medio === 'pariente')
-          + opcion('Amigo', rec.medio === 'amigo')
-          + opcion('Redes Sociales', rec.medio === 'redes')
-          + opcion('Otro' + (rec.medio === 'otro' && rec.medioOtro ? ': ' + esc(rec.medioOtro) : ''), rec.medio === 'otro')
-        + '</ul>'
-
-        + '<p class="hoja-pregunta">¿Por qué eligió la institución para matricular a su hijo(a)?</p>'
-        + '<ul class="hoja-lista">'
-          + opcion('Por su impacto en educación <u>Cristiana</u>', motivos.indexOf('cristiana') !== -1)
-          + opcion('Por su enfoque académico', motivos.indexOf('academico') !== -1)
-          + opcion('Por sus instalaciones', motivos.indexOf('instalaciones') !== -1)
-          + opcion('Todas las anteriores', motivos.indexOf('todas') !== -1)
-        + '</ul>'
-
-        + '<p class="hoja-linea">Tiene familiares en la Institución <u>' + esc(rec.familiares || '') + '</u></p>'
-        + '<div class="hoja-linea hoja-dosfilas">'
-          + '<span>Parentesco <u>' + esc(rec.parentesco || '') + '</u></span>'
-          + '<span>Nivel <u>' + esc(rec.nivel || '') + '</u></span>'
-        + '</div>'
-
-        + '<p class="hoja-nota">Esta solicitud no significa reservación de cupo.</p>'
-
-        + '<p class="hoja-fecha">Tegucigalpa M.D.C. a los <u>' + f.dia + '</u> días del mes de <u>'
-          + f.mes + '</u> de <u>' + f.anio + '</u></p>'
-
-        + '<div class="hoja-firma">'
-          + '<span class="hoja-firma-nombre">' + esc(rec.firma || '') + '</span>'
-          + 'Firma del Padre o Encargado'
-        + '</div>'
-
-        + '<p class="hoja-origen">Solicitud recibida en línea a través de virginiasapp.edu.hn el '
-          + fechaCorta(rec.t) + ' · Registro interno ' + esc(rec.id.slice(0, 8)) + '</p>'
-      + '</div>'
-
-    + '</div>';
-  }
-
-  function opcion(texto, activo) {
-    return '<li><span class="txt">' + texto + '</span><span class="hoja-cx">' + (activo ? 'X' : '') + '</span></li>';
-  }
-
-  function fechaISOaCorta(iso) {
-    if (!iso) return '';
-    var p = String(iso).split('-');
-    return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : iso;
-  }
-
-  /* ─── Impresión ─── */
 
   function imprimir() {
     if (!state.abierta) return;
-    var host = el('preins-print-host');
-    host.innerHTML = el('preins-hoja-wrap').innerHTML;
-
-    var limpiar = function () {
-      document.body.classList.remove('ceevs-imprimiendo');
-      host.innerHTML = '';
-      window.removeEventListener('afterprint', limpiar);
-    };
-    window.addEventListener('afterprint', limpiar);
-
-    document.body.classList.add('ceevs-imprimiendo');
-    // Un respiro para que el navegador maquete la hoja antes de abrir el diálogo.
-    setTimeout(function () {
-      window.print();
-      setTimeout(limpiar, 1500);   // respaldo si el navegador no avisa
-    }, 120);
+    window.ceevsHoja.imprimir(state.abierta, opcionesHoja(state.abierta));
   }
 
   /* ─── Acciones ─── */
@@ -598,6 +403,7 @@
       if (e.key === 'Escape' && !el('preins-modal').hidden) cerrar();
     });
 
+    el('preins-descargar').addEventListener('click', descargar);
     el('preins-imprimir').addEventListener('click', imprimir);
     el('preins-estado').addEventListener('change', function () {
       if (state.abierta) cambiarEstado(state.abierta.id, this.value);
@@ -616,7 +422,7 @@
     /** Trae el contador de nuevas sin abrir la pestaña (para el globo del menú). */
     precargar: function () { if (!state.cargado) cargar(); },
     /** Marcado de la hoja oficial a partir de una solicitud (útil para previsualizar). */
-    hoja: hojaHTML
+    hoja: function (rec) { return window.ceevsHoja.html(rec, opcionesHoja(rec)); }
   };
 
   if (document.readyState === 'loading') {
