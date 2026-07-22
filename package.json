@@ -1,0 +1,22 @@
+{
+  "name": "ceevs-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio institucional del Centro Educativo Evangélico Virginia Sapp",
+  "scripts": {
+    "postinstall": "patch-package",
+    "seo:check": "node scripts/seo-check.mjs",
+    "seo:lighthouse": "lhci autorun",
+    "seo:audit": "npm run seo:check && npm run seo:lighthouse",
+    "seo:production": "node scripts/seo-production-check.mjs"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.15.1",
+    "patch-package": "^8.0.1"
+  },
+  "overrides": {
+    "@lhci/cli": {
+      "lighthouse": "13.4.1"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+name: SEO quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install audit tools
+        run: npm ci
+
+      - name: Run SEO checks and Lighthouse CI
+        run: npm run seo:audit
+
+      - name: Save Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: reports/lighthouse/
+          if-no-files-found: ignore
+          retention-days: 14

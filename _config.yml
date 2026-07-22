@@ -19,9 +19,18 @@ exclude:
   - "Requerimientos/"
   - "Docs/"
   - ".claude/"
+  - ".github/"
+  - ".playwright-cli/"
+  - "node_modules/"
+  - "reports/"
+  - "scripts/"
+  - "patches/"
 
   # ── Scripts de desarrollo (Python) ──
   - "*.py"
+  - "package.json"
+  - "package-lock.json"
+  - "lighthouserc.cjs"
 
   # ── Documentación de planificación / arquitectura ──
   - "ANALISIS_ARQUITECTURA.md"

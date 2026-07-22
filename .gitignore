@@ -2,6 +2,10 @@ CLAUDE.md
 *.tmp
 Thumbs.db
 .DS_Store
+.playwright-cli/
+node_modules/
+.lighthouseci/
+reports/lighthouse/
 
 # Datos del panel admin (viven en el servidor, no en el repo)
 server-data/

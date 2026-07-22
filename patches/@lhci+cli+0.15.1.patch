@@ -1,0 +1,14 @@
+diff --git a/node_modules/@lhci/cli/src/collect/node-runner.js b/node_modules/@lhci/cli/src/collect/node-runner.js
+index cda78e9..35711fa 100644
+--- a/node_modules/@lhci/cli/src/collect/node-runner.js
++++ b/node_modules/@lhci/cli/src/collect/node-runner.js
+@@ -111,7 +111,8 @@ class LighthouseRunner {
+         os.platform() === 'win32' &&
+         LighthouseRunner.isOutputLhrLike(stdout.trim()) &&
+         stderr.includes('Generating results...') &&
+-        stderr.includes('Chrome could not be killed')
++        (stderr.includes('Chrome could not be killed') ||
++          stderr.includes('EPERM, Permission denied'))
+       ) {
+         return resolve(stdout);
+       }

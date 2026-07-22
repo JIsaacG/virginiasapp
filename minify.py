@@ -38,6 +38,7 @@ def minify_js(text):
     text = re.sub(r'/\*.*?\*/', '', text, flags=re.DOTALL)
     text = re.sub(r'\n\s*\n', '\n', text)
     text = re.sub(r'[ \t]+', ' ', text)
+    text = re.sub(r'[ \t]+$', '', text, flags=re.MULTILINE)
     return text.strip()
 
 
@@ -49,7 +50,9 @@ def resolve_css_imports(css_path):
 
     def replace_import(m):
         rel = m.group(1).strip("'\"")
-        full = os.path.normpath(os.path.join(base, rel))
+        # Las versiones ?v=... son para caché HTTP; no forman parte del path.
+        rel_path = rel.split('?', 1)[0]
+        full = os.path.normpath(os.path.join(base, rel_path))
         if os.path.exists(full):
             return resolve_css_imports(full)
         return f'/* missing: {rel} */'

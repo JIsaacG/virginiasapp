@@ -2,6 +2,9 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /api/
+Disallow: /components/
+Disallow: /server-data/
+Disallow: /uploads/
 
-# PENDING_DOMAIN_OFFICIAL: confirmar el dominio oficial antes de publicar.
-Sitemap: https://www.virginiasapp.edu.hn/sitemap.xml
+Sitemap: https://lavenderblush-jackal-726259.hostingersite.com/sitemap.xml
