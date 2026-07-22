@@ -120,23 +120,13 @@ const Main = {
     const cursorRing = document.getElementById('cursor-ring');
 
     if (!isTouch && cursor && cursorRing) {
-      let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
-
       document.addEventListener('mousemove', e => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        cursor.style.left = mouseX + 'px';
-        cursor.style.top = mouseY + 'px';
+        const { clientX, clientY } = e;
+        cursor.style.left = clientX + 'px';
+        cursor.style.top = clientY + 'px';
+        cursorRing.style.left = clientX + 'px';
+        cursorRing.style.top = clientY + 'px';
       });
-
-      const animateRing = () => {
-        ringX += (mouseX - ringX) * CONFIG.CURSOR_RING_EASING;
-        ringY += (mouseY - ringY) * CONFIG.CURSOR_RING_EASING;
-        cursorRing.style.left = ringX + 'px';
-        cursorRing.style.top = ringY + 'px';
-        requestAnimationFrame(animateRing);
-      };
-      animateRing();
 
       document.querySelectorAll('a,button,.valor-card,.nivel-card,.quiz-opt').forEach(el => {
         el.addEventListener('mouseenter', () => {

@@ -25,6 +25,14 @@
 
 declare(strict_types=1);
 
+/* La API solo debe responder JSON. Un aviso de PHP impreso en medio (por
+   ejemplo, un POST que se pasa de post_max_size) rompe la respuesta, filtra
+   rutas del servidor y —al haber salida antes de tiempo— impide fijar el código
+   HTTP correcto. Los errores se registran, no se muestran. */
+@ini_set('display_errors', '0');
+@ini_set('display_startup_errors', '0');
+@ini_set('log_errors', '1');
+
 /** Claves de configuración que el panel puede publicar (espejo de localStorage). */
 const CEEVS_CONFIG_KEYS = array(
   'ceevs_images',
@@ -74,8 +82,36 @@ function json_fail(string $msg, int $code = 400, array $extra = array()): void {
   json_out(array_merge(array('ok' => false, 'error' => $msg), $extra), $code);
 }
 
-function read_json_body(): array {
-  $raw = file_get_contents('php://input');
+/**
+ * Cuerpo JSON de la petición.
+ *
+ * @param int $maxBytes Tope del cuerpo. 0 = sin tope (lo que necesita save.php,
+ *   que publica la configuración entera con imágenes en base64). En los endpoints
+ *   abiertos SIEMPRE hay que pasar un tope: sin él, un POST de decenas de MB se
+ *   buffea y se decodifica, y eso basta para tumbar un hosting compartido.
+ */
+function read_json_body(int $maxBytes = 0): array {
+  if ($maxBytes > 0) {
+    // Corte barato antes de leer nada: si el cliente ya declaró que viene grande.
+    $declarado = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
+    if ($declarado > $maxBytes) {
+      json_fail('La solicitud es demasiado grande.', 413);
+    }
+    $fh = fopen('php://input', 'rb');
+    if ($fh === false) {
+      return array();
+    }
+    // Se lee un byte de más: si llega, es que el cuerpo pasa del tope aunque
+    // Content-Length dijera otra cosa.
+    $raw = stream_get_contents($fh, $maxBytes + 1);
+    fclose($fh);
+    if ($raw !== false && strlen($raw) > $maxBytes) {
+      json_fail('La solicitud es demasiado grande.', 413);
+    }
+  } else {
+    $raw = file_get_contents('php://input');
+  }
+
   $data = json_decode($raw === false ? '' : $raw, true);
   return is_array($data) ? $data : array();
 }

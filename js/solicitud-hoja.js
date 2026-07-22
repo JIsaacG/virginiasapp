@@ -25,7 +25,7 @@
     acsi:  'assets/images/formulario/logo asci.png',
     // Escudo dorado del león (esquina superior derecha de la hoja).
     // Si el archivo no existe todavía, el hueco se oculta solo.
-    der:   'assets/images/formulario/logo-lions.png'
+    der:   'assets/images/formulario/lion_logo.png'
   };
 
   var VISION = 'Ser una institución líder en servicios educativos, culturales y sociales fundamentada en principios '

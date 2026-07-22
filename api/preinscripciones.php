@@ -84,7 +84,8 @@ if ($metodo !== 'POST') {
 
 ceevs_require_csrf();
 
-$body = read_json_body();
+// Lo más grande que manda el panel son las notas internas (1500 caracteres).
+$body = read_json_body(262144);
 $action = isset($body['action']) && is_string($body['action']) ? $body['action'] : '';
 
 if ($action === 'ajustes') {

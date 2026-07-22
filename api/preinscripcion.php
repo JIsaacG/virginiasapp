@@ -19,12 +19,10 @@ $metodo = $_SERVER['REQUEST_METHOD'] ?? '';
 /* ─── Estado del formulario ─── */
 
 if ($metodo === 'GET') {
-  $s = ceevs_preins_settings();
-  json_out(array(
-    'ok'      => true,
-    'abierto' => !empty($s['abierto']),
-    'ciclo'   => (string) $s['ciclo'],
-  ));
+  // Vía barata a propósito: lee una copia diminuta, no el índice completo.
+  // Esto corre en cada visita a la página.
+  $e = ceevs_preins_estado_publico();
+  json_out(array('ok' => true, 'abierto' => $e['abierto'], 'ciclo' => $e['ciclo']));
 }
 
 if ($metodo !== 'POST') {
@@ -33,7 +31,20 @@ if ($metodo !== 'POST') {
 
 ceevs_require_same_origin();
 
-$body = read_json_body();
+/**
+ * Freno de intentos: lo PRIMERO, antes de leer el cuerpo y de validar nada.
+ *
+ * El cupo de solicitudes guardadas (más abajo) no basta por sí solo: quien manda
+ * payloads que no pasan la validación nunca lo gasta y podría martillar sin
+ * límite. Aquí paga todo el que toca la puerta, y pasado el tope la respuesta
+ * cuesta una lectura de archivo pequeño y nada más.
+ */
+if (!ceevs_preins_intento()) {
+  header('Retry-After: 3600');
+  json_fail('Demasiados envíos desde esta conexión. Espera una hora o comunícate directamente con admisiones al 9221-5752.', 429);
+}
+
+$body = read_json_body(CEEVS_PREINS_MAX_BODY_BYTES);
 
 // Campo trampa: los robots rellenan todo, una persona nunca lo ve.
 if (ceevs_preins_txt($body['sitio_web'] ?? '', 40) !== '') {
@@ -46,6 +57,7 @@ if (empty($settings['abierto'])) {
 }
 
 if (ceevs_preins_rate_bloqueado()) {
+  header('Retry-After: 3600');
   json_fail('Ya se enviaron varias solicitudes desde esta conexión. Espera una hora o comunícate directamente con admisiones.', 429);
 }
 
@@ -163,7 +175,25 @@ foreach (is_array($body['motivo'] ?? null) ? $body['motivo'] : array() as $m) {
 
 /* ─── Ensamblado y guardado ─── */
 
+// Cerrojo: desde aquí hasta guardar el índice, un solo proceso a la vez. Sin
+// esto, dos envíos simultáneos leen el mismo índice y el segundo pisa al primero
+// (se pierde una solicitud y el correlativo repite número).
+$lock = ceevs_preins_lock();
+
 $ix = ceevs_preins_index();
+
+// Tope de almacenamiento: cada solicitud es un archivo más (y su foto). Agotar
+// la cuota de disco o de inodos del hosting no tumbaría solo el formulario,
+// sino el sitio entero, así que aquí se corta antes.
+if (ceevs_preins_lleno($ix)) {
+  ceevs_preins_unlock($lock);
+  // Una sola anotación por ventana: si no, la propia bitácora se vuelve carga.
+  if (ceevs_preins_primera_vez('lleno')) {
+    ceevs_audit('preinscripcion_tope', 'Almacén lleno: ' . count($ix['items']) . ' solicitudes', false, 'formulario público');
+  }
+  json_fail('En este momento no podemos recibir más solicitudes en línea. Comunícate con admisiones al 9221-5752.', 503);
+}
+
 $id = ceevs_preins_new_id();
 $num = (int) $ix['next'];
 
@@ -189,17 +219,25 @@ $rec = array(
   'foto'       => false,
 );
 
-if (!empty($body['foto'])) {
-  $rec['foto'] = ceevs_preins_save_foto($id, $body['foto']);
+// La foto solo entra si queda presupuesto de disco. Si no, la solicitud se
+// guarda igual sin ella: vale mucho más el dato de la familia que la fotografía.
+$fotoBytes = 0;
+if (!empty($body['foto']) && ceevs_preins_cabe_foto($ix)) {
+  $fotoBytes = ceevs_preins_save_foto($id, $body['foto']);
+  $rec['foto'] = $fotoBytes > 0;
 }
 
 if (!ceevs_preins_write($id, $rec)) {
+  ceevs_preins_unlock($lock);
   json_fail('No pudimos guardar la solicitud en el servidor. Intenta de nuevo en unos minutos.', 500);
 }
 
 $ix['next'] = $num + 1;
+$ix['bytes'] = (int) $ix['bytes'] + $fotoBytes;
 array_unshift($ix['items'], ceevs_preins_row($rec));
 ceevs_preins_save_index($ix);
+
+ceevs_preins_unlock($lock);
 
 // El cupo se descuenta hasta aquí: solo cuentan las solicitudes realmente guardadas.
 ceevs_preins_rate_contar();
@@ -213,7 +251,7 @@ ceevs_audit(
 
 /* ─── Aviso al área de admisiones ─── */
 
-if (!empty($settings['notificar']) && (string) $settings['correo'] !== '') {
+if (!empty($settings['notificar']) && (string) $settings['correo'] !== '' && ceevs_preins_correo_permitido()) {
   $host = preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
   $texto = "Se recibió una nueva solicitud de pre-inscripción en el sitio web.\n\n"
     . 'Número de solicitud: ' . $num . "\n"

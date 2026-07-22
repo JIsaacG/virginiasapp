@@ -14,6 +14,15 @@
   </FilesMatch>
 </IfModule>
 
+# La librería que genera el PDF de las solicitudes nunca cambia (si algún día se
+# actualiza, se sube con otro nombre). Caché largo: evita revalidar 900 KB en cada
+# visita y le quita tráfico repetido al hosting.
+<IfModule mod_headers.c>
+  <FilesMatch "^html2pdf\.bundle\.min\.js$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
 # Compresión de texto (si el servidor no la aplica ya por su cuenta).
 # i18n-data.js pasa de ~120 KB a ~25 KB; el CSS completo de ~400 KB a ~80 KB.
 <IfModule mod_deflate.c>

@@ -23,7 +23,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 ceevs_require_same_origin();
 ceevs_session_start();
 
-$body = read_json_body();
+// Endpoint abierto (aquí todavía no hay sesión): el cuerpo más grande que maneja
+// son un correo y una contraseña, así que 64 KB sobran de largo.
+$body = read_json_body(65536);
 $action = isset($body['action']) && is_string($body['action']) ? $body['action'] : '';
 
 function body_str(array $body, string $key): string {

@@ -1,0 +1,31 @@
+# Reglas de la mini-API. Esta carpeta solo debe responder JSON.
+
+# Los avisos de PHP no pueden imprimirse aquí: rompen el JSON de la respuesta,
+# filtran rutas internas del servidor y, al salir antes que nada, impiden fijar
+# el código HTTP correcto (un POST gigante devolvía 200 en lugar de 413).
+#
+# Se cubren los dos motores posibles porque cada uno lee una cosa distinta:
+#   - PHP-FPM / CGI (lo habitual en Hostinger) → api/.user.ini
+#   - mod_php                                  → estas líneas
+# Van dentro de <IfModule> a propósito: donde mod_php no exista, el bloque se
+# ignora en vez de tumbar el sitio con un error 500.
+<IfModule mod_php.c>
+  php_flag display_errors off
+  php_flag display_startup_errors off
+  php_flag log_errors on
+</IfModule>
+<IfModule mod_php8.c>
+  php_flag display_errors off
+  php_flag display_startup_errors off
+  php_flag log_errors on
+</IfModule>
+<IfModule mod_php7.c>
+  php_flag display_errors off
+  php_flag display_startup_errors off
+  php_flag log_errors on
+</IfModule>
+
+# La configuración de PHP de la carpeta no se sirve nunca.
+<FilesMatch "^\.user\.ini$">
+  Require all denied
+</FilesMatch>
