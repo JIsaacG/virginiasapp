@@ -127,6 +127,9 @@
     renderDashboard();
     updateSecurityCard();
     renderAudit();
+    // Carga la bandeja de pre-inscripciones para que el globo del menú
+    // muestre cuántas solicitudes nuevas hay sin tener que abrir la pestaña.
+    if (window.ceevsPreins) window.ceevsPreins.precargar();
   }
 
   function showLoginError(msg) {
@@ -732,6 +735,7 @@
         if (tabName === 'paleta') renderPalettePanel();
         if (tabName === 'inventario') renderInventoryList();
         if (tabName === 'mision' && window.ceevsMisionAula && window.ceevsMisionAula.renderAdmin) window.ceevsMisionAula.renderAdmin();
+        if (tabName === 'preinscripciones' && window.ceevsPreins) window.ceevsPreins.render();
         if (tabName === 'galeria') renderGalleryPanel();
         if (tabName === 'video') { loadVideoSettings(); loadHubVideoSettings(); }
         if (tabName === 'respaldo') renderBackupStatus();

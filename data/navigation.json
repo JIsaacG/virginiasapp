@@ -50,10 +50,8 @@
     {
       "id": "solicitar-admision",
       "label": "Solicitar admisión",
-      "href": "https://portal.edubox.app/login/virginiasapp",
-      "type": "external",
-      "target": "_blank",
-      "rel": "noopener",
+      "href": "preinscripcion.html",
+      "type": "internal",
       "variant": "primary"
     }
   ],
@@ -111,10 +109,8 @@
     {
       "id": "solicitar-admision",
       "label": "Solicitar admisión",
-      "href": "https://portal.edubox.app/login/virginiasapp",
-      "type": "external",
-      "target": "_blank",
-      "rel": "noopener"
+      "href": "preinscripcion.html",
+      "type": "internal"
     }
   ]
 }

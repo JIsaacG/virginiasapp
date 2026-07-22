@@ -12,6 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@0,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css?v=20260719-2">
   <link rel="stylesheet" href="css/pages/admin.css?v=20260719-2">
+  <link rel="stylesheet" href="css/pages/preinscripciones-admin.css?v=20260721-1">
+  <link rel="stylesheet" href="css/pages/solicitud-print.css?v=20260721-1">
 </head>
 <body>
 
@@ -87,6 +89,10 @@
       </button>
       <button class="admin-tab-btn" data-tab="mision">
         <span class="admin-tab-icon">✝️</span> Misión
+      </button>
+      <button class="admin-tab-btn" data-tab="preinscripciones">
+        <span class="admin-tab-icon">📋</span> Pre-inscripciones
+        <span class="admin-tab-badge" id="preins-tab-badge" hidden>0</span>
       </button>
       <button class="admin-tab-btn" data-tab="respaldo">
         <span class="admin-tab-icon">💾</span> Respaldo
@@ -562,6 +568,94 @@
     </div>
   </div>
 
+  <!-- ─── PANEL: Pre-inscripciones ─── -->
+  <div class="admin-tab-panel" id="panel-preinscripciones">
+    <div class="admin-main">
+      <div class="admin-header">
+        <h2>Pre-inscripciones</h2>
+        <p>Solicitudes de admisión que las familias envían desde <a href="preinscripcion.html" target="_blank" rel="noopener">preinscripcion.html</a>. Ábrelas para verlas completas, descargarlas en PDF con el formato oficial y llevar el control de a quién ya se contactó.</p>
+      </div>
+
+      <div class="preins-stats" id="preins-stats"></div>
+
+      <!-- Bandeja -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Bandeja de solicitudes</h3>
+          <span class="product-count" id="preins-count">—</span>
+        </div>
+
+        <div class="preins-toolbar">
+          <input type="search" id="preins-buscar" class="admin-input" placeholder="🔍 Buscar por alumno, encargado, grado o número…" autocomplete="off" aria-label="Buscar solicitud">
+          <select id="preins-filtro" class="admin-select" aria-label="Filtrar por estado">
+            <option value="">Todos los estados</option>
+            <option value="nueva">🔵 Nuevas</option>
+            <option value="leida">👁️ Leídas</option>
+            <option value="contactada">✅ Contactadas</option>
+            <option value="archivada">📁 Archivadas</option>
+          </select>
+          <button type="button" class="admin-btn-secondary" id="preins-refrescar">↻ Actualizar</button>
+        </div>
+
+        <div class="preins-lista" id="preins-lista">
+          <p class="empty-state">Cargando solicitudes…</p>
+        </div>
+      </div>
+
+      <!-- Ajustes -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>⚙️ Ajustes del formulario</h3>
+        </div>
+        <p class="admin-card-desc">Controla a qué correo llega el aviso de cada solicitud nueva y si el formulario sigue recibiendo.</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="admin-input-label" for="preins-set-correo">Correo del área de admisiones</label>
+            <input type="email" id="preins-set-correo" class="admin-input" placeholder="admisiones@virginiasapp.edu.hn">
+            <small class="admin-input-hint">Ahí llega el aviso de cada solicitud nueva.</small>
+          </div>
+          <div class="form-group">
+            <label class="admin-input-label" for="preins-set-ciclo">Ciclo escolar</label>
+            <input type="text" id="preins-set-ciclo" class="admin-input" placeholder="2026-2027">
+            <small class="admin-input-hint">Se guarda con cada solicitud para separarlas por año.</small>
+          </div>
+          <div class="form-group">
+            <label class="admin-input-label" for="preins-set-proximo">Próximo número de solicitud</label>
+            <input type="number" id="preins-set-proximo" class="admin-input" min="1" step="1">
+            <small class="admin-input-hint">Continúa la numeración de las hojas de papel. Solo puede aumentar.</small>
+          </div>
+        </div>
+
+        <div class="preins-switches">
+          <label class="preins-switch">
+            <input type="checkbox" id="preins-set-abierto">
+            <span><strong>Recibir solicitudes</strong><small>Si lo apagas, la página muestra "período cerrado" y deja de recibir.</small></span>
+          </label>
+          <label class="preins-switch">
+            <input type="checkbox" id="preins-set-notificar">
+            <span><strong>Avisarme por correo</strong><small>Envía un aviso a admisiones cada vez que llega una solicitud nueva.</small></span>
+          </label>
+        </div>
+
+        <div class="admin-form-actions">
+          <button type="button" class="admin-btn-save" id="preins-set-guardar">💾 Guardar ajustes</button>
+        </div>
+      </div>
+
+      <div class="admin-help">
+        <h3>¿Cómo trabajo una solicitud?</h3>
+        <ol>
+          <li>Ábrela con <strong>Ver solicitud</strong>: se muestra tal como la hoja oficial impresa.</li>
+          <li>Usa <strong>🖨️ Descargar PDF</strong> y elige <em>"Guardar como PDF"</em> como destino de impresión.</li>
+          <li>Llama o escribe a la familia y marca la solicitud como <strong>Contactada</strong>.</li>
+          <li>Al terminar el proceso, márcala como <strong>Archivada</strong> para sacarla de la bandeja activa.</li>
+        </ol>
+        <p><strong>Privacidad:</strong> son datos de menores de edad. Solo se ven con sesión de administrador iniciada y nunca quedan públicos en el sitio.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── PANEL: Respaldo ─── -->
   <div class="admin-tab-panel" id="panel-respaldo">
     <div class="admin-main">
@@ -666,6 +760,44 @@
 <!-- Toast de confirmación -->
 <div id="admin-toast"></div>
 
+<!-- ─── Detalle de una pre-inscripción ─── -->
+<div class="preins-modal" id="preins-modal" hidden>
+  <div class="preins-modal-box" role="dialog" aria-modal="true" aria-labelledby="preins-modal-title">
+    <header class="preins-modal-top">
+      <div>
+        <h3 id="preins-modal-title">Solicitud</h3>
+        <p id="preins-modal-sub"></p>
+      </div>
+      <button type="button" class="preins-modal-close" id="preins-modal-close" aria-label="Cerrar">✕</button>
+    </header>
+
+    <div class="preins-modal-bar">
+      <button type="button" class="admin-btn-save" id="preins-imprimir">🖨️ Descargar PDF / Imprimir</button>
+      <select id="preins-estado" class="admin-select" aria-label="Estado de la solicitud">
+        <option value="nueva">🔵 Nueva</option>
+        <option value="leida">👁️ Leída</option>
+        <option value="contactada">✅ Contactada</option>
+        <option value="archivada">📁 Archivada</option>
+      </select>
+      <a href="#" class="preins-btn-wa" id="preins-wa" target="_blank" rel="noopener">💬 WhatsApp</a>
+      <a href="#" class="preins-btn-wa preins-btn-wa--mail" id="preins-mail">✉️ Correo</a>
+      <button type="button" class="admin-btn-secondary" id="preins-copiar">📋 Copiar datos</button>
+      <button type="button" class="admin-btn-danger" id="preins-eliminar">🗑️ Eliminar</button>
+    </div>
+
+    <div class="preins-modal-notas">
+      <label class="admin-input-label" for="preins-notas">Notas internas (solo las ve el panel, no salen en el PDF)</label>
+      <textarea id="preins-notas" class="admin-textarea" rows="2" placeholder="Ej: Se llamó el 22/07, agendan entrevista el viernes."></textarea>
+      <button type="button" class="admin-btn-secondary" id="preins-notas-save">Guardar notas</button>
+    </div>
+
+    <div class="preins-hoja-wrap" id="preins-hoja-wrap"></div>
+  </div>
+</div>
+
+<!-- Contenedor que se llena solo al imprimir (ver css/pages/solicitud-print.css) -->
+<div id="preins-print-host"></div>
+
 <!-- Scripts (admin-sync.js debe ir antes de image-manager.js) -->
 <script src="js/admin-sync.js?v=20260719-2"></script>
 <script src="js/site-settings.js?v=20260719-2"></script>
@@ -675,6 +807,7 @@
 <script src="js/mision-aula.js?v=20260719-2"></script>
 <script src="js/image-manager.js?v=20260719-2"></script>
 <script src="js/gallery-extra.js?v=20260719-2"></script>
+<script src="js/preinscripciones-admin.js?v=20260721-1"></script>
 <script src="js/admin.js?v=20260719-2"></script>
 </body>
 </html>

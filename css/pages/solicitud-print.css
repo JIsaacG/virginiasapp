@@ -1,0 +1,318 @@
+/* ═══════════════════════════════════════
+   HOJA OFICIAL DE SOLICITUD DE ADMISIÓN — réplica imprimible
+
+   Reproduce el formato en papel del CEEVS para que la solicitud recibida por
+   el sitio se archive igual que las que se llenan a mano. El marcado lo genera
+   js/preinscripciones-admin.js; aquí solo vive la presentación.
+
+   Se usa en dos lugares:
+    - vista previa dentro del panel (pantalla),
+    - impresión / "Guardar como PDF" (@media print).
+
+   Medidas en mm y pt a propósito: así el navegador imprime igual en
+   cualquier computadora, sin depender del zoom de pantalla.
+═══════════════════════════════════════ */
+
+.hoja {
+  --linea: #000;
+  width: 190mm;
+  margin: 0 auto;
+  padding: 4mm 2mm;
+  background: #fff;
+  color: #000;
+  font-family: 'Cambria', 'Times New Roman', Georgia, serif;
+  font-size: 10pt;
+  line-height: 1.25;
+}
+
+.hoja * { box-sizing: border-box; }
+
+/* ─── Encabezado con los tres escudos ─── */
+
+.hoja-top {
+  display: grid;
+  grid-template-columns: 26mm 1fr 26mm;
+  align-items: center;
+  gap: 4mm;
+  margin-bottom: 2mm;
+}
+
+.hoja-top img { display: block; max-width: 100%; height: auto; }
+.hoja-top-izq img { max-height: 24mm; margin: 0 auto; }
+.hoja-top-der img { max-height: 24mm; margin: 0 auto; }
+.hoja-top-acsi { text-align: center; }
+.hoja-top-acsi img { max-height: 18mm; margin: 0 auto; }
+
+/* Si algún escudo todavía no se ha subido, el hueco simplemente desaparece. */
+.hoja-top img[hidden] { display: none; }
+
+.hoja-titulo {
+  text-align: center;
+  font-size: 12pt;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 3mm;
+}
+
+/* ─── Recuadro de visión y misión ─── */
+
+.hoja-vm {
+  border: 1px solid var(--linea);
+  padding: 2mm 3mm;
+  margin-bottom: 4mm;
+  font-size: 7.5pt;
+  line-height: 1.3;
+  text-align: justify;
+}
+
+.hoja-vm h3 {
+  text-align: center;
+  font-size: 8pt;
+  font-weight: 700;
+  margin: 1mm 0 0.5mm;
+}
+
+.hoja-vm h3:first-child { margin-top: 0; }
+
+/* ─── Número de solicitud + foto ─── */
+
+.hoja-numrow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6mm;
+  margin-bottom: 4mm;
+}
+
+.hoja-num {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--linea);
+  min-height: 11mm;
+}
+
+.hoja-num span {
+  display: flex;
+  align-items: center;
+  padding: 1.5mm 3mm;
+  border-right: 1px solid var(--linea);
+  font-size: 9.5pt;
+}
+
+.hoja-num b {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22mm;
+  padding: 1.5mm 3mm;
+  color: #C00000;              /* el número va en rojo, como en la hoja de papel */
+  font-size: 13pt;
+  font-weight: 700;
+}
+
+.hoja-foto {
+  width: 38mm;
+  min-height: 32mm;
+  border: 1px solid var(--linea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 9.5pt;
+  line-height: 1.6;
+  overflow: hidden;
+}
+
+.hoja-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ─── Títulos de bloque ─── */
+
+.hoja-h2 {
+  font-size: 10pt;
+  font-weight: 700;
+  margin: 4mm 0 1.5mm;
+}
+
+/* ─── Tablas de datos ─── */
+
+.hoja-t {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2mm;
+  table-layout: fixed;
+}
+
+.hoja-t td, .hoja-t th {
+  border: 1px solid var(--linea);
+  padding: 1.2mm 2mm;
+  font-size: 9.5pt;
+  vertical-align: middle;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  height: 6.5mm;
+}
+
+.hoja-t th {
+  text-align: center;
+  font-weight: 700;
+  font-size: 10pt;
+}
+
+/* Celdas de etiqueta (la columna impresa) vs. celdas de dato (lo que llenó la familia) */
+.hoja-t .lbl { font-weight: 400; white-space: nowrap; }
+.hoja-t .val { font-weight: 700; }
+.hoja-t .val.vacio { font-weight: 400; color: #666; }
+.hoja-t td.cx { text-align: center; }
+
+/* Franja gris que separa al padre de la madre en la hoja original */
+.hoja-sep td { background: #D9D9D9; height: 3.5mm; border: 1px solid var(--linea); padding: 0; }
+
+/* ─── Línea suelta con etiquetas en la misma fila ─── */
+
+.hoja-t .inline-lbl { font-weight: 400; }
+.hoja-t .inline-lbl b { font-weight: 700; }
+
+/* ─── Casillas de selección ─── */
+
+.hoja-lista { list-style: none; margin: 1.5mm 0 3mm 8mm; padding: 0; }
+
+.hoja-lista li {
+  display: flex;
+  align-items: center;
+  gap: 3mm;
+  margin-bottom: 1.6mm;
+  font-size: 10pt;
+}
+
+.hoja-lista li::before {
+  content: '•';
+  font-size: 11pt;
+  line-height: 1;
+  width: 3mm;
+}
+
+/* El texto lleva un ancho fijo para que todas las casillas queden
+   alineadas en columna, igual que en la hoja impresa. */
+.hoja-lista li .txt { flex: 0 0 62mm; }
+
+.hoja-cx {
+  width: 4.5mm;
+  height: 4.5mm;
+  border: 1px solid var(--linea);
+  border-radius: 0.8mm;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9pt;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.hoja-pregunta { font-size: 10pt; margin-top: 3mm; }
+
+/* ─── Líneas de escritura (familiares, parentesco, fecha) ─── */
+
+.hoja-linea { font-size: 10pt; margin-bottom: 2.5mm; }
+
+.hoja-linea u {
+  display: inline-block;
+  min-width: 40mm;
+  border-bottom: 1px solid var(--linea);
+  text-decoration: none;
+  font-weight: 700;
+  text-align: center;
+  padding: 0 2mm;
+}
+
+.hoja-linea u:empty::after { content: '\00a0'; }
+
+.hoja-dosfilas { display: flex; gap: 10mm; flex-wrap: wrap; }
+
+.hoja-nota {
+  font-weight: 700;
+  font-size: 10pt;
+  margin: 4mm 0 6mm 8mm;
+}
+
+.hoja-fecha { font-size: 10pt; margin: 0 0 16mm 12mm; }
+
+.hoja-firma {
+  text-align: center;
+  font-size: 10pt;
+  margin-top: 4mm;
+}
+
+.hoja-firma-nombre {
+  display: block;
+  width: 90mm;
+  margin: 0 auto 1mm;
+  padding-bottom: 1mm;
+  border-bottom: 1px solid var(--linea);
+  font-weight: 700;
+  font-family: 'Segoe Script', 'Brush Script MT', cursive;
+  font-size: 12pt;
+}
+
+/* Pie discreto: deja constancia de que llegó por el sitio web */
+.hoja-origen {
+  margin-top: 8mm;
+  padding-top: 2mm;
+  border-top: 1px dotted #999;
+  font-size: 7.5pt;
+  color: #555;
+  text-align: center;
+}
+
+/* ─── Vista previa dentro del panel ─── */
+
+.preins-hoja-wrap {
+  background: #E4E1DC;
+  padding: 18px;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.preins-hoja-wrap .hoja {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .18);
+  padding: 12mm 10mm;
+  width: 216mm;
+}
+
+/* Contenedor que solo existe al momento de imprimir */
+#preins-print-host { display: none; }
+
+/* ─── Impresión / Guardar como PDF ─── */
+
+@media print {
+  @page { size: letter portrait; margin: 10mm; }
+
+  html, body { background: #fff !important; }
+
+  /* Durante la impresión solo debe existir la hoja: el panel se oculta entero. */
+  body.ceevs-imprimiendo > * { display: none !important; }
+
+  body.ceevs-imprimiendo > #preins-print-host {
+    display: block !important;
+    position: static;
+    width: auto;
+  }
+
+  body.ceevs-imprimiendo .hoja {
+    width: auto;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  /* La segunda hoja del formulario arranca en página nueva, como el original. */
+  .hoja-p2 { break-before: page; page-break-before: always; }
+
+  /* Ninguna tabla debe partirse por la mitad entre dos páginas. */
+  .hoja-t, .hoja-vm, .hoja-numrow { break-inside: avoid; page-break-inside: avoid; }
+  .hoja-t tr { break-inside: avoid; page-break-inside: avoid; }
+
+  /* Que el navegador no descarte la franja gris ni el rojo del correlativo. */
+  .hoja, .hoja * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

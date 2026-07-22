@@ -1,0 +1,797 @@
+/* ═══════════════════════════════════════
+   PRE-INSCRIPCIÓN — Solicitud de admisión en línea
+   Asistente por pasos pensado para llenarse desde el celular.
+   Página: preinscripcion.html · Lógica: js/preinscripcion.js
+═══════════════════════════════════════ */
+
+.preins {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 120px 20px 80px;
+}
+
+/* Varias piezas de esta página se muestran y ocultan con el atributo [hidden]
+   (aviso de borrador, foto, botones de navegación…). Como aquí se declaran
+   display: flex / block, el "display:none" del navegador perdería sin esto. */
+.preins [hidden] { display: none !important; }
+
+/* ─── Encabezado ─── */
+
+.preins-head { text-align: center; margin-bottom: 34px; }
+
+.preins-head .section-label { justify-content: center; }
+
+.preins-head h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5.2vw, 3.1rem);
+  line-height: 1.1;
+  color: var(--forest2);
+  margin-bottom: 14px;
+}
+
+.preins-head h1 em { color: var(--gold2); font-style: italic; }
+
+.preins-head-desc {
+  max-width: 560px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.preins-head-facts {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 22px;
+  margin-top: 22px;
+}
+
+.preins-head-facts li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .82rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, .7);
+  border: 1px solid rgba(171, 100, 35, .16);
+  border-radius: 999px;
+  padding: 7px 15px;
+}
+
+/* ─── Barra de progreso ─── */
+
+.preins-progress {
+  position: sticky;
+  top: 76px;
+  z-index: 40;
+  background: rgba(247, 245, 242, .94);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(171, 100, 35, .18);
+  border-radius: var(--rl);
+  padding: 16px 20px 12px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 24px rgba(106, 36, 7, .07);
+}
+
+.preins-progress-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 9px;
+}
+
+.preins-progress-step {
+  font-weight: 600;
+  font-size: .92rem;
+  color: var(--forest2);
+}
+
+.preins-progress-pct {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--gold2);
+}
+
+.preins-progress-track {
+  height: 7px;
+  background: rgba(171, 100, 35, .14);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.preins-progress-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  transition: width .45s cubic-bezier(.4, 0, .2, 1);
+}
+
+.preins-dots {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.preins-dots li {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: .42;
+  transition: opacity .3s;
+}
+
+.preins-dots li span {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1.5px solid rgba(171, 100, 35, .35);
+  font-size: .74rem;
+  font-weight: 700;
+  color: var(--muted);
+  background: #fff;
+  transition: all .3s;
+}
+
+.preins-dots li small { font-size: .64rem; color: var(--muted); letter-spacing: .02em; }
+
+.preins-dots li.done { opacity: 1; }
+.preins-dots li.done span {
+  background: var(--gold2);
+  border-color: var(--gold2);
+  color: #fff;
+  font-size: 0;                      /* oculta el número y deja solo el ✓ */
+}
+.preins-dots li.done span::after { content: '✓'; font-size: .85rem; }
+
+.preins-dots li.current { opacity: 1; }
+.preins-dots li.current span {
+  border-color: var(--gold2);
+  color: var(--gold2);
+  box-shadow: 0 0 0 4px rgba(245, 124, 0, .14);
+}
+.preins-dots li.current small { color: var(--forest2); font-weight: 700; }
+
+/* ─── Aviso de borrador recuperado ─── */
+
+.preins-draft {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  background: linear-gradient(135deg, rgba(215, 175, 74, .16), rgba(245, 124, 0, .1));
+  border: 1px solid rgba(215, 175, 74, .45);
+  border-radius: var(--rl);
+  padding: 14px 18px;
+  margin-bottom: 18px;
+}
+
+.preins-draft > span { font-size: 1.3rem; }
+.preins-draft p { flex: 1; min-width: 200px; font-size: .9rem; color: var(--forest3); }
+.preins-draft-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ─── Tarjeta del formulario ─── */
+
+.preins-card {
+  background: #fff;
+  border: 1px solid rgba(171, 100, 35, .16);
+  border-radius: var(--rxl);
+  padding: 34px 32px 26px;
+  box-shadow: 0 18px 50px rgba(106, 36, 7, .08);
+}
+
+/* Campo trampa anti-robots: fuera de la vista, pero no display:none
+   (algunos robots ignoran los ocultos con display). */
+.preins-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.preins-step { display: none; animation: preinsIn .38s cubic-bezier(.4, 0, .2, 1); }
+.preins-step.active { display: block; }
+
+@keyframes preinsIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.preins-step-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid rgba(171, 100, 35, .13);
+}
+
+.preins-step-icon {
+  font-size: 1.7rem;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(215, 175, 74, .2), rgba(245, 124, 0, .12));
+}
+
+.preins-step-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--forest2);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.preins-step-head p { font-size: .89rem; color: var(--muted); line-height: 1.5; }
+
+/* ─── Campos ─── */
+
+.preins-field { margin-bottom: 18px; }
+
+.preins-field label,
+.preins-label {
+  display: block;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--forest3);
+  margin-bottom: 7px;
+}
+
+.preins-field label b,
+.preins-label b { color: var(--gold2); }
+
+.preins-field input[type="text"],
+.preins-field input[type="tel"],
+.preins-field input[type="email"],
+.preins-field input[type="date"],
+.preins-field input[type="number"],
+.preins-field select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--cream2);
+  border: 1.5px solid rgba(171, 100, 35, .22);
+  border-radius: 12px;
+  padding: 13px 15px;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+.preins-field select { cursor: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236A2407' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.preins-field input:focus,
+.preins-field select:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--gold2);
+  box-shadow: 0 0 0 4px rgba(245, 124, 0, .13);
+}
+
+.preins-field input[readonly] {
+  background: rgba(171, 100, 35, .07);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.preins-field input.invalid,
+.preins-field select.invalid {
+  border-color: #C0392B;
+  box-shadow: 0 0 0 4px rgba(192, 57, 43, .1);
+}
+
+.preins-hint { display: block; font-size: .76rem; color: var(--muted); margin-top: 6px; line-height: 1.45; }
+.preins-hint.err { color: #C0392B; font-weight: 600; }
+
+.preins-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0 16px; }
+.preins-row .preins-field--narrow { max-width: 120px; }
+
+/* ─── Opciones tipo tarjeta (radios) ─── */
+
+.preins-choices { display: grid; gap: 10px; }
+.preins-choices--2 { grid-template-columns: repeat(2, 1fr); }
+.preins-choices--4 { grid-template-columns: repeat(4, 1fr); }
+
+.preins-choice input { position: absolute; opacity: 0; pointer-events: none; }
+
+.preins-choice-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  min-height: 84px;
+  padding: 12px 8px;
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--forest3);
+  background: var(--cream2);
+  border: 1.5px solid rgba(171, 100, 35, .2);
+  border-radius: 14px;
+  transition: all .2s;
+}
+
+.preins-choice-emoji { font-size: 1.5rem; line-height: 1; }
+
+.preins-choice:hover .preins-choice-box {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(106, 36, 7, .1);
+}
+
+.preins-choice input:checked + .preins-choice-box {
+  background: linear-gradient(135deg, rgba(215, 175, 74, .25), rgba(245, 124, 0, .16));
+  border-color: var(--gold2);
+  color: var(--forest2);
+  box-shadow: 0 0 0 3px rgba(245, 124, 0, .13);
+}
+
+.preins-choice input:focus-visible + .preins-choice-box { outline: 2px solid var(--gold2); outline-offset: 2px; }
+
+/* ─── Casillas de selección múltiple ─── */
+
+.preins-checks { display: grid; gap: 9px; }
+
+.preins-check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: var(--cream2);
+  border: 1.5px solid rgba(171, 100, 35, .18);
+  border-radius: 12px;
+  font-size: .92rem;
+  color: var(--forest3);
+  transition: all .2s;
+}
+
+.preins-check:hover { border-color: var(--gold); }
+.preins-check input { width: 19px; height: 19px; accent-color: var(--gold2); flex-shrink: 0; }
+.preins-check:has(input:checked) {
+  background: rgba(215, 175, 74, .16);
+  border-color: var(--gold2);
+  font-weight: 600;
+}
+
+/* ─── Casilla "saltar este paso" ─── */
+
+.preins-skip {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: .87rem;
+  color: var(--muted);
+  background: rgba(171, 100, 35, .06);
+  border: 1px dashed rgba(171, 100, 35, .3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.preins-skip input { width: 18px; height: 18px; accent-color: var(--gold2); flex-shrink: 0; }
+.preins-skip:has(input:checked) { background: rgba(215, 175, 74, .18); border-style: solid; border-color: var(--gold); color: var(--forest3); font-weight: 600; }
+
+.preins-skip--declara { align-items: flex-start; font-size: .84rem; line-height: 1.5; }
+.preins-skip--declara input { margin-top: 2px; }
+
+.preins-parent.off { opacity: .35; pointer-events: none; filter: grayscale(1); }
+
+/* ─── Foto del alumno ─── */
+
+.preins-photo {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 24px;
+  align-items: start;
+  background: linear-gradient(135deg, rgba(59, 166, 224, .07), rgba(215, 175, 74, .09));
+  border: 1px solid rgba(171, 100, 35, .18);
+  border-radius: var(--rl);
+  padding: 22px;
+  margin-top: 26px;
+}
+
+.preins-photo-info h3 {
+  font-size: 1.02rem;
+  color: var(--forest2);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preins-photo-info > p { font-size: .85rem; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+
+.preins-photo-tips { list-style: none; display: grid; gap: 7px; }
+
+.preins-photo-tips li {
+  position: relative;
+  padding-left: 20px;
+  font-size: .82rem;
+  color: var(--forest3);
+  line-height: 1.45;
+}
+
+.preins-photo-tips li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--gold2);
+  font-weight: 700;
+}
+
+.preins-photo-box { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+
+.preins-photo-frame {
+  width: 150px;
+  height: 180px;
+  border: 2px dashed rgba(171, 100, 35, .4);
+  border-radius: 10px;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.preins-photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+.preins-photo-empty {
+  font-size: .82rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ─── Hermanos ─── */
+
+.preins-block { margin-bottom: 30px; }
+
+.preins-block h3 {
+  font-size: 1.02rem;
+  color: var(--forest2);
+  margin-bottom: 10px;
+}
+
+.preins-block-hint { font-size: .8rem; color: var(--muted); margin-bottom: 10px; }
+
+.preins-hermanos { display: grid; gap: 12px; margin-bottom: 12px; }
+
+.preins-hermano {
+  display: grid;
+  grid-template-columns: 1fr 78px auto auto 36px;
+  gap: 10px;
+  align-items: center;
+  background: var(--cream2);
+  border: 1px solid rgba(171, 100, 35, .18);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.preins-hermano input[type="text"],
+.preins-hermano input[type="number"] {
+  width: 100%;
+  font-family: inherit;
+  font-size: .92rem;
+  background: #fff;
+  border: 1.5px solid rgba(171, 100, 35, .2);
+  border-radius: 9px;
+  padding: 9px 11px;
+  color: var(--ink);
+}
+
+.preins-hermano input:focus { outline: none; border-color: var(--gold2); }
+
+.preins-hermano-flag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .78rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.preins-hermano-flag input { width: 17px; height: 17px; accent-color: var(--gold2); }
+
+.preins-hermano-del {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 9px;
+  background: rgba(192, 57, 43, .1);
+  color: #C0392B;
+  font-size: 1rem;
+  cursor: none;
+  transition: background .2s;
+}
+
+.preins-hermano-del:hover { background: rgba(192, 57, 43, .22); }
+
+#pi-hermanos-wrap.off { opacity: .35; pointer-events: none; }
+
+/* ─── Revisión final ─── */
+
+.preins-review { display: grid; gap: 12px; margin-bottom: 26px; }
+
+.preins-review-card {
+  background: var(--cream2);
+  border: 1px solid rgba(171, 100, 35, .18);
+  border-radius: 14px;
+  padding: 16px 18px;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.preins-review-card:hover { border-color: var(--gold); box-shadow: 0 6px 18px rgba(106, 36, 7, .08); }
+
+.preins-review-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.preins-review-head h3 {
+  font-size: .82rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold2);
+  font-weight: 700;
+}
+
+.preins-review-edit {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--forest2);
+  background: none;
+  border: 1px solid rgba(171, 100, 35, .3);
+  border-radius: 999px;
+  padding: 5px 13px;
+  cursor: none;
+  transition: all .2s;
+}
+
+.preins-review-edit:hover { background: var(--gold2); border-color: var(--gold2); color: #fff; }
+
+.preins-review-list { display: grid; gap: 5px; }
+
+.preins-review-list div {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 10px;
+  font-size: .87rem;
+  line-height: 1.5;
+}
+
+.preins-review-list dt, .preins-review-list .k { color: var(--muted); }
+.preins-review-list .v { color: var(--ink); font-weight: 600; }
+.preins-review-list .v.empty { color: rgba(94, 81, 69, .5); font-weight: 400; font-style: italic; }
+
+/* ─── Aviso y firma ─── */
+
+.preins-block--sign { border-top: 1px solid rgba(171, 100, 35, .13); padding-top: 24px; }
+
+.preins-notice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(59, 166, 224, .09);
+  border-left: 3px solid var(--gold3);
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+
+.preins-notice p { font-size: .87rem; color: var(--forest3); line-height: 1.55; }
+
+/* ─── Errores y navegación ─── */
+
+.preins-error {
+  background: rgba(192, 57, 43, .1);
+  border: 1px solid rgba(192, 57, 43, .3);
+  color: #A93226;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: .88rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.preins-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(171, 100, 35, .13);
+}
+
+.preins-saved { flex: 1; font-size: .76rem; color: var(--muted); text-align: center; }
+
+.preins-btn-back,
+.preins-btn-next,
+.preins-btn-send,
+.preins-btn-mini {
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: none;
+  transition: all .25s;
+  border: none;
+}
+
+.preins-btn-back {
+  background: none;
+  border: 1.5px solid rgba(171, 100, 35, .3);
+  color: var(--forest2);
+  padding: 13px 24px;
+  font-size: .92rem;
+}
+
+.preins-btn-back:hover { border-color: var(--forest2); background: rgba(171, 100, 35, .07); }
+
+.preins-btn-next,
+.preins-btn-send {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #fff;
+  padding: 14px 32px;
+  font-size: .98rem;
+  box-shadow: 0 10px 26px rgba(245, 124, 0, .28);
+}
+
+.preins-btn-next:hover,
+.preins-btn-send:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(245, 124, 0, .36); }
+
+.preins-btn-send { background: linear-gradient(135deg, #1E8449, #27AE60); box-shadow: 0 10px 26px rgba(39, 174, 96, .28); }
+.preins-btn-send:hover { box-shadow: 0 14px 32px rgba(39, 174, 96, .36); }
+.preins-btn-send:disabled, .preins-btn-next:disabled { opacity: .55; transform: none; box-shadow: none; }
+
+.preins-btn-mini {
+  background: rgba(171, 100, 35, .1);
+  color: var(--forest2);
+  padding: 9px 17px;
+  font-size: .83rem;
+  border: 1px solid rgba(171, 100, 35, .22);
+}
+
+.preins-btn-mini:hover { background: var(--gold2); border-color: var(--gold2); color: #fff; }
+.preins-btn-mini--ghost { background: none; }
+
+.preins-help {
+  text-align: center;
+  font-size: .84rem;
+  color: var(--muted);
+  margin-top: 22px;
+}
+
+.preins-help a { color: var(--gold2); font-weight: 600; text-decoration: none; }
+.preins-help a:hover { text-decoration: underline; }
+
+/* ─── Pantalla de éxito ─── */
+
+.preins-done {
+  background: #fff;
+  border: 1px solid rgba(171, 100, 35, .18);
+  border-radius: var(--rxl);
+  padding: 52px 38px;
+  text-align: center;
+  box-shadow: 0 18px 50px rgba(106, 36, 7, .09);
+  animation: preinsIn .5s cubic-bezier(.4, 0, .2, 1);
+}
+
+.preins-done-seal { font-size: 3.4rem; margin-bottom: 14px; }
+
+.preins-done h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.7rem, 4.4vw, 2.4rem);
+  color: var(--forest2);
+  margin-bottom: 12px;
+}
+
+.preins-done-num {
+  display: inline-block;
+  font-size: 1rem;
+  color: var(--forest3);
+  background: linear-gradient(135deg, rgba(215, 175, 74, .22), rgba(245, 124, 0, .14));
+  border: 1px solid rgba(215, 175, 74, .5);
+  border-radius: 999px;
+  padding: 10px 26px;
+  margin-bottom: 18px;
+}
+
+.preins-done-num strong { font-size: 1.35rem; color: var(--gold2); letter-spacing: .04em; }
+
+.preins-done-desc { max-width: 520px; margin: 0 auto 30px; color: var(--muted); line-height: 1.7; }
+
+.preins-done-next {
+  text-align: left;
+  max-width: 520px;
+  margin: 0 auto 30px;
+  background: var(--cream2);
+  border-radius: var(--rl);
+  padding: 22px 24px;
+}
+
+.preins-done-next h3 { font-size: .95rem; color: var(--forest2); margin-bottom: 12px; }
+.preins-done-next ul { list-style: none; display: grid; gap: 10px; }
+.preins-done-next li { display: flex; gap: 10px; font-size: .88rem; color: var(--forest3); line-height: 1.55; }
+.preins-done-next a { color: var(--gold2); font-weight: 600; }
+
+.preins-done-btns,
+.preins-closed-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ─── Período cerrado ─── */
+
+.preins-closed {
+  background: #fff;
+  border: 1px solid rgba(171, 100, 35, .18);
+  border-radius: var(--rxl);
+  padding: 52px 38px;
+  text-align: center;
+  box-shadow: 0 18px 50px rgba(106, 36, 7, .08);
+}
+
+.preins-closed-icon { font-size: 3rem; display: block; margin-bottom: 14px; }
+
+.preins-closed h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem;
+  color: var(--forest2);
+  margin-bottom: 10px;
+}
+
+.preins-closed p { color: var(--muted); max-width: 460px; margin: 0 auto 26px; line-height: 1.65; }
+
+/* ─── Responsive ─── */
+
+@media (max-width: 900px) {
+  .preins-photo { grid-template-columns: 1fr; }
+  .preins-photo-box { justify-self: center; }
+}
+
+@media (max-width: 720px) {
+  .preins { padding: 100px 14px 60px; }
+  .preins-card { padding: 24px 18px 20px; border-radius: var(--rl); }
+  .preins-progress { top: 66px; padding: 13px 15px 10px; }
+  .preins-dots li small { display: none; }
+  .preins-choices--4 { grid-template-columns: repeat(2, 1fr); }
+  .preins-row { grid-template-columns: 1fr; }
+  .preins-row .preins-field--narrow { max-width: none; }
+  .preins-hermano { grid-template-columns: 1fr 70px; row-gap: 8px; }
+  .preins-hermano .preins-hermano-del { grid-column: 2; justify-self: end; }
+  .preins-review-list div { grid-template-columns: 1fr; gap: 0; }
+  .preins-review-list .k { font-size: .76rem; }
+  .preins-nav { flex-wrap: wrap; }
+  .preins-saved { order: 3; flex-basis: 100%; }
+  .preins-btn-next, .preins-btn-send { flex: 1; }
+  .preins-done, .preins-closed { padding: 38px 22px; }
+}
+
+@media (max-width: 420px) {
+  .preins-step-head { gap: 10px; }
+  .preins-step-icon { width: 40px; height: 40px; font-size: 1.4rem; }
+  .preins-step-head h2 { font-size: 1.25rem; }
+}
