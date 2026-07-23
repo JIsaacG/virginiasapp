@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const origin = 'https://lavenderblush-jackal-726259.hostingersite.com';
+const origin = 'https://prueba.virginiasapp.edu.hn';
 const errors = [];
 const notices = [];
 

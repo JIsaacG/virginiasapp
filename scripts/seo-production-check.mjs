@@ -1,5 +1,5 @@
-const target = new URL(process.env.SEO_TARGET_URL || 'https://lavenderblush-jackal-726259.hostingersite.com/');
-const canonicalOrigin = 'https://lavenderblush-jackal-726259.hostingersite.com';
+const target = new URL(process.env.SEO_TARGET_URL || 'https://prueba.virginiasapp.edu.hn/');
+const canonicalOrigin = 'https://prueba.virginiasapp.edu.hn';
 const failures = [];
 
 async function get(pathname, userAgent = 'CEEVS-SEO-Monitor/1.0') {

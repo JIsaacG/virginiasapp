@@ -2,7 +2,7 @@
 
 ## Dominios
 
-- Dominio público y origen canónico: `https://lavenderblush-jackal-726259.hostingersite.com/`
+- Dominio público y origen canónico: `https://prueba.virginiasapp.edu.hn/`
 - Dominio que todavía aloja parte de las imágenes: `https://virginiasapp.edu.hn/`
 
 Toda la metadata SEO, el sitemap y las pruebas usan el dominio de Hostinger como canónico. La respuesta pública de Hostinger entrega actualmente una regla que bloquea a Googlebot; para poder aparecer en Google, elimina ese bloqueo desde hPanel o solicita a soporte de Hostinger que habilite el rastreo del dominio.
@@ -19,13 +19,13 @@ npm run seo:production  # Comprueba la publicación temporal después de despleg
 Para comprobar otra publicación:
 
 ```bash
-SEO_TARGET_URL=https://lavenderblush-jackal-726259.hostingersite.com npm run seo:production
+SEO_TARGET_URL=https://prueba.virginiasapp.edu.hn npm run seo:production
 ```
 
 En PowerShell:
 
 ```powershell
-$env:SEO_TARGET_URL='https://lavenderblush-jackal-726259.hostingersite.com'; npm run seo:production
+$env:SEO_TARGET_URL='https://prueba.virginiasapp.edu.hn'; npm run seo:production
 ```
 
 Los pull requests y cambios a `main` ejecutan la auditoría local mediante `.github/workflows/seo-quality.yml`. Los informes Lighthouse quedan adjuntos a la ejecución durante 14 días.
@@ -46,7 +46,7 @@ codex mcp add openseo --url https://app.openseo.so/mcp
 
 Después de autorizar:
 
-1. Crea o selecciona el proyecto `lavenderblush-jackal-726259.hostingersite.com`.
+1. Crea o selecciona el proyecto `prueba.virginiasapp.edu.hn`.
 2. Conecta Google Search Console cuando Googlebot pueda rastrear el dominio.
 3. Ejecuta una auditoría de sitio después de cada despliegue importante.
 4. Revisa semanalmente posiciones, páginas con impresiones y errores de indexación.
