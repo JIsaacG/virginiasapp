@@ -376,6 +376,16 @@
   function descargar(rec, opts) {
     opts = opts || {};
 
+    // html2canvas 1.x incorpora el scroll actual al cálculo de elementos fuera
+    // de pantalla. Se genera desde el origen y al terminar se devuelve al usuario
+    // exactamente a la posición donde estaba.
+    var scrollX = window.pageXOffset || document.documentElement.scrollLeft || 0;
+    var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    var html = document.documentElement;
+    var scrollBehavior = html.style.scrollBehavior;
+    html.style.scrollBehavior = 'auto';
+    window.scrollTo(0, 0);
+
     // La hoja se arma fuera de la vista: se necesita en el documento para que
     // el navegador calcule medidas y cargue las imágenes antes de fotografiarla.
     var host = document.createElement('div');
@@ -386,6 +396,8 @@
 
     var quitar = function () {
       if (host.parentNode) host.parentNode.removeChild(host);
+      window.scrollTo(scrollX, scrollY);
+      html.style.scrollBehavior = scrollBehavior;
     };
 
     return Promise.all([cargarLib(), esperarImagenes(host)])
@@ -394,7 +406,17 @@
           margin:     MARGEN,
           filename:   opts.archivo || nombreArchivo(rec),
           image:      { type: 'jpeg', quality: 0.96 },
-          html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false },
+          // html2canvas hereda por defecto el desplazamiento vertical de la
+          // ventana. Si el botón se pulsa más abajo, ese scroll se convertía en
+          // espacio blanco dentro del PDF. Se fija el origen del clon en (0, 0).
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            logging: false,
+            scrollX: 0,
+            scrollY: 0
+          },
           jsPDF:      { unit: 'mm', format: PAPEL.jsPDF, orientation: 'portrait' },
           // La segunda parte arranca en página nueva y ningún bloque (tabla de
           // alumno, tabla de padres) se parte a la mitad: se mueve entero si no cabe.

@@ -4,8 +4,9 @@
  *
  * Se carga DESPUÉS de bootstrap.php (usa CEEVS_DATA_DIR y sus utilidades).
  *
- * En Hostinger todo vive fuera de public_html, en la carpeta privada:
- *   /home/<cuenta>/VIRGINIASAPP/SOLICITUDES DE ADMISIÓN/
+ * En Hostinger todo vive fuera de public_html, en la carpeta privada que se ve
+ * como hermana de public_html en el Administrador de archivos:
+ *   <directorio del sitio>/VIRGINIASAPP/SOLICITUDES DE ADMISIÓN/
  *
  * En desarrollo local se conserva server-data/preinscripciones/. La variable de
  * entorno CEEVS_PREINS_DIR permite indicar otra ruta absoluta si el hosting
@@ -25,11 +26,12 @@ define('CEEVS_PREINS_LEGACY_DIR', CEEVS_DATA_DIR . '/preinscripciones');
 /**
  * Ubicación privada de las solicitudes.
  *
- * Hostinger publica el sitio desde una de estas rutas:
+ * Hostinger publica el sitio desde una de estas rutas, entre otras:
  *   /home/u12345678/public_html
  *   /home/u12345678/domains/dominio/public_html
- * En ambos casos se extrae /home/u12345678 y se usa la carpeta que el cliente
- * creó junto a public_html. No se guarda la URL del Administrador de archivos:
+ * En ambos casos se toma la carpeta padre de public_html, que es exactamente la
+ * ubicación donde el cliente creó VIRGINIASAPP. No se guarda la URL del
+ * Administrador de archivos:
  * esa URL es solo la interfaz web de Hostinger, no una ruta escribible por PHP.
  */
 function ceevs_preins_storage_dir(): string {
@@ -43,13 +45,35 @@ function ceevs_preins_storage_dir(): string {
     isset($_SERVER['DOCUMENT_ROOT']) ? (string) $_SERVER['DOCUMENT_ROOT'] : '',
   );
   foreach ($roots as $root) {
+    $normal = rtrim(str_replace('\\', '/', $root), '/');
+    if (
+      preg_match('#^/home/[^/]+(?:/.+)?/public_html$#', $normal) === 1 ||
+      preg_match('#^/home/[^/]+/public_html$#', $normal) === 1
+    ) {
+      return dirname($normal) . '/VIRGINIASAPP/SOLICITUDES DE ADMISIÓN';
+    }
+  }
+
+  return CEEVS_PREINS_LEGACY_DIR;
+}
+
+/**
+ * Ruta que usó brevemente una versión anterior al asumir que VIRGINIASAPP
+ * colgaba siempre del home de la cuenta. Se conserva solo para rescatar datos si
+ * aquella versión alcanzó a guardar alguna solicitud allí.
+ */
+function ceevs_preins_previous_hostinger_dir(): string {
+  $roots = array(
+    dirname(__DIR__),
+    isset($_SERVER['DOCUMENT_ROOT']) ? (string) $_SERVER['DOCUMENT_ROOT'] : '',
+  );
+  foreach ($roots as $root) {
     $normal = str_replace('\\', '/', $root);
     if (preg_match('#^(/home/[^/]+)(?:/|$)#', $normal, $m) === 1) {
       return $m[1] . '/VIRGINIASAPP/SOLICITUDES DE ADMISIÓN';
     }
   }
-
-  return CEEVS_PREINS_LEGACY_DIR;
+  return '';
 }
 
 define('CEEVS_PREINS_DIR', ceevs_preins_storage_dir());
@@ -90,20 +114,31 @@ const CEEVS_PREINS_ESTADOS = array('nueva', 'leida', 'contactada', 'archivada');
  * El índice se copia al final: así el panel no ve una migración incompleta.
  */
 function ceevs_preins_migrate_legacy(): void {
-  if (
-    CEEVS_PREINS_DIR === CEEVS_PREINS_LEGACY_DIR ||
-    !@is_dir(CEEVS_PREINS_LEGACY_DIR) ||
-    @file_exists(CEEVS_PREINS_INDEX)
-  ) {
+  if (@file_exists(CEEVS_PREINS_INDEX)) {
     return;
   }
 
-  $oldIndex = CEEVS_PREINS_LEGACY_DIR . '/index.php';
-  if (!@is_file($oldIndex)) {
+  $sources = array();
+  $previousHostinger = ceevs_preins_previous_hostinger_dir();
+  if ($previousHostinger !== '' && $previousHostinger !== CEEVS_PREINS_DIR) {
+    $sources[] = $previousHostinger;
+  }
+  if (CEEVS_PREINS_LEGACY_DIR !== CEEVS_PREINS_DIR) {
+    $sources[] = CEEVS_PREINS_LEGACY_DIR;
+  }
+
+  $sourceDir = '';
+  foreach (array_unique($sources) as $candidate) {
+    if (@is_file($candidate . '/index.php')) {
+      $sourceDir = $candidate;
+      break;
+    }
+  }
+  if ($sourceDir === '') {
     return;
   }
 
-  $names = @scandir(CEEVS_PREINS_LEGACY_DIR);
+  $names = @scandir($sourceDir);
   if (!is_array($names)) {
     return;
   }
@@ -121,7 +156,7 @@ function ceevs_preins_migrate_legacy(): void {
   $copy[] = 'index.php';
 
   foreach ($copy as $name) {
-    $source = CEEVS_PREINS_LEGACY_DIR . '/' . $name;
+    $source = $sourceDir . '/' . $name;
     $dest = CEEVS_PREINS_DIR . '/' . $name;
     if (@file_exists($dest)) {
       continue;

@@ -113,7 +113,9 @@
 
 .hoja-foto {
   width: 38mm;
-  min-height: 32mm;
+  height: 38mm;
+  min-height: 38mm;
+  flex: 0 0 38mm;
   border: 1px solid var(--linea);
   display: flex;
   align-items: center;
@@ -124,7 +126,12 @@
   overflow: hidden;
 }
 
-.hoja-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hoja-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
 /* ─── Títulos de bloque ─── */
 
@@ -286,7 +293,10 @@
 /* Hoja que se dibuja para el PDF: tiene que estar en la página (si no, el
    navegador no carga las imágenes ni calcula medidas), pero fuera de la vista. */
 .ceevs-hoja-pdf {
-  position: fixed;
+  /* Debe ser absoluto, no fixed: html2canvas suma el scroll de la ventana a
+     los elementos fijos y ese desplazamiento terminaba como un gran espacio
+     blanco al inicio del PDF cuando el usuario pulsaba el botón más abajo. */
+  position: absolute;
   left: -10000px;
   top: 0;
   width: 210mm;
