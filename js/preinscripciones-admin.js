@@ -156,7 +156,7 @@
 
     if (!state.items.length) {
       lista.innerHTML = '<p class="empty-state">Todavía no llega ninguna solicitud.<br>'
-        + '<small>Cuando una familia envíe el formulario aparecerá aquí y te llegará un aviso al correo de admisiones.</small></p>';
+        + '<small>Cuando una familia envíe el formulario aparecerá aquí y llegará completo al correo institucional.</small></p>';
       return;
     }
     if (!items.length) {

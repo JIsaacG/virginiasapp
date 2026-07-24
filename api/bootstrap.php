@@ -2,12 +2,16 @@
 /**
  * bootstrap.php — Núcleo compartido de la mini-API del panel CEEVS.
  *
- * Estado del servidor (todo en ../server-data/, gitignored, protegido con
+ * Estado general del servidor (en ../server-data/, gitignored, protegido con
  * .htaccess y además con guardas <?php exit; ?> en los archivos sensibles):
  *  - site-config.json  → configuración publicada del sitio (pública, la sirve config.php)
  *  - admin-user.php    → cuenta del administrador (correo + hashes, nunca texto plano)
  *  - login-guard.php   → contador de intentos fallidos (bloqueo por IP y global)
  *  - audit-log.php     → bitácora de movimientos del panel
+ *  - correo-config.php → credenciales SMTP privadas (se crea desde la plantilla)
+ *
+ * Las solicitudes de admisión son la excepción: preinscripciones-lib.php las
+ * guarda fuera de public_html, en el directorio privado asignado en Hostinger.
  *
  * OJO: la carpeta data/ del repo es OTRA cosa (JSON públicos del sitio:
  * comunicados, juegos, etc.) — no usarla aquí.
@@ -51,6 +55,7 @@ define('CEEVS_CONFIG_FILE', CEEVS_DATA_DIR . '/site-config.json');
 define('CEEVS_USER_FILE', CEEVS_DATA_DIR . '/admin-user.php');
 define('CEEVS_GUARD_FILE', CEEVS_DATA_DIR . '/login-guard.php');
 define('CEEVS_AUDIT_FILE', CEEVS_DATA_DIR . '/audit-log.php');
+define('CEEVS_MAIL_CONFIG_FILE', CEEVS_DATA_DIR . '/correo-config.php');
 
 const CEEVS_MAX_VALUE_BYTES = 2000000;   // 2 MB por apartado de configuración
 const CEEVS_MAX_UPLOAD_BYTES = 60000000; // 60 MB por archivo subido
@@ -472,17 +477,252 @@ function ceevs_audit_read(int $limit): array {
 
 /* ─── Correo ─── */
 
+/**
+ * Configuración privada del correo.
+ *
+ * Se carga desde server-data/correo-config.php (fuera del repositorio y
+ * protegido por .htaccess). Cada valor también puede suministrarse como variable
+ * de entorno, algo útil si más adelante se migra a otro tipo de servidor.
+ */
+function ceevs_mail_config(): array {
+  static $config = null;
+  if (is_array($config)) {
+    return $config;
+  }
+
+  $config = array(
+    'smtp_host'     => '',
+    'smtp_port'     => 587,
+    'smtp_security' => 'tls', // tls (STARTTLS), ssl (TLS directo) o none
+    'smtp_user'     => '',
+    'smtp_password' => '',
+    'from_email'    => '',
+    'from_name'     => 'Centro Educativo Evangélico Virginia Sapp',
+    'admissions_to' => '',
+    'timeout'       => 15,
+  );
+
+  if (@is_file(CEEVS_MAIL_CONFIG_FILE)) {
+    $loaded = @include CEEVS_MAIL_CONFIG_FILE;
+    if (is_array($loaded)) {
+      foreach ($config as $key => $unused) {
+        if (array_key_exists($key, $loaded)) {
+          $config[$key] = $loaded[$key];
+        }
+      }
+    }
+  }
+
+  $env = array(
+    'smtp_host'     => 'CEEVS_SMTP_HOST',
+    'smtp_port'     => 'CEEVS_SMTP_PORT',
+    'smtp_security' => 'CEEVS_SMTP_SECURITY',
+    'smtp_user'     => 'CEEVS_SMTP_USER',
+    'smtp_password' => 'CEEVS_SMTP_PASSWORD',
+    'from_email'    => 'CEEVS_SMTP_FROM_EMAIL',
+    'from_name'     => 'CEEVS_SMTP_FROM_NAME',
+    'admissions_to' => 'CEEVS_ADMISSIONS_TO',
+    'timeout'       => 'CEEVS_SMTP_TIMEOUT',
+  );
+  foreach ($env as $key => $name) {
+    $value = getenv($name);
+    if (is_string($value) && $value !== '') {
+      $config[$key] = $value;
+    }
+  }
+
+  $config['smtp_host'] = trim((string) $config['smtp_host']);
+  $config['smtp_port'] = max(1, min(65535, (int) $config['smtp_port']));
+  $config['smtp_security'] = strtolower(trim((string) $config['smtp_security']));
+  if (!in_array($config['smtp_security'], array('tls', 'ssl', 'none'), true)) {
+    $config['smtp_security'] = 'tls';
+  }
+  $config['smtp_user'] = trim((string) $config['smtp_user']);
+  $config['smtp_password'] = (string) $config['smtp_password'];
+  $config['from_email'] = trim((string) $config['from_email']);
+  $config['from_name'] = trim(str_replace(array("\r", "\n"), ' ', (string) $config['from_name']));
+  $config['admissions_to'] = trim((string) $config['admissions_to']);
+  $config['timeout'] = max(5, min(60, (int) $config['timeout']));
+  return $config;
+}
+
+/** Destinatario institucional configurado por SMTP, o el del panel como respaldo. */
+function ceevs_admissions_recipient(string $fallback): string {
+  $configured = (string) ceevs_mail_config()['admissions_to'];
+  return filter_var($configured, FILTER_VALIDATE_EMAIL) ? $configured : $fallback;
+}
+
+/** Lista validada de destinatarios separados por coma o punto y coma. */
+function ceevs_mail_addresses(string $to): array {
+  $out = array();
+  foreach (preg_split('/[;,]+/', $to) ?: array() as $candidate) {
+    $candidate = trim($candidate);
+    if ($candidate !== '' && filter_var($candidate, FILTER_VALIDATE_EMAIL)) {
+      $out[] = $candidate;
+    }
+  }
+  return array_values(array_unique($out));
+}
+
+/** Lee una respuesta SMTP completa (incluidas las respuestas multilínea). */
+function ceevs_smtp_response($socket, array $expected): bool {
+  for ($i = 0; $i < 80; $i++) {
+    $line = @fgets($socket, 8192);
+    if (!is_string($line) || $line === '') {
+      return false;
+    }
+    if (preg_match('/^(\d{3})([ -])/', $line, $m) === 1 && $m[2] === ' ') {
+      return in_array((int) $m[1], $expected, true);
+    }
+  }
+  return false;
+}
+
+function ceevs_smtp_command($socket, string $command, array $expected): bool {
+  if (@fwrite($socket, $command . "\r\n") === false) {
+    return false;
+  }
+  return ceevs_smtp_response($socket, $expected);
+}
+
+/** Construye un mensaje de texto UTF-8 listo para transmitir por SMTP. */
+function ceevs_smtp_message(array $to, string $subject, string $text, array $config): string {
+  $fromName = (string) $config['from_name'];
+  $fromEmail = (string) $config['from_email'];
+  $host = preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
+  $messageHost = is_string($host) && preg_match('/^[A-Za-z0-9.-]+$/', $host) === 1 ? $host : 'localhost';
+  $encodedName = '=?UTF-8?B?' . base64_encode($fromName !== '' ? $fromName : 'CEEVS') . '?=';
+  $encodedSubject = '=?UTF-8?B?' . base64_encode(str_replace(array("\r", "\n"), ' ', $subject)) . '?=';
+  $normalized = str_replace(array("\r\n", "\r"), "\n", $text);
+
+  $headers = array(
+    'Date: ' . date(DATE_RFC2822),
+    'Message-ID: <' . bin2hex(random_bytes(16)) . '@' . $messageHost . '>',
+    'From: ' . $encodedName . ' <' . $fromEmail . '>',
+    'To: ' . implode(', ', $to),
+    'Subject: ' . $encodedSubject,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=UTF-8',
+    'Content-Transfer-Encoding: base64',
+  );
+  return implode("\r\n", $headers) . "\r\n\r\n"
+    . rtrim(chunk_split(base64_encode($normalized), 76, "\r\n")) . "\r\n";
+}
+
+/**
+ * Entrega por SMTP autenticado con TLS.
+ *
+ * La contraseña solo sale del archivo privado/variables de entorno y nunca se
+ * devuelve al navegador, se registra en la bitácora ni se incorpora al mensaje.
+ */
+function ceevs_send_smtp(array $to, string $subject, string $text, array $config): bool {
+  $host = (string) $config['smtp_host'];
+  $port = (int) $config['smtp_port'];
+  $security = (string) $config['smtp_security'];
+  $from = (string) $config['from_email'];
+  if (
+    $host === '' ||
+    !filter_var($from, FILTER_VALIDATE_EMAIL) ||
+    preg_match('/^[A-Za-z0-9.-]+$/', $host) !== 1
+  ) {
+    return false;
+  }
+
+  $context = stream_context_create(array(
+    'ssl' => array(
+      'verify_peer'      => true,
+      'verify_peer_name' => true,
+      'peer_name'        => $host,
+      'SNI_enabled'      => true,
+    ),
+  ));
+  $remote = ($security === 'ssl' ? 'ssl://' : 'tcp://') . $host . ':' . $port;
+  $errno = 0;
+  $errstr = '';
+  $socket = @stream_socket_client(
+    $remote,
+    $errno,
+    $errstr,
+    (int) $config['timeout'],
+    STREAM_CLIENT_CONNECT,
+    $context
+  );
+  if (!is_resource($socket)) {
+    return false;
+  }
+  @stream_set_timeout($socket, (int) $config['timeout']);
+
+  $httpHost = preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
+  $hello = is_string($httpHost) && preg_match('/^[A-Za-z0-9.-]+$/', $httpHost) === 1
+    ? $httpHost
+    : 'localhost';
+
+  $ok = ceevs_smtp_response($socket, array(220))
+    && ceevs_smtp_command($socket, 'EHLO ' . $hello, array(250));
+
+  if ($ok && $security === 'tls') {
+    $ok = ceevs_smtp_command($socket, 'STARTTLS', array(220))
+      && @stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)
+      && ceevs_smtp_command($socket, 'EHLO ' . $hello, array(250));
+  }
+
+  $user = (string) $config['smtp_user'];
+  if ($ok && $user !== '') {
+    $ok = ceevs_smtp_command($socket, 'AUTH LOGIN', array(334))
+      && ceevs_smtp_command($socket, base64_encode($user), array(334))
+      && ceevs_smtp_command($socket, base64_encode((string) $config['smtp_password']), array(235));
+  }
+
+  if ($ok) {
+    $ok = ceevs_smtp_command($socket, 'MAIL FROM:<' . $from . '>', array(250));
+  }
+  foreach ($to as $address) {
+    if ($ok) {
+      $ok = ceevs_smtp_command($socket, 'RCPT TO:<' . $address . '>', array(250, 251));
+    }
+  }
+  if ($ok) {
+    $ok = ceevs_smtp_command($socket, 'DATA', array(354));
+  }
+  if ($ok) {
+    $message = ceevs_smtp_message($to, $subject, $text, $config);
+    // SMTP termina el cuerpo con una línea que contiene solo un punto.
+    $message = preg_replace('/(?m)^\./', '..', $message);
+    $ok = is_string($message)
+      && @fwrite($socket, $message . ".\r\n") !== false
+      && ceevs_smtp_response($socket, array(250));
+  }
+
+  @fwrite($socket, "QUIT\r\n");
+  @fclose($socket);
+  return $ok;
+}
+
 function ceevs_send_mail(string $to, string $subject, string $text): bool {
+  $addresses = ceevs_mail_addresses($to);
+  if (!$addresses) {
+    return false;
+  }
+
+  $config = ceevs_mail_config();
+  if ((string) $config['smtp_host'] !== '') {
+    return ceevs_send_smtp($addresses, $subject, $text, $config);
+  }
+
+  // Respaldo para instalaciones que todavía usan mail() nativo.
   $host = preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
   if ($host === '' || filter_var($host, FILTER_VALIDATE_IP)) {
     $host = 'localhost';
   }
-  $from = 'no-reply@' . $host;
-  $headers = 'From: Panel CEEVS <' . $from . ">\r\n"
+  $from = filter_var((string) $config['from_email'], FILTER_VALIDATE_EMAIL)
+    ? (string) $config['from_email']
+    : 'no-reply@' . $host;
+  $fromName = (string) $config['from_name'] !== '' ? (string) $config['from_name'] : 'Panel CEEVS';
+  $headers = 'From: =?UTF-8?B?' . base64_encode($fromName) . '?= <' . $from . ">\r\n"
     . "Content-Type: text/plain; charset=UTF-8\r\n"
     . "Content-Transfer-Encoding: 8bit\r\n";
   $encSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
-  return @mail($to, $encSubject, $text, $headers);
+  return @mail(implode(', ', $addresses), $encSubject, $text, $headers);
 }
 
 /* ─── Configuración publicada ─── */

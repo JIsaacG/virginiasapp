@@ -299,7 +299,9 @@
     recovery_key_new: '🗝️ Clave maestra nueva',
     recovery_key_fail: '⛔ Clave maestra rechazada',
     config_saved: '📝 Cambios publicados en el sitio',
-    file_uploaded: '🖼️ Archivo subido'
+    file_uploaded: '🖼️ Archivo subido',
+    preins_correo_enviado: '📨 Solicitud enviada al correo institucional',
+    preins_correo_fallo: '⚠️ Falló el envío de una solicitud por correo'
   };
 
   var AUDIT_KEY_LABELS = {

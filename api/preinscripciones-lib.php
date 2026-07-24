@@ -4,8 +4,12 @@
  *
  * Se carga DESPUÉS de bootstrap.php (usa CEEVS_DATA_DIR y sus utilidades).
  *
- * Todo vive en server-data/preinscripciones/ (gitignored, .htaccess "deny" y
- * además guarda "<?php exit;" en cada archivo, igual que el resto del panel):
+ * En Hostinger todo vive fuera de public_html, en la carpeta privada:
+ *   /home/<cuenta>/VIRGINIASAPP/SOLICITUDES DE ADMISIÓN/
+ *
+ * En desarrollo local se conserva server-data/preinscripciones/. La variable de
+ * entorno CEEVS_PREINS_DIR permite indicar otra ruta absoluta si el hosting
+ * cambia su estructura. Cada archivo lleva además la guarda "<?php exit;":
  *   - index.php      → índice liviano de la bandeja + ajustes + correlativo
  *   - rec-<id>.php   → la solicitud completa (un archivo por solicitud)
  *   - foto-<id>.<ext>→ foto del alumno (se sirve solo con sesión iniciada)
@@ -16,7 +20,39 @@
 
 declare(strict_types=1);
 
-define('CEEVS_PREINS_DIR', CEEVS_DATA_DIR . '/preinscripciones');
+define('CEEVS_PREINS_LEGACY_DIR', CEEVS_DATA_DIR . '/preinscripciones');
+
+/**
+ * Ubicación privada de las solicitudes.
+ *
+ * Hostinger publica el sitio desde una de estas rutas:
+ *   /home/u12345678/public_html
+ *   /home/u12345678/domains/dominio/public_html
+ * En ambos casos se extrae /home/u12345678 y se usa la carpeta que el cliente
+ * creó junto a public_html. No se guarda la URL del Administrador de archivos:
+ * esa URL es solo la interfaz web de Hostinger, no una ruta escribible por PHP.
+ */
+function ceevs_preins_storage_dir(): string {
+  $configured = getenv('CEEVS_PREINS_DIR');
+  if (is_string($configured) && trim($configured) !== '') {
+    return rtrim(trim($configured), "/\\");
+  }
+
+  $roots = array(
+    dirname(__DIR__),
+    isset($_SERVER['DOCUMENT_ROOT']) ? (string) $_SERVER['DOCUMENT_ROOT'] : '',
+  );
+  foreach ($roots as $root) {
+    $normal = str_replace('\\', '/', $root);
+    if (preg_match('#^(/home/[^/]+)(?:/|$)#', $normal, $m) === 1) {
+      return $m[1] . '/VIRGINIASAPP/SOLICITUDES DE ADMISIÓN';
+    }
+  }
+
+  return CEEVS_PREINS_LEGACY_DIR;
+}
+
+define('CEEVS_PREINS_DIR', ceevs_preins_storage_dir());
 define('CEEVS_PREINS_INDEX', CEEVS_PREINS_DIR . '/index.php');
 define('CEEVS_PREINS_GUARD', CEEVS_PREINS_DIR . '/guard.php');
 define('CEEVS_PREINS_ESTADO', CEEVS_PREINS_DIR . '/estado.php');
@@ -47,21 +83,78 @@ const CEEVS_PREINS_ESTADOS = array('nueva', 'leida', 'contactada', 'archivada');
 
 /* ─── Carpeta ─── */
 
+/**
+ * Copia una sola vez las solicitudes de la ubicación antigua.
+ *
+ * Se copia (no se mueve) para que una publicación nunca destruya los originales.
+ * El índice se copia al final: así el panel no ve una migración incompleta.
+ */
+function ceevs_preins_migrate_legacy(): void {
+  if (
+    CEEVS_PREINS_DIR === CEEVS_PREINS_LEGACY_DIR ||
+    !@is_dir(CEEVS_PREINS_LEGACY_DIR) ||
+    @file_exists(CEEVS_PREINS_INDEX)
+  ) {
+    return;
+  }
+
+  $oldIndex = CEEVS_PREINS_LEGACY_DIR . '/index.php';
+  if (!@is_file($oldIndex)) {
+    return;
+  }
+
+  $names = @scandir(CEEVS_PREINS_LEGACY_DIR);
+  if (!is_array($names)) {
+    return;
+  }
+
+  $copy = array();
+  foreach ($names as $name) {
+    if (
+      preg_match('/^rec-[a-f0-9]{16}\.php$/', $name) === 1 ||
+      preg_match('/^foto-[a-f0-9]{16}\.(?:jpg|png|webp)$/', $name) === 1 ||
+      in_array($name, array('guard.php', 'estado.php'), true)
+    ) {
+      $copy[] = $name;
+    }
+  }
+  $copy[] = 'index.php';
+
+  foreach ($copy as $name) {
+    $source = CEEVS_PREINS_LEGACY_DIR . '/' . $name;
+    $dest = CEEVS_PREINS_DIR . '/' . $name;
+    if (@file_exists($dest)) {
+      continue;
+    }
+    $tmp = CEEVS_PREINS_DIR . '/.migrando-' . hash('sha256', $name) . '.tmp';
+    if (!@copy($source, $tmp) || !@rename($tmp, $dest)) {
+      @unlink($tmp);
+      return;
+    }
+    @chmod($dest, preg_match('/\.(?:jpg|png|webp)$/', $name) === 1 ? 0644 : 0600);
+  }
+}
+
 function ceevs_preins_ensure_dir(): void {
   ceevs_ensure_data_dir();
-  if (!is_dir(CEEVS_PREINS_DIR)) {
+  if (!@is_dir(CEEVS_PREINS_DIR)) {
     @mkdir(CEEVS_PREINS_DIR, 0755, true);
+  }
+  if (!@is_dir(CEEVS_PREINS_DIR)) {
+    return;
   }
   $ht = CEEVS_PREINS_DIR . '/.htaccess';
   if (!file_exists($ht)) {
     @file_put_contents($ht, "Require all denied\n");
   }
+  ceevs_preins_migrate_legacy();
 }
 
 /* ─── Índice de la bandeja ─── */
 
 /** Índice completo: ajustes + correlativo + fichas resumidas (más reciente primero). */
 function ceevs_preins_index(): array {
+  ceevs_preins_ensure_dir();
   $ix = ceevs_read_guarded(CEEVS_PREINS_INDEX);
   if (!is_array($ix)) {
     $ix = array();
@@ -155,6 +248,7 @@ function ceevs_preins_read(string $id): ?array {
   if (!ceevs_preins_valid_id($id)) {
     return null;
   }
+  ceevs_preins_ensure_dir();
   return ceevs_read_guarded(ceevs_preins_file($id));
 }
 

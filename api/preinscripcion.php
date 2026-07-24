@@ -251,17 +251,30 @@ ceevs_audit(
 
 /* ─── Aviso al área de admisiones ─── */
 
-if (!empty($settings['notificar']) && (string) $settings['correo'] !== '' && ceevs_preins_correo_permitido()) {
+$destinoAdmisiones = ceevs_admissions_recipient((string) $settings['correo']);
+if (
+  !empty($settings['notificar']) &&
+  filter_var($destinoAdmisiones, FILTER_VALIDATE_EMAIL) &&
+  ceevs_preins_correo_permitido()
+) {
   $host = preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
-  $texto = "Se recibió una nueva solicitud de pre-inscripción en el sitio web.\n\n"
-    . 'Número de solicitud: ' . $num . "\n"
-    . 'Alumno(a): ' . $nombre . "\n"
-    . 'Grado que va a cursar: ' . $grado . "\n"
-    . 'Contacto de la familia: ' . $contacto . "\n\n"
-    . "Entra al panel para ver la solicitud completa y descargar el PDF:\n"
+  $texto = ceevs_preins_texto($rec)
+    . "\n\n────────────────────────────────────────\n"
+    . "Esta solicitud también quedó guardada en el archivo privado de admisiones.\n"
+    . "Entra al panel para gestionarla, ver la fotografía y descargar el PDF:\n"
     . 'https://' . ($host !== '' ? $host : 'www.virginiasapp.edu.hn') . "/admin.html\n\n"
     . "— Aviso automático del sitio del Centro Educativo Evangélico Virginia Sapp.";
-  @ceevs_send_mail((string) $settings['correo'], 'Nueva pre-inscripción #' . $num . ' — ' . $nombre, $texto);
+  $correoEnviado = ceevs_send_mail(
+    $destinoAdmisiones,
+    'Solicitud de admisión #' . $num . ' — ' . $nombre,
+    $texto
+  );
+  ceevs_audit(
+    $correoEnviado ? 'preins_correo_enviado' : 'preins_correo_fallo',
+    'Solicitud #' . $num . ' — entrega al correo institucional',
+    $correoEnviado,
+    'sistema'
+  );
 }
 
 json_out(array('ok' => true, 'num' => $num));
