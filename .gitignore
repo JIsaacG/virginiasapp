@@ -10,3 +10,9 @@ reports/lighthouse/
 # Datos del panel admin (viven en el servidor, no en el repo)
 server-data/
 uploads/
+
+# Credenciales de la base de datos (solo en el servidor, NUNCA en el repositorio)
+api/db-config.php
+.env
+.env.*
+!.env.example

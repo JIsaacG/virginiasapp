@@ -20,6 +20,42 @@ require __DIR__ . '/preinscripciones-lib.php';
 
 require_auth();
 
+/**
+ * Ficha de la base de datos para el panel.
+ *
+ * Nunca incluye la contraseña: solo si hay una guardada. El administrador no
+ * necesita volver a verla y así no viaja al navegador ni queda en la caché.
+ */
+function ceevs_preins_bd_estado(): array {
+  $c = ceevs_db_config();
+  $configurada = ceevs_db_configurada();
+  $conectada = $configurada && ceevs_db_ready();
+
+  $pendientes = 0;
+  if ($conectada) {
+    $enDisco = ceevs_preins_db_ids_en_disco();
+    if ($enDisco) {
+      $st = ceevs_db_run('SELECT id FROM ' . CEEVS_DB_TABLA_PREINS);
+      $enBase = $st === null ? array() : $st->fetchAll(PDO::FETCH_COLUMN);
+      $pendientes = count(array_diff(array_keys($enDisco), array_map('strval', $enBase)));
+    }
+  }
+
+  return array(
+    'soportada'   => ceevs_db_soportada(),
+    'configurada' => $configurada,
+    'conectada'   => $conectada,
+    'error'       => $conectada ? '' : ceevs_db_error(),
+    'host'        => $c['host'],
+    'puerto'      => $c['puerto'],
+    'nombre'      => $c['nombre'],
+    'usuario'     => $c['usuario'],
+    'tieneClave'  => $c['clave'] !== '',
+    'archivo'     => ceevs_db_config_actual(),
+    'pendientes'  => $pendientes,
+  );
+}
+
 $metodo = $_SERVER['REQUEST_METHOD'] ?? '';
 $requestAction = isset($_GET['action']) && is_string($_GET['action']) ? $_GET['action'] : '';
 
@@ -63,6 +99,12 @@ if ($metodo === 'GET') {
   $action = isset($_GET['action']) && is_string($_GET['action']) ? $_GET['action'] : 'list';
 
   if ($action === 'list') {
+    // Al abrir la bandeja se suben a la base, en tandas cortas, las solicitudes
+    // que aún estuvieran solo en archivos (las anteriores a la base de datos, o
+    // las recibidas mientras la conexión estuvo caída).
+    if (ceevs_preins_usa_db()) {
+      ceevs_preins_db_importar(25);
+    }
     $ix = ceevs_preins_index();
     $stats = array('total' => count($ix['items']), 'nueva' => 0, 'leida' => 0, 'contactada' => 0, 'archivada' => 0);
     foreach ($ix['items'] as $it) {
@@ -80,10 +122,10 @@ if ($metodo === 'GET') {
     ));
   }
 
-  /* Estado real de la carpeta de admisiones.
-     Sirve para contrastar la ruta que usa PHP con la que se ve en el
-     Administrador de archivos del hosting, sin tener que adivinar cuál de las
-     dos es: aquí sale la ruta absoluta de verdad y lo que hay dentro. */
+  /* Dónde están de verdad las solicitudes.
+     Con base de datos informa de la conexión y de cuánto hay guardado; sin
+     ella, de la carpeta de admisiones y su ruta absoluta, para poder
+     contrastarla con la del Administrador de archivos del hosting. */
   if ($action === 'salud') {
     $dir = CEEVS_PREINS_DIR;
     $existe = @is_dir($dir);
@@ -103,6 +145,15 @@ if ($metodo === 'GET') {
         }
       }
     }
+
+    $enDb = ceevs_preins_usa_db();
+    if ($enDb) {
+      $db = ceevs_preins_db_stats();
+      $recs = $db['total'];
+      $pdfs = $db['pdfs'];
+      $pdfBytes = $db['bytes'];
+    }
+
     $ix = ceevs_preins_index();
     $sinPdf = 0;
     foreach ($ix['items'] as $it) {
@@ -112,6 +163,7 @@ if ($metodo === 'GET') {
     }
     json_out(array(
       'ok'         => true,
+      'bd'         => ceevs_preins_bd_estado(),
       'ruta'       => $dir,
       'existe'     => $existe,
       'escribible' => $existe && @is_writable($dir),
@@ -123,41 +175,34 @@ if ($metodo === 'GET') {
     ));
   }
 
+  /* Ficha de la base de datos para la tarjeta del panel. La contraseña jamás
+     sale de aquí: solo se dice si hay una guardada. */
+  if ($action === 'bd') {
+    json_out(array('ok' => true, 'bd' => ceevs_preins_bd_estado()));
+  }
+
   $id = isset($_GET['id']) && is_string($_GET['id']) ? $_GET['id'] : '';
   if (!ceevs_preins_valid_id($id)) {
     json_fail('Solicitud no encontrada.', 404);
   }
 
   if ($action === 'foto') {
-    $path = ceevs_preins_foto_path($id);
-    if ($path === null) {
+    $archivo = ceevs_preins_archivo($id, 'foto');
+    if ($archivo === null) {
       json_fail('Esta solicitud no tiene foto.', 404);
     }
-    $tipos = array('jpg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp');
-    $ext = strtolower((string) pathinfo($path, PATHINFO_EXTENSION));
-    header('Content-Type: ' . ($tipos[$ext] ?? 'application/octet-stream'));
-    header('Content-Length: ' . (string) filesize($path));
+    $ext = strtolower((string) pathinfo($archivo['nombre'], PATHINFO_EXTENSION));
     header('Cache-Control: private, max-age=300');
-    header('X-Content-Type-Options: nosniff');
-    header('Content-Disposition: inline; filename="foto-solicitud.' . $ext . '"');
-    readfile($path);
-    exit;
+    ceevs_preins_enviar_archivo($archivo, 'inline', 'foto-solicitud.' . ($ext !== '' ? $ext : 'jpg'));
   }
 
   if ($action === 'pdf') {
-    $rec = ceevs_preins_read($id);
-    $path = is_array($rec) ? ceevs_preins_pdf_path($rec) : null;
-    if ($path === null) {
+    $archivo = ceevs_preins_archivo($id, 'pdf');
+    if ($archivo === null) {
       json_fail('Esta solicitud todavía no tiene una copia PDF guardada.', 404);
     }
-    $name = basename($path);
-    header('Content-Type: application/pdf');
-    header('Content-Length: ' . (string) filesize($path));
     header('Cache-Control: private, no-store');
-    header('X-Content-Type-Options: nosniff');
-    header('Content-Disposition: attachment; filename="' . $name . '"');
-    readfile($path);
-    exit;
+    ceevs_preins_enviar_archivo($archivo, 'attachment', basename($archivo['nombre']));
   }
 
   if ($action === 'get') {
@@ -183,6 +228,57 @@ ceevs_require_csrf();
 // Lo más grande que manda el panel son las notas internas (1500 caracteres).
 $body = read_json_body(262144);
 $action = isset($body['action']) && is_string($body['action']) ? $body['action'] : '';
+
+/* ─── Configuración de la base de datos ───
+   Se prueba la conexión ANTES de guardar nada y, si funciona, se aprovecha la
+   misma petición para crear las tablas e importar lo que hubiera en archivos. */
+if ($action === 'bd') {
+  $actual = ceevs_db_config();
+  $clave = isset($body['clave']) && is_string($body['clave']) ? $body['clave'] : '';
+  $nueva = array(
+    'host'    => ceevs_preins_txt($body['host'] ?? '', 120),
+    'puerto'  => (int) ($body['puerto'] ?? 3306),
+    'nombre'  => ceevs_preins_txt($body['nombre'] ?? '', 64),
+    'usuario' => ceevs_preins_txt($body['usuario'] ?? '', 64),
+    // Dejar la contraseña en blanco significa "conservar la que ya está
+    // guardada": es lo que permite corregir el host sin volver a escribirla.
+    'clave'   => $clave !== '' ? $clave : (string) $actual['clave'],
+  );
+
+  $error = '';
+  if (!ceevs_db_probar($nueva, $error)) {
+    ceevs_audit('bd_config_fallo', 'Prueba de conexión fallida: ' . $error, false);
+    json_fail($error, 400, array('bd' => ceevs_preins_bd_estado()));
+  }
+  if (!ceevs_db_save_config($nueva, $error)) {
+    json_fail($error !== '' ? $error : 'No se pudo guardar la configuración.', 500);
+  }
+
+  // Reconectar con lo recién guardado y subir lo que estuviera en archivos.
+  ceevs_db_reset();
+  ceevs_preins_usa_db(true);
+  $importado = ceevs_preins_db_importar(25);
+
+  ceevs_audit('bd_config', 'Base de datos conectada: ' . $nueva['usuario'] . '@' . $nueva['host'] . '/' . $nueva['nombre']);
+  json_out(array(
+    'ok' => true,
+    'bd' => ceevs_preins_bd_estado(),
+    'importado' => $importado,
+  ));
+}
+
+/* Traslado manual de lo que quedó en archivos. Va por tandas: el navegador
+   vuelve a pedirlo mientras queden pendientes. */
+if ($action === 'importar') {
+  if (!ceevs_preins_usa_db()) {
+    json_fail('Primero hay que conectar la base de datos.', 400);
+  }
+  $importado = ceevs_preins_db_importar(25);
+  if ($importado['importadas'] > 0) {
+    ceevs_audit('bd_importacion', $importado['importadas'] . ' solicitud(es) trasladada(s) de archivos a la base de datos');
+  }
+  json_out(array('ok' => true, 'importado' => $importado, 'bd' => ceevs_preins_bd_estado()));
+}
 
 if ($action === 'ajustes') {
   $ix = ceevs_preins_index();

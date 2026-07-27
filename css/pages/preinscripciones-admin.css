@@ -103,6 +103,57 @@
 .preins-salud-datos { margin-top: 6px !important; }
 .preins-salud-mal { color: #A93226; }
 
+/* ─── Tarjeta de la base de datos ───
+   Es lo que decide si las solicitudes sobreviven a una actualización del sitio,
+   así que su estado se ve de un vistazo y el aviso cambia de color con él. */
+
+.preins-bd-chip {
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+
+.preins-bd-chip--ok    { background: rgba(30, 132, 73, .12); color: #1E8449; }
+.preins-bd-chip--mal   { background: rgba(169, 50, 38, .12); color: #A93226; }
+.preins-bd-chip--falta { background: rgba(185, 119, 14, .14); color: #B9770E; }
+
+.preins-bd-aviso {
+  border-radius: 10px;
+  border: 1px solid transparent;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.preins-bd-aviso code {
+  background: rgba(65, 36, 4, .08);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 12.5px;
+  word-break: break-all;
+}
+
+.preins-bd-aviso--ok {
+  background: rgba(30, 132, 73, .07);
+  border-color: rgba(30, 132, 73, .25);
+  color: #196F3D;
+}
+
+.preins-bd-aviso--mal {
+  background: rgba(169, 50, 38, .07);
+  border-color: rgba(169, 50, 38, .25);
+  color: #922B21;
+}
+
+.preins-bd-aviso--falta {
+  background: rgba(185, 119, 14, .08);
+  border-color: rgba(185, 119, 14, .3);
+  color: #935116;
+}
+
 /* ─── Lista de solicitudes ─── */
 
 .preins-lista { display: grid; gap: 10px; }

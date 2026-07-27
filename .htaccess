@@ -10,6 +10,17 @@
   RewriteRule ^index\.html$ / [R=301,L]
 </IfModule>
 
+# Archivos ocultos y de configuración: nunca se sirven.
+# Sin esta regla, un .env subido al sitio se descarga escribiendo la URL en el
+# navegador, y con él se van las credenciales de la base de datos. Aplica al
+# nombre del archivo, así que no afecta a /.well-known/ (validación del SSL).
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(env|bak|sql|log|ini)$">
+  Require all denied
+</FilesMatch>
+
 # Refuerzo de no indexación para superficies privadas.
 <IfModule mod_headers.c>
   <Files "admin.html">

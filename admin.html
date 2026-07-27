@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@0,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css?v=20260719-2">
   <link rel="stylesheet" href="css/pages/admin.css?v=20260719-2">
-  <link rel="stylesheet" href="css/pages/preinscripciones-admin.css?v=20260721-1">
+  <link rel="stylesheet" href="css/pages/preinscripciones-admin.css?v=20260727-2">
   <link rel="stylesheet" href="css/pages/solicitud-print.css?v=20260724-3">
 </head>
 <body>
@@ -606,6 +606,46 @@
         </div>
       </div>
 
+      <!-- Base de datos: es lo que hace que las solicitudes sobrevivan a cada actualización del sitio -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>🗄️ Base de datos</h3>
+          <span class="preins-bd-chip" id="preins-bd-chip">Comprobando…</span>
+        </div>
+        <p class="admin-card-desc">Guardar las solicitudes en la base de datos es lo que evita que se borren cada vez que se actualiza el sitio. Los datos crea la base en <strong>hPanel → Bases de datos → MySQL</strong> y aquí se escriben una sola vez.</p>
+
+        <div class="preins-bd-aviso" id="preins-bd-aviso" hidden></div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="admin-input-label" for="preins-bd-host">Host</label>
+            <input type="text" id="preins-bd-host" class="admin-input" placeholder="localhost" autocomplete="off">
+            <small class="admin-input-hint">En Hostinger casi siempre es <code>localhost</code>.</small>
+          </div>
+          <div class="form-group">
+            <label class="admin-input-label" for="preins-bd-nombre">Nombre de la base de datos</label>
+            <input type="text" id="preins-bd-nombre" class="admin-input" placeholder="u123456789_ceevs" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="admin-input-label" for="preins-bd-usuario">Usuario</label>
+            <input type="text" id="preins-bd-usuario" class="admin-input" placeholder="u123456789_admin" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label class="admin-input-label" for="preins-bd-clave">Contraseña</label>
+            <input type="password" id="preins-bd-clave" class="admin-input" placeholder="La contraseña del usuario" autocomplete="new-password">
+            <small class="admin-input-hint" id="preins-bd-clave-hint">Se guarda cifrada en el servidor y nunca vuelve a mostrarse.</small>
+          </div>
+        </div>
+
+        <div class="admin-form-actions">
+          <button type="button" class="admin-btn-save" id="preins-bd-guardar">🔌 Probar y conectar</button>
+          <button type="button" class="admin-btn-secondary" id="preins-bd-importar" hidden>⬆️ Trasladar solicitudes antiguas</button>
+        </div>
+      </div>
+
       <!-- Ajustes -->
       <div class="admin-card">
         <div class="admin-card-header">
@@ -812,7 +852,7 @@
 <script src="js/image-manager.js?v=20260719-2"></script>
 <script src="js/gallery-extra.js?v=20260719-2"></script>
 <script src="js/solicitud-hoja.js?v=20260727-1"></script>
-<script src="js/preinscripciones-admin.js?v=20260727-1"></script>
+<script src="js/preinscripciones-admin.js?v=20260727-2"></script>
 <script src="js/admin.js?v=20260719-2"></script>
 </body>
 </html>

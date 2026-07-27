@@ -4,10 +4,21 @@
  *
  * Se carga DESPUÉS de bootstrap.php (usa CEEVS_DATA_DIR y sus utilidades).
  *
- * En Hostinger todo vive fuera de public_html, en la carpeta privada que se ve
- * como hermana de public_html en el Administrador de archivos:
- *   <directorio del sitio>/VIRGINIASAPP/SOLICITUDES DE ADMISIÓN/
+ * DÓNDE SE GUARDA (dos modos, se elige solo en cada petición)
  *
+ * 1) Base de datos MySQL — el modo recomendado y el que se usa si hay
+ *    credenciales configuradas (ver db.php y preinscripciones-db.php). Es la
+ *    única forma de que las solicitudes NO se pierdan al publicar una versión
+ *    nueva del sitio: lo que está en la base no viaja con los archivos.
+ *
+ * 2) Archivos — respaldo de siempre. Se usa cuando no hay base configurada
+ *    (desarrollo local) y también cuando la hay pero no responde, para no
+ *    rechazarle nunca la solicitud a una familia. En cuanto la conexión vuelve,
+ *    el importador sube a la base lo guardado mientras tanto.
+ *
+ * En modo archivos, en Hostinger todo vive fuera de public_html, en la carpeta
+ * privada hermana de public_html:
+ *   <directorio del sitio>/VIRGINIASAPP/SOLICITUDES DE ADMISIÓN/
  * En desarrollo local se conserva server-data/preinscripciones/. La variable de
  * entorno CEEVS_PREINS_DIR permite indicar otra ruta absoluta si el hosting
  * cambia su estructura. Cada archivo lleva además la guarda "<?php exit;":
@@ -15,12 +26,14 @@
  *   - rec-<id>.php   → la solicitud completa (un archivo por solicitud)
  *   - foto-<id>.<ext>→ foto del alumno (se sirve solo con sesión iniciada)
  *   - Solicitud-*.pdf→ copia exacta del PDF entregado a la familia
- *   - guard.php      → freno anti-spam del formulario público (por IP)
  *
  * Son datos personales de menores: NUNCA se exponen sin sesión de administrador.
  */
 
 declare(strict_types=1);
+
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/preinscripciones-db.php';
 
 define('CEEVS_PREINS_LEGACY_DIR', CEEVS_DATA_DIR . '/preinscripciones');
 
@@ -46,12 +59,11 @@ function ceevs_preins_storage_dir(): string {
     isset($_SERVER['DOCUMENT_ROOT']) ? (string) $_SERVER['DOCUMENT_ROOT'] : '',
   );
   foreach ($roots as $root) {
-    $normal = rtrim(str_replace('\\', '/', $root), '/');
-    if (
-      preg_match('#^/home/[^/]+(?:/.+)?/public_html$#', $normal) === 1 ||
-      preg_match('#^/home/[^/]+/public_html$#', $normal) === 1
-    ) {
-      return dirname($normal) . '/VIRGINIASAPP/SOLICITUDES DE ADMISIÓN';
+    // Vale igual si el sitio es el dominio principal o un subdominio colgado
+    // dentro de public_html (ver ceevs_hosting_padre_public_html en db.php).
+    $priv = ceevs_hosting_padre_public_html((string) $root);
+    if ($priv !== '') {
+      return $priv . '/VIRGINIASAPP/SOLICITUDES DE ADMISIÓN';
     }
   }
 
@@ -79,9 +91,15 @@ function ceevs_preins_previous_hostinger_dir(): string {
 
 define('CEEVS_PREINS_DIR', ceevs_preins_storage_dir());
 define('CEEVS_PREINS_INDEX', CEEVS_PREINS_DIR . '/index.php');
-define('CEEVS_PREINS_GUARD', CEEVS_PREINS_DIR . '/guard.php');
-define('CEEVS_PREINS_ESTADO', CEEVS_PREINS_DIR . '/estado.php');
-define('CEEVS_PREINS_LOCK', CEEVS_PREINS_DIR . '/lock.php');
+
+/* Estos tres son datos de trabajo, no expedientes: el freno anti-spam, la copia
+   del estado del formulario y el cerrojo. Perderlos no cuesta nada (se rehacen
+   solos), así que viven en server-data/ y no en la carpeta de admisiones. Así
+   funcionan igual con base de datos que sin ella, y sin depender de que la
+   carpeta privada del hosting exista y permita escribir. */
+define('CEEVS_PREINS_GUARD', CEEVS_DATA_DIR . '/preins-guard.php');
+define('CEEVS_PREINS_ESTADO', CEEVS_DATA_DIR . '/preins-estado.php');
+define('CEEVS_PREINS_LOCK', CEEVS_DATA_DIR . '/preins-lock.php');
 
 const CEEVS_PREINS_MAX_FOTO_BYTES = 2200000;  // 2 MB de foto ya redimensionada
 const CEEVS_PREINS_MAX_PDF_BYTES  = 6000000;  // 6 MB por PDF generado en el navegador
@@ -151,8 +169,7 @@ function ceevs_preins_migrate_legacy(): void {
     if (
       preg_match('/^rec-[a-f0-9]{16}\.php$/', $name) === 1 ||
       preg_match('/^foto-[a-f0-9]{16}\.(?:jpg|png|webp)$/', $name) === 1 ||
-      preg_match('/^(?:pdf-[a-f0-9]{16}|Solicitud-[A-Za-z0-9-]{1,180})\.pdf$/', $name) === 1 ||
-      in_array($name, array('guard.php', 'estado.php'), true)
+      preg_match('/^(?:pdf-[a-f0-9]{16}|Solicitud-[A-Za-z0-9-]{1,180})\.pdf$/', $name) === 1
     ) {
       $copy[] = $name;
     }
@@ -176,6 +193,11 @@ function ceevs_preins_migrate_legacy(): void {
 
 function ceevs_preins_ensure_dir(): void {
   ceevs_ensure_data_dir();
+  // Con base de datos, la carpeta de admisiones ya no recibe expedientes: no
+  // hay que crearla ni mover nada entre ubicaciones antiguas.
+  if (ceevs_preins_usa_db()) {
+    return;
+  }
   if (!@is_dir(CEEVS_PREINS_DIR)) {
     @mkdir(CEEVS_PREINS_DIR, 0755, true);
   }
@@ -189,10 +211,33 @@ function ceevs_preins_ensure_dir(): void {
   ceevs_preins_migrate_legacy();
 }
 
+/* ─── Elección del almacén ─── */
+
+/**
+ * ¿Esta petición trabaja contra la base de datos?
+ *
+ * Se resuelve una sola vez por petición y solo cuando de verdad hace falta
+ * tocar el almacén: la página pública consulta el estado del formulario en cada
+ * visita y esa vía barata no debe abrir nunca una conexión.
+ */
+function ceevs_preins_usa_db(bool $recalcular = false): bool {
+  static $usa = null;
+  if ($recalcular) {
+    $usa = null;
+  }
+  if ($usa === null) {
+    $usa = ceevs_db_configurada() && ceevs_db_ready();
+  }
+  return $usa;
+}
+
 /* ─── Índice de la bandeja ─── */
 
 /** Índice completo: ajustes + correlativo + fichas resumidas (más reciente primero). */
 function ceevs_preins_index(): array {
+  if (ceevs_preins_usa_db()) {
+    return ceevs_preins_db_index();
+  }
   ceevs_preins_ensure_dir();
   $ix = ceevs_read_guarded(CEEVS_PREINS_INDEX);
   if (!is_array($ix)) {
@@ -224,13 +269,31 @@ function ceevs_preins_index(): array {
 }
 
 function ceevs_preins_save_index(array $ix): bool {
-  ceevs_preins_ensure_dir();
-  $ok = ceevs_write_guarded(CEEVS_PREINS_INDEX, $ix);
+  if (ceevs_preins_usa_db()) {
+    $ok = ceevs_preins_db_save_index($ix);
+  } else {
+    ceevs_preins_ensure_dir();
+    $ok = ceevs_write_guarded(CEEVS_PREINS_INDEX, $ix);
+  }
   ceevs_preins_cache_estado($ix['settings']);
   return $ok;
 }
 
 function ceevs_preins_settings(): array {
+  // Con base de datos se leen solo los ajustes: no hace falta traerse la
+  // bandeja entera para saber si el formulario está abierto.
+  if (ceevs_preins_usa_db()) {
+    $s = ceevs_preins_db_ajuste('settings', array());
+    if (!is_array($s)) {
+      $s = array();
+    }
+    return $s + array(
+      'correo'    => CEEVS_PREINS_CORREO_DEFECTO,
+      'notificar' => true,
+      'abierto'   => true,
+      'ciclo'     => '',
+    );
+  }
   $ix = ceevs_preins_index();
   return $ix['settings'];
 }
@@ -245,7 +308,7 @@ function ceevs_preins_settings(): array {
  * más caro sale cada visita: justo lo que busca una carga malintencionada.
  */
 function ceevs_preins_cache_estado(array $settings): void {
-  ceevs_preins_ensure_dir();
+  ceevs_ensure_data_dir();
   ceevs_write_guarded(CEEVS_PREINS_ESTADO, array(
     'abierto' => !empty($settings['abierto']),
     'ciclo'   => (string) ($settings['ciclo'] ?? ''),
@@ -321,17 +384,94 @@ function ceevs_preins_pdf_path(array $rec): ?string {
   return @is_file($path) ? $path : null;
 }
 
+/**
+ * Adjunto de una solicitud ('foto' o 'pdf'), venga de donde venga.
+ *
+ * Devuelve siempre la misma forma para que los endpoints no tengan que saber si
+ * el binario está en la base de datos o en disco:
+ *   array{nombre:string, mime:string, bytes:int, contenido:?string, ruta:?string}
+ * Exactamente uno de `contenido` (base de datos) y `ruta` (disco) viene lleno.
+ */
+function ceevs_preins_archivo(string $id, string $tipo, ?array $rec = null): ?array {
+  if (!ceevs_preins_valid_id($id) || !in_array($tipo, array('foto', 'pdf'), true)) {
+    return null;
+  }
+
+  if (ceevs_preins_usa_db()) {
+    return ceevs_preins_db_archivo($id, $tipo, true);
+  }
+
+  if ($tipo === 'foto') {
+    $path = ceevs_preins_foto_path($id);
+    if ($path === null) {
+      return null;
+    }
+    $tipos = array('jpg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp');
+    $ext = strtolower((string) pathinfo($path, PATHINFO_EXTENSION));
+    return array(
+      'nombre'    => basename($path),
+      'mime'      => $tipos[$ext] ?? 'application/octet-stream',
+      'bytes'     => (int) @filesize($path),
+      'contenido' => null,
+      'ruta'      => $path,
+    );
+  }
+
+  $rec = is_array($rec) ? $rec : ceevs_preins_read($id);
+  $path = is_array($rec) ? ceevs_preins_pdf_path($rec) : null;
+  if ($path === null) {
+    return null;
+  }
+  return array(
+    'nombre'    => basename($path),
+    'mime'      => 'application/pdf',
+    'bytes'     => (int) @filesize($path),
+    'contenido' => null,
+    'ruta'      => $path,
+  );
+}
+
+/** Entrega un adjunto al navegador con las cabeceras ya puestas. */
+function ceevs_preins_enviar_archivo(array $archivo, string $disposicion, string $nombre): void {
+  // El nombre acaba dentro de una cabecera HTTP: fuera comillas y saltos de
+  // línea, aunque el valor venga de nuestro propio almacén.
+  $nombre = (string) preg_replace('/[^A-Za-z0-9._-]+/', '-', basename($nombre));
+  if ($nombre === '' || $nombre === '-') {
+    $nombre = 'archivo';
+  }
+  $mime = preg_match('#^[a-z]+/[a-z0-9.+-]+$#i', (string) $archivo['mime']) === 1
+    ? (string) $archivo['mime']
+    : 'application/octet-stream';
+  header('Content-Type: ' . $mime);
+  header('X-Content-Type-Options: nosniff');
+  header('Content-Disposition: ' . $disposicion . '; filename="' . $nombre . '"');
+  if (is_string($archivo['contenido'])) {
+    header('Content-Length: ' . (string) strlen($archivo['contenido']));
+    echo $archivo['contenido'];
+  } elseif (is_string($archivo['ruta'])) {
+    header('Content-Length: ' . (string) @filesize($archivo['ruta']));
+    readfile($archivo['ruta']);
+  }
+  exit;
+}
+
 /* ─── Lectura y escritura de solicitudes ─── */
 
 function ceevs_preins_read(string $id): ?array {
   if (!ceevs_preins_valid_id($id)) {
     return null;
   }
+  if (ceevs_preins_usa_db()) {
+    return ceevs_preins_db_read($id);
+  }
   ceevs_preins_ensure_dir();
   return ceevs_read_guarded(ceevs_preins_file($id));
 }
 
 function ceevs_preins_write(string $id, array $rec): bool {
+  if (ceevs_preins_usa_db()) {
+    return ceevs_preins_db_write($id, $rec);
+  }
   ceevs_preins_ensure_dir();
   return ceevs_write_guarded(ceevs_preins_file($id), $rec);
 }
@@ -339,6 +479,9 @@ function ceevs_preins_write(string $id, array $rec): bool {
 function ceevs_preins_delete(string $id): bool {
   if (!ceevs_preins_valid_id($id)) {
     return false;
+  }
+  if (ceevs_preins_usa_db()) {
+    return ceevs_preins_db_delete($id);
   }
   $liberados = 0;
   $foto = ceevs_preins_foto_path($id);
@@ -399,6 +542,11 @@ function ceevs_preins_row(array $rec): array {
 
 /** Reescribe la ficha resumida de una solicitud dentro del índice. */
 function ceevs_preins_touch_row(array $rec): bool {
+  // En base de datos la ficha resumida son columnas de la propia fila, así que
+  // ceevs_preins_write() ya la dejó al día.
+  if (ceevs_preins_usa_db()) {
+    return true;
+  }
   $ix = ceevs_preins_index();
   $id = (string) ($rec['id'] ?? '');
   $row = ceevs_preins_row($rec);
@@ -430,7 +578,7 @@ function ceevs_preins_touch_row(array $rec): bool {
 
 /** Lee el registro del freno ya limpio de ventanas vencidas. */
 function ceevs_preins_rate_load(): array {
-  ceevs_preins_ensure_dir();
+  ceevs_ensure_data_dir();
   $g = ceevs_read_guarded(CEEVS_PREINS_GUARD);
   // Formato viejo (plano, una entrada por IP) o archivo nuevo: se empieza limpio.
   // Es un registro efímero anti-spam; perderlo no tiene consecuencia.
@@ -572,7 +720,12 @@ function ceevs_preins_primera_vez(string $clave): bool {
  * rarísima que rechazarle la solicitud a una familia.
  */
 function ceevs_preins_lock() {
-  ceevs_preins_ensure_dir();
+  // Con base de datos el cerrojo lo pone el propio MySQL (GET_LOCK): así se
+  // serializan también dos procesos PHP que no compartan sistema de archivos.
+  if (ceevs_preins_usa_db()) {
+    return ceevs_db_lock() ? 'db' : null;
+  }
+  ceevs_ensure_data_dir();
   $fh = @fopen(CEEVS_PREINS_LOCK, 'c');
   if ($fh === false) {
     return null;
@@ -588,6 +741,10 @@ function ceevs_preins_lock() {
 }
 
 function ceevs_preins_unlock($fh): void {
+  if ($fh === 'db') {
+    ceevs_db_unlock();
+    return;
+  }
   if ($fh) {
     @flock($fh, LOCK_UN);
     @fclose($fh);
@@ -681,8 +838,14 @@ function ceevs_preins_save_foto(string $id, $dataUrl): int {
     return 0;
   }
 
+  $nombre = 'foto-' . $id . '.' . $exts[$mime];
+
+  if (ceevs_preins_usa_db()) {
+    return ceevs_preins_db_guardar_archivo($id, 'foto', $bin, $mime, $nombre) ? strlen($bin) : 0;
+  }
+
   ceevs_preins_ensure_dir();
-  $dest = CEEVS_PREINS_DIR . '/foto-' . $id . '.' . $exts[$mime];
+  $dest = CEEVS_PREINS_DIR . '/' . $nombre;
   if (@file_put_contents($dest, $bin, LOCK_EX) === false) {
     return 0;
   }
@@ -759,36 +922,55 @@ function ceevs_preins_save_pdf(string $id, string $token, string $bin, bool $tru
     }
   }
 
+  $enDb = ceevs_preins_usa_db();
   $ix = ceevs_preins_index();
-  $anterior = ceevs_preins_pdf_path($rec);
-  $bytesAnteriores = $anterior !== null ? max(0, (int) @filesize($anterior)) : 0;
   $bytes = strlen($bin);
+  $name = ceevs_preins_pdf_filename($rec);
+
+  if ($enDb) {
+    $previo = ceevs_preins_db_archivo($id, 'pdf', false);
+    $bytesAnteriores = $previo === null ? 0 : (int) $previo['bytes'];
+  } else {
+    $anterior = ceevs_preins_pdf_path($rec);
+    $bytesAnteriores = $anterior !== null ? max(0, (int) @filesize($anterior)) : 0;
+  }
+
   if (!ceevs_preins_cabe_pdf($ix, $bytes, $bytesAnteriores)) {
     ceevs_preins_unlock($lock);
     $motivo = 'sin_presupuesto';
     return null;
   }
 
-  $name = ceevs_preins_pdf_filename($rec);
-  $dest = CEEVS_PREINS_DIR . '/' . $name;
-  try {
-    $tmp = $dest . '.' . bin2hex(random_bytes(5)) . '.tmp';
-  } catch (Throwable $e) {
-    ceevs_preins_unlock($lock);
-    $motivo = 'sin_aleatorio';
-    return null;
-  }
-  if (@file_put_contents($tmp, $bin, LOCK_EX) === false || !@rename($tmp, $dest)) {
-    @unlink($tmp);
-    ceevs_preins_unlock($lock);
-    // Lo más probable aquí: cuota de disco agotada o permisos de la carpeta.
-    $motivo = 'escritura_fallo';
-    return null;
-  }
-  @chmod($dest, 0600);
+  if ($enDb) {
+    // Si MySQL rechaza el paquete (max_allowed_packet bajo en hosting
+    // compartido) se pierde solo la copia PDF: el expediente sigue guardado y
+    // el panel puede regenerarla más tarde.
+    if (!ceevs_preins_db_guardar_archivo($id, 'pdf', $bin, 'application/pdf', $name)) {
+      ceevs_preins_unlock($lock);
+      $motivo = 'escritura_fallo';
+      return null;
+    }
+  } else {
+    $dest = CEEVS_PREINS_DIR . '/' . $name;
+    try {
+      $tmp = $dest . '.' . bin2hex(random_bytes(5)) . '.tmp';
+    } catch (Throwable $e) {
+      ceevs_preins_unlock($lock);
+      $motivo = 'sin_aleatorio';
+      return null;
+    }
+    if (@file_put_contents($tmp, $bin, LOCK_EX) === false || !@rename($tmp, $dest)) {
+      @unlink($tmp);
+      ceevs_preins_unlock($lock);
+      // Lo más probable aquí: cuota de disco agotada o permisos de la carpeta.
+      $motivo = 'escritura_fallo';
+      return null;
+    }
+    @chmod($dest, 0600);
 
-  if ($anterior !== null && $anterior !== $dest) {
-    @unlink($anterior);
+    if ($anterior !== null && $anterior !== $dest) {
+      @unlink($anterior);
+    }
   }
 
   $rec['pdf'] = true;
@@ -797,21 +979,29 @@ function ceevs_preins_save_pdf(string $id, string $token, string $bin, bool $tru
   $rec['pdfGuardado'] = gmdate('c');
   unset($rec['pdfTokenHash'], $rec['pdfTokenExpires']);
   if (!ceevs_preins_write($id, $rec)) {
-    @unlink($dest);
+    if ($enDb) {
+      ceevs_preins_db_borrar_archivo($id, 'pdf');
+    } else {
+      @unlink($dest);
+    }
     ceevs_preins_unlock($lock);
     $motivo = 'registro_no_guardado';
     return null;
   }
 
-  $ix['pdfBytes'] = max(0, (int) ($ix['pdfBytes'] ?? 0) - $bytesAnteriores + $bytes);
-  $row = ceevs_preins_row($rec);
-  foreach ($ix['items'] as $i => $item) {
-    if ((string) ($item['id'] ?? '') === $id) {
-      $ix['items'][$i] = $row;
-      break;
+  // Con base de datos, el índice se calcula al leerlo: no hay contadores ni
+  // fichas resumidas que reescribir aquí.
+  if (!$enDb) {
+    $ix['pdfBytes'] = max(0, (int) ($ix['pdfBytes'] ?? 0) - $bytesAnteriores + $bytes);
+    $row = ceevs_preins_row($rec);
+    foreach ($ix['items'] as $i => $item) {
+      if ((string) ($item['id'] ?? '') === $id) {
+        $ix['items'][$i] = $row;
+        break;
+      }
     }
+    ceevs_preins_save_index($ix);
   }
-  ceevs_preins_save_index($ix);
   ceevs_preins_unlock($lock);
 
   return array('archivo' => $name, 'bytes' => $bytes, 'rec' => $rec);

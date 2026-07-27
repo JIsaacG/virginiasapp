@@ -29,7 +29,8 @@
     settings: null,
     next: 0,
     cargado: false,
-    abierta: null   // solicitud abierta en el detalle
+    abierta: null,  // solicitud abierta en el detalle
+    bd: null        // estado de la base de datos (ver pintarBd)
   };
 
   /* ─── Utilidades ─── */
@@ -110,6 +111,7 @@
         lista.innerHTML = '<p class="empty-state">' + esc(err.message)
           + '<br><small>Si acabas de entrar, recarga la página. Sin PHP (modo local) esta pestaña no funciona.</small></p>';
         el('preins-count').textContent = '—';
+        pintarBd(null);
       });
   }
 
@@ -193,27 +195,173 @@
   /**
    * Dónde guarda PHP las solicitudes, de verdad.
    *
-   * La ruta se deduce de la estructura del hosting, así que conviene poder
-   * compararla con la que se ve en el Administrador de archivos sin adivinar.
+   * Con base de datos se informa de ella; sin base de datos, de la carpeta del
+   * servidor y su ruta absoluta, para poder compararla con la que se ve en el
+   * Administrador de archivos del hosting sin tener que adivinar.
    */
   function pintarSalud() {
     var cont = el('preins-salud');
     if (!cont) return;
     get('action=salud')
       .then(function (d) {
+        pintarBd(d.bd);
+
         var kb = d.pdfBytes ? ' · ' + Math.round(d.pdfBytes / 1024) + ' KB' : '';
-        var problema = !d.existe
-          ? '<strong class="preins-salud-mal">La carpeta no existe.</strong>'
-          : (!d.escribible ? '<strong class="preins-salud-mal">La carpeta no permite escribir.</strong>' : '');
-        cont.innerHTML = '<p class="preins-salud-ruta"><span>📁 Carpeta de admisiones en el servidor:</span>'
-          + '<code>' + esc(d.ruta) + '</code></p>'
-          + '<p class="preins-salud-datos">' + d.recs + ' solicitud' + (d.recs === 1 ? '' : 'es')
+        var datos = d.recs + ' solicitud' + (d.recs === 1 ? '' : 'es')
           + ' · ' + d.pdfs + ' PDF' + (d.pdfs === 1 ? '' : 's') + ' archivado' + (d.pdfs === 1 ? '' : 's') + kb
-          + (d.sinPdf ? ' · <strong>' + d.sinPdf + ' sin PDF</strong>' : '')
-          + ' ' + problema + '</p>';
+          + (d.sinPdf ? ' · <strong>' + d.sinPdf + ' sin PDF</strong>' : '');
+
+        if (d.bd && d.bd.conectada) {
+          cont.innerHTML = '<p class="preins-salud-ruta"><span>🗄️ Guardadas en la base de datos:</span>'
+            + '<code>' + esc(d.bd.nombre) + '</code></p>'
+            + '<p class="preins-salud-datos">' + datos + '</p>';
+        } else {
+          var problema = !d.existe
+            ? '<strong class="preins-salud-mal">La carpeta no existe.</strong>'
+            : (!d.escribible ? '<strong class="preins-salud-mal">La carpeta no permite escribir.</strong>' : '');
+          cont.innerHTML = '<p class="preins-salud-ruta"><span>📁 Carpeta de admisiones en el servidor:</span>'
+            + '<code>' + esc(d.ruta) + '</code></p>'
+            + '<p class="preins-salud-datos">' + datos + ' ' + problema + '</p>';
+        }
         cont.hidden = false;
       })
       .catch(function () { cont.hidden = true; });
+  }
+
+  /* ─── Base de datos ───
+   *
+   * Es la tarjeta más importante de la pestaña: mientras las solicitudes vivan
+   * solo en archivos del sitio, cada publicación de una versión nueva se las
+   * lleva. Por eso el aviso es explícito y no un detalle técnico escondido.
+   */
+
+  function pintarBd(bd) {
+    var chip = el('preins-bd-chip');
+    var aviso = el('preins-bd-aviso');
+    if (!chip || !aviso) return;
+    if (!bd) {
+      chip.textContent = 'No disponible';
+      chip.className = 'preins-bd-chip preins-bd-chip--falta';
+      return;
+    }
+    state.bd = bd;
+
+    var estado = bd.conectada ? 'ok' : (bd.configurada ? 'mal' : 'falta');
+    chip.className = 'preins-bd-chip preins-bd-chip--' + estado;
+    chip.textContent = bd.conectada ? '✅ Conectada' : (bd.configurada ? '⚠️ Sin conexión' : '⚠️ Sin configurar');
+
+    var texto;
+    if (!bd.soportada) {
+      texto = '<strong>Este servidor no tiene activado el conector MySQL de PHP.</strong> '
+        + 'Pídele a soporte del hosting que habilite <code>pdo_mysql</code>; mientras tanto las solicitudes '
+        + 'se guardan en archivos y se pierden al actualizar el sitio.';
+    } else if (!bd.configurada) {
+      texto = '<strong>Las solicitudes se están guardando en archivos del sitio, y por eso desaparecen '
+        + 'cada vez que se actualiza el código.</strong> Crea la base de datos en el hosting, escribe aquí sus '
+        + 'datos y pulsa "Probar y conectar": las que ya tengas se trasladan solas.';
+    } else if (!bd.conectada) {
+      texto = '<strong>No se pudo conectar: ' + esc(bd.error || 'error desconocido') + '</strong> '
+        + 'Mientras tanto las solicitudes se siguen recibiendo y guardando en archivos; en cuanto la conexión '
+        + 'vuelva se subirán solas a la base de datos.';
+    } else {
+      texto = 'Las solicitudes se guardan en <code>' + esc(bd.nombre) + '</code>. '
+        + 'Ya puedes actualizar el sitio cuantas veces quieras: no se borran.'
+        + (bd.pendientes ? ' Quedan <strong>' + bd.pendientes + '</strong> por trasladar desde archivos.' : '');
+    }
+    aviso.className = 'preins-bd-aviso preins-bd-aviso--' + estado;
+    aviso.innerHTML = texto;
+    aviso.hidden = false;
+
+    // Los campos solo se rellenan si el administrador no está escribiendo en ellos.
+    ['host', 'nombre', 'usuario'].forEach(function (campo) {
+      var input = el('preins-bd-' + campo);
+      if (input && document.activeElement !== input) input.value = bd[campo] || '';
+    });
+    if (!el('preins-bd-host').value) el('preins-bd-host').value = 'localhost';
+
+    var hint = el('preins-bd-clave-hint');
+    if (hint) {
+      hint.textContent = bd.tieneClave
+        ? 'Ya hay una contraseña guardada: déjalo en blanco para conservarla.'
+        : 'Se guarda solo en el servidor y nunca vuelve a mostrarse.';
+    }
+
+    var btnImp = el('preins-bd-importar');
+    if (btnImp) {
+      btnImp.hidden = !(bd.conectada && bd.pendientes > 0);
+      btnImp.textContent = '⬆️ Trasladar ' + bd.pendientes + ' solicitud'
+        + (bd.pendientes === 1 ? '' : 'es') + ' de archivos';
+    }
+  }
+
+  function cargarBd() {
+    return get('action=bd')
+      .then(function (d) { pintarBd(d.bd); })
+      .catch(function () { /* la tarjeta se queda como estaba */ });
+  }
+
+  function guardarBd() {
+    var btn = el('preins-bd-guardar');
+    var original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '⏳ Probando la conexión…';
+
+    post({
+      action: 'bd',
+      host: el('preins-bd-host').value,
+      nombre: el('preins-bd-nombre').value,
+      usuario: el('preins-bd-usuario').value,
+      clave: el('preins-bd-clave').value
+    })
+      .then(function (d) {
+        el('preins-bd-clave').value = '';
+        pintarBd(d.bd);
+        var imp = d.importado || {};
+        toast(imp.importadas
+          ? 'Conectada. ' + imp.importadas + ' solicitud' + (imp.importadas === 1 ? '' : 'es') + ' trasladada' + (imp.importadas === 1 ? '' : 's') + '.'
+          : 'Base de datos conectada. Las solicitudes ya no se borran al actualizar.');
+        return cargar();
+      })
+      .catch(function (err) {
+        toast(err.message);
+        return cargarBd();
+      })
+      .then(function () {
+        btn.disabled = false;
+        btn.textContent = original;
+      });
+  }
+
+  /** Traslada por tandas lo que quedó en archivos; el servidor limita cada una. */
+  function importarBd() {
+    var btn = el('preins-bd-importar');
+    var original = btn.textContent;
+    var total = 0;
+    btn.disabled = true;
+
+    function tanda() {
+      return post({ action: 'importar' }).then(function (d) {
+        var imp = d.importado || {};
+        total += imp.importadas || 0;
+        pintarBd(d.bd);
+        btn.textContent = '⏳ Trasladando… (' + total + ')';
+        // Si una tanda no consigue mover nada, seguir solo repetiría el error.
+        if (imp.pendientes > 0 && imp.importadas > 0) return tanda();
+      });
+    }
+
+    tanda()
+      .then(function () {
+        toast(total
+          ? total + ' solicitud' + (total === 1 ? '' : 'es') + ' trasladada' + (total === 1 ? '' : 's') + ' a la base de datos'
+          : 'No quedaba nada por trasladar');
+        return cargar();
+      })
+      .catch(function (err) { toast(err.message); })
+      .then(function () {
+        btn.disabled = false;
+        btn.textContent = original;
+      });
   }
 
   function pintarAjustes() {
@@ -580,6 +728,8 @@
     el('preins-eliminar').addEventListener('click', eliminar);
     el('preins-copiar').addEventListener('click', copiar);
     el('preins-set-guardar').addEventListener('click', guardarAjustes);
+    el('preins-bd-guardar').addEventListener('click', guardarBd);
+    el('preins-bd-importar').addEventListener('click', importarBd);
   }
 
   /* ─── API pública (la usa admin.js al cambiar de pestaña) ─── */
