@@ -270,17 +270,63 @@
 
   /* ─── Descargar en PDF / imprimir ─── */
 
-  /** Baja el PDF de una vez, sin pasar por el diálogo de impresión. */
+  function descargarGuardado(rec) {
+    var a = document.createElement('a');
+    a.href = API + '?action=pdf&id=' + encodeURIComponent(rec.id);
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  /** Guarda desde el panel una copia que falte (solicitudes recibidas antes del cambio). */
+  function guardarPdfFaltante(rec, blob) {
+    return fetch(API + '?action=pdf&id=' + encodeURIComponent(rec.id), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/pdf',
+        'X-CEEVS-CSRF': csrf()
+      },
+      credentials: 'same-origin',
+      body: blob
+    })
+      .then(function (r) {
+        return r.json().then(function (d) { return { status: r.status, data: d }; });
+      })
+      .then(function (res) {
+        if (res.status !== 200 || !res.data || !res.data.ok) {
+          throw new Error((res.data && res.data.error) || 'No se pudo guardar el PDF.');
+        }
+        rec.pdf = true;
+        var fila = state.items.filter(function (it) { return it.id === rec.id; })[0];
+        if (fila) fila.pdf = true;
+      });
+  }
+
+  /** Baja el PDF guardado; si es un registro anterior, primero lo crea y archiva. */
   function descargar() {
     if (!state.abierta) return;
     var btn = el('preins-descargar');
     var original = btn.textContent;
 
     btn.disabled = true;
-    btn.textContent = '⏳ Preparando el PDF…';
+    btn.textContent = state.abierta.pdf ? '⏳ Descargando…' : '⏳ Creando y guardando el PDF…';
 
-    window.ceevsHoja.descargar(state.abierta, opcionesHoja(state.abierta))
-      .then(function () { toast('PDF descargado (tamaño oficio)'); })
+    var tarea;
+    if (state.abierta.pdf) {
+      descargarGuardado(state.abierta);
+      tarea = Promise.resolve();
+    } else {
+      tarea = window.ceevsHoja.generar(state.abierta, opcionesHoja(state.abierta))
+        .then(function (blob) {
+          return guardarPdfFaltante(state.abierta, blob).then(function () {
+            window.ceevsHoja.descargarBlob(blob, window.ceevsHoja.nombreArchivo(state.abierta));
+          });
+        });
+    }
+
+    tarea
+      .then(function () { toast('PDF guardado y descargado (tamaño oficio)'); })
       .catch(function (err) { toast((err && err.message) || 'No se pudo generar el PDF.'); })
       .then(function () {
         btn.disabled = false;

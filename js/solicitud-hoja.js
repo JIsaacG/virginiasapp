@@ -367,13 +367,25 @@
     });
   }
 
+  /** Espera a que el origen (0, 0) haya quedado aplicado y maquetado. */
+  function esperarOrigen() {
+    return new Promise(function (resolve) {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          setTimeout(resolve, 20);
+        });
+      });
+    });
+  }
+
   /**
-   * Genera el PDF y lo baja de una vez, sin pasar por el diálogo de impresión.
+   * Genera el PDF como Blob. La subida al servidor y la descarga local usan
+   * exactamente este mismo objeto: nunca se crean dos versiones distintas.
    * @param {Object} rec
    * @param {Object} [opts] `fotoSrc`, `archivo`
-   * @returns {Promise}
+   * @returns {Promise<Blob>}
    */
-  function descargar(rec, opts) {
+  function generar(rec, opts) {
     opts = opts || {};
 
     // html2canvas 1.x incorpora el scroll actual al cálculo de elementos fuera
@@ -385,6 +397,10 @@
     var scrollBehavior = html.style.scrollBehavior;
     html.style.scrollBehavior = 'auto';
     window.scrollTo(0, 0);
+    // Cancela también una animación smooth que hubiera iniciado la pantalla de
+    // confirmación justo antes de generar el archivo.
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
 
     // La hoja se arma fuera de la vista: se necesita en el documento para que
     // el navegador calcule medidas y cargue las imágenes antes de fotografiarla.
@@ -400,7 +416,7 @@
       html.style.scrollBehavior = scrollBehavior;
     };
 
-    return Promise.all([cargarLib(), esperarImagenes(host)])
+    return Promise.all([cargarLib(), esperarImagenes(host), esperarOrigen()])
       .then(function (r) {
         return r[0]().set({
           margin:     MARGEN,
@@ -425,19 +441,52 @@
           // desfase es justo lo que partía la tabla de padres a la mitad en el PDF
           // (la vista de impresión, que no pasa por html2canvas, siempre salió bien).
           pagebreak:  { mode: ['css'], before: '.hoja-p2', avoid: ['.hoja-bloque', '.hoja-vm', '.hoja-numrow'] }
-        }).from(host.querySelector('.hoja')).save();
+        }).from(host.querySelector('.hoja')).outputPdf('blob');
       })
-      .then(function () { quitar(); })
+      .then(function (blob) {
+        quitar();
+        if (!(blob instanceof Blob) || blob.size === 0) {
+          throw new Error('El generador produjo un PDF vacío.');
+        }
+        return blob;
+      })
       .catch(function (err) {
         quitar();
         throw err;
       });
   }
 
+  /** Descarga un Blob ya generado sin volver a fotografiar la hoja. */
+  function descargarBlob(blob, archivo) {
+    if (!(blob instanceof Blob) || blob.size === 0) {
+      throw new Error('No hay un PDF listo para descargar.');
+    }
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = archivo || 'Solicitud-admision.pdf';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 30000);
+  }
+
+  /** Genera el PDF y lo baja sin pasar por el diálogo de impresión. */
+  function descargar(rec, opts) {
+    opts = opts || {};
+    return generar(rec, opts).then(function (blob) {
+      descargarBlob(blob, opts.archivo || nombreArchivo(rec));
+      return blob;
+    });
+  }
+
   window.ceevsHoja = {
     html: hojaHTML,
     imprimir: imprimir,
+    generar: generar,
     descargar: descargar,
+    descargarBlob: descargarBlob,
     ocultarLogosFaltantes: ocultarLogosFaltantes,
     nombreArchivo: nombreArchivo
   };

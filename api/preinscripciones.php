@@ -5,6 +5,7 @@
  * GET  ?action=list              → { ok, items, settings, next, stats }
  * GET  ?action=get&id=…          → { ok, rec, texto }
  * GET  ?action=foto&id=…         → la foto del alumno (binaria, nunca pública)
+ * GET  ?action=pdf&id=…          → el PDF ya guardado (descarga autenticada)
  * POST { action: 'estado',   id, estado }
  * POST { action: 'notas',    id, notas }
  * POST { action: 'eliminar', id }
@@ -20,6 +21,35 @@ require __DIR__ . '/preinscripciones-lib.php';
 require_auth();
 
 $metodo = $_SERVER['REQUEST_METHOD'] ?? '';
+$requestAction = isset($_GET['action']) && is_string($_GET['action']) ? $_GET['action'] : '';
+
+/* El panel puede crear la copia que falte en solicitudes anteriores. Recibe el
+   Blob directo para no inflarlo un 33 % convirtiéndolo a base64. */
+if ($metodo === 'POST' && $requestAction === 'pdf') {
+  ceevs_require_csrf();
+  $id = isset($_GET['id']) && is_string($_GET['id']) ? strtolower(trim($_GET['id'])) : '';
+  $tipo = strtolower(trim((string) ($_SERVER['CONTENT_TYPE'] ?? '')));
+  $largo = max(0, (int) ($_SERVER['CONTENT_LENGTH'] ?? 0));
+  if (!ceevs_preins_valid_id($id)) {
+    json_fail('Solicitud no encontrada.', 404);
+  }
+  if (strpos($tipo, 'application/pdf') !== 0) {
+    json_fail('El archivo recibido no es un PDF.', 415);
+  }
+  if ($largo > CEEVS_PREINS_MAX_PDF_BYTES) {
+    json_fail('El PDF supera el tamaño permitido.', 413);
+  }
+  $pdf = @file_get_contents('php://input', false, null, 0, CEEVS_PREINS_MAX_PDF_BYTES + 1);
+  if (!is_string($pdf) || $pdf === '' || strlen($pdf) > CEEVS_PREINS_MAX_PDF_BYTES) {
+    json_fail('No se recibió un PDF válido.', 400);
+  }
+  $guardado = ceevs_preins_save_pdf($id, '', $pdf, true);
+  if ($guardado === null) {
+    json_fail('No se pudo guardar el PDF de la solicitud.', 422);
+  }
+  ceevs_audit('preins_pdf_guardado', 'PDF recreado desde el panel: ' . $guardado['archivo']);
+  json_out(array('ok' => true, 'archivo' => $guardado['archivo'], 'bytes' => $guardado['bytes']));
+}
 
 /* ─── Lecturas ─── */
 
@@ -65,11 +95,28 @@ if ($metodo === 'GET') {
     exit;
   }
 
+  if ($action === 'pdf') {
+    $rec = ceevs_preins_read($id);
+    $path = is_array($rec) ? ceevs_preins_pdf_path($rec) : null;
+    if ($path === null) {
+      json_fail('Esta solicitud todavía no tiene una copia PDF guardada.', 404);
+    }
+    $name = basename($path);
+    header('Content-Type: application/pdf');
+    header('Content-Length: ' . (string) filesize($path));
+    header('Cache-Control: private, no-store');
+    header('X-Content-Type-Options: nosniff');
+    header('Content-Disposition: attachment; filename="' . $name . '"');
+    readfile($path);
+    exit;
+  }
+
   if ($action === 'get') {
     $rec = ceevs_preins_read($id);
     if ($rec === null) {
       json_fail('Solicitud no encontrada.', 404);
     }
+    unset($rec['pdfTokenHash'], $rec['pdfTokenExpires']);
     json_out(array('ok' => true, 'rec' => $rec, 'texto' => ceevs_preins_texto($rec)));
   }
 

@@ -15,6 +15,58 @@ require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/preinscripciones-lib.php';
 
 $metodo = $_SERVER['REQUEST_METHOD'] ?? '';
+$action = isset($_GET['action']) && is_string($_GET['action']) ? $_GET['action'] : '';
+
+/* ─── Copia PDF generada por el navegador ───
+ *
+ * La solicitud debe guardarse primero para asignarle el correlativo que aparece
+ * en la hoja. Después, el mismo PDF que recibe la familia llega aquí como binario.
+ * Un token temporal, distinto para cada solicitud, impide adjuntar archivos a
+ * registros ajenos y evita que esta ruta pública permita sobrescrituras.
+ */
+if ($metodo === 'POST' && $action === 'pdf') {
+  ceevs_require_same_origin();
+
+  $id = isset($_SERVER['HTTP_X_CEEVS_PDF_ID'])
+    ? strtolower(trim((string) $_SERVER['HTTP_X_CEEVS_PDF_ID']))
+    : '';
+  $token = isset($_SERVER['HTTP_X_CEEVS_PDF_TOKEN'])
+    ? trim((string) $_SERVER['HTTP_X_CEEVS_PDF_TOKEN'])
+    : '';
+  $tipo = strtolower(trim((string) ($_SERVER['CONTENT_TYPE'] ?? '')));
+  $largo = max(0, (int) ($_SERVER['CONTENT_LENGTH'] ?? 0));
+
+  if (!ceevs_preins_valid_id($id) || strlen($token) < 32) {
+    json_fail('No se pudo asociar el PDF con la solicitud.', 403);
+  }
+  if (strpos($tipo, 'application/pdf') !== 0) {
+    json_fail('El archivo recibido no es un PDF.', 415);
+  }
+  if ($largo > CEEVS_PREINS_MAX_PDF_BYTES) {
+    json_fail('El PDF supera el tamaño permitido.', 413);
+  }
+
+  $pdf = @file_get_contents('php://input', false, null, 0, CEEVS_PREINS_MAX_PDF_BYTES + 1);
+  if (!is_string($pdf) || $pdf === '' || strlen($pdf) > CEEVS_PREINS_MAX_PDF_BYTES) {
+    json_fail('No se recibió un PDF válido.', 400);
+  }
+
+  $guardado = ceevs_preins_save_pdf($id, $token, $pdf);
+  if ($guardado === null) {
+    json_fail('No se pudo guardar el PDF. El enlace pudo vencer; vuelve a intentarlo desde la confirmación.', 422);
+  }
+  ceevs_audit(
+    'preins_pdf_guardado',
+    'PDF de solicitud guardado: ' . (string) $guardado['archivo'],
+    true,
+    'formulario público'
+  );
+  json_out(array(
+    'ok' => true,
+    'archivo' => $guardado['archivo'],
+    'bytes' => $guardado['bytes'],
+  ));
+}
 
 /* ─── Estado del formulario ─── */
 
@@ -196,6 +248,7 @@ if (ceevs_preins_lleno($ix)) {
 
 $id = ceevs_preins_new_id();
 $num = (int) $ix['next'];
+$pdfToken = bin2hex(random_bytes(32));
 
 $rec = array(
   'id'         => $id,
@@ -217,6 +270,9 @@ $rec = array(
   'firma'      => ceevs_preins_txt($body['firma'] ?? '', 120),
   'notas'      => '',
   'foto'       => false,
+  'pdf'        => false,
+  'pdfTokenHash' => hash('sha256', $pdfToken),
+  'pdfTokenExpires' => time() + 1800,
 );
 
 // La foto solo entra si queda presupuesto de disco. Si no, la solicitud se
@@ -277,4 +333,10 @@ if (
   );
 }
 
-json_out(array('ok' => true, 'num' => $num));
+json_out(array(
+  'ok' => true,
+  'num' => $num,
+  'id' => $id,
+  't' => $rec['t'],
+  'pdfToken' => $pdfToken,
+));

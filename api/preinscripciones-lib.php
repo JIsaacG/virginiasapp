@@ -14,6 +14,7 @@
  *   - index.php      → índice liviano de la bandeja + ajustes + correlativo
  *   - rec-<id>.php   → la solicitud completa (un archivo por solicitud)
  *   - foto-<id>.<ext>→ foto del alumno (se sirve solo con sesión iniciada)
+ *   - Solicitud-*.pdf→ copia exacta del PDF entregado a la familia
  *   - guard.php      → freno anti-spam del formulario público (por IP)
  *
  * Son datos personales de menores: NUNCA se exponen sin sesión de administrador.
@@ -83,6 +84,7 @@ define('CEEVS_PREINS_ESTADO', CEEVS_PREINS_DIR . '/estado.php');
 define('CEEVS_PREINS_LOCK', CEEVS_PREINS_DIR . '/lock.php');
 
 const CEEVS_PREINS_MAX_FOTO_BYTES = 2200000;  // 2 MB de foto ya redimensionada
+const CEEVS_PREINS_MAX_PDF_BYTES  = 6000000;  // 6 MB por PDF generado en el navegador
 const CEEVS_PREINS_MAX_POR_IP     = 4;        // solicitudes GUARDADAS por IP cada hora
 const CEEVS_PREINS_VENTANA_IP     = 3600;     // ventana del freno, en segundos
 const CEEVS_PREINS_MAX_HERMANOS   = 12;
@@ -101,6 +103,7 @@ const CEEVS_PREINS_MAX_CORREOS_HORA = 30;     // avisos por correo (Hostinger co
 const CEEVS_PREINS_MAX_IPS_GUARD   = 400;     // entradas vivas en guard.php
 const CEEVS_PREINS_MAX_TOTAL       = 2000;    // solicitudes almacenadas (tope de inodos)
 const CEEVS_PREINS_MAX_FOTOS_BYTES = 400000000; // 400 MB de fotos en total (cuota de disco)
+const CEEVS_PREINS_MAX_PDFS_BYTES  = 1000000000; // 1 GB de copias PDF en total
 
 /** Estados por los que pasa una solicitud dentro del panel. */
 const CEEVS_PREINS_ESTADOS = array('nueva', 'leida', 'contactada', 'archivada');
@@ -148,6 +151,7 @@ function ceevs_preins_migrate_legacy(): void {
     if (
       preg_match('/^rec-[a-f0-9]{16}\.php$/', $name) === 1 ||
       preg_match('/^foto-[a-f0-9]{16}\.(?:jpg|png|webp)$/', $name) === 1 ||
+      preg_match('/^(?:pdf-[a-f0-9]{16}|Solicitud-[A-Za-z0-9-]{1,180})\.pdf$/', $name) === 1 ||
       in_array($name, array('guard.php', 'estado.php'), true)
     ) {
       $copy[] = $name;
@@ -194,11 +198,18 @@ function ceevs_preins_index(): array {
   if (!is_array($ix)) {
     $ix = array();
   }
-  $ix += array('next' => CEEVS_PREINS_NUM_INICIAL, 'items' => array(), 'settings' => array(), 'bytes' => 0);
+  $ix += array(
+    'next' => CEEVS_PREINS_NUM_INICIAL,
+    'items' => array(),
+    'settings' => array(),
+    'bytes' => 0,
+    'pdfBytes' => 0,
+  );
   if (!is_array($ix['items'])) {
     $ix['items'] = array();
   }
   $ix['bytes'] = max(0, (int) $ix['bytes']);   // fotos guardadas, en bytes
+  $ix['pdfBytes'] = max(0, (int) $ix['pdfBytes']);
   if (!is_array($ix['settings'])) {
     $ix['settings'] = array();
   }
@@ -277,6 +288,39 @@ function ceevs_preins_foto_path(string $id): ?string {
   return null;
 }
 
+/** Nombre legible y único de la copia PDF guardada en la carpeta de admisiones. */
+function ceevs_preins_pdf_filename(array $rec): string {
+  $nombre = (string) (($rec['alumno']['nombre'] ?? '') ?: 'Alumno');
+  if (function_exists('iconv')) {
+    $ascii = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $nombre);
+    if (is_string($ascii) && $ascii !== '') {
+      $nombre = $ascii;
+    }
+  }
+  $nombre = trim((string) preg_replace('/[^A-Za-z0-9]+/', '-', $nombre), '-');
+  if ($nombre === '') {
+    $nombre = 'Alumno';
+  }
+  $nombre = substr($nombre, 0, 90);
+  $num = max(0, (int) ($rec['num'] ?? 0));
+  $id = ceevs_preins_valid_id($rec['id'] ?? '') ? (string) $rec['id'] : '0000000000000000';
+  return 'Solicitud-' . $num . '-' . $nombre . '-' . substr($id, 0, 8) . '.pdf';
+}
+
+/** Ruta de la copia PDF de una solicitud, o null si todavía no se ha guardado. */
+function ceevs_preins_pdf_path(array $rec): ?string {
+  $name = (string) ($rec['pdfArchivo'] ?? '');
+  if (
+    $name === '' ||
+    basename($name) !== $name ||
+    preg_match('/^[A-Za-z0-9.-]{1,200}\.pdf$/', $name) !== 1
+  ) {
+    return null;
+  }
+  $path = CEEVS_PREINS_DIR . '/' . $name;
+  return @is_file($path) ? $path : null;
+}
+
 /* ─── Lectura y escritura de solicitudes ─── */
 
 function ceevs_preins_read(string $id): ?array {
@@ -302,6 +346,15 @@ function ceevs_preins_delete(string $id): bool {
     $liberados = (int) @filesize($foto);
     @unlink($foto);
   }
+  $pdfLiberados = 0;
+  $rec = ceevs_preins_read($id);
+  if (is_array($rec)) {
+    $pdf = ceevs_preins_pdf_path($rec);
+    if ($pdf !== null) {
+      $pdfLiberados = (int) @filesize($pdf);
+      @unlink($pdf);
+    }
+  }
   @unlink(ceevs_preins_file($id));
 
   $ix = ceevs_preins_index();
@@ -310,6 +363,7 @@ function ceevs_preins_delete(string $id): bool {
   }));
   // Al borrar se devuelve el espacio al presupuesto de fotos.
   $ix['bytes'] = max(0, (int) $ix['bytes'] - $liberados);
+  $ix['pdfBytes'] = max(0, (int) ($ix['pdfBytes'] ?? 0) - $pdfLiberados);
   return ceevs_preins_save_index($ix);
 }
 
@@ -339,6 +393,7 @@ function ceevs_preins_row(array $rec): array {
     'tel'     => $tel,
     'correo'  => $correo,
     'foto'    => !empty($rec['foto']),
+    'pdf'     => !empty($rec['pdf']),
   );
 }
 
@@ -556,6 +611,13 @@ function ceevs_preins_cabe_foto(array $ix): bool {
   return (int) ($ix['bytes'] ?? 0) < CEEVS_PREINS_MAX_FOTOS_BYTES;
 }
 
+/** ¿Cabe una copia PDF de este tamaño dentro del presupuesto del archivo? */
+function ceevs_preins_cabe_pdf(array $ix, int $bytes, int $reemplaza = 0): bool {
+  $usados = max(0, (int) ($ix['pdfBytes'] ?? 0) - max(0, $reemplaza));
+  return $bytes > 0 && $bytes <= CEEVS_PREINS_MAX_PDF_BYTES
+    && ($usados + $bytes) <= CEEVS_PREINS_MAX_PDFS_BYTES;
+}
+
 /* ─── Saneado de los campos que llegan del formulario ─── */
 
 /** Texto de una línea: sin caracteres de control, recortado y con tope de largo. */
@@ -626,6 +688,93 @@ function ceevs_preins_save_foto(string $id, $dataUrl): int {
   }
   @chmod($dest, 0644);
   return strlen($bin);
+}
+
+/**
+ * Guarda la copia PDF que generó el mismo módulo usado para la descarga.
+ *
+ * El token de un solo formulario impide que un visitante pueda adjuntar o
+ * reemplazar archivos de otra solicitud. Devuelve los datos del archivo o null.
+ */
+function ceevs_preins_save_pdf(string $id, string $token, string $bin, bool $trusted = false): ?array {
+  if (
+    !ceevs_preins_valid_id($id) ||
+    (!$trusted && (strlen($token) < 32 || strlen($token) > 160)) ||
+    $bin === '' ||
+    strlen($bin) > CEEVS_PREINS_MAX_PDF_BYTES ||
+    strncmp($bin, '%PDF-', 5) !== 0 ||
+    strpos(substr($bin, -4096), '%%EOF') === false
+  ) {
+    return null;
+  }
+
+  $lock = ceevs_preins_lock();
+  $rec = ceevs_preins_read($id);
+  $hash = is_array($rec) ? (string) ($rec['pdfTokenHash'] ?? '') : '';
+  $expires = is_array($rec) ? (int) ($rec['pdfTokenExpires'] ?? 0) : 0;
+  if (!is_array($rec) || (
+    !$trusted && (
+      $hash === '' ||
+      $expires < time() ||
+      !empty($rec['pdf']) ||
+      !hash_equals($hash, hash('sha256', $token))
+    )
+  )) {
+    ceevs_preins_unlock($lock);
+    return null;
+  }
+
+  $ix = ceevs_preins_index();
+  $anterior = ceevs_preins_pdf_path($rec);
+  $bytesAnteriores = $anterior !== null ? max(0, (int) @filesize($anterior)) : 0;
+  $bytes = strlen($bin);
+  if (!ceevs_preins_cabe_pdf($ix, $bytes, $bytesAnteriores)) {
+    ceevs_preins_unlock($lock);
+    return null;
+  }
+
+  $name = ceevs_preins_pdf_filename($rec);
+  $dest = CEEVS_PREINS_DIR . '/' . $name;
+  try {
+    $tmp = $dest . '.' . bin2hex(random_bytes(5)) . '.tmp';
+  } catch (Throwable $e) {
+    ceevs_preins_unlock($lock);
+    return null;
+  }
+  if (@file_put_contents($tmp, $bin, LOCK_EX) === false || !@rename($tmp, $dest)) {
+    @unlink($tmp);
+    ceevs_preins_unlock($lock);
+    return null;
+  }
+  @chmod($dest, 0600);
+
+  if ($anterior !== null && $anterior !== $dest) {
+    @unlink($anterior);
+  }
+
+  $rec['pdf'] = true;
+  $rec['pdfArchivo'] = $name;
+  $rec['pdfBytes'] = $bytes;
+  $rec['pdfGuardado'] = gmdate('c');
+  unset($rec['pdfTokenHash'], $rec['pdfTokenExpires']);
+  if (!ceevs_preins_write($id, $rec)) {
+    @unlink($dest);
+    ceevs_preins_unlock($lock);
+    return null;
+  }
+
+  $ix['pdfBytes'] = max(0, (int) ($ix['pdfBytes'] ?? 0) - $bytesAnteriores + $bytes);
+  $row = ceevs_preins_row($rec);
+  foreach ($ix['items'] as $i => $item) {
+    if ((string) ($item['id'] ?? '') === $id) {
+      $ix['items'][$i] = $row;
+      break;
+    }
+  }
+  ceevs_preins_save_index($ix);
+  ceevs_preins_unlock($lock);
+
+  return array('archivo' => $name, 'bytes' => $bytes, 'rec' => $rec);
 }
 
 /* ─── Texto plano de una solicitud (correo y exportación) ─── */

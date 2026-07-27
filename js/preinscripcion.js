@@ -26,6 +26,11 @@ const Preinscripcion = {
 
   data: null,
   enviada: null,           // solicitud ya enviada, para la copia en PDF
+  pdfBlob: null,           // la misma copia se guarda en servidor y se descarga
+  pdfPromise: null,
+  pdfUploadPromise: null,
+  pdfToken: '',
+  pdfGuardado: false,
   paso: 1,
   maxPaso: 1,
   enviando: false,
@@ -786,16 +791,47 @@ const Preinscripcion = {
         // desde esta misma pantalla (el borrador ya se borró).
         this.enviada = Object.assign({}, JSON.parse(JSON.stringify(this.data)), {
           num: res.data.num,
-          t: new Date().toISOString()
+          id: res.data.id || '',
+          t: res.data.t || new Date().toISOString()
         });
+        this.pdfToken = res.data.pdfToken || '';
+        this.pdfBlob = null;
+        this.pdfPromise = null;
+        this.pdfUploadPromise = null;
+        this.pdfGuardado = false;
 
         this.el.wizard.hidden = true;
         this.el.done.hidden = false;
         this.el.doneNum.textContent = '#' + res.data.num;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.el.donePdf.disabled = true;
+        this.el.donePdf.textContent = '⏳ Guardando el PDF…';
+        this.el.donePdfMsg.className = 'preins-hint';
+        this.el.donePdfMsg.textContent = 'Espera unos segundos mientras archivamos la copia oficial.';
+        window.scrollTo({ top: 0, behavior: 'auto' });
 
         if (typeof addXP === 'function') addXP(30, '🏫', '¡Solicitud enviada!', 'Bienvenida a la familia CEEVS');
         if (typeof unlockBadge === 'function') unlockBadge('contact');
+
+        // La solicitud ya está a salvo. El PDF se genera después porque necesita
+        // el número correlativo devuelto por el servidor. Un fallo aquí nunca
+        // reactiva "Enviar" (eso duplicaría la solicitud); se ofrece reintentar.
+        this.el.send.textContent = 'Guardando el PDF…';
+        return this._guardarPDFServidor()
+          .then(() => ({ pdfOk: true }))
+          .catch(err => ({ pdfOk: false, pdfError: err }));
+      })
+      .then(resultado => {
+        if (!resultado) return;
+        this.enviando = false;
+        this.el.donePdf.disabled = false;
+        this.el.donePdf.textContent = '⬇️ Descargar mi solicitud en PDF';
+        if (resultado.pdfOk) {
+          this.el.donePdfMsg.className = 'preins-hint';
+          this.el.donePdfMsg.textContent = 'El PDF también quedó guardado en el archivo de admisiones.';
+        } else {
+          this.el.donePdfMsg.className = 'preins-hint err';
+          this.el.donePdfMsg.textContent = 'La solicitud llegó, pero falta guardar su PDF. Pulsa el botón para reintentar y descargarlo.';
+        }
       })
       .catch(err => {
         this._fallar(err && err.message
@@ -808,6 +844,64 @@ const Preinscripcion = {
   },
 
   /* ─── Copia en PDF para la familia ─── */
+
+  _generarPDF() {
+    if (this.pdfBlob) return Promise.resolve(this.pdfBlob);
+    if (this.pdfPromise) return this.pdfPromise;
+    if (!this.enviada || !window.ceevsHoja || typeof window.ceevsHoja.generar !== 'function') {
+      return Promise.reject(new Error('No se pudo iniciar el generador de PDF.'));
+    }
+
+    this.pdfPromise = window.ceevsHoja
+      .generar(this.enviada, { fotoSrc: this.enviada.foto || '' })
+      .then(blob => {
+        this.pdfBlob = blob;
+        this.pdfPromise = null;
+        return blob;
+      })
+      .catch(err => {
+        this.pdfPromise = null;
+        throw err;
+      });
+    return this.pdfPromise;
+  },
+
+  _subirPDF(blob) {
+    if (this.pdfGuardado) return Promise.resolve();
+    if (this.pdfUploadPromise) return this.pdfUploadPromise;
+    if (!this.enviada || !this.enviada.id || !this.pdfToken) {
+      return Promise.reject(new Error('Falta la autorización temporal para guardar el PDF.'));
+    }
+
+    this.pdfUploadPromise = fetch(this.API + '?action=pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/pdf',
+        'X-CEEVS-PDF-ID': this.enviada.id,
+        'X-CEEVS-PDF-TOKEN': this.pdfToken
+      },
+      credentials: 'same-origin',
+      body: blob
+    })
+      .then(r => r.json().then(d => ({ status: r.status, data: d })))
+      .then(res => {
+        if (res.status !== 200 || !res.data || !res.data.ok) {
+          throw new Error((res.data && res.data.error) || 'No se pudo guardar el PDF en el servidor.');
+        }
+        this.pdfGuardado = true;
+        this.pdfToken = '';
+        this.pdfUploadPromise = null;
+      })
+      .catch(err => {
+        this.pdfUploadPromise = null;
+        throw err;
+      });
+    return this.pdfUploadPromise;
+  },
+
+  _guardarPDFServidor() {
+    return this._generarPDF().then(blob => this._subirPDF(blob).then(() => blob));
+  },
 
   /**
    * Baja la solicitud ya enviada en el formato de la hoja oficial. La arma
@@ -826,8 +920,23 @@ const Preinscripcion = {
     msg.className = 'preins-hint';
     msg.textContent = 'Esto puede tardar unos segundos.';
 
-    window.ceevsHoja.descargar(this.enviada, { fotoSrc: this.enviada.foto || '' })
-      .then(() => { msg.textContent = 'Listo ✓ Busca el archivo en tus descargas.'; })
+    this._generarPDF()
+      .then(blob => {
+        const guardar = this.pdfGuardado
+          ? Promise.resolve(true)
+          : this._subirPDF(blob).then(() => true).catch(() => false);
+        return guardar.then(guardado => ({ blob, guardado }));
+      })
+      .then(resultado => {
+        window.ceevsHoja.descargarBlob(
+          resultado.blob,
+          window.ceevsHoja.nombreArchivo(this.enviada)
+        );
+        msg.className = resultado.guardado ? 'preins-hint' : 'preins-hint err';
+        msg.textContent = resultado.guardado
+          ? 'Listo ✓ El mismo PDF quedó guardado en admisiones y en tus descargas.'
+          : 'El PDF se descargó, pero no pudo guardarse en admisiones. Comunícate con la institución.';
+      })
       .catch(err => {
         msg.className = 'preins-hint err';
         msg.textContent = (err && err.message)
