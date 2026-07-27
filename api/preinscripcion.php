@@ -51,8 +51,17 @@ if ($metodo === 'POST' && $action === 'pdf') {
     json_fail('No se recibió un PDF válido.', 400);
   }
 
-  $guardado = ceevs_preins_save_pdf($id, $token, $pdf);
+  $motivo = '';
+  $guardado = ceevs_preins_save_pdf($id, $token, $pdf, false, $motivo);
   if ($guardado === null) {
+    // Se anota el motivo: sin esto, una solicitud sin PDF es indistinguible de
+    // una que nunca intentó subirlo y no hay nada que revisar en la bitácora.
+    ceevs_audit(
+      'preins_pdf_fallo',
+      'Solicitud ' . $id . ' — ' . ($motivo !== '' ? $motivo : 'desconocido') . ' (' . strlen($pdf) . ' bytes)',
+      false,
+      'formulario público'
+    );
     json_fail('No se pudo guardar el PDF. El enlace pudo vencer; vuelve a intentarlo desde la confirmación.', 422);
   }
   ceevs_audit(

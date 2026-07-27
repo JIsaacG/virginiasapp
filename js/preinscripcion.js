@@ -532,6 +532,16 @@ const Preinscripcion = {
     this.maxPaso = Math.max(this.maxPaso, n);
     if (n === this.TOTAL_PASOS) this._pintarRevision();
 
+    // El generador de PDF pesa ~885 KB y solo puede usarse DESPUÉS de enviar,
+    // porque la hoja lleva el correlativo que asigna el servidor. Si se empieza
+    // a bajar en ese momento, la familia tiene que esperar con la página abierta
+    // la descarga más el render, y muchas la cierran antes: la solicitud queda
+    // guardada pero sin su copia oficial. Pidiéndolo desde el paso 6, al enviar
+    // ya está en caché. No estorba: no genera nada todavía.
+    if (n >= this.TOTAL_PASOS - 1 && window.ceevsHoja && typeof window.ceevsHoja.precargar === 'function') {
+      window.ceevsHoja.precargar();
+    }
+
     // Pasado el primer paso, el encabezado de presentación se encoge: en el
     // celular estorbaba y obligaba a bajar en cada paso para ver los campos.
     if (this.maxPaso > 1) document.getElementById('preins').classList.add('avanzado');
@@ -806,7 +816,8 @@ const Preinscripcion = {
         this.el.donePdf.disabled = true;
         this.el.donePdf.textContent = '⏳ Guardando el PDF…';
         this.el.donePdfMsg.className = 'preins-hint';
-        this.el.donePdfMsg.textContent = 'Espera unos segundos mientras archivamos la copia oficial.';
+        this.el.donePdfMsg.textContent = 'Tu solicitud ya está guardada ✓ — no cierres esta página todavía: '
+          + 'estamos preparando la copia oficial en PDF.';
         window.scrollTo({ top: 0, behavior: 'auto' });
 
         if (typeof addXP === 'function') addXP(30, '🏫', '¡Solicitud enviada!', 'Bienvenida a la familia CEEVS');
@@ -830,7 +841,9 @@ const Preinscripcion = {
           this.el.donePdfMsg.textContent = 'El PDF también quedó guardado en el archivo de admisiones.';
         } else {
           this.el.donePdfMsg.className = 'preins-hint err';
-          this.el.donePdfMsg.textContent = 'La solicitud llegó, pero falta guardar su PDF. Pulsa el botón para reintentar y descargarlo.';
+          // Ya no se pierde nada: el panel de admisiones repone la copia que falte.
+          this.el.donePdfMsg.textContent = 'Tu solicitud llegó completa ✓. No pudimos archivar la copia en PDF; '
+            + 'el colegio la generará al revisarla. Pulsa el botón para descargar la tuya.';
         }
       })
       .catch(err => {
@@ -873,7 +886,7 @@ const Preinscripcion = {
       return Promise.reject(new Error('Falta la autorización temporal para guardar el PDF.'));
     }
 
-    this.pdfUploadPromise = fetch(this.API + '?action=pdf', {
+    const intento = () => fetch(this.API + '?action=pdf', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/pdf',
@@ -886,8 +899,21 @@ const Preinscripcion = {
       .then(r => r.json().then(d => ({ status: r.status, data: d })))
       .then(res => {
         if (res.status !== 200 || !res.data || !res.data.ok) {
-          throw new Error((res.data && res.data.error) || 'No se pudo guardar el PDF en el servidor.');
+          const e = new Error((res.data && res.data.error) || 'No se pudo guardar el PDF en el servidor.');
+          e.status = res.status;
+          throw e;
         }
+      });
+
+    // Un reintento, y solo si falló la red o el servidor. Ante un 4xx (token
+    // vencido, PDF rechazado) repetir da exactamente el mismo error.
+    this.pdfUploadPromise = intento()
+      .catch(err => {
+        const reintentable = !err.status || err.status >= 500;
+        if (!reintentable) throw err;
+        return new Promise(r => setTimeout(r, 1500)).then(intento);
+      })
+      .then(() => {
         this.pdfGuardado = true;
         this.pdfToken = '';
         this.pdfUploadPromise = null;
@@ -900,7 +926,29 @@ const Preinscripcion = {
   },
 
   _guardarPDFServidor() {
-    return this._generarPDF().then(blob => this._subirPDF(blob).then(() => blob));
+    this._avisarAlCerrar(true);
+    return this._generarPDF()
+      .then(blob => this._subirPDF(blob).then(() => blob))
+      .then(
+        blob => { this._avisarAlCerrar(false); return blob; },
+        err => { this._avisarAlCerrar(false); throw err; }
+      );
+  },
+
+  /**
+   * Mientras la copia oficial se está armando y subiendo, avisa si intentan
+   * cerrar. Es el momento frágil: la solicitud ya está guardada, pero el PDF
+   * vive solo en esta pestaña y cerrarla deja al colegio sin él.
+   */
+  _avisarAlCerrar(activar) {
+    if (activar) {
+      if (this._guardaCierre) return;
+      this._guardaCierre = e => { e.preventDefault(); e.returnValue = ''; };
+      window.addEventListener('beforeunload', this._guardaCierre);
+    } else if (this._guardaCierre) {
+      window.removeEventListener('beforeunload', this._guardaCierre);
+      this._guardaCierre = null;
+    }
   },
 
   /**

@@ -318,6 +318,21 @@
     return cargarLib._espera;
   }
 
+  /**
+   * Adelanta la descarga del generador (≈885 KB) sin armar ningún PDF.
+   *
+   * La copia oficial solo puede generarse DESPUÉS de enviar, porque necesita el
+   * correlativo que asigna el servidor. Si la librería empieza a bajarse en ese
+   * momento, la familia tiene que esperar con la página abierta la descarga más
+   * el render; muchas la cierran antes y el colegio se queda sin el PDF. Pidiéndola
+   * mientras aún llenan los últimos pasos, al enviar ya está en caché.
+   *
+   * Nunca rechaza: es una optimización, y si falla el intento real reporta el error.
+   */
+  function precargar() {
+    return cargarLib().then(function () { return true; }, function () { return false; });
+  }
+
   /** Nombre de archivo amable: Solicitud-12-Ana-Maria-Lopez.pdf */
   function nombreArchivo(rec) {
     var alumno = (rec.alumno && rec.alumno.nombre) || '';
@@ -487,6 +502,7 @@
     generar: generar,
     descargar: descargar,
     descargarBlob: descargarBlob,
+    precargar: precargar,
     ocultarLogosFaltantes: ocultarLogosFaltantes,
     nombreArchivo: nombreArchivo
   };

@@ -103,6 +103,8 @@
         pintarAjustes();
         pintarStats(d.stats || {});
         pintarLista();
+        pintarBotonPdf();
+        pintarSalud();
       })
       .catch(function (err) {
         lista.innerHTML = '<p class="empty-state">' + esc(err.message)
@@ -176,6 +178,7 @@
             + (it.tel ? '<span>📞 ' + esc(it.tel) + '</span>' : '')
             + (it.correo ? '<span>✉️ ' + esc(it.correo) + '</span>' : '')
             + (it.foto ? '<span>📷 Con foto</span>' : '')
+            + (it.pdf ? '' : '<span class="preins-sinpdf">📄 Sin PDF</span>')
           + '</p>'
         + '</div>'
         + '<div class="preins-fila-meta">'
@@ -185,6 +188,32 @@
         + '<button type="button" class="preins-fila-btn" data-preins-ver="' + esc(it.id) + '">Ver solicitud →</button>'
         + '</article>';
     }).join('');
+  }
+
+  /**
+   * Dónde guarda PHP las solicitudes, de verdad.
+   *
+   * La ruta se deduce de la estructura del hosting, así que conviene poder
+   * compararla con la que se ve en el Administrador de archivos sin adivinar.
+   */
+  function pintarSalud() {
+    var cont = el('preins-salud');
+    if (!cont) return;
+    get('action=salud')
+      .then(function (d) {
+        var kb = d.pdfBytes ? ' · ' + Math.round(d.pdfBytes / 1024) + ' KB' : '';
+        var problema = !d.existe
+          ? '<strong class="preins-salud-mal">La carpeta no existe.</strong>'
+          : (!d.escribible ? '<strong class="preins-salud-mal">La carpeta no permite escribir.</strong>' : '');
+        cont.innerHTML = '<p class="preins-salud-ruta"><span>📁 Carpeta de admisiones en el servidor:</span>'
+          + '<code>' + esc(d.ruta) + '</code></p>'
+          + '<p class="preins-salud-datos">' + d.recs + ' solicitud' + (d.recs === 1 ? '' : 'es')
+          + ' · ' + d.pdfs + ' PDF' + (d.pdfs === 1 ? '' : 's') + ' archivado' + (d.pdfs === 1 ? '' : 's') + kb
+          + (d.sinPdf ? ' · <strong>' + d.sinPdf + ' sin PDF</strong>' : '')
+          + ' ' + problema + '</p>';
+        cont.hidden = false;
+      })
+      .catch(function () { cont.hidden = true; });
   }
 
   function pintarAjustes() {
@@ -300,7 +329,99 @@
         rec.pdf = true;
         var fila = state.items.filter(function (it) { return it.id === rec.id; })[0];
         if (fila) fila.pdf = true;
+        pintarBotonPdf();
       });
+  }
+
+  /* ─── Relleno de las copias PDF que falten ───
+   *
+   * La copia oficial la arma el navegador, no PHP. Cuando la familia envía la
+   * solicitud y cierra la página antes de que termine (o se le cae la conexión),
+   * el expediente queda guardado pero sin su PDF. Este barrido lo repone desde
+   * el panel: usa el MISMO generador que la familia, así que el archivo es
+   * idéntico, y sube con sesión de administrador, sin depender del token de 30
+   * minutos que ya venció.
+   *
+   * Va en serie a propósito: dos html2canvas a la vez consumen memoria de sobra
+   * y en equipos modestos tumban la pestaña.
+   */
+
+  function pintarProgresoPdf(texto, ocupado) {
+    var aviso = el('preins-pdf-estado');
+    if (aviso) {
+      aviso.textContent = texto || '';
+      aviso.hidden = !texto;
+    }
+    var btn = el('preins-rellenar-pdf');
+    if (btn) btn.disabled = !!ocupado;
+  }
+
+  /** Refresca el botón de relleno con cuántas copias faltan. */
+  function pintarBotonPdf() {
+    var btn = el('preins-rellenar-pdf');
+    if (!btn) return;
+    var faltan = state.items.filter(function (it) { return !it.pdf; }).length;
+    btn.hidden = faltan === 0;
+    btn.textContent = '📄 Generar PDF faltante' + (faltan === 1 ? '' : 's') + ' (' + faltan + ')';
+  }
+
+  function rellenarPdfsFaltantes(auto) {
+    if (rellenarPdfsFaltantes._corriendo) return Promise.resolve();
+    if (!window.ceevsHoja || typeof window.ceevsHoja.generar !== 'function') return Promise.resolve();
+
+    var pendientes = state.items.filter(function (it) { return !it.pdf; });
+    if (!pendientes.length) {
+      if (!auto) toast('Todas las solicitudes ya tienen su PDF guardado');
+      return Promise.resolve();
+    }
+
+    rellenarPdfsFaltantes._corriendo = true;
+    var hechos = 0;
+    var fallos = 0;
+    var seguidos = 0;
+
+    function siguiente(i) {
+      // Dos fallos seguidos: algo va mal de fondo (permisos, cuota, sesión
+      // vencida). Seguir solo repetiría el error tantas veces como solicitudes.
+      if (i >= pendientes.length || seguidos >= 2) return Promise.resolve();
+
+      pintarProgresoPdf('Generando PDF ' + (i + 1) + ' de ' + pendientes.length + '…', true);
+
+      return get('action=get&id=' + encodeURIComponent(pendientes[i].id))
+        .then(function (d) {
+          var rec = d.rec;
+          if (!rec) throw new Error('No se pudo leer la solicitud.');
+          return window.ceevsHoja.generar(rec, opcionesHoja(rec))
+            .then(function (blob) { return guardarPdfFaltante(rec, blob); });
+        })
+        .then(function () {
+          hechos++;
+          seguidos = 0;
+        })
+        .catch(function () {
+          fallos++;
+          seguidos++;
+        })
+        .then(function () {
+          // Respiro entre solicitudes: html2canvas deja mucha memoria por liberar.
+          return new Promise(function (r) { setTimeout(r, 300); });
+        })
+        .then(function () { return siguiente(i + 1); });
+    }
+
+    return siguiente(0).then(function () {
+      rellenarPdfsFaltantes._corriendo = false;
+      pintarProgresoPdf('', false);
+      pintarLista();
+      pintarBotonPdf();
+      if (hechos && !fallos) {
+        toast(hechos + ' PDF' + (hechos === 1 ? '' : 's') + ' generado' + (hechos === 1 ? '' : 's') + ' y archivado' + (hechos === 1 ? '' : 's'));
+      } else if (hechos && fallos) {
+        toast(hechos + ' PDF guardados, ' + fallos + ' con error. Revisa la bitácora.');
+      } else if (fallos) {
+        toast('No se pudieron generar los PDF que faltan. Revisa la bitácora (📜).');
+      }
+    });
   }
 
   /** Baja el PDF guardado; si es un registro anterior, primero lo crea y archiva. */
@@ -440,6 +561,7 @@
     el('preins-buscar').addEventListener('input', pintarLista);
     el('preins-filtro').addEventListener('change', pintarLista);
     el('preins-refrescar').addEventListener('click', function () { cargar().then(function () { toast('Bandeja actualizada'); }); });
+    el('preins-rellenar-pdf').addEventListener('click', function () { rellenarPdfsFaltantes(false); });
 
     el('preins-modal-close').addEventListener('click', cerrar);
     el('preins-modal').addEventListener('click', function (e) {
@@ -463,7 +585,20 @@
   /* ─── API pública (la usa admin.js al cambiar de pestaña) ─── */
 
   window.ceevsPreins = {
-    render: function () { if (!state.cargado) cargar(); },
+    /**
+     * Al abrir la pestaña se reponen solas las copias PDF que falten. Es lo que
+     * garantiza que la carpeta de admisiones acabe con el PDF de TODAS las
+     * solicitudes, aunque la familia cerrara la página antes de que se subiera.
+     *
+     * Va aquí y no en cargar() a propósito: cargar() también corre para el globo
+     * del menú, y no conviene ponerse a generar PDFs mientras el administrador
+     * está en otra pestaña.
+     */
+    render: function () {
+      (state.cargado ? Promise.resolve() : cargar()).then(function () {
+        rellenarPdfsFaltantes(true);
+      });
+    },
     recargar: cargar,
     /** Trae el contador de nuevas sin abrir la pestaña (para el globo del menú). */
     precargar: function () { if (!state.cargado) cargar(); },

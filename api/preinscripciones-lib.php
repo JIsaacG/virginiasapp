@@ -695,33 +695,68 @@ function ceevs_preins_save_foto(string $id, $dataUrl): int {
  *
  * El token de un solo formulario impide que un visitante pueda adjuntar o
  * reemplazar archivos de otra solicitud. Devuelve los datos del archivo o null.
+ *
+ * $motivo recoge, cuando se devuelve null, una etiqueta corta con la causa. Sin
+ * ella todos los caminos de fallo se ven iguales desde fuera y no hay forma de
+ * saber por qué una solicitud se quedó sin su PDF (que es justo lo que pasó con
+ * las primeras solicitudes recibidas).
  */
-function ceevs_preins_save_pdf(string $id, string $token, string $bin, bool $trusted = false): ?array {
-  if (
-    !ceevs_preins_valid_id($id) ||
-    (!$trusted && (strlen($token) < 32 || strlen($token) > 160)) ||
-    $bin === '' ||
-    strlen($bin) > CEEVS_PREINS_MAX_PDF_BYTES ||
-    strncmp($bin, '%PDF-', 5) !== 0 ||
-    strpos(substr($bin, -4096), '%%EOF') === false
-  ) {
+function ceevs_preins_save_pdf(string $id, string $token, string $bin, bool $trusted = false, ?string &$motivo = null): ?array {
+  $motivo = '';
+  if (!ceevs_preins_valid_id($id)) {
+    $motivo = 'id_invalido';
+    return null;
+  }
+  if (!$trusted && (strlen($token) < 32 || strlen($token) > 160)) {
+    $motivo = 'token_invalido';
+    return null;
+  }
+  if ($bin === '') {
+    $motivo = 'vacio';
+    return null;
+  }
+  if (strlen($bin) > CEEVS_PREINS_MAX_PDF_BYTES) {
+    $motivo = 'muy_grande';
+    return null;
+  }
+  if (strncmp($bin, '%PDF-', 5) !== 0) {
+    $motivo = 'no_es_pdf';
+    return null;
+  }
+  // Sin %%EOF al final el archivo llegó cortado: es la huella de una subida
+  // interrumpida (pestaña cerrada, datos móviles caídos).
+  if (strpos(substr($bin, -4096), '%%EOF') === false) {
+    $motivo = 'truncado';
     return null;
   }
 
   $lock = ceevs_preins_lock();
   $rec = ceevs_preins_read($id);
-  $hash = is_array($rec) ? (string) ($rec['pdfTokenHash'] ?? '') : '';
-  $expires = is_array($rec) ? (int) ($rec['pdfTokenExpires'] ?? 0) : 0;
-  if (!is_array($rec) || (
-    !$trusted && (
-      $hash === '' ||
-      $expires < time() ||
-      !empty($rec['pdf']) ||
-      !hash_equals($hash, hash('sha256', $token))
-    )
-  )) {
+  if (!is_array($rec)) {
     ceevs_preins_unlock($lock);
+    $motivo = 'sin_registro';
     return null;
+  }
+  if (!$trusted) {
+    $hash = (string) ($rec['pdfTokenHash'] ?? '');
+    $expires = (int) ($rec['pdfTokenExpires'] ?? 0);
+    // "Ya tiene PDF" se comprueba primero: al guardar con éxito se borra el
+    // token, así que un reintento llegaría aquí sin hash y se reportaría como
+    // 'sin_token', haciendo creer que algo se rompió cuando en realidad la copia
+    // ya está a salvo.
+    if (!empty($rec['pdf'])) {
+      $motivo = 'ya_tiene_pdf';
+    } elseif ($hash === '') {
+      $motivo = 'sin_token';
+    } elseif ($expires < time()) {
+      $motivo = 'token_vencido';
+    } elseif (!hash_equals($hash, hash('sha256', $token))) {
+      $motivo = 'token_no_coincide';
+    }
+    if ($motivo !== '') {
+      ceevs_preins_unlock($lock);
+      return null;
+    }
   }
 
   $ix = ceevs_preins_index();
@@ -730,6 +765,7 @@ function ceevs_preins_save_pdf(string $id, string $token, string $bin, bool $tru
   $bytes = strlen($bin);
   if (!ceevs_preins_cabe_pdf($ix, $bytes, $bytesAnteriores)) {
     ceevs_preins_unlock($lock);
+    $motivo = 'sin_presupuesto';
     return null;
   }
 
@@ -739,11 +775,14 @@ function ceevs_preins_save_pdf(string $id, string $token, string $bin, bool $tru
     $tmp = $dest . '.' . bin2hex(random_bytes(5)) . '.tmp';
   } catch (Throwable $e) {
     ceevs_preins_unlock($lock);
+    $motivo = 'sin_aleatorio';
     return null;
   }
   if (@file_put_contents($tmp, $bin, LOCK_EX) === false || !@rename($tmp, $dest)) {
     @unlink($tmp);
     ceevs_preins_unlock($lock);
+    // Lo más probable aquí: cuota de disco agotada o permisos de la carpeta.
+    $motivo = 'escritura_fallo';
     return null;
   }
   @chmod($dest, 0600);
@@ -760,6 +799,7 @@ function ceevs_preins_save_pdf(string $id, string $token, string $bin, bool $tru
   if (!ceevs_preins_write($id, $rec)) {
     @unlink($dest);
     ceevs_preins_unlock($lock);
+    $motivo = 'registro_no_guardado';
     return null;
   }
 

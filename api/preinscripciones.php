@@ -43,8 +43,14 @@ if ($metodo === 'POST' && $requestAction === 'pdf') {
   if (!is_string($pdf) || $pdf === '' || strlen($pdf) > CEEVS_PREINS_MAX_PDF_BYTES) {
     json_fail('No se recibió un PDF válido.', 400);
   }
-  $guardado = ceevs_preins_save_pdf($id, '', $pdf, true);
+  $motivo = '';
+  $guardado = ceevs_preins_save_pdf($id, '', $pdf, true, $motivo);
   if ($guardado === null) {
+    ceevs_audit(
+      'preins_pdf_fallo',
+      'Solicitud ' . $id . ' — ' . ($motivo !== '' ? $motivo : 'desconocido') . ' (' . strlen($pdf) . ' bytes, desde el panel)',
+      false
+    );
     json_fail('No se pudo guardar el PDF de la solicitud.', 422);
   }
   ceevs_audit('preins_pdf_guardado', 'PDF recreado desde el panel: ' . $guardado['archivo']);
@@ -71,6 +77,49 @@ if ($metodo === 'GET') {
       'settings' => $ix['settings'],
       'next'     => $ix['next'],
       'stats'    => $stats,
+    ));
+  }
+
+  /* Estado real de la carpeta de admisiones.
+     Sirve para contrastar la ruta que usa PHP con la que se ve en el
+     Administrador de archivos del hosting, sin tener que adivinar cuál de las
+     dos es: aquí sale la ruta absoluta de verdad y lo que hay dentro. */
+  if ($action === 'salud') {
+    $dir = CEEVS_PREINS_DIR;
+    $existe = @is_dir($dir);
+    $recs = 0;
+    $pdfs = 0;
+    $pdfBytes = 0;
+    if ($existe) {
+      $names = @scandir($dir);
+      if (is_array($names)) {
+        foreach ($names as $name) {
+          if (preg_match('/^rec-[a-f0-9]{16}\.php$/', $name) === 1) {
+            $recs++;
+          } elseif (substr($name, -4) === '.pdf') {
+            $pdfs++;
+            $pdfBytes += max(0, (int) @filesize($dir . '/' . $name));
+          }
+        }
+      }
+    }
+    $ix = ceevs_preins_index();
+    $sinPdf = 0;
+    foreach ($ix['items'] as $it) {
+      if (empty($it['pdf'])) {
+        $sinPdf++;
+      }
+    }
+    json_out(array(
+      'ok'         => true,
+      'ruta'       => $dir,
+      'existe'     => $existe,
+      'escribible' => $existe && @is_writable($dir),
+      'recs'       => $recs,
+      'pdfs'       => $pdfs,
+      'pdfBytes'   => $pdfBytes,
+      'sinPdf'     => $sinPdf,
+      'total'      => count($ix['items']),
     ));
   }
 

@@ -69,6 +69,40 @@
 .preins-toolbar .admin-input { flex: 1; min-width: 220px; }
 .preins-toolbar .admin-select { min-width: 180px; }
 
+.preins-pdf-estado {
+  align-self: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #B9770E;
+}
+
+/* ─── Salud de la carpeta de admisiones ───
+   Muestra la ruta absoluta real donde PHP guarda todo, para poder compararla
+   con la que se ve en el Administrador de archivos del hosting. */
+
+.preins-salud {
+  background: rgba(65, 36, 4, .04);
+  border: 1px solid rgba(65, 36, 4, .1);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.preins-salud p { margin: 0; font-size: 12px; color: rgba(65, 36, 4, .7); }
+.preins-salud-ruta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+
+.preins-salud-ruta code {
+  font-size: 11.5px;
+  word-break: break-all;
+  background: rgba(65, 36, 4, .07);
+  border-radius: 5px;
+  padding: 2px 7px;
+  color: var(--forest, #412404);
+}
+
+.preins-salud-datos { margin-top: 6px !important; }
+.preins-salud-mal { color: #A93226; }
+
 /* ─── Lista de solicitudes ─── */
 
 .preins-lista { display: grid; gap: 10px; }
@@ -119,6 +153,10 @@
 
 .preins-fila-contacto { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 2px; }
 .preins-fila-contacto span { font-size: 11.5px; color: rgba(65, 36, 4, .55); }
+
+/* La copia oficial la arma el navegador de la familia: si cerró la página antes
+   de que subiera, la solicitud queda sin PDF. Se marca para que se note. */
+.preins-fila-contacto .preins-sinpdf { color: #B9770E; font-weight: 600; }
 
 .preins-fila-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
 .preins-fila-meta small { font-size: 11px; color: rgba(65, 36, 4, .5); }
