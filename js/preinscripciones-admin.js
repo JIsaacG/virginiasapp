@@ -264,9 +264,20 @@
         + 'Mientras tanto las solicitudes se siguen recibiendo y guardando en archivos; en cuanto la conexión '
         + 'vuelva se subirán solas a la base de datos.';
     } else {
+      // Lo que de verdad quiere saber quien acaba de conectar: si esto hay que
+      // repetirlo en cada actualización. Se responde con la ruta a la vista.
       texto = 'Las solicitudes se guardan en <code>' + esc(bd.nombre) + '</code>. '
         + 'Ya puedes actualizar el sitio cuantas veces quieras: no se borran.'
-        + (bd.pendientes ? ' Quedan <strong>' + bd.pendientes + '</strong> por trasladar desde archivos.' : '');
+        + (bd.pendientes ? ' Quedan <strong>' + bd.pendientes + '</strong> por trasladar desde archivos.' : '')
+        + '<br><span class="preins-bd-origen">'
+        + (bd.permanente
+            ? '🔒 Conexión permanente: las credenciales están guardadas fuera del sitio'
+              + (bd.origen ? ' (<code>' + esc(bd.origen) + '</code>)' : '')
+              + ', así que ninguna actualización las borra. <strong>No hay que volver a escribirlas.</strong>'
+            : '⚠️ Atención: las credenciales quedaron <strong>dentro del sitio</strong>'
+              + (bd.origen ? ' (<code>' + esc(bd.origen) + '</code>)' : '')
+              + ', así que la próxima actualización podría borrarlas y habría que escribirlas otra vez.')
+        + '</span>';
     }
     aviso.className = 'preins-bd-aviso preins-bd-aviso--' + estado;
     aviso.innerHTML = texto;

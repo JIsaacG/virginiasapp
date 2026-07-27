@@ -41,6 +41,8 @@ function ceevs_preins_bd_estado(): array {
     }
   }
 
+  $origen = ceevs_db_origen();
+
   return array(
     'soportada'   => ceevs_db_soportada(),
     'configurada' => $configurada,
@@ -51,7 +53,10 @@ function ceevs_preins_bd_estado(): array {
     'nombre'      => $c['nombre'],
     'usuario'     => $c['usuario'],
     'tieneClave'  => $c['clave'] !== '',
-    'archivo'     => ceevs_db_config_actual(),
+    // Dónde quedaron las credenciales y si ese sitio aguanta una publicación:
+    // es lo que responde "¿tengo que volver a hacer esto cada vez?".
+    'origen'      => $origen['ruta'],
+    'permanente'  => $origen['permanente'],
     'pendientes'  => $pendientes,
   );
 }

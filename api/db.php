@@ -196,6 +196,7 @@ function ceevs_db_env_file(bool $recargar = false): array {
       $contenido = @file_get_contents($path);
       if (is_string($contenido) && $contenido !== '') {
         $raw = $contenido;
+        ceevs_db_env_path($path);
         break;
       }
     }
@@ -234,6 +235,51 @@ function ceevs_db_env_file(bool $recargar = false): array {
     $vals[$clave] = $valor;
   }
   return $vals;
+}
+
+/** Ruta del .env que se acabó usando ('' si no había ninguno). */
+function ceevs_db_env_path(?string $set = null): string {
+  static $path = '';
+  if ($set !== null) {
+    $path = $set;
+  }
+  return $path;
+}
+
+/**
+ * De dónde salen las credenciales que se están usando y, sobre todo, si ese
+ * lugar sobrevive a una publicación del sitio.
+ *
+ * Existe para que el panel pueda afirmarlo en pantalla: la pregunta natural de
+ * quien acaba de conectar la base es "¿voy a tener que repetir esto en cada
+ * actualización?", y la respuesta depende de dónde quedó guardado el archivo.
+ *
+ * @return array{ruta:string, permanente:bool}
+ */
+function ceevs_db_origen(): array {
+  // La ruta del .env solo se conoce después de haberlo leído. Se fuerza aquí
+  // (está memorizado, así que no cuesta nada) para no depender de que alguien
+  // haya llamado antes a ceevs_db_config().
+  ceevs_db_env_file();
+
+  $sitio = rtrim(str_replace('\\', '/', dirname(__DIR__)), '/');
+  $fuera = function (string $ruta) use ($sitio): bool {
+    $ruta = str_replace('\\', '/', $ruta);
+    return $ruta !== '' && strncmp($ruta, $sitio . '/', strlen($sitio) + 1) !== 0;
+  };
+
+  if (is_string(getenv('CEEVS_DB_NAME')) && getenv('CEEVS_DB_NAME') !== '') {
+    return array('ruta' => 'Variables de entorno del servidor', 'permanente' => true);
+  }
+  $archivo = ceevs_db_config_actual();
+  if ($archivo !== '') {
+    return array('ruta' => $archivo, 'permanente' => $fuera($archivo));
+  }
+  $env = ceevs_db_env_path();
+  if ($env !== '') {
+    return array('ruta' => $env, 'permanente' => $fuera($env));
+  }
+  return array('ruta' => '', 'permanente' => false);
 }
 
 /**

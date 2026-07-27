@@ -148,6 +148,16 @@
   color: #922B21;
 }
 
+/* Dónde quedaron las credenciales: se lee después del mensaje principal. */
+.preins-bd-origen {
+  display: block;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(65, 36, 4, .12);
+  font-size: 12.5px;
+  opacity: .92;
+}
+
 .preins-bd-aviso--falta {
   background: rgba(185, 119, 14, .08);
   border-color: rgba(185, 119, 14, .3);
