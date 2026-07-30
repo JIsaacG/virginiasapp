@@ -214,7 +214,8 @@
         if (d.bd && d.bd.conectada) {
           cont.innerHTML = '<p class="preins-salud-ruta"><span>🗄️ Guardadas en la base de datos:</span>'
             + '<code>' + esc(d.bd.nombre) + '</code></p>'
-            + '<p class="preins-salud-datos">' + datos + '</p>';
+            + '<p class="preins-salud-datos">' + datos + '</p>'
+            + copiaCarpeta(d);
         } else {
           var problema = !d.existe
             ? '<strong class="preins-salud-mal">La carpeta no existe.</strong>'
@@ -226,6 +227,31 @@
         cont.hidden = false;
       })
       .catch(function () { cont.hidden = true; });
+  }
+
+  /**
+   * Segunda línea de la tarjeta: la copia de respaldo en la carpeta del hosting.
+   *
+   * Solo aparece con base de datos conectada, porque sin ella la carpeta no es
+   * una copia sino el almacén, y eso ya lo dice la línea de arriba.
+   */
+  function copiaCarpeta(d) {
+    var esp = (d.bd && d.bd.espejo) || null;
+    if (!esp || !esp.activo) return '';
+    var disco = d.disco || {};
+    var detalle;
+    if (!esp.escribible) {
+      detalle = '<strong class="preins-salud-mal">no se puede escribir en ella</strong>';
+    } else if (esp.pendientes > 0) {
+      detalle = disco.recs + ' copiada' + (disco.recs === 1 ? '' : 's')
+        + ' · <strong>' + esp.pendientes + ' por copiar</strong>';
+    } else {
+      detalle = disco.recs + ' copiada' + (disco.recs === 1 ? '' : 's')
+        + ' · ' + disco.pdfs + ' PDF' + (disco.pdfs === 1 ? '' : 's') + ' — al día';
+    }
+    return '<p class="preins-salud-ruta"><span>📁 Copia de respaldo en la carpeta:</span>'
+      + '<code>' + esc(esp.ruta) + '</code></p>'
+      + '<p class="preins-salud-datos">' + detalle + '</p>';
   }
 
   /* ─── Base de datos ───
@@ -266,9 +292,18 @@
     } else {
       // Lo que de verdad quiere saber quien acaba de conectar: si esto hay que
       // repetirlo en cada actualización. Se responde con la ruta a la vista.
-      texto = 'Las solicitudes se guardan en <code>' + esc(bd.nombre) + '</code>. '
-        + 'Ya puedes actualizar el sitio cuantas veces quieras: no se borran.'
+      var esp = bd.espejo || {};
+      texto = 'Las solicitudes se guardan en <code>' + esc(bd.nombre) + '</code>'
+        + (esp.activo && esp.escribible
+            ? ' y, además, se deja una copia de cada una en la carpeta de admisiones del servidor'
+            : '')
+        + '. Ya puedes actualizar el sitio cuantas veces quieras: no se borran.'
         + (bd.pendientes ? ' Quedan <strong>' + bd.pendientes + '</strong> por trasladar desde archivos.' : '')
+        + (esp.activo && !esp.escribible
+            ? ' <strong>La copia en la carpeta está desactivada: el servidor no permite escribir en '
+              + '<code>' + esc(esp.ruta || '') + '</code>.</strong>'
+            : '')
+        + (esp.pendientes ? ' Quedan <strong>' + esp.pendientes + '</strong> por copiar a la carpeta.' : '')
         + '<br><span class="preins-bd-origen">'
         + (bd.permanente
             ? '🔒 Conexión permanente: las credenciales están guardadas fuera del sitio'
@@ -297,11 +332,16 @@
         : 'Se guarda solo en el servidor y nunca vuelve a mostrarse.';
     }
 
+    // Un solo botón para las dos direcciones: subir a la base lo que quedó en
+    // archivos y bajar a la carpeta la copia de lo que solo está en la base.
     var btnImp = el('preins-bd-importar');
     if (btnImp) {
-      btnImp.hidden = !(bd.conectada && bd.pendientes > 0);
-      btnImp.textContent = '⬆️ Trasladar ' + bd.pendientes + ' solicitud'
-        + (bd.pendientes === 1 ? '' : 'es') + ' de archivos';
+      var porCopiar = (bd.espejo && bd.espejo.pendientes) || 0;
+      var n = bd.pendientes || porCopiar;
+      btnImp.hidden = !(bd.conectada && n > 0);
+      btnImp.textContent = bd.pendientes
+        ? '⬆️ Trasladar ' + bd.pendientes + ' solicitud' + (bd.pendientes === 1 ? '' : 'es') + ' de archivos'
+        : '📁 Copiar ' + porCopiar + ' solicitud' + (porCopiar === 1 ? '' : 'es') + ' a la carpeta';
     }
   }
 
@@ -343,29 +383,43 @@
       });
   }
 
-  /** Traslada por tandas lo que quedó en archivos; el servidor limita cada una. */
+  /**
+   * Sincroniza por tandas las dos direcciones: sube a la base lo que quedó en
+   * archivos y baja a la carpeta la copia de lo que solo está en la base. El
+   * servidor limita el tamaño de cada tanda; aquí solo se repite.
+   */
   function importarBd() {
     var btn = el('preins-bd-importar');
     var original = btn.textContent;
-    var total = 0;
+    var subidas = 0;
+    var copiadas = 0;
     btn.disabled = true;
 
     function tanda() {
       return post({ action: 'importar' }).then(function (d) {
         var imp = d.importado || {};
-        total += imp.importadas || 0;
+        var esp = d.espejado || {};
+        subidas += imp.importadas || 0;
+        copiadas += esp.copiadas || 0;
         pintarBd(d.bd);
-        btn.textContent = '⏳ Trasladando… (' + total + ')';
+        btn.textContent = '⏳ Sincronizando… (' + (subidas + copiadas) + ')';
         // Si una tanda no consigue mover nada, seguir solo repetiría el error.
         if (imp.pendientes > 0 && imp.importadas > 0) return tanda();
+        if (esp.pendientes > 0 && esp.copiadas > 0) return tanda();
       });
     }
 
     tanda()
       .then(function () {
-        toast(total
-          ? total + ' solicitud' + (total === 1 ? '' : 'es') + ' trasladada' + (total === 1 ? '' : 's') + ' a la base de datos'
-          : 'No quedaba nada por trasladar');
+        var partes = [];
+        if (subidas) {
+          partes.push(subidas + ' solicitud' + (subidas === 1 ? '' : 'es')
+            + ' trasladada' + (subidas === 1 ? '' : 's') + ' a la base de datos');
+        }
+        if (copiadas) {
+          partes.push(copiadas + ' copiada' + (copiadas === 1 ? '' : 's') + ' a la carpeta');
+        }
+        toast(partes.length ? partes.join(' · ') : 'No quedaba nada por sincronizar');
         return cargar();
       })
       .catch(function (err) { toast(err.message); })

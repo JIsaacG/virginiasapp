@@ -43,6 +43,18 @@ function ceevs_preins_bd_estado(): array {
 
   $origen = ceevs_db_origen();
 
+  // Copia de respaldo en la carpeta de admisiones: si está activa, si se puede
+  // escribir en ella y cuánto le falta por copiar de la base.
+  $espejo = array(
+    'activo'     => ceevs_preins_espejo_activo(),
+    'escribible' => ceevs_preins_espejo_listo(),
+    'ruta'       => CEEVS_PREINS_DIR,
+    'pendientes' => 0,
+  );
+  if ($conectada && $espejo['escribible']) {
+    $espejo['pendientes'] = count(ceevs_preins_db_faltan_en_espejo());
+  }
+
   return array(
     'soportada'   => ceevs_db_soportada(),
     'configurada' => $configurada,
@@ -58,6 +70,7 @@ function ceevs_preins_bd_estado(): array {
     'origen'      => $origen['ruta'],
     'permanente'  => $origen['permanente'],
     'pendientes'  => $pendientes,
+    'espejo'      => $espejo,
   );
 }
 
@@ -107,8 +120,11 @@ if ($metodo === 'GET') {
     // Al abrir la bandeja se suben a la base, en tandas cortas, las solicitudes
     // que aún estuvieran solo en archivos (las anteriores a la base de datos, o
     // las recibidas mientras la conexión estuvo caída).
+    // Y en el sentido contrario: se deja en la carpeta la copia de respaldo de
+    // las que solo estuvieran en la base (tanda corta: cada una arrastra su PDF).
     if (ceevs_preins_usa_db()) {
       ceevs_preins_db_importar(25);
+      ceevs_preins_db_exportar(6);
     }
     $ix = ceevs_preins_index();
     $stats = array('total' => count($ix['items']), 'nueva' => 0, 'leida' => 0, 'contactada' => 0, 'archivada' => 0);
@@ -151,6 +167,10 @@ if ($metodo === 'GET') {
       }
     }
 
+    // Lo que hay en la carpeta se guarda aparte: con base de datos, las cifras
+    // principales son las de la base y estas describen la copia de respaldo.
+    $disco = array('recs' => $recs, 'pdfs' => $pdfs, 'pdfBytes' => $pdfBytes);
+
     $enDb = ceevs_preins_usa_db();
     if ($enDb) {
       $db = ceevs_preins_db_stats();
@@ -177,6 +197,7 @@ if ($metodo === 'GET') {
       'pdfBytes'   => $pdfBytes,
       'sinPdf'     => $sinPdf,
       'total'      => count($ix['items']),
+      'disco'      => $disco,
     ));
   }
 
@@ -263,17 +284,19 @@ if ($action === 'bd') {
   ceevs_db_reset();
   ceevs_preins_usa_db(true);
   $importado = ceevs_preins_db_importar(25);
+  $espejado = ceevs_preins_db_exportar(6);
 
   ceevs_audit('bd_config', 'Base de datos conectada: ' . $nueva['usuario'] . '@' . $nueva['host'] . '/' . $nueva['nombre']);
   json_out(array(
     'ok' => true,
     'bd' => ceevs_preins_bd_estado(),
     'importado' => $importado,
+    'espejado' => $espejado,
   ));
 }
 
-/* Traslado manual de lo que quedó en archivos. Va por tandas: el navegador
-   vuelve a pedirlo mientras queden pendientes. */
+/* Sincronización manual entre la base y la carpeta, en los dos sentidos. Va por
+   tandas: el navegador vuelve a pedirlo mientras queden pendientes. */
 if ($action === 'importar') {
   if (!ceevs_preins_usa_db()) {
     json_fail('Primero hay que conectar la base de datos.', 400);
@@ -282,7 +305,16 @@ if ($action === 'importar') {
   if ($importado['importadas'] > 0) {
     ceevs_audit('bd_importacion', $importado['importadas'] . ' solicitud(es) trasladada(s) de archivos a la base de datos');
   }
-  json_out(array('ok' => true, 'importado' => $importado, 'bd' => ceevs_preins_bd_estado()));
+  $espejado = ceevs_preins_db_exportar(6);
+  if ($espejado['copiadas'] > 0) {
+    ceevs_audit('preins_espejo', $espejado['copiadas'] . ' solicitud(es) copiada(s) de la base a la carpeta de admisiones');
+  }
+  json_out(array(
+    'ok' => true,
+    'importado' => $importado,
+    'espejado' => $espejado,
+    'bd' => ceevs_preins_bd_estado(),
+  ));
 }
 
 if ($action === 'ajustes') {

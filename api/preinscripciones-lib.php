@@ -231,6 +231,148 @@ function ceevs_preins_usa_db(bool $recalcular = false): bool {
   return $usa;
 }
 
+/* ─── Espejo en la carpeta de admisiones ───
+ *
+ * Con base de datos, la carpeta ya no es el almacén, pero se sigue escribiendo:
+ * queda una copia de cada solicitud, su foto y su PDF que se puede abrir con el
+ * Administrador de archivos del hosting sin depender de MySQL ni del panel.
+ *
+ * Tres reglas, en este orden:
+ *   1. El espejo NUNCA hace fallar un guardado. Si la carpeta no existe, no
+ *      permite escribir o se agotó la cuota, la solicitud queda igualmente en la
+ *      base de datos y la copia simplemente no se escribe.
+ *   2. La base de datos manda. Al eliminar una solicitud se borra también su
+ *      copia (ver ceevs_preins_db_delete): si no, el importador la resucitaría.
+ *   3. Se rellena solo. ceevs_preins_db_exportar() baja a la carpeta lo que ya
+ *      estuviera en la base sin copia (lo anterior al espejo, o lo guardado
+ *      mientras la carpeta no permitía escribir).
+ *
+ * Poner CEEVS_PREINS_ESPEJO=0 en el entorno lo desactiva.
+ */
+
+/** ¿Hay que dejar además una copia en archivos de lo que va a la base de datos? */
+function ceevs_preins_espejo_activo(): bool {
+  static $activo = null;
+  if ($activo === null) {
+    $env = getenv('CEEVS_PREINS_ESPEJO');
+    $activo = !(is_string($env) && in_array(strtolower(trim($env)), array('0', 'no', 'false', 'off'), true));
+  }
+  // Sin base de datos la carpeta ES el almacén: no hay nada que espejar.
+  return $activo && ceevs_preins_usa_db();
+}
+
+/**
+ * Prepara la carpeta del espejo y dice si se puede escribir en ella.
+ * Se resuelve una sola vez por petición: si no se puede, no tiene sentido
+ * reintentar el mkdir en cada solicitud, foto y PDF de la misma petición.
+ */
+function ceevs_preins_espejo_dir(): bool {
+  static $listo = null;
+  if ($listo !== null) {
+    return $listo;
+  }
+  $listo = false;
+  if (!@is_dir(CEEVS_PREINS_DIR)) {
+    @mkdir(CEEVS_PREINS_DIR, 0755, true);
+  }
+  if (!@is_dir(CEEVS_PREINS_DIR) || !@is_writable(CEEVS_PREINS_DIR)) {
+    return $listo;
+  }
+  $ht = CEEVS_PREINS_DIR . '/.htaccess';
+  if (!@file_exists($ht)) {
+    @file_put_contents($ht, "Require all denied\n");
+  }
+  $listo = true;
+  return $listo;
+}
+
+/** ¿Se puede escribir el espejo ahora mismo? */
+function ceevs_preins_espejo_listo(): bool {
+  return ceevs_preins_espejo_activo() && ceevs_preins_espejo_dir();
+}
+
+/** Copia en la carpeta del expediente completo (rec-<id>.php). */
+function ceevs_preins_espejo_rec(string $id, array $rec): bool {
+  if (!ceevs_preins_espejo_listo() || !ceevs_preins_valid_id($id)) {
+    return false;
+  }
+  $destino = ceevs_preins_file($id);
+  if (!ceevs_write_guarded($destino, $rec)) {
+    return false;
+  }
+  @chmod($destino, 0600);
+  return true;
+}
+
+/**
+ * Copia en la carpeta de un binario de la solicitud.
+ *
+ * La foto queda 0644 y el PDF 0600, igual que en modo archivos. $viejo permite
+ * retirar una copia anterior cuyo nombre haya cambiado: el del PDF lleva dentro
+ * el correlativo y el nombre del alumno.
+ */
+function ceevs_preins_espejo_binario(string $nombre, string $bin, int $modo, string $viejo = ''): bool {
+  if (!ceevs_preins_espejo_listo() || $nombre === '' || basename($nombre) !== $nombre) {
+    return false;
+  }
+  $dest = CEEVS_PREINS_DIR . '/' . $nombre;
+  try {
+    $tmp = $dest . '.' . bin2hex(random_bytes(5)) . '.tmp';
+  } catch (Throwable $e) {
+    return false;
+  }
+  // Se escribe aparte y se renombra: quien abra la carpeta nunca se encuentra un
+  // PDF a medio escribir.
+  if (@file_put_contents($tmp, $bin, LOCK_EX) === false || !@rename($tmp, $dest)) {
+    @unlink($tmp);
+    return false;
+  }
+  @chmod($dest, $modo);
+  if ($viejo !== '' && $viejo !== $nombre && basename($viejo) === $viejo) {
+    @unlink(CEEVS_PREINS_DIR . '/' . $viejo);
+  }
+  return true;
+}
+
+/** Copia del índice, para poder leer la carpeta sin la base de datos. */
+function ceevs_preins_espejo_index(array $ix): bool {
+  if (!ceevs_preins_espejo_listo()) {
+    return false;
+  }
+  if (!ceevs_write_guarded(CEEVS_PREINS_INDEX, $ix)) {
+    return false;
+  }
+  @chmod(CEEVS_PREINS_INDEX, 0600);
+  return true;
+}
+
+/**
+ * Qué hay ya en la carpeta, de un solo scandir y sin abrir ningún archivo.
+ *
+ *   array{rec: array<id,true>, archivos: array<nombre,true>}
+ *
+ * Los adjuntos se comprueban por nombre exacto contra el que guarda la base de
+ * datos, no por un patrón: así una copia con nombre antiguo no se da por buena
+ * ni se vuelve a exportar en cada tanda.
+ */
+function ceevs_preins_espejo_presentes(): array {
+  $out = array('rec' => array(), 'archivos' => array());
+  $names = @scandir(CEEVS_PREINS_DIR);
+  if (!is_array($names)) {
+    return $out;
+  }
+  foreach ($names as $name) {
+    if ($name === '.' || $name === '..') {
+      continue;
+    }
+    if (preg_match('/^rec-([a-f0-9]{16})\.php$/', $name, $m) === 1) {
+      $out['rec'][$m[1]] = true;
+    }
+    $out['archivos'][$name] = true;
+  }
+  return $out;
+}
+
 /* ─── Índice de la bandeja ─── */
 
 /** Índice completo: ajustes + correlativo + fichas resumidas (más reciente primero). */
@@ -271,6 +413,9 @@ function ceevs_preins_index(): array {
 function ceevs_preins_save_index(array $ix): bool {
   if (ceevs_preins_usa_db()) {
     $ok = ceevs_preins_db_save_index($ix);
+    // La copia en la carpeta lleva el índice completo (fichas incluidas), que es
+    // lo que permite leerla sin la base de datos.
+    ceevs_preins_espejo_index($ix);
   } else {
     ceevs_preins_ensure_dir();
     $ok = ceevs_write_guarded(CEEVS_PREINS_INDEX, $ix);
@@ -470,7 +615,13 @@ function ceevs_preins_read(string $id): ?array {
 
 function ceevs_preins_write(string $id, array $rec): bool {
   if (ceevs_preins_usa_db()) {
-    return ceevs_preins_db_write($id, $rec);
+    $ok = ceevs_preins_db_write($id, $rec);
+    // El espejo va después y no cambia el resultado: con la solicitud ya a salvo
+    // en la base, que la carpeta falle no debe romperle el envío a la familia.
+    if ($ok) {
+      ceevs_preins_espejo_rec($id, $rec);
+    }
+    return $ok;
   }
   ceevs_preins_ensure_dir();
   return ceevs_write_guarded(ceevs_preins_file($id), $rec);
@@ -481,7 +632,13 @@ function ceevs_preins_delete(string $id): bool {
     return false;
   }
   if (ceevs_preins_usa_db()) {
-    return ceevs_preins_db_delete($id);
+    // db_delete se lleva también la copia de la carpeta; el índice del espejo se
+    // rehace para que no quede apuntando a una solicitud que ya no existe.
+    $ok = ceevs_preins_db_delete($id);
+    if (ceevs_preins_espejo_listo()) {
+      ceevs_preins_espejo_index(ceevs_preins_index());
+    }
+    return $ok;
   }
   $liberados = 0;
   $foto = ceevs_preins_foto_path($id);
@@ -841,7 +998,11 @@ function ceevs_preins_save_foto(string $id, $dataUrl): int {
   $nombre = 'foto-' . $id . '.' . $exts[$mime];
 
   if (ceevs_preins_usa_db()) {
-    return ceevs_preins_db_guardar_archivo($id, 'foto', $bin, $mime, $nombre) ? strlen($bin) : 0;
+    if (!ceevs_preins_db_guardar_archivo($id, 'foto', $bin, $mime, $nombre)) {
+      return 0;
+    }
+    ceevs_preins_espejo_binario($nombre, $bin, 0644);
+    return strlen($bin);
   }
 
   ceevs_preins_ensure_dir();
@@ -973,6 +1134,10 @@ function ceevs_preins_save_pdf(string $id, string $token, string $bin, bool $tru
     }
   }
 
+  // Nombre de la copia anterior: si cambió (el nombre lleva el correlativo y el
+  // del alumno), la vieja hay que retirarla del espejo.
+  $pdfAnterior = (string) ($rec['pdfArchivo'] ?? '');
+
   $rec['pdf'] = true;
   $rec['pdfArchivo'] = $name;
   $rec['pdfBytes'] = $bytes;
@@ -987,6 +1152,12 @@ function ceevs_preins_save_pdf(string $id, string $token, string $bin, bool $tru
     ceevs_preins_unlock($lock);
     $motivo = 'registro_no_guardado';
     return null;
+  }
+
+  if ($enDb) {
+    // La copia del PDF en la carpeta va al final, cuando el expediente ya está
+    // guardado y ya menciona el archivo: así no queda nunca un PDF huérfano.
+    ceevs_preins_espejo_binario($name, $bin, 0600, $pdfAnterior);
   }
 
   // Con base de datos, el índice se calcula al leerlo: no hay contadores ni

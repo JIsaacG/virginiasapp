@@ -450,6 +450,117 @@ function ceevs_preins_db_importar_ajustes(): void {
   }
 }
 
+/* ─── Copia de respaldo en la carpeta de admisiones ─── */
+
+/**
+ * Solicitudes que están en la base pero cuya copia en la carpeta falta o está
+ * incompleta (sin expediente, sin la foto o sin el PDF que la base sí tiene).
+ *
+ * Cuesta dos consultas sin binarios y un scandir: nunca se abre un archivo ni se
+ * trae un blob solo para saber qué falta.
+ *
+ * @return string[] identificadores, del más reciente al más antiguo
+ */
+function ceevs_preins_db_faltan_en_espejo(): array {
+  if (!ceevs_preins_espejo_listo()) {
+    return array();
+  }
+  $st = ceevs_db_run('SELECT id, tiene_foto, tiene_pdf FROM ' . CEEVS_DB_TABLA_PREINS . ' ORDER BY num DESC');
+  if ($st === null) {
+    return array();
+  }
+  $filas = $st->fetchAll();
+
+  // Nombre exacto con el que se guardó cada adjunto, para compararlo con lo que
+  // hay en la carpeta.
+  $nombres = array();
+  $sa = ceevs_db_run('SELECT id, tipo, nombre FROM ' . CEEVS_DB_TABLA_ARCHIVOS);
+  if ($sa !== null) {
+    foreach ($sa->fetchAll() as $r) {
+      $nombres[(string) $r['id']][(string) $r['tipo']] = (string) $r['nombre'];
+    }
+  }
+
+  $hay = ceevs_preins_espejo_presentes();
+  $faltan = array();
+  foreach ($filas as $r) {
+    $id = (string) $r['id'];
+    if (!ceevs_preins_valid_id($id)) {
+      continue;
+    }
+    $completo = isset($hay['rec'][$id]);
+    foreach (array('foto', 'pdf') as $tipo) {
+      if (!$completo) {
+        break;
+      }
+      if ((int) $r['tiene_' . $tipo] !== 1) {
+        continue;
+      }
+      $nombre = (string) ($nombres[$id][$tipo] ?? '');
+      $completo = $nombre !== '' && isset($hay['archivos'][$nombre]);
+    }
+    if (!$completo) {
+      $faltan[] = $id;
+    }
+  }
+  return $faltan;
+}
+
+/**
+ * Baja a la carpeta de admisiones las solicitudes que solo estén en la base.
+ *
+ * Es la operación inversa de ceevs_preins_db_importar() y lo que cierra el
+ * círculo del espejo: lo que llega a partir de ahora se escribe en los dos
+ * sitios a la vez, y esto rellena lo anterior. Va por tandas cortas porque cada
+ * expediente arrastra su PDF, que pesa cientos de kilobytes y hay que traerlo
+ * entero desde MySQL.
+ *
+ * @return array{copiadas:int, pendientes:int}
+ */
+function ceevs_preins_db_exportar(int $max = 6): array {
+  $resultado = array('copiadas' => 0, 'pendientes' => 0);
+  if (!ceevs_preins_espejo_listo()) {
+    return $resultado;
+  }
+
+  $faltan = ceevs_preins_db_faltan_en_espejo();
+  $resultado['pendientes'] = count($faltan);
+  foreach (array_slice($faltan, 0, max(1, $max)) as $id) {
+    if (ceevs_preins_db_exportar_una((string) $id)) {
+      $resultado['copiadas']++;
+    }
+    // Copiada o ilegible, deja de estar pendiente en esta tanda: una solicitud
+    // que no se puede escribir no debe frenar a las demás.
+    $resultado['pendientes']--;
+  }
+
+  // El índice se rehace cuando algo cambió (o si nunca llegó a escribirse).
+  if ($resultado['copiadas'] > 0 || !@is_file(CEEVS_PREINS_INDEX)) {
+    ceevs_preins_espejo_index(ceevs_preins_index());
+  }
+  return $resultado;
+}
+
+/** Escribe en la carpeta el expediente de una solicitud con su foto y su PDF. */
+function ceevs_preins_db_exportar_una(string $id): bool {
+  $rec = ceevs_preins_db_read($id);
+  if (!is_array($rec)) {
+    return false;
+  }
+
+  foreach (array('foto' => 0644, 'pdf' => 0600) as $tipo => $modo) {
+    $archivo = ceevs_preins_db_archivo($id, $tipo, true);
+    if ($archivo === null || !is_string($archivo['contenido']) || $archivo['contenido'] === '') {
+      continue;
+    }
+    ceevs_preins_espejo_binario((string) $archivo['nombre'], $archivo['contenido'], $modo);
+  }
+
+  // El expediente se escribe al final: mientras no exista, la solicitud sigue
+  // contando como pendiente y la próxima tanda la reintenta completa.
+  return ceevs_preins_espejo_rec($id, $rec);
+}
+
 /* ─── Estado para el panel ─── */
 
 /** Resumen de lo que hay en la base, para la tarjeta de salud del panel. */
