@@ -412,7 +412,7 @@
 }
 @media(max-width:900px){ .zona-interactiva{ padding:60px 6vw 80px; } }
 @media(max-width:600px){
-  .zona-interactiva{ padding:48px 5vw 64px; }
+  .zona-interactiva{ padding:48px 5vw 64px; scroll-margin-top:64px; }
   .game-card{ padding:28px 22px 24px; }
 }
 .zona-header { text-align:center; margin-bottom:48px; }

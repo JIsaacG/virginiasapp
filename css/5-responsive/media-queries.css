@@ -111,7 +111,7 @@
 /* ═══════════════════════════════════════
    NAVBAR — RESPONSIVE (Fase 1)
 ═══════════════════════════════════════ */
-@media (max-width: 1024px) {
+@media (max-width: 1660px) {
   .nav-links,
   .nav-cta .btn-nav-ghost,
   .nav-cta .btn-nav-solid {
@@ -135,6 +135,17 @@
 @media (max-width: 480px) {
   #navbar {
     padding: 10px 16px;
+    gap: 12px;
+  }
+
+  .nav-logo {
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .nav-wordmark {
+    flex: 1 1 auto;
+    overflow: hidden;
   }
 
   .nav-logo-img,

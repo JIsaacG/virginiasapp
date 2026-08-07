@@ -181,6 +181,7 @@
   display: none;
   width: 44px;
   height: 44px;
+  flex: 0 0 44px;
   border: 0;
   background: transparent;
   align-items: center;
@@ -424,6 +425,6 @@ button:focus-visible {
   margin-right: 4px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1660px) {
   .nav-lang { display: none; }
 }

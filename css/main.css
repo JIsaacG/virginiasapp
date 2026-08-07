@@ -24,7 +24,7 @@
 @import url('4-sections/marquee.css');
 @import url('4-sections/historia.css');
 @import url('4-sections/niveles.css');
-@import url('4-sections/mision.css');
+@import url('4-sections/mision.css?v=20260807-valores');
 @import url('4-sections/valores.css');
 @import url('4-sections/quiz.css');
 @import url('4-sections/admisiones.css');
@@ -43,7 +43,7 @@
 @import url('4-sections/interactivo.css');
 @import url('4-sections/mision-evangelistica.css');
 @import url('4-sections/mision-aula.css');
-@import url('4-sections/quienes-somos.css');
+@import url('4-sections/quienes-somos.css?v=20260807-perfil1');
 @import url('4-sections/bienvenida.css');
 @import url('4-sections/contacto-canales.css?v=20260703-2');
 @import url('4-sections/sugerencias.css');

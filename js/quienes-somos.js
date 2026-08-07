@@ -49,9 +49,10 @@ const QuienesSomos = {
   },
 
   // SDD-F3-QS-005 — acordeones accesibles (teclado + aria)
+  // Mismo mecanismo para los desplegables del perfil del egresado (SDD-PEND-002).
   _setupAccordions() {
     document.addEventListener('click', e => {
-      const trigger = e.target.closest('.qs-acc-trigger');
+      const trigger = e.target.closest('.qs-acc-trigger, .perfil-cat-trigger');
       if (!trigger) return;
 
       const panelId = trigger.getAttribute('aria-controls');

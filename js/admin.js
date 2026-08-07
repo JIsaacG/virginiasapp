@@ -80,6 +80,12 @@
       ]
     },
     {
+      page: '👥 Nosotros (nosotros.html)',
+      images: [
+        { key: 'ns-junta-foto', label: 'Junta directiva — Retrato institucional', defaultUrl: 'assets/images/nosotros/junta-directiva.jpg' }
+      ]
+    },
+    {
       page: '✝️ Misión Evangelística (mision-evangelistica.html)',
       images: [
         { key: 'me-portada-estudiantes', label: 'Portada — Estudiantes en clase', defaultUrl: WP + '2026/01/IMG_5958.jpg' },
