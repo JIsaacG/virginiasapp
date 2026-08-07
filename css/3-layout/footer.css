@@ -27,6 +27,6 @@
   .niveles-cards{ grid-template-columns:1fr 1fr; gap:12px; }
   .testimonios-layout{ grid-template-columns:1fr; gap:40px; }
   .historia-grid{ gap:48px; }
-  .footer-main{ grid-template-columns:1.2fr 1fr 1fr 1fr; gap:32px; }
+  .footer-main{ grid-template-columns:1.2fr repeat(4,1fr); gap:28px; }
 }
 
