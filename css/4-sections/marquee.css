@@ -73,8 +73,65 @@
 .hl-foto:hover img { filter:none; }
 .hl-foto figcaption { font-family:'Playfair Display',serif; font-style:italic; font-size:11.5px; color:var(--muted); line-height:1.35; text-align:center; padding:9px 2px 11px; }
 
+/* La foto es un botón: abre el visor ampliado */
+.hl-zoom { display:block; width:100%; padding:0; border:0; background:none; cursor:zoom-in; border-radius:2px; }
+.hl-zoom:focus-visible { outline:2px solid var(--gold2); outline-offset:4px; }
+
 .hl-text { font-size:14px; color:var(--muted); line-height:1.7; text-align:center; margin-top:26px; }
 .hl-text strong { color:var(--forest); font-weight:600; }
+
+/* ── Visor ampliado de las fotos históricas ──
+   La imagen entra con un FLIP desde la miniatura (transform lo pone el JS). */
+.hl-lightbox {
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+  padding:clamp(16px,4vw,56px);
+  background:rgba(28,15,2,.94);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  opacity:0; visibility:hidden;
+  transition:opacity .35s ease, visibility 0s linear .35s;
+}
+.hl-lightbox.is-open { opacity:1; visibility:visible; transition:opacity .35s ease, visibility 0s; }
+
+.hl-lb-figure { margin:0; display:flex; flex-direction:column; align-items:center; gap:18px; max-width:100%; }
+.hl-lb-img {
+  display:block; max-width:100%; max-height:72vh; object-fit:contain;
+  background:var(--parch); padding:clamp(8px,1vw,14px); border-radius:4px;
+  box-shadow:0 40px 90px rgba(0,0,0,.55);
+  opacity:0; transform-origin:center center;
+  transition:transform .55s cubic-bezier(.22,.85,.25,1), opacity .3s ease;
+}
+.hl-lightbox.is-ready .hl-lb-img { opacity:1; }
+.hl-lightbox.is-swapping .hl-lb-img { opacity:0; transform:scale(.94); transition:transform .18s ease, opacity .18s ease; }
+
+.hl-lb-caption {
+  display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center;
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:clamp(13px,1.4vw,17px); color:rgba(255,255,255,.85);
+  opacity:0; transform:translateY(14px);
+  transition:opacity .45s ease .18s, transform .45s ease .18s;
+}
+.hl-lightbox.is-ready .hl-lb-caption { opacity:1; transform:none; }
+.hl-lb-count { font-family:'Outfit',sans-serif; font-style:normal; font-size:11px; letter-spacing:.16em; color:var(--gold); }
+
+.hl-lb-close, .hl-lb-nav {
+  position:absolute; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+  color:#fff; border-radius:50%; cursor:pointer; line-height:1;
+  transition:background .2s ease, transform .2s ease;
+}
+.hl-lb-close:hover, .hl-lb-nav:hover { background:rgba(255,255,255,.26); transform:scale(1.08); }
+.hl-lb-close:focus-visible, .hl-lb-nav:focus-visible { outline:2px solid var(--gold2); outline-offset:3px; }
+.hl-lb-close { top:clamp(12px,2vw,26px); right:clamp(12px,2vw,26px); width:46px; height:46px; font-size:18px; }
+.hl-lb-nav { top:50%; width:52px; height:52px; font-size:30px; margin-top:-26px; padding-bottom:5px; }
+.hl-lb-prev { left:clamp(8px,2vw,30px); }
+.hl-lb-next { right:clamp(8px,2vw,30px); }
+
+@media (max-width:640px){
+  .hl-lb-img { max-height:62vh; }
+  .hl-lb-nav { width:44px; height:44px; font-size:26px; margin-top:-22px; }
+  .hl-lb-close { width:40px; height:40px; }
+}
 
 /* Móvil y tablet: la línea pasa a vertical */
 @media (max-width:1024px){

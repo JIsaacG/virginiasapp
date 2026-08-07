@@ -13,6 +13,7 @@ const QuienesSomos = {
     this._setupScrollSpy();
     this._setupAccordions();
     this._setupLeadModal();
+    this._setupHistoriaLightbox();
   },
 
   // SDD-F3-QS-001 — resaltar la sección visible en la navegación interna
@@ -108,6 +109,118 @@ const QuienesSomos = {
 
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
+    });
+  },
+
+  // Visor de las fotos de la línea de tiempo: la polaroid crece hasta el centro (FLIP)
+  _setupHistoriaLightbox() {
+    const lb = DOM.byId('hl-lightbox');
+    const lbImg = DOM.byId('hl-lb-img');
+    const lbCap = DOM.byId('hl-lb-caption');
+    const lbCount = DOM.byId('hl-lb-count');
+    const fotos = Array.from(DOM.selectAll('.historia-linea .hl-foto'));
+    if (!lb || !lbImg || !fotos.length) return;
+
+    let idx = 0;
+    let lastFocused = null;
+
+    const miniatura = i => fotos[i] && fotos[i].querySelector('img');
+
+    // FLIP: coloca la imagen sobre la miniatura y la deja viajar a su sitio final
+    const zoomDesde = origen => {
+      const desde = origen && origen.getBoundingClientRect();
+      const hasta = lbImg.getBoundingClientRect();
+      if (!desde || !desde.width || !hasta.width) return;
+
+      const sx = desde.width / hasta.width;
+      const sy = desde.height / hasta.height;
+      const dx = (desde.left + desde.width / 2) - (hasta.left + hasta.width / 2);
+      const dy = (desde.top + desde.height / 2) - (hasta.top + hasta.height / 2);
+
+      lbImg.style.transition = 'none';
+      lbImg.style.transform = `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+      DOM.addClass(lb, 'is-ready');
+      void lbImg.offsetWidth;              // fuerza el reflow antes de animar
+      lbImg.style.transition = '';
+      lbImg.style.transform = '';
+    };
+
+    const pintar = i => {
+      const src = miniatura(i);
+      const cap = fotos[i].querySelector('figcaption');
+      if (!src) return;
+      lbImg.src = src.currentSrc || src.src;
+      lbImg.alt = src.alt || '';
+      DOM.text(lbCap, cap ? cap.textContent : '');
+      DOM.text(lbCount, `${i + 1} / ${fotos.length}`);
+    };
+
+    const abrir = async (i, disparador) => {
+      idx = i;
+      lastFocused = disparador || document.activeElement;
+      pintar(idx);
+
+      DOM.addClass(lb, 'is-open');
+      DOM.attr(lb, 'aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      try { await lbImg.decode(); } catch (err) { /* caché o formato ya listo: seguimos */ }
+      zoomDesde(miniatura(idx));
+
+      const cerrar = lb.querySelector('[data-hl-close]');
+      if (cerrar) cerrar.focus();
+    };
+
+    const navegar = async paso => {
+      idx = (idx + paso + fotos.length) % fotos.length;
+      DOM.addClass(lb, 'is-swapping');
+      window.setTimeout(async () => {
+        pintar(idx);
+        try { await lbImg.decode(); } catch (err) { /* idem */ }
+        DOM.removeClass(lb, 'is-swapping');
+      }, 180);
+    };
+
+    const cerrar = () => {
+      // FLIP inverso: la imagen se encoge de vuelta hacia su polaroid
+      const origen = miniatura(idx);
+      const desde = origen && origen.getBoundingClientRect();
+      const hasta = lbImg.getBoundingClientRect();
+      if (desde && desde.width && hasta.width) {
+        const sx = desde.width / hasta.width;
+        const sy = desde.height / hasta.height;
+        const dx = (desde.left + desde.width / 2) - (hasta.left + hasta.width / 2);
+        const dy = (desde.top + desde.height / 2) - (hasta.top + hasta.height / 2);
+        lbImg.style.transform = `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+      }
+      DOM.removeClass(lb, 'is-ready');
+      DOM.attr(lb, 'aria-hidden', 'true');
+
+      window.setTimeout(() => {
+        DOM.removeClass(lb, 'is-open');
+        DOM.removeClass(lb, 'is-swapping');
+        lbImg.style.transform = '';
+        document.body.style.overflow = '';
+      }, 420);
+
+      if (lastFocused) { lastFocused.focus(); lastFocused = null; }
+    };
+
+    fotos.forEach((foto, i) => {
+      DOM.on(foto.querySelector('.hl-zoom'), 'click', e => abrir(i, e.currentTarget));
+    });
+
+    DOM.on(lb, 'click', e => {
+      if (e.target.closest('[data-hl-prev]')) { navegar(-1); return; }
+      if (e.target.closest('[data-hl-next]')) { navegar(1); return; }
+      if (e.target.closest('[data-hl-close]') || !e.target.closest('.hl-lb-figure')) cerrar();
+    });
+
+    DOM.on(document, 'keydown', e => {
+      if (!DOM.hasClass(lb, 'is-open')) return;
+      if (e.key === 'Escape') cerrar();
+      if (e.key === 'ArrowLeft') navegar(-1);
+      if (e.key === 'ArrowRight') navegar(1);
     });
   },
 };

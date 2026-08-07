@@ -294,11 +294,15 @@
       <span class="hl-dot" aria-hidden="true"></span>
       <div class="hl-fotos">
         <figure class="hl-foto">
-          <img src="assets/images/timeline/Imagen%201.jpg" alt="Vista del campus del Instituto Evangélico Virginia Sapp en sus primeros años" loading="lazy" data-img-key="qs-historia-1962-a">
+          <button type="button" class="hl-zoom" aria-haspopup="dialog">
+            <img src="assets/images/timeline/Imagen%201.jpg" alt="Vista del campus del Instituto Evangélico Virginia Sapp en sus primeros años" loading="lazy" data-img-key="qs-historia-1962-a">
+          </button>
           <figcaption>El campus en sus primeros años</figcaption>
         </figure>
         <figure class="hl-foto">
-          <img src="assets/images/timeline/45.jpg" alt="Fachada del instituto con el lema «El principio de la sabiduría es el temor de Jehová»" loading="lazy" data-img-key="qs-historia-1962-b">
+          <button type="button" class="hl-zoom" aria-haspopup="dialog">
+            <img src="assets/images/timeline/45.jpg" alt="Fachada del instituto con el lema «El principio de la sabiduría es el temor de Jehová»" loading="lazy" data-img-key="qs-historia-1962-b">
+          </button>
           <figcaption>La fachada y su lema fundacional</figcaption>
         </figure>
       </div>
@@ -313,11 +317,15 @@
       <span class="hl-dot" aria-hidden="true"></span>
       <div class="hl-fotos">
         <figure class="hl-foto">
-          <img src="assets/images/timeline/33.jpg" alt="Bus escolar del instituto estacionado junto a los primeros pabellones de aulas" loading="lazy" data-img-key="qs-historia-7080-a">
+          <button type="button" class="hl-zoom" aria-haspopup="dialog">
+            <img src="assets/images/timeline/33.jpg" alt="Bus escolar del instituto estacionado junto a los primeros pabellones de aulas" loading="lazy" data-img-key="qs-historia-7080-a">
+          </button>
           <figcaption>El bus escolar y los primeros pabellones</figcaption>
         </figure>
         <figure class="hl-foto">
-          <img src="assets/images/timeline/55.jpg" alt="Estudiantes del instituto trabajando en el laboratorio de cómputo" loading="lazy" data-img-key="qs-historia-7080-b">
+          <button type="button" class="hl-zoom" aria-haspopup="dialog">
+            <img src="assets/images/timeline/55.jpg" alt="Estudiantes del instituto trabajando en el laboratorio de cómputo" loading="lazy" data-img-key="qs-historia-7080-b">
+          </button>
           <figcaption>Estudiantes en el laboratorio de cómputo</figcaption>
         </figure>
       </div>
@@ -332,11 +340,15 @@
       <span class="hl-dot" aria-hidden="true"></span>
       <div class="hl-fotos">
         <figure class="hl-foto">
-          <img src="assets/images/timeline/556.jpg" alt="Plaza central del campus con jardineras y bancas" loading="lazy" data-img-key="qs-historia-hoy-a">
+          <button type="button" class="hl-zoom" aria-haspopup="dialog">
+            <img src="assets/images/timeline/556.jpg" alt="Plaza central del campus con jardineras y bancas" loading="lazy" data-img-key="qs-historia-hoy-a">
+          </button>
           <figcaption>La plaza central del campus</figcaption>
         </figure>
         <figure class="hl-foto">
-          <img src="assets/images/timeline/888.jpg" alt="Obra de ampliación de las instalaciones del campus" loading="lazy" data-img-key="qs-historia-hoy-b">
+          <button type="button" class="hl-zoom" aria-haspopup="dialog">
+            <img src="assets/images/timeline/888.jpg" alt="Obra de ampliación de las instalaciones del campus" loading="lazy" data-img-key="qs-historia-hoy-b">
+          </button>
           <figcaption>Ampliación de las instalaciones</figcaption>
         </figure>
       </div>
@@ -344,6 +356,17 @@
     </li>
   </ol>
 </section>
+
+<!-- Visor de las fotos históricas (se abre al hacer clic en una polaroid) -->
+<div class="hl-lightbox" id="hl-lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Foto histórica ampliada">
+  <button type="button" class="hl-lb-close" data-hl-close aria-label="Cerrar">✕</button>
+  <button type="button" class="hl-lb-nav hl-lb-prev" data-hl-prev aria-label="Foto anterior">‹</button>
+  <button type="button" class="hl-lb-nav hl-lb-next" data-hl-next aria-label="Foto siguiente">›</button>
+  <figure class="hl-lb-figure">
+    <img class="hl-lb-img" id="hl-lb-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="">
+    <figcaption class="hl-lb-caption"><span id="hl-lb-caption"></span><span class="hl-lb-count" id="hl-lb-count"></span></figcaption>
+  </figure>
+</div>
 
 <!-- ─── MISIÓN / VISIÓN ─── -->
 <div class="mision-split">
