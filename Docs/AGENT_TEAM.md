@@ -104,6 +104,27 @@ IMPLEMENTER → IMPLEMENTER DICE DONE → MERGE
 
 ---
 
+## Regla cero — se pregunta antes de encender el pipeline
+
+El pipeline completo **no** es el modo por defecto. Antes de invocar más de un agente de
+revisión o de ejecutar `verify:medium` / `verify:high`, se le pregunta al usuario con qué
+profundidad quiere trabajar:
+
+| Opción | Qué se ejecuta | Tiempo |
+|---|---|---|
+| **Rápido** (por defecto) | El cambio + `npm run verify:low` | segundos |
+| **Normal** | + Web Quality + Adversarial Reviewer + Quality Gate | minutos |
+| **Completo** | Los 7 agentes + Lighthouse + Security Reviewer | varios minutos |
+
+No se pregunta cuando: el usuario ya dijo el nivel; el cambio toca `api/`, autenticación,
+formularios, base de datos, solicitudes de admisión o `.htaccess` (se asume **Completo** y
+se avisa, porque son datos de familias reales); o es una consulta y no un cambio.
+
+Puedes fijar el nivel de entrada en cualquier momento: *"hazlo rápido"*, *"revisión normal"*,
+*"pipeline completo"*.
+
+---
+
 ## Proporcional al riesgo
 
 El sistema no debe convertir un cambio de una palabra en una operación de treinta minutos.

@@ -7,12 +7,42 @@ compartida del equipo.
 
 ---
 
+## REGLA CERO — pregunta antes de encender el pipeline
+
+**El pipeline completo NO es el modo por defecto.** Por defecto se hace el trabajo y se
+ejecuta el gate mínimo. Nada más.
+
+Antes de invocar más de un agente de revisión, o de ejecutar `verify:medium` / `verify:high`,
+**pregúntale al usuario** con qué profundidad quiere trabajar. Una sola pregunta, con estas
+opciones:
+
+| Opción | Qué se ejecuta | Cuánto tarda |
+|---|---|---|
+| **Rápido** (por defecto) | El cambio + `npm run verify:low` | segundos |
+| **Normal** | + Web Quality + Adversarial Reviewer + Quality Gate | minutos |
+| **Completo** | Los 7 agentes + Lighthouse + Security Reviewer | varios minutos |
+
+Excepciones en las que **no** hace falta preguntar:
+
+- El usuario ya dijo el nivel ("hazlo rápido", "revísalo a fondo", "pipeline completo").
+- El cambio toca `api/`, autenticación, formularios, base de datos, solicitudes de
+  admisión o `.htaccess`: ahí se asume **Completo** y se avisa, no se pregunta. Son datos
+  de familias reales.
+- Es una pregunta, no un cambio: no se ejecuta ningún gate.
+
+Corregir un texto, un color o un enlace **no** justifica siete agentes. Si el usuario pide
+algo simple, hazlo, ejecuta `verify:low` y entrega. El sistema es proporcional al riesgo o
+no sirve: un gate que estorba en lo trivial se acaba desactivando en lo importante.
+
+---
+
 ## PRIME DIRECTIVE
 
 **No optimizamos para producir código rápidamente. Optimizamos para producir cambios verificables.**
 
 Un cambio que parece correcto y no se ha comprobado vale menos que un cambio pequeño con
-evidencia de que funciona.
+evidencia de que funciona. Eso no significa aplicar el máximo rigor a todo: significa que
+el rigor aplicado se declare y que nada se dé por bueno sin comprobarlo.
 
 ---
 
