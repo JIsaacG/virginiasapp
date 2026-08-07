@@ -169,5 +169,7 @@
 @media (max-width:520px){
   .hl-fotos { grid-template-columns:1fr; gap:22px; }
   .hl-foto:last-child { margin-top:0; }
+  /* los huecos siguen en pareja: vacíos no necesitan todo el ancho */
+  .hl-fotos-vacias { grid-template-columns:1fr 1fr; gap:12px; }
 }
 
