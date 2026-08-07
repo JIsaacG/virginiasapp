@@ -95,6 +95,46 @@
   color: rgba(255,255,255,.4);
 }
 
+/* ── Galería complementaria bajo el video ──
+   Misma anchura máxima que .hub-video-frame (980px) para que nunca
+   se vea más ancha que el video, y de alto claramente menor. */
+.hub-shots {
+  width: 100%;
+  max-width: 980px;
+  margin: 20px auto 0;
+}
+.hub-shots-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.hub-shot {
+  aspect-ratio: 16 / 9;
+  max-height: 170px;
+  border-radius: var(--rl);
+  border: 1px dashed rgba(215,175,74,.3);
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 2px, transparent 2px 12px),
+    #150a01;
+}
+.hub-shot-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 170px;
+  object-fit: cover;
+  border-radius: var(--rl);
+  border: 1px solid rgba(215,175,74,.28);
+}
+.hub-shots-note {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.38);
+}
+
 /* ═══════════════════════════════════════
    SECCIÓN NAVEGACIÓN — fondo claro, tarjetas
 ═══════════════════════════════════════ */
@@ -117,8 +157,8 @@
   --pc: var(--gold);
   position: relative;
   display: flex; flex-direction: column; align-items: flex-start;
-  gap: 12px;
-  padding: 32px 28px;
+  gap: 9px;
+  padding: 24px 24px 28px;
   background: #F7F5F2;
   border: 1px solid rgba(106,36,7,.10);
   border-radius: var(--rl);
@@ -141,25 +181,52 @@
 }
 .hub-card:hover::before { transform: scaleX(1); }
 
-.hub-card-icon {
-  width: 60px; height: 60px; border-radius: 16px;
-  display: grid; place-items: center; font-size: 30px;
-  background: color-mix(in srgb, var(--pc) 13%, #fff);
-  border: 1px solid color-mix(in srgb, var(--pc) 22%, transparent);
-  transition: transform .3s ease;
+/* ── Espacio reservado para la imagen de cada tarjeta ──
+   Nunca más ancho que la tarjeta (width:100% del área de contenido) y de
+   alto acotado, para que la imagen no domine sobre el texto.
+   Al tener la foto: sustituir el <span class="hub-card-media"> por
+   <img class="hub-card-media-img" src="..." alt="..." loading="lazy">. */
+.hub-card-media,
+.hub-card-media-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 128px;
+  border-radius: 14px;
+  margin-bottom: 4px;
 }
-.hub-card:hover .hub-card-icon { transform: scale(1.08) rotate(-4deg); }
+.hub-card-media {
+  display: grid; place-items: center;
+  padding: 8px; text-align: center;
+  background:
+    repeating-linear-gradient(45deg, rgba(106,36,7,.035) 0 2px, transparent 2px 12px),
+    color-mix(in srgb, var(--pc) 9%, #fff);
+  border: 1px dashed color-mix(in srgb, var(--pc) 34%, transparent);
+  transition: border-color .3s ease, background-color .3s ease;
+}
+.hub-card-media-note {
+  font-size: 13px; font-weight: 600; line-height: 1.4;
+  letter-spacing: .04em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--pc) 62%, var(--muted));
+}
+.hub-card:hover .hub-card-media {
+  border-color: color-mix(in srgb, var(--pc) 60%, transparent);
+}
+.hub-card-media-img {
+  display: block;
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--pc) 22%, transparent);
+}
 
 .hub-card-title {
   font-family: 'Playfair Display', serif;
-  font-size: 21px; font-weight: 700; color: var(--ink);
+  font-size: 25px; font-weight: 700; line-height: 1.2; color: var(--ink);
 }
 .hub-card-desc {
-  font-size: 14px; line-height: 1.6; color: var(--muted); flex-grow: 1;
+  font-size: 16px; line-height: 1.55; color: var(--muted); flex-grow: 1;
 }
 .hub-card-arrow {
-  margin-top: 6px;
-  font-size: 14px; font-weight: 600;
+  margin-top: 4px;
+  font-size: 16px; font-weight: 600;
   color: var(--pc);
   display: inline-flex; align-items: center; gap: 7px;
 }
@@ -198,8 +265,13 @@
   .hub-video-section,
   .hub-nav-section { padding: 56px 5vw 64px; }
   .hub-head { margin-bottom: 34px; }
-  .hub-card { padding: 26px 22px; }
+  .hub-card { padding: 20px 20px 24px; }
+  .hub-card-media,
+  .hub-card-media-img { max-height: 150px; }
   .hub-video-play { width: 70px; height: 70px; }
   .hub-video-play svg { width: 28px; height: 28px; }
   .hub-video-ph-text { font-size: 19px; }
+  .hub-shots-row { gap: 10px; }
+  .hub-shot,
+  .hub-shot-img { max-height: 96px; }
 }

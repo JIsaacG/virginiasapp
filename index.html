@@ -39,7 +39,7 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet"></noscript>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="dist/main.min.css?v=20260807-adieeds2">
+  <link rel="stylesheet" href="dist/main.min.css?v=20260807-adieeds3">
 
   <!-- Datos estructurados (JSON-LD) — perfil de la institución para Google -->
   <script type="application/ld+json">
@@ -437,6 +437,20 @@
       Tu navegador no soporta la reproducción de video.
     </video>
   </div>
+
+  <!-- ─── Galería complementaria del video (espacio reservado) ───
+       3 espacios pensados para fotos de apoyo, no para sustituir al video.
+       Al tener las imágenes: cambia cada <div class="hub-shot"> por
+       <img class="hub-shot-img" src="..." alt="..." loading="lazy"> y borra el
+       párrafo .hub-shots-note. -->
+  <div class="hub-shots reveal">
+    <div class="hub-shots-row">
+      <div class="hub-shot" aria-hidden="true"></div>
+      <div class="hub-shot" aria-hidden="true"></div>
+      <div class="hub-shot" aria-hidden="true"></div>
+    </div>
+    <p class="hub-shots-note">Pendiente agregar imágenes</p>
+  </div>
 </section>
 
 
@@ -448,44 +462,47 @@
     <p>Navega fácilmente por cada área del Centro Educativo Evangélico Virginia Sapp.</p>
   </div>
 
+  <!-- Cada tarjeta reserva un espacio para su imagen (.hub-card-media).
+       Al tener la foto: sustituye ese <span> por
+       <img class="hub-card-media-img" src="..." alt="..." loading="lazy"> -->
   <div class="hub-grid">
     <a href="quienes-somos.html" class="hub-card reveal" style="--pc:var(--ceevs-blue)">
-      <span class="hub-card-icon" aria-hidden="true">🏫</span>
+      <span class="hub-card-media" aria-hidden="true"><span class="hub-card-media-note">Pendiente de añadir imagen</span></span>
       <h3 class="hub-card-title">Quiénes somos</h3>
       <p class="hub-card-desc">Historia desde 1962, misión, visión, valores cristianos y el equipo que forma a tus hijos.</p>
       <span class="hub-card-arrow">Conocer la institución <i>→</i></span>
     </a>
 
     <a href="admisiones.html" class="hub-card reveal" style="--pc:var(--ceevs-orange)">
-      <span class="hub-card-icon" aria-hidden="true">🎓</span>
+      <span class="hub-card-media" aria-hidden="true"><span class="hub-card-media-note">Pendiente de añadir imagen</span></span>
       <h3 class="hub-card-title">Admisiones</h3>
       <p class="hub-card-desc">Niveles de Preescolar a Secundaria, proceso de inscripción paso a paso y cupos 2026–2027.</p>
       <span class="hub-card-arrow">Ver admisiones <i>→</i></span>
     </a>
 
     <a href="recuerdos.html" class="hub-card reveal" style="--pc:var(--ceevs-gold)">
-      <span class="hub-card-icon" aria-hidden="true">📸</span>
+      <span class="hub-card-media" aria-hidden="true"><span class="hub-card-media-note">Pendiente de añadir imagen</span></span>
       <h3 class="hub-card-title">Galería y recuerdos</h3>
       <p class="hub-card-desc">Fotos y álbumes de graduaciones, eventos y la vida escolar de la familia CEEVS.</p>
       <span class="hub-card-arrow">Ver álbumes <i>→</i></span>
     </a>
 
     <a href="interactivo.html" class="hub-card reveal" style="--pc:var(--ceevs-sky)">
-      <span class="hub-card-icon" aria-hidden="true">🎮</span>
+      <span class="hub-card-media" aria-hidden="true"><span class="hub-card-media-note">Pendiente de añadir imagen</span></span>
       <h3 class="hub-card-title">Actividades</h3>
       <p class="hub-card-desc">Juegos, trivias bíblicas y retos interactivos para aprender jugando con fe.</p>
       <span class="hub-card-arrow">Jugar ahora <i>→</i></span>
     </a>
 
     <a href="mision-evangelistica.html" class="hub-card reveal" style="--pc:var(--ceevs-brown)">
-      <span class="hub-card-icon" aria-hidden="true">✝️</span>
+      <span class="hub-card-media" aria-hidden="true"><span class="hub-card-media-note">Pendiente de añadir imagen</span></span>
       <h3 class="hub-card-title">Misión evangelística</h3>
       <p class="hub-card-desc">El propósito cristocéntrico que guía la enseñanza, la fe en el aula y la formación en valores.</p>
       <span class="hub-card-arrow">Conocer la misión <i>→</i></span>
     </a>
 
     <a href="contactenos.html" class="hub-card reveal" style="--pc:var(--ceevs-orange)">
-      <span class="hub-card-icon" aria-hidden="true">💬</span>
+      <span class="hub-card-media" aria-hidden="true"><span class="hub-card-media-note">Pendiente de añadir imagen</span></span>
       <h3 class="hub-card-title">Contáctenos</h3>
       <p class="hub-card-desc">Teléfono, ubicación y formulario para agendar una visita o resolver tus dudas.</p>
       <span class="hub-card-arrow">Escribir o agendar <i>→</i></span>
@@ -529,16 +546,11 @@
         <div class="f-brand-name" style="margin-bottom:0">Virginia <span>Sapp</span></div>
       </div>
       <div class="f-brand-year">✦ CEEVS · Centro Educativo Evangélico Virginia Sapp · Fundado en 1962</div>
-      <p class="f-brand-desc">Más de seis décadas formando líderes con fe, excelencia académica y valores eternos en Tegucigalpa, Honduras.</p>
       <a href="https://adieeds.edu.hn/" target="_blank" rel="noopener" class="f-member">
-        <span class="f-member-logo">
-          <img src="assets/icons/adieeds-virginiasapp.png" alt="Logo de ADIEEDS y Virginia Sapp" loading="lazy" decoding="async" width="600" height="400">
-        </span>
-        <span class="f-member-text">
-          <span class="f-member-title">Miembro de ADIEEDS</span>
-          <span class="f-member-sub">Asociación de Instituciones Educativas Evangélicas de Santidad</span>
-        </span>
+        <span class="f-member-title">Miembro de ADIEEDS</span>
+        <span class="f-member-sub">Asociación de Instituciones Educativas Evangélicas de Santidad</span>
       </a>
+      <p class="f-brand-desc">Más de seis décadas formando líderes con fe, excelencia académica y valores eternos en Tegucigalpa, Honduras.</p>
       <div class="f-soc">
         <a href="https://www.facebook.com/ieevs.edu.hn/" target="_blank" rel="noopener" class="soc-btn" aria-label="Facebook">f</a>
         <a href="https://portal.edubox.app/login/virginiasapp" target="_blank" rel="noopener" class="soc-btn" aria-label="Portal">↗</a>
