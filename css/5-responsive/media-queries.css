@@ -213,18 +213,18 @@
     right: 14px;
     left: auto;
     width: auto;
-    min-width: 176px;
-    max-width: min(240px, calc(100vw - 24px));
+    min-width: 200px;
+    max-width: min(270px, calc(100vw - 24px));
     border-radius: 14px;
     padding: 10px 12px;
   }
 
   .hud-header { margin-bottom: 8px; }
-  .hud-title { font-size: 10px; letter-spacing: 0.08em; }
-  .hud-score { font-size: 17px; }
-  .hud-xp-label { font-size: 10px; }
+  .hud-title { font-size: 12.5px; letter-spacing: 0.08em; }
+  .hud-score { font-size: 22px; }
+  .hud-xp-label { font-size: 12px; }
   .hud-badges { gap: 5px; }
-  .hud-badge { width: 24px; height: 24px; font-size: 12px; }
+  .hud-badge { width: 28px; height: 28px; font-size: 14px; }
 
   #toast {
     right: 12px;
@@ -243,15 +243,16 @@
   #game-hud {
     bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
     right: 10px;
-    min-width: 162px;
-    max-width: min(210px, calc(100vw - 20px));
+    min-width: 188px;
+    max-width: min(230px, calc(100vw - 20px));
     padding: 9px 10px;
     border-radius: 12px;
   }
 
-  .hud-title { font-size: 9px; }
-  .hud-score { font-size: 15px; }
-  .hud-badge { width: 22px; height: 22px; font-size: 11px; }
+  .hud-title { font-size: 12px; }
+  .hud-score { font-size: 20px; }
+  .hud-xp-label { font-size: 11.5px; }
+  .hud-badge { width: 26px; height: 26px; font-size: 13px; }
 
   #toast {
     right: 10px;
