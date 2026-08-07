@@ -9,6 +9,7 @@
 .mision-half:first-child { background:var(--cream); }
 .mision-half:last-child { background:var(--parch); }
 .mision-half:last-child .mision-big { color:rgba(65,36,4,.05); }
+#vision .mision-big { color:rgba(171,100,35,.04); }
 .mision-big {
   position:absolute; bottom:-10px; left:-10px;
   font-family:'Playfair Display',serif;
@@ -26,4 +27,13 @@
 .mision-text { font-size:14.5px; line-height:1.8; }
 .mision-half:first-child .mision-text { color:var(--muted); }
 .mision-half:last-child .mision-text { color:var(--muted); }
+
+/* Espacio para la foto de cada tarjeta (editable desde el panel: qs-mision-foto / qs-vision-foto) */
+.mision-foto {
+  margin:32px 0 0; border-radius:14px; overflow:hidden;
+  background:rgba(65,36,4,.05);
+  box-shadow:0 14px 34px rgba(65,36,4,.12);
+  position:relative; z-index:1;
+}
+.mision-foto img { display:block; width:100%; aspect-ratio:16/10; object-fit:cover; }
 

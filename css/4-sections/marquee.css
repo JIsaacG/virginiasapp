@@ -15,59 +15,86 @@
 .section-label::before { content:''; width:28px; height:2px; background:var(--gold); }
 .section-label span { font-size:11px; font-weight:600; color:var(--gold); letter-spacing:.12em; text-transform:uppercase; }
 
-.historia-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; margin-top:60px; }
-
-.historia-text h2 {
+/* Intro: titular a la izquierda, párrafos a la derecha */
+.historia-intro { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(32px,5vw,80px); align-items:start; margin-top:40px; }
+.historia-intro h2 {
   font-family:'Playfair Display',serif;
-  font-size:clamp(34px,4vw,54px); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:24px;
+  font-size:clamp(34px,4vw,54px); font-weight:700; color:var(--forest); line-height:1.12;
 }
-.historia-text h2 em { font-style:italic; color:var(--gold); }
-.historia-text p { font-size:15px; color:var(--muted); line-height:1.8; margin-bottom:16px; }
-.historia-text p strong { color:var(--forest); font-weight:600; }
+.historia-intro h2 em { font-style:italic; color:var(--gold); }
+.historia-intro-text p { font-size:15px; color:var(--muted); line-height:1.8; margin-bottom:16px; }
+.historia-intro-text p:last-child { margin-bottom:0; }
+.historia-intro-text p strong { color:var(--forest); font-weight:600; }
 
-.historia-timeline { position:relative; padding-left:28px; }
-.historia-timeline::before { content:''; position:absolute; left:9px; top:8px; bottom:8px; width:1.5px; background:linear-gradient(to bottom, var(--gold), transparent); }
-.timeline-item { position:relative; margin-bottom:32px; }
-.timeline-item::before { content:''; position:absolute; left:-22px; top:6px; width:10px; height:10px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 3px rgba(171,100,35,.2); }
-.timeline-year { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px; }
-.timeline-text { font-size:14px; color:var(--muted); line-height:1.6; }
-.timeline-text strong { color:var(--forest); }
-
-.historia-image-wrap { position:relative; }
-.historia-main-img { border-radius:var(--rxl); overflow:hidden; box-shadow:0 32px 80px rgba(65,36,4,.18); }
-.historia-main-img img { width:100%; aspect-ratio:4/5; object-fit:cover; display:block; filter:saturate(.85); }
-.historia-float-card {
-  position:absolute; bottom:-24px; left:-32px;
-  background:var(--parch); border-radius:var(--rl); padding:20px 24px;
-  box-shadow:0 8px 32px rgba(65,36,4,.15);
-  border:1px solid rgba(171,100,35,.25);
-  max-width:220px;
-}
-.float-card-num { font-family:'Playfair Display',serif; font-size:40px; font-weight:900; color:var(--gold2); line-height:1; }
-.float-card-text { font-size:12px; color:var(--muted); margin-top:4px; line-height:1.4; }
-
-/* Reel de Instagram embebido en el slot de historia.
-   Marco vertical 9:16: recorta cabecera y pie de IG para mostrar solo el video. */
-.historia-reel {
+/* ── Línea de tiempo horizontal con fotos históricas ──
+   El eje se dibuja a una altura fija (--hl-eje) medida desde el borde superior
+   del track; por eso .hl-cabecera tiene alto fijo y reserva ese espacio. */
+.historia-linea {
+  --hl-eje:78px;
   position:relative;
-  width:100%;
-  max-width:380px;
-  aspect-ratio:9 / 16;
-  border-radius:var(--rxl);
-  overflow:hidden;
-  box-shadow:0 32px 80px rgba(65,36,4,.18);
-  background:#000;
+  list-style:none; margin:clamp(56px,7vw,90px) 0 0; padding:0;
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  column-gap:clamp(20px,3vw,52px);
 }
-.historia-reel iframe {
-  position:absolute;
-  top:-54px;            /* oculta la cabecera (avatar/usuario/ver perfil) */
-  left:0;
-  width:100%;
-  height:calc(100% + 240px); /* extiende para que el video llene y el pie quede recortado abajo */
-  border:0;
-  display:block;
+.historia-linea::before {
+  content:''; position:absolute; left:0; right:0; top:var(--hl-eje); height:2px;
+  background:linear-gradient(90deg, rgba(171,100,35,0) 0%, var(--gold) 14%, var(--gold) 86%, rgba(171,100,35,0) 100%);
 }
-@media (max-width:768px){
-  .historia-reel { max-width:340px; margin:0 auto; }
+
+.hl-hito { position:relative; padding-top:calc(var(--hl-eje) + 34px); }
+
+.hl-cabecera { position:absolute; top:0; left:0; right:0; height:var(--hl-eje); display:flex; flex-direction:column; align-items:center; justify-content:flex-start; text-align:center; }
+.hl-year { font-family:'Playfair Display',serif; font-size:clamp(26px,2.8vw,38px); font-weight:700; color:var(--forest); line-height:1.05; }
+.hl-name { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; margin-top:6px; }
+
+.hl-dot {
+  position:absolute; top:var(--hl-eje); left:50%; transform:translate(-50%,-50%);
+  width:18px; height:18px; border-radius:4px; background:var(--gold);
+  box-shadow:0 0 0 6px var(--cream), 0 0 0 8px rgba(171,100,35,.28);
+}
+.hl-dot::after { content:'+'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; line-height:1; color:var(--cream); }
+
+/* Fotos tipo polaroid: dos por hito, con inclinaciones opuestas */
+.hl-fotos { display:grid; grid-template-columns:1.08fr .92fr; gap:clamp(10px,1.2vw,18px); align-items:start; }
+.hl-foto {
+  margin:0; background:var(--parch); padding:8px 8px 0;
+  border:1px solid rgba(171,100,35,.22); border-radius:4px;
+  box-shadow:0 10px 28px rgba(65,36,4,.16);
+  transition:transform .35s cubic-bezier(.25,.8,.25,1), box-shadow .35s ease;
+}
+.hl-foto:first-child { transform:rotate(-1.8deg); }
+.hl-foto:last-child { transform:rotate(2.2deg); margin-top:18px; }
+.hl-foto:hover { transform:rotate(0) translateY(-6px) scale(1.03); box-shadow:0 22px 48px rgba(65,36,4,.26); z-index:2; position:relative; }
+.hl-foto img {
+  display:block; width:100%; aspect-ratio:4/3; object-fit:cover;
+  filter:sepia(.22) saturate(.82) contrast(1.03);
+  transition:filter .35s ease;
+}
+.hl-foto:hover img { filter:none; }
+.hl-foto figcaption { font-family:'Playfair Display',serif; font-style:italic; font-size:11.5px; color:var(--muted); line-height:1.35; text-align:center; padding:9px 2px 11px; }
+
+.hl-text { font-size:14px; color:var(--muted); line-height:1.7; text-align:center; margin-top:26px; }
+.hl-text strong { color:var(--forest); font-weight:600; }
+
+/* Móvil y tablet: la línea pasa a vertical */
+@media (max-width:1024px){
+  .historia-intro { grid-template-columns:1fr; gap:24px; }
+  .historia-linea {
+    grid-template-columns:1fr; row-gap:44px;
+    padding-left:28px; margin-top:48px;
+  }
+  .historia-linea::before {
+    left:5px; right:auto; top:10px; bottom:10px; width:2px; height:auto;
+    background:linear-gradient(to bottom, var(--gold), rgba(171,100,35,.15));
+  }
+  .hl-hito { padding-top:0; }
+  .hl-cabecera { position:static; height:auto; align-items:flex-start; text-align:left; margin-bottom:16px; }
+  .hl-name { margin-top:2px; }
+  .hl-dot { top:10px; left:-28px; transform:none; }
+  .hl-text { text-align:left; margin-top:18px; }
+}
+@media (max-width:520px){
+  .hl-fotos { grid-template-columns:1fr; gap:22px; }
+  .hl-foto:last-child { margin-top:0; }
 }
 

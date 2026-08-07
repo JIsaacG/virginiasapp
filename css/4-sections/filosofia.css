@@ -36,11 +36,7 @@
   /* historia */
   .historia{ padding:72px 6vw; }
   .historia::before{ font-size:clamp(80px,18vw,160px); }
-  .historia-grid{ grid-template-columns:1fr; gap:40px; }
-  .historia-image-wrap{ order:-1; }
-  .historia-main-img img{ aspect-ratio:16/9; }
-  .historia-float-card{ bottom:-16px; left:-12px; padding:16px 18px; }
-  .float-card-num{ font-size:32px; }
+  .historia-intro{ grid-template-columns:1fr; gap:24px; }
 
   /* niveles */
   .niveles{ padding:72px 6vw; }

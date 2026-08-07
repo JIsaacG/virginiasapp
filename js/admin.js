@@ -66,6 +66,14 @@
         { key: 'qs-bienvenida-docentes', label: 'Bienvenida — Docentes', defaultUrl: WP + '2026/01/IMG_9784.jpg' },
         { key: 'qs-bienvenida-comunidad', label: 'Bienvenida — Comunidad educativa', defaultUrl: WP + '2025/10/WhatsApp-Image-2025-10-22-at-3.37.19-PM-2-533x400.jpeg' },
         { key: 'qs-bienvenida-ninos', label: 'Bienvenida — Niños', defaultUrl: WP + '2026/01/IMG_5896.jpg' },
+        { key: 'qs-historia-1962-a', label: 'Historia 1962 — Campus en sus primeros años', defaultUrl: 'assets/images/timeline/Imagen%201.jpg' },
+        { key: 'qs-historia-1962-b', label: 'Historia 1962 — Fachada y lema fundacional', defaultUrl: 'assets/images/timeline/45.jpg' },
+        { key: 'qs-historia-7080-a', label: 'Historia 70–80 — Bus escolar y pabellones', defaultUrl: 'assets/images/timeline/33.jpg' },
+        { key: 'qs-historia-7080-b', label: 'Historia 70–80 — Laboratorio de cómputo', defaultUrl: 'assets/images/timeline/55.jpg' },
+        { key: 'qs-historia-hoy-a', label: 'Historia hoy — Plaza central del campus', defaultUrl: 'assets/images/timeline/556.jpg' },
+        { key: 'qs-historia-hoy-b', label: 'Historia hoy — Ampliación de instalaciones', defaultUrl: 'assets/images/timeline/888.jpg' },
+        { key: 'qs-mision-foto', label: 'Misión — Foto de la tarjeta', defaultUrl: WP + '2026/01/IMG_5958.jpg' },
+        { key: 'qs-vision-foto', label: 'Visión — Foto de la tarjeta', defaultUrl: WP + '2025/10/IMG_1816-1400x786.jpg' },
         { key: 'qs-acsi-cert', label: 'Acordeón ACSI — Certificación', defaultUrl: WP + '2026/03/IMG_7464.JPG-712x400.jpeg' },
         { key: 'qs-declaracion-logo', label: 'Declaración institucional — Logo', defaultUrl: 'assets/logo principal.png' }
       ]
