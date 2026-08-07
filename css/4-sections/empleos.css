@@ -43,6 +43,7 @@
   background:linear-gradient(155deg, rgba(171,100,35,.16), rgba(255,255,255,.96));
   border-color:rgba(171,100,35,.45);
 }
+.fp-back-logo { height:34px; width:auto; display:block; margin:0 auto -4px; flex:0 0 auto; }
 .fp-back-title { font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:var(--gold2); }
 .filosofia-pillar p { font-size:13.5px; color:var(--muted); line-height:1.7; margin:0; }
 .filosofia-pillar:focus-visible .fp-face { box-shadow:0 0 0 2px var(--gold2); }

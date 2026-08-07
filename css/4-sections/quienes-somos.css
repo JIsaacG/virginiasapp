@@ -127,68 +127,96 @@
   max-width: 1240px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: 56px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: 64px;
   align-items: center;
 }
 .acsi-body { min-width: 0; }
-.acsi-top { margin-bottom: 28px; }
+.acsi-top { margin-bottom: 26px; }
+.acsi .section-label span { font-size: 13px; }
 .acsi-top h2 {
   font-family: 'Playfair Display', serif;
   font-size: clamp(30px, 3.6vw, 48px);
   font-weight: 700;
   color: var(--forest);
   line-height: 1.15;
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 .acsi-top h2 em { color: var(--gold); font-style: italic; }
+
+/* El logo deja de flotar: vive en una placa acreditadora sobre el párrafo,
+   con el mismo marco que la fotografía para que lean como una sola pieza. */
 .acsi-lead-row {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   gap: 24px;
-  margin-bottom: 32px;
+  margin-bottom: 30px;
+}
+.acsi-sello-frame {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 24px;
+  /* blanco puro: el PNG del logo trae fondo blanco y con --white se notaría el corte */
+  background: var(--ceevs-white);
+  border: 1.5px solid rgba(171, 100, 35, 0.18);
+  border-radius: var(--r);
+  box-shadow: 0 10px 24px rgba(65, 36, 4, 0.07);
 }
 .acsi-sello {
-  flex: 0 0 auto;
-  width: 150px;
+  display: block;
+  width: 200px;
   height: auto;
-  margin-top: 4px;
 }
 .acsi-lead {
-  font-size: 16px;
+  font-size: 18px;
   color: var(--muted);
-  line-height: 1.85;
+  line-height: 1.8;
+  max-width: 58ch;
   margin: 0;
 }
 .acsi-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 36px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 32px;
+  margin: 0;
+  padding-top: 28px;
+  border-top: 1px solid rgba(171, 100, 35, 0.16);
+  list-style: none;
+}
+.acsi-badge {
+  position: relative;
+  padding-left: 26px;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--forest);
+  line-height: 1.5;
+}
+.acsi-badge::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.42em;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 4px rgba(215, 175, 74, 0.20);
 }
 .acsi-media {
   min-width: 0;
+  padding: 10px;
   border-radius: var(--rl);
-  overflow: hidden;
-  background: var(--white);
+  background: var(--ceevs-white);
   border: 1.5px solid rgba(171, 100, 35, 0.18);
   box-shadow: 0 18px 40px rgba(65, 36, 4, 0.10);
 }
 .acsi-foto {
   display: block;
   width: 100%;
-  height: 100%;
-  min-height: 380px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
-}
-.acsi-badge {
-  background: var(--white);
-  border: 1.5px solid rgba(171, 100, 35, 0.25);
-  border-radius: 999px;
-  padding: 8px 18px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--forest);
+  border-radius: calc(var(--rl) - 10px);
 }
 
 /* ── LAES — SDD-F3-QS-007 ── */
@@ -671,7 +699,7 @@
 @media (max-width: 1024px) {
   .acsi-inner { grid-template-columns: 1fr; gap: 36px; }
   .acsi-media { order: -1; }
-  .acsi-foto { min-height: 260px; max-height: 340px; }
+  .acsi-lead { max-width: none; }
   .qs-nav { top: 64px; }
   #historia, #mision, #vision, #filosofia, #declaracion-fe,
   #acsi, #valores, #perfil-egresado, #laes,
@@ -682,8 +710,10 @@
 
 @media (max-width: 700px) {
   .acsi, .laes, .equipo, .junta { padding: 64px 6vw; }
-  .acsi-lead-row { flex-direction: column; gap: 16px; }
-  .acsi-sello { width: 190px; max-width: 70%; }
+  .acsi-lead-row { gap: 20px; }
+  .acsi-sello-frame { padding: 12px 18px; max-width: 100%; }
+  .acsi-sello { width: 170px; max-width: 100%; }
+  .acsi-badges { grid-template-columns: 1fr; gap: 12px; padding-top: 24px; }
   .lead-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
   .lead-card { padding: 22px 12px 20px; }
   .lead-avatar { width: 84px; height: 84px; }

@@ -15,6 +15,25 @@
   content:''; position:absolute; inset:0;
   background:linear-gradient(105deg, rgba(65,36,4,0.95) 40%, rgba(35,18,2,0.6) 100%);
 }
+/* Admisiones: foto del campus. Se mantiene el difuminado en diagonal —
+   la izquierda sigue siendo marrón sólido para el texto y la foto sólo
+   aparece en la zona derecha que el degradado deja limpia. */
+.page-hero--admisiones::before {
+  /* Ruta relativa a dist/main.min.css, que es la hoja que sirve admisiones.html
+     (minify.py inlinea los @import sin reescribir las URL). */
+  background-image:url('../assets/Admisiones/campus-admisiones.jpg');
+  background-position:center 72%;
+  filter:saturate(.62) brightness(.62);
+  -webkit-mask-image:linear-gradient(105deg, transparent 34%, rgba(0,0,0,.45) 54%, #000 80%);
+  mask-image:linear-gradient(105deg, transparent 34%, rgba(0,0,0,.45) 54%, #000 80%);
+}
+.page-hero--admisiones::after {
+  background:linear-gradient(105deg,
+    rgba(65,36,4,0.96) 38%,
+    rgba(58,31,3,0.74) 62%,
+    rgba(35,18,2,0.34) 100%);
+}
+
 .page-hero-content { position:relative; z-index:2; max-width:680px; }
 .page-hero-title {
   font-family:'Playfair Display',serif;
@@ -38,6 +57,20 @@
 .trust-badge svg { color:var(--gold2); flex-shrink:0; }
 @media(max-width:900px){
   .page-hero{ padding:120px 6vw 60px; }
+  /* En pantallas estrechas el texto ocupa todo el ancho: la foto se retira
+     hacia la esquina y el degradado se cierra para no restarle contraste. */
+  .page-hero--admisiones::before{
+    background-position:center 68%;
+    filter:saturate(.55) brightness(.5);
+    -webkit-mask-image:linear-gradient(120deg, transparent 18%, rgba(0,0,0,.45) 55%, #000 92%);
+    mask-image:linear-gradient(120deg, transparent 18%, rgba(0,0,0,.45) 55%, #000 92%);
+  }
+  .page-hero--admisiones::after{
+    background:linear-gradient(120deg,
+      rgba(65,36,4,0.97) 42%,
+      rgba(58,31,3,0.86) 70%,
+      rgba(35,18,2,0.62) 100%);
+  }
 }
 @media(max-width:600px){
   .page-hero{ padding:100px 5vw 48px; }

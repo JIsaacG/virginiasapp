@@ -15,6 +15,7 @@ import sys
 PAGES = [
     'index.html',
     'quienes-somos.html',
+    'nosotros.html',
     'admisiones.html',
     'contactenos.html',
     'interactivo.html',
@@ -67,9 +68,14 @@ ALT_EDUBOX_URL = 'virginiasapp.edubox.app/core_sc'
 
 # Fase 3 — secciones requeridas en quienes-somos.html
 QS_REQUIRED_IDS = [
-    'historia', 'mision', 'vision', 'filosofia', 'declaracion-fe',
-    'acsi', 'valores', 'perfil-egresado', 'laes',
-    'equipo-directivo', 'junta-directiva',
+    'historia', 'mision', 'vision', 'filosofia', 'declaracion-fe', 'acsi',
+]
+
+# Secciones trasladadas de quienes-somos.html a nosotros.html (agosto 2026).
+# Viven en nosotros.html y NO deben volver a quienes-somos.html: dos páginas
+# con el mismo id romperían los anclajes y el scroll-spy.
+NOSOTROS_REQUIRED_IDS = [
+    'valores', 'perfil-egresado', 'laes', 'equipo-directivo', 'junta-directiva',
 ]
 
 
@@ -181,6 +187,25 @@ def check_page(path):
                 errors.append(f'quienes-somos.html falta la sección id="{sec_id}"')
         if 'js/quienes-somos.js' not in content:
             errors.append('quienes-somos.html no carga js/quienes-somos.js')
+        for sec_id in NOSOTROS_REQUIRED_IDS:
+            if f'id="{sec_id}"' in content:
+                errors.append(
+                    f'quienes-somos.html conserva la sección id="{sec_id}" '
+                    '(fue trasladada a nosotros.html)'
+                )
+
+    # ── Secciones trasladadas: nosotros.html ──
+    if os.path.basename(path) == 'nosotros.html':
+        if 'class="qs-nav"' not in content:
+            errors.append('nosotros.html no tiene navegación interna (qs-nav)')
+        for sec_id in NOSOTROS_REQUIRED_IDS:
+            if f'id="{sec_id}"' not in content:
+                errors.append(f'nosotros.html falta la sección id="{sec_id}"')
+        if 'js/quienes-somos.js' not in content:
+            errors.append(
+                'nosotros.html no carga js/quienes-somos.js '
+                '(scroll-spy y modal del equipo directivo)'
+            )
 
     # ── Fase 4: validaciones específicas de contactenos.html ──
     if os.path.basename(path) == 'contactenos.html':
@@ -267,7 +292,7 @@ def run():
 
     # Check páginas nuevas existen
     for new_page in ('mision-evangelistica.html', 'sugerencias.html',
-                     'comunicados.html', 'capacitate.html'):
+                     'comunicados.html', 'capacitate.html', 'nosotros.html'):
         if not os.path.exists(new_page):
             print(f'\n[FAIL] {new_page} no existe')
             total_errors += 1

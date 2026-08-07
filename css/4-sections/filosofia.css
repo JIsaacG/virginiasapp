@@ -60,7 +60,9 @@
   /* quiz */
   .quiz-section{ padding:72px 6vw; }
   .quiz-card{ padding:32px 28px; }
-  .quiz-options{ grid-template-columns:1fr 1fr; gap:10px; }
+  .quiz-options{ gap:10px; }
+  .quiz-opt{ padding:18px 10px 16px; gap:10px; font-size:13px; }
+  .quiz-opt-icon{ width:46px; height:46px; font-size:21px; }
 
   /* admisiones */
   .admisiones{ padding:72px 6vw; }

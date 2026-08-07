@@ -74,9 +74,8 @@
         { key: 'qs-historia-2010-b', label: 'Historia 2010 — Ampliación de instalaciones', defaultUrl: 'assets/images/timeline/888.jpg' },
         { key: 'qs-mision-foto', label: 'Misión — Foto de la tarjeta', defaultUrl: 'assets/images/misionvision/mision.jpg' },
         { key: 'qs-vision-foto', label: 'Visión — Foto de la tarjeta', defaultUrl: 'assets/images/misionvision/vision.jpg' },
-        { key: 'qs-acsi-logo', label: 'Acreditación ACSI — Logo ACSI (junto al texto)', defaultUrl: 'assets/images/sections/acsi-logo.png' },
-        { key: 'qs-acsi-foto', label: 'Acreditación ACSI — Imagen lateral', defaultUrl: WP + '2026/03/IMG_7464.JPG-712x400.jpeg' },
-        { key: 'qs-acsi-cert', label: 'Acordeón ACSI — Certificación', defaultUrl: WP + '2026/03/IMG_7464.JPG-712x400.jpeg' },
+        { key: 'qs-acsi-logo', label: 'Acreditación ACSI — Logo ACSI (placa)', defaultUrl: 'assets/images/sections/acsi-logo.png' },
+        { key: 'qs-acsi-foto', label: 'Acreditación ACSI — Imagen lateral', defaultUrl: WP + '2025/10/WhatsApp-Image-2025-10-22-at-3.37.19-PM-2-533x400.jpeg' },
         { key: 'qs-declaracion-logo', label: 'Declaración institucional — Logo', defaultUrl: 'assets/logo principal.png' }
       ]
     },

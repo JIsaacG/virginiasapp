@@ -30,10 +30,11 @@
 
 /* Espacio para la foto de cada tarjeta (editable desde el panel: qs-mision-foto / qs-vision-foto) */
 .mision-foto {
-  margin:32px 0 0; border-radius:14px; overflow:hidden;
+  margin:28px 0 0; border-radius:14px; overflow:hidden;
+  width:100%; max-width:380px;
   background:rgba(65,36,4,.05);
   box-shadow:0 14px 34px rgba(65,36,4,.12);
   position:relative; z-index:1;
 }
-.mision-foto img { display:block; width:100%; aspect-ratio:16/10; object-fit:cover; }
+.mision-foto img { display:block; width:100%; aspect-ratio:3/2; object-fit:cover; }
 
