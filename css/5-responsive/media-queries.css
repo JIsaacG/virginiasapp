@@ -172,7 +172,9 @@
   .filosofia{ padding:56px 5vw; }
   .filosofia-title{ font-size:clamp(28px,8vw,40px); }
   .filosofia-pillars{ grid-template-columns:1fr; gap:12px; }
-  .filosofia-pillar{ padding:24px 18px; }
+  .filosofia-pillar,
+  .filosofia-pillar .fp-inner{ min-height:260px; }
+  .filosofia-pillar .fp-face{ padding:20px 18px; }
   .declaracion-fe{ padding:56px 5vw; }
   .declaracion-title{ font-size:clamp(28px,8vw,40px); }
   .declaracion-grid{ gap:10px; }

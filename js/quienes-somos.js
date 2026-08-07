@@ -118,7 +118,9 @@ const QuienesSomos = {
     const lbFig = lb && lb.querySelector('.hl-lb-figure');
     const lbCap = DOM.byId('hl-lb-caption');
     const lbCount = DOM.byId('hl-lb-count');
-    const fotos = Array.from(DOM.selectAll('.historia-linea .hl-foto'));
+    // Solo las polaroids con foto real: los huecos reservados no entran en el visor
+    const zooms = Array.from(DOM.selectAll('.historia-linea .hl-zoom'));
+    const fotos = zooms.map(btn => btn.closest('.hl-foto'));
     if (!lb || !lbFig || !fotos.length) return;
 
     // La imagen se crea aquí: así el HTML no necesita un src de relleno
@@ -212,8 +214,8 @@ const QuienesSomos = {
       if (lastFocused) { lastFocused.focus(); lastFocused = null; }
     };
 
-    fotos.forEach((foto, i) => {
-      DOM.on(foto.querySelector('.hl-zoom'), 'click', e => abrir(i, e.currentTarget));
+    zooms.forEach((btn, i) => {
+      DOM.on(btn, 'click', e => abrir(i, e.currentTarget));
     });
 
     DOM.on(lb, 'click', e => {
