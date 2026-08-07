@@ -137,9 +137,14 @@
     padding: 10px 16px;
   }
 
-  .nav-logo-img {
-    width: 40px;
-    height: 40px;
+  .nav-logo-img,
+  .nav-logo-image {
+    height: 38px;
+    max-height: 38px;
+  }
+
+  .nav-logo-image {
+    max-width: 68px;
   }
 }
 

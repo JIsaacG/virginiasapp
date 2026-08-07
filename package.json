@@ -8,7 +8,15 @@
     "seo:check": "node scripts/seo-check.mjs",
     "seo:lighthouse": "lhci autorun",
     "seo:audit": "npm run seo:check && npm run seo:lighthouse",
-    "seo:production": "node scripts/seo-production-check.mjs"
+    "seo:production": "node scripts/seo-production-check.mjs",
+    "check:js": "node scripts/check-js-syntax.mjs",
+    "check:php": "node scripts/check-php-syntax.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "check:pages": "python generate-pages.py",
+    "verify": "node scripts/verify.mjs",
+    "verify:low": "node scripts/verify.mjs --level=low",
+    "verify:medium": "node scripts/verify.mjs --level=medium",
+    "verify:high": "node scripts/verify.mjs --level=high"
   },
   "devDependencies": {
     "@lhci/cli": "0.15.1",

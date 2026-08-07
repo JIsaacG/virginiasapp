@@ -11,6 +11,7 @@
 /* hero animations */
 @keyframes heroFadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
 .hero-eyebrow { animation:heroFadeUp .7s ease both; }
+.hero-lema { animation:heroFadeUp .7s .07s ease both; }
 .hero-founding-text { animation:heroFadeUp .7s .1s ease both; }
 .hero-headline { animation:heroFadeUp .8s .15s ease both; }
 .hero-desc { animation:heroFadeUp .8s .25s ease both; }

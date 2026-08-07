@@ -5,14 +5,32 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      full:
+        description: 'Ejecutar también Lighthouse (auditoría completa)'
+        type: boolean
+        default: true
+
+# Un push rápido tras otro cancela la ejecución anterior de la misma rama: no tiene
+# sentido pagar dos Lighthouse por un commit que ya quedó obsoleto.
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  audit:
+  # ── Puerta rápida: se ejecuta SIEMPRE (PR, main y manual) ─────────────────
+  # Todo lo barato y determinista. Sin navegador, sin red hacia el sitio.
+  gate:
+    name: Puerta de calidad (rápida)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
       - name: Checkout
+        # fetch-depth 0 para que el escáner de secretos pueda consultar el historial
+        # si alguna vez se amplía a revisar commits, no solo el árbol actual.
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -25,8 +43,67 @@ jobs:
       - name: Install audit tools
         run: npm ci
 
-      - name: Run SEO checks and Lighthouse CI
-        run: npm run seo:audit
+      - name: Escáner de secretos
+        run: npm run check:secrets
+
+      - name: Sintaxis JavaScript
+        run: npm run check:js
+
+      - name: Sintaxis PHP
+        # El script distingue "hay un error de sintaxis" (exit 1) de "no hay PHP en esta
+        # máquina" (exit 2). Sin este envoltorio, un runner sin PHP rompería el CI con un
+        # rojo que no significa nada. Un error real sí lo rompe.
+        shell: bash
+        run: |
+          set +e
+          node scripts/check-php-syntax.mjs
+          status=$?
+          set -e
+          if [ "$status" -eq 1 ]; then
+            echo "::error::Error de sintaxis en api/"
+            exit 1
+          fi
+          if [ "$status" -eq 2 ]; then
+            echo "::warning::PHP no disponible en el runner — comprobación omitida (NOT AVAILABLE)"
+          fi
+
+      - name: Validador de páginas
+        run: python generate-pages.py
+
+      - name: Comprobaciones SEO
+        run: npm run seo:check
+
+      - name: Auditoría de dependencias de producción
+        # Las 8 vulnerabilidades conocidas viven en la cadena de @lhci/cli
+        # (devDependencies) y no se sirven al público. Lo que bloquea es que aparezca
+        # algo vulnerable en lo que sí llega al navegador.
+        run: npm audit --omit=dev --audit-level=moderate
+
+  # ── Auditoría completa: solo en main y en ejecución manual ────────────────
+  # Lighthouse necesita Chrome y tarda minutos. Ejecutarlo en cada push de cada PR
+  # duplicaba trabajo sin añadir señal: el SEO estático ya lo cubre `seo:check`.
+  # Para forzarlo sobre una rama, lanza el workflow a mano (workflow_dispatch).
+  lighthouse:
+    name: Lighthouse (completa)
+    needs: gate
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install audit tools
+        run: npm ci
+
+      - name: Lighthouse CI
+        run: npm run seo:lighthouse
 
       - name: Save Lighthouse reports
         if: always()

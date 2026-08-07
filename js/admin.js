@@ -34,7 +34,7 @@
     {
       page: '🌐 Global (todas las páginas)',
       images: [
-        { key: 'nav-logo', label: 'Logo de la barra de navegación', defaultUrl: 'assets/logo principal.png' },
+        { key: 'nav-logo', label: 'Logo de la barra de navegación', defaultUrl: 'assets/logo-institucional.png' },
         { key: 'footer-logo', label: 'Logo del pie de página', defaultUrl: 'assets/logo.jpg' },
         { key: 'page-hero-bg', label: 'Fondo del encabezado en páginas internas (admisiones, quiénes somos, contacto, recuerdos, etc.)', defaultUrl: UNSPLASH + 'photo-1580582932707-520aed937b7b?w=1600&q=75&auto=format', type: 'bg' }
       ]
