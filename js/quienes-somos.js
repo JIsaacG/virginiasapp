@@ -115,11 +115,17 @@ const QuienesSomos = {
   // Visor de las fotos de la línea de tiempo: la polaroid crece hasta el centro (FLIP)
   _setupHistoriaLightbox() {
     const lb = DOM.byId('hl-lightbox');
-    const lbImg = DOM.byId('hl-lb-img');
+    const lbFig = lb && lb.querySelector('.hl-lb-figure');
     const lbCap = DOM.byId('hl-lb-caption');
     const lbCount = DOM.byId('hl-lb-count');
     const fotos = Array.from(DOM.selectAll('.historia-linea .hl-foto'));
-    if (!lb || !lbImg || !fotos.length) return;
+    if (!lb || !lbFig || !fotos.length) return;
+
+    // La imagen se crea aquí: así el HTML no necesita un src de relleno
+    const lbImg = document.createElement('img');
+    lbImg.className = 'hl-lb-img';
+    lbImg.alt = '';
+    lbFig.insertBefore(lbImg, lbFig.firstChild);
 
     let idx = 0;
     let lastFocused = null;

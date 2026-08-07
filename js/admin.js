@@ -72,8 +72,8 @@
         { key: 'qs-historia-7080-b', label: 'Historia 70–80 — Laboratorio de cómputo', defaultUrl: 'assets/images/timeline/55.jpg' },
         { key: 'qs-historia-hoy-a', label: 'Historia hoy — Plaza central del campus', defaultUrl: 'assets/images/timeline/556.jpg' },
         { key: 'qs-historia-hoy-b', label: 'Historia hoy — Ampliación de instalaciones', defaultUrl: 'assets/images/timeline/888.jpg' },
-        { key: 'qs-mision-foto', label: 'Misión — Foto de la tarjeta', defaultUrl: WP + '2026/01/IMG_5958.jpg' },
-        { key: 'qs-vision-foto', label: 'Visión — Foto de la tarjeta', defaultUrl: WP + '2025/10/IMG_1816-1400x786.jpg' },
+        { key: 'qs-mision-foto', label: 'Misión — Foto de la tarjeta', defaultUrl: 'assets/images/misionvision/mision.jpg' },
+        { key: 'qs-vision-foto', label: 'Visión — Foto de la tarjeta', defaultUrl: 'assets/images/misionvision/vision.jpg' },
         { key: 'qs-acsi-cert', label: 'Acordeón ACSI — Certificación', defaultUrl: WP + '2026/03/IMG_7464.JPG-712x400.jpeg' },
         { key: 'qs-declaracion-logo', label: 'Declaración institucional — Logo', defaultUrl: 'assets/logo principal.png' }
       ]
