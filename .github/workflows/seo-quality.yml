@@ -20,17 +20,17 @@ concurrency:
 jobs:
   # ── Puerta rápida: se ejecuta SIEMPRE (PR, main y manual) ─────────────────
   # Todo lo barato y determinista. Sin navegador, sin red hacia el sitio.
-  gate:
+  #
+  # El id del job sigue siendo `audit` a propósito: si la protección de rama exige el
+  # check "audit", renombrarlo dejaría los PR esperando para siempre un check que ya no
+  # reporta. El nombre visible sí cambia; el contrato no.
+  audit:
     name: Puerta de calidad (rápida)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Checkout
-        # fetch-depth 0 para que el escáner de secretos pueda consultar el historial
-        # si alguna vez se amplía a revisar commits, no solo el árbol actual.
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -40,8 +40,21 @@ jobs:
           node-version: 24
           cache: npm
 
+      - name: Setup Python
+        # generate-pages.py se invoca como `python`. En un runner sin este paso el
+        # binario puede llamarse solo `python3` y el gate se pondría rojo por el entorno,
+        # no por el cambio.
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Install audit tools
         run: npm ci
+
+      - name: Pruebas del propio escáner de secretos
+        # El escáner es el único check cuyo fallo es invisible: si un patrón deja de
+        # detectar, todo sigue verde. Estos casos lo impiden.
+        run: node tests/check-secrets.test.mjs
 
       - name: Escáner de secretos
         run: npm run check:secrets
@@ -85,7 +98,7 @@ jobs:
   # Para forzarlo sobre una rama, lanza el workflow a mano (workflow_dispatch).
   lighthouse:
     name: Lighthouse (completa)
-    needs: gate
+    needs: audit
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full)
     runs-on: ubuntu-latest
     timeout-minutes: 15

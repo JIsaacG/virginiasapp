@@ -13,6 +13,7 @@
     "check:php": "node scripts/check-php-syntax.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "check:pages": "python generate-pages.py",
+    "test:checkers": "node tests/check-secrets.test.mjs",
     "verify": "node scripts/verify.mjs",
     "verify:low": "node scripts/verify.mjs --level=low",
     "verify:medium": "node scripts/verify.mjs --level=medium",

@@ -50,22 +50,66 @@ const PATTERNS = [
   {
     // Sin \b delante: en `$db_pass` o `smtp_password` el guion bajo es carácter de
     // palabra, así que un \b inicial nunca casaría y el secreto pasaría inadvertido.
+    //
+    // El `['"\]]*` antes del operador es lo que hace que funcione con la forma que usa
+    // este repositorio: `'clave' => '…'` (api/db-config.example.php), `"password": "…"`
+    // en JSON y `$cfg['password'] = '…'`. Sin él, la clave entrecomillada nunca casaba
+    // y la rama `=>` era inalcanzable justo para el idioma que sí se usa aquí.
+    // `secret(?!ari)` evita que "Secretario"/"Secretaría" —cargos del equipo directivo,
+    // muy presentes en js/i18n-data.js— se lean como la palabra "secret".
     name: 'credencial asignada en código',
-    re: /[\w.$-]*(?:password|passwd|pwd|pass|secret|api[_-]?key|apikey|access[_-]?token|auth[_-]?token|contrase(?:n|ñ)a|clave)\w*\s*(?:=>|[:=])\s*(['"])([^'"\n]{8,})\1/gi,
+    re: /[\w.$-]*(?:password|passwd|pwd|pass|secret(?!ari)|api[_-]?key|apikey|access[_-]?token|auth[_-]?token|contrase(?:n|ñ)a|clave)\w*['"\]]*\s*(?:=>|[:=])\s*(['"])([^'"\n]{8,})\1/gi,
     valueGroup: 2,
+  },
+  {
+    // define('DB_PASSWORD', '…') — la constante PHP separa clave y valor con coma, no
+    // con un operador de asignación, así que no la ve el patrón anterior.
+    name: 'credencial en define()',
+    re: /\bdefine\s*\(\s*(['"])[\w.-]*(?:password|passwd|pwd|pass|secret|key|token|contrase(?:n|ñ)a|clave)\w*\1\s*,\s*(['"])([^'"\n]{8,})\2/gi,
+    valueGroup: 3,
   },
 ];
 
 /** Valores que son claramente marcadores de posición, no secretos. */
 const PLACEHOLDER = /^(?:$|x{3,}|\*{3,}|\.{3,}|-+|<.*>|\{\{.*\}\}|\$\{.*\}|%[A-Z_]+%|(?:tu|your|my)[_-].*|cambia.*|reemplaza.*|change[_-]?me|placeholder|ejemplo.*|example.*|sample.*|dummy|test|demo|null|none|true|false|password|secret|123456\d*|abc123)$/i;
-const PLACEHOLDER_CONTEXT = /example|ejemplo|placeholder|sample|\.md$/i;
 
 /**
- * Una contraseña no lleva espacios; un mensaje de interfaz sí. `js/admin.js` y el panel
- * están llenos de cadenas como '🔑 Contraseña cambiada' asignadas a claves cuyo nombre
- * contiene "password". Sin este filtro el escáner ahoga los hallazgos reales en ruido.
+ * Archivos que son plantillas por convención de nombre (`db-config.example.php`,
+ * `.env.example`). Anclado a separadores: una versión por subcadena exoneraba de paso
+ * *toda* la documentación `.md`, que es justo uno de los sitios donde de verdad se filtra
+ * una contraseña copiada de producción.
  */
-const LOOKS_LIKE_PROSE = /\s/;
+const PLACEHOLDER_CONTEXT = /(?:^|[/.\\-])(?:example|ejemplo|sample|template|dist)(?:$|[/.\\-])/i;
+
+/**
+ * Distingue un mensaje de interfaz de una contraseña. `js/admin.js` está lleno de cadenas
+ * como '🔑 Contraseña cambiada' asignadas a claves cuyo nombre contiene "password"; sin
+ * este filtro el ruido entierra los hallazgos reales.
+ *
+ * Se considera prosa si lleva espacio y **no** tiene ningún rasgo típico de contraseña
+ * (dígito o símbolo). Filtrar por "contiene un espacio" a secas era demasiado amplio: dejaba
+ * pasar cualquier passphrase.
+ *
+ * LIMITACIÓN CONOCIDA: una passphrase de palabras corrientes sin dígitos ni símbolos
+ * ('correct horse battery staple') sigue leyéndose como prosa y no se reporta. Separarlas
+ * de un mensaje en español no es resoluble con una expresión regular; la Regla A y la
+ * revisión del diff por el security-reviewer son la red para ese caso.
+ */
+const PASSWORD_TRAITS = /[\d!@#$%^&*_+=<>?~/\\|-]/;
+const looksLikeProse = (value) => /\s/.test(value) && !PASSWORD_TRAITS.test(value);
+
+/**
+ * Un identificador en mayúsculas es el **nombre** de una variable de entorno, no su valor.
+ * `api/db.php` y `api/bootstrap.php` mapean sus ajustes así: `'clave' => 'CEEVS_DB_PASS'`.
+ * Lo que importa es el valor que llega por el entorno, y ese no está en el repositorio.
+ */
+const ENV_VAR_NAME = /^[A-Z][A-Z0-9_]{2,}$/;
+
+/**
+ * Rutas y órdenes: `"check:secrets": "node scripts/check-secrets.mjs"` en package.json es
+ * una clave con la palabra "secret" y un comando por valor.
+ */
+const LOOKS_LIKE_PATH = /(?:^|[\s/\\])[\w.-]+\.(?:mjs|cjs|js|ts|py|sh|php|json|ya?ml|md|html|css)(?:\s|$)/i;
 
 /**
  * Valores que ya casan con un patrón más específico de esta misma lista. Se reportan una
@@ -110,7 +154,41 @@ const ACKNOWLEDGED = [
       'PENDIENTE DE DECISIÓN DEL DUEÑO: sigue siendo una contraseña en texto plano en un repositorio ' +
       'público; si coincide o se parece a la del servidor, cámbiala. Fuera del alcance de esta tarea.',
   },
+  {
+    file: 'INFORME_HALLAZGOS.md',
+    fingerprint: 'fb1aebf5770b1244',
+    why:
+      'El mismo ADMIN_PASS, citado en la auditoría que lo documenta. No es una fuga nueva: es el ' +
+      'mismo valor. Se acusa recibo aparte a propósito, para que quede constancia de que la ' +
+      'contraseña aparece en DOS archivos versionados — al cambiarla hay que tocar los dos.',
+  },
 ];
+
+/* ── Superficie de prueba ─────────────────────────────────────────────────── */
+/* Exportadas para que `tests/check-secrets.test.mjs` pueda afirmar sobre los patrones
+   sin ejecutar el escaneo completo. El escaneo solo corre cuando este archivo se
+   invoca directamente, no cuando se importa. */
+export { PATTERNS };
+
+/** Filtros de la regla genérica, en un solo sitio para que prueba y escáner no diverjan. */
+export function shouldIgnoreValue(value, file) {
+  const trimmed = String(value).trim();
+  return (
+    PLACEHOLDER.test(trimmed) ||
+    PLACEHOLDER_CONTEXT.test(file) ||
+    looksLikeProse(trimmed) ||
+    ENV_VAR_NAME.test(trimmed) ||
+    LOOKS_LIKE_PATH.test(trimmed) ||
+    COVERED_BY_SPECIFIC.test(trimmed)
+  );
+}
+
+const invokedDirectly =
+  process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
+
+if (!invokedDirectly) {
+  // Importado desde las pruebas: solo se exponen los patrones.
+} else {
 
 /* ── Recolección ──────────────────────────────────────────────────────────── */
 const BINARY = /\.(png|jpe?g|webp|gif|avif|ico|svgz|mp4|webm|mp3|m4a|ogg|zip|gz|tgz|pdf|xlsx?|docx?|pptx?|woff2?|ttf|eot|min\.js|min\.css)$/i;
@@ -138,10 +216,15 @@ for (const file of tracked) {
 }
 
 /* Regla B */
+/**
+ * Los informes acaban en los registros del CI, que son legibles por más gente que el
+ * repositorio. Solo se muestra un prefijo cuando el valor es lo bastante largo como para
+ * que revelar 4 caracteres no acerque a nadie a adivinarlo; por debajo se oculta entero.
+ */
 function redact(value) {
   const text = String(value);
-  if (text.length <= 8) return `[REDACTADO — ${text.length} chars]`;
-  return `${text.slice(0, 3)}…${text.slice(-2)} [REDACTADO — ${text.length} chars]`;
+  if (text.length < 16) return `[REDACTADO — ${text.length} chars]`;
+  return `${text.slice(0, 2)}…${text.slice(-2)} [REDACTADO — ${text.length} chars]`;
 }
 
 function fingerprint(value) {
@@ -171,13 +254,7 @@ for (const file of tracked) {
     pattern.re.lastIndex = 0;
     for (const match of content.matchAll(pattern.re)) {
       const value = pattern.valueGroup ? match[pattern.valueGroup] : match[0];
-      if (pattern.valueGroup) {
-        const trimmed = value.trim();
-        if (PLACEHOLDER.test(trimmed)) continue;
-        if (PLACEHOLDER_CONTEXT.test(file)) continue;
-        if (LOOKS_LIKE_PROSE.test(trimmed)) continue;
-        if (COVERED_BY_SPECIFIC.test(trimmed)) continue;
-      }
+      if (pattern.valueGroup && shouldIgnoreValue(value, file)) continue;
 
       const line = content.slice(0, match.index).split('\n').length;
       const note = isAcknowledged(file, value);
@@ -214,3 +291,5 @@ if (blocking.length) {
 
 console.log('  Sin secretos ni archivos sensibles versionados.');
 process.exit(0);
+
+} // fin de invokedDirectly

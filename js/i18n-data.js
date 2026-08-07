@@ -147,6 +147,7 @@ window.CEEVS_I18N = {
   "Acreditado": "Accredited",
   "Acreditados por ACSI": "Accredited by ACSI",
   "Acreditados por Association of Christian Schools International, bajo estándares internacionales de calidad.": "Accredited by the Association of Christian Schools International, under international quality standards.",
+  "✦ ACREDITADO POR ACSI · ASOCIACIÓN INTERNACIONAL DE ESCUELAS CRISTIANAS ·": "✦ ACCREDITED BY ACSI · ASSOCIATION OF CHRISTIAN SCHOOLS INTERNATIONAL ·",
   "Actitudes": "Attitudes",
   "Actividades": "Activities",
   "Actividades educativas y entretenidas para padres, alumnos y docentes de la familia CEEVS. Gana XP con cada juego.": "Educational and fun activities for parents, students and teachers of the CEEVS family. Earn XP with every game.",

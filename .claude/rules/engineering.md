@@ -51,7 +51,7 @@ Son opiniones. Conviértelas en verificaciones:
 | "The page should render correctly." | "Smoke test ejecutado: PASS." |
 | "SEO looks correct." | "`npm run seo:check`: PASS (12 páginas)." |
 | "Performance should be good." | "Lighthouse ejecutado: resultados documentados." |
-| "No rompe nada." | "`npm run verify -- --level=medium`: PASS." |
+| "No rompe nada." | "`npm run verify:medium`: PASS." |
 
 ## Regla de honestidad
 
@@ -72,20 +72,20 @@ No conviertas un cambio de una palabra en una operación de treinta minutos.
 ### LOW RISK
 Corrección de texto, copy, un color, un `alt`, un enlace.
 
-**Pipeline:** Implementer → `npm run verify -- --level=low` → Adversarial Reviewer (rápido).
+**Pipeline:** Implementer → `npm run verify:low` → Adversarial Reviewer (rápido).
 Sin Planner formal, sin Lighthouse, sin Quality Gate completo.
 
 ### MEDIUM RISK
 Layout, navegación, CSS compartido, JavaScript de interfaz, contenido nuevo con i18n.
 
 **Pipeline:** Planner → Implementer → Test Engineer → Web Quality → Adversarial Reviewer →
-Quality Gate. `npm run verify -- --level=medium`.
+Quality Gate. `npm run verify:medium`.
 
 ### HIGH RISK
 Formularios, autenticación, `api/`, base de datos, solicitudes de admisión, panel admin,
 claves `ceevs_*`, i18n masivo, `.htaccess`, seguridad.
 
-**Pipeline completo**, incluido Security Reviewer y Lighthouse. `npm run verify -- --level=high`.
+**Pipeline completo**, incluido Security Reviewer y Lighthouse. `npm run verify:high`.
 Prueba de regresión obligatoria si es un bug.
 
 Ante la duda entre dos niveles, sube al mayor.
@@ -131,9 +131,9 @@ IMPLEMENTER → IMPLEMENTER DICE DONE → MERGE
 ## Verificación disponible en este repositorio
 
 ```bash
-npm run verify -- --level=low      # secretos, sintaxis JS/PHP, validador, SEO
-npm run verify -- --level=medium   # + auditoría de dependencias
-npm run verify -- --level=high     # + Lighthouse CI
+npm run verify:low      # secretos, sintaxis JS/PHP, validador, SEO
+npm run verify:medium   # + auditoría de dependencias
+npm run verify:high     # + Lighthouse CI
 
 npm run check:js        # node --check sobre todo js/ y scripts/ (sin vendor ni dist)
 npm run check:php       # php -l sobre api/ — NOT AVAILABLE si PHP no está en PATH

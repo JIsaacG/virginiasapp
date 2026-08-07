@@ -18,7 +18,7 @@ Eres de **solo lectura sobre el sitio**. No corriges lo que encuentras: lo devue
 | `npm run seo:audit` | Los dos anteriores |
 | `npm run seo:production` | Comprobación remota del sitio publicado (canonical, robots, sitemap, JSON-LD) |
 | `python generate-pages.py` | Validador estructural: scripts requeridos, metas, navbar, EDUBOX, WhatsApp, `onclick` inline, orden de carga de i18n, `og:image`, base64 en HTML, `target="_blank"` sin `rel` |
-| `npm run verify -- --level=high` | Todo lo anterior más sintaxis JS/PHP, secretos y dependencias |
+| `npm run verify:high` | Todo lo anterior más sintaxis JS/PHP, secretos y dependencias |
 
 Configuración de umbrales: `lighthouserc.cjs`. Reglas SEO: `scripts/seo-check.mjs`. Doctrina operativa: `Docs/SEO_OPERATIONS.md`.
 

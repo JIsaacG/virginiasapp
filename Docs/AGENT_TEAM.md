@@ -22,18 +22,27 @@ su propio trabajo.**
 
 ## Los siete agentes
 
-| Agente | Escribe | Función |
+| Agente | Rol de escritura | Función |
 |---|---|---|
-| `planner` | ❌ | Convierte la petición en criterios de aceptación Given/When/Then, fija alcance y fuera de alcance, clasifica el riesgo. |
-| `implementer` | ✅ código | Implementa exactamente esos criterios, con el cambio mínimo. Informa VERIFIED / PARTIALLY VERIFIED / UNVERIFIED, nunca DONE. |
-| `test-engineer` | ✅ solo pruebas | Intenta demostrar que la implementación está equivocada. Prueba entradas inválidas, estados vacíos, responsive, regresiones. |
-| `web-quality` | ❌ | SEO, Lighthouse, accesibilidad, HTML y enlaces. Reutiliza el tooling que ya existe en vez de duplicarlo. |
-| `security-reviewer` | ❌ | Secretos, XSS, PHP (`api/`), dependencias, archivos sensibles. Redacta siempre los valores. |
-| `adversarial-reviewer` | ❌ | Revisa el **diff**, no los informes de los demás. Clasifica BLOCKER/HIGH/MEDIUM/LOW. Nunca arregla lo que encuentra. |
-| `quality-gate` | ❌ | Árbitro final. Evalúa la evidencia y emite PASS / CONDITIONAL PASS / FAIL. |
+| `planner` | solo lectura | Convierte la petición en criterios de aceptación Given/When/Then, fija alcance y fuera de alcance, clasifica el riesgo. |
+| `implementer` | escribe código | Implementa exactamente esos criterios, con el cambio mínimo. Informa VERIFIED / PARTIALLY VERIFIED / UNVERIFIED, nunca DONE. |
+| `test-engineer` | escribe pruebas | Intenta demostrar que la implementación está equivocada. Prueba entradas inválidas, estados vacíos, responsive, regresiones. |
+| `web-quality` | solo lectura | SEO, Lighthouse, accesibilidad, HTML y enlaces. Reutiliza el tooling que ya existe en vez de duplicarlo. |
+| `security-reviewer` | solo lectura | Secretos, XSS, PHP (`api/`), dependencias, archivos sensibles. Redacta siempre los valores. |
+| `adversarial-reviewer` | solo lectura | Revisa el **diff**, no los informes de los demás. Clasifica BLOCKER/HIGH/MEDIUM/LOW. Nunca arregla lo que encuentra. |
+| `quality-gate` | solo lectura | Árbitro final. Evalúa la evidencia y emite PASS / CONDITIONAL PASS / FAIL. |
 
-Los agentes de solo lectura no tienen `Write` ni `Edit` en su frontmatter: la separación
-está aplicada por configuración, no solo por instrucciones.
+### Hasta dónde llega el "solo lectura"
+
+A los cinco agentes de revisión se les quitan `Write` y `Edit` del campo `tools`, lo que
+elimina la vía obvia de modificar archivos. **No es un aislamiento a prueba de todo:**
+conservan `Bash` y `PowerShell`, con los que se puede escribir un archivo igualmente. La
+prohibición está además escrita en su prompt, pero un prompt es contexto, no una barrera.
+
+Si en algún momento hace falta impedirlo de verdad —y no solo desincentivarlo—, el
+mecanismo es un hook `PreToolUse` en `.claude/settings.json` que rechace escrituras
+cuando el agente activo sea uno de los revisores. No está implementado: es una decisión
+del dueño del repositorio, no un descuido.
 
 ---
 

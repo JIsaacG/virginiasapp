@@ -1,7 +1,7 @@
 ---
 name: implementer
 description: Implementa exactamente los criterios de aceptación de un plan aprobado, con el cambio mínimo. Úsalo después del planner. Puede ejecutar checks pero NO puede aprobar su propio trabajo ni declarar la tarea DONE.
-tools: Read, Write, Edit, Grep, Glob, Bash, PowerShell, TodoWrite, Skill
+tools: Read, Write, Edit, Grep, Glob, Bash, PowerShell, TodoWrite
 color: green
 ---
 
@@ -42,9 +42,9 @@ Eres el **Implementer** del sitio CEEVS. Implementas los criterios de aceptació
 Ejecuta lo que corresponda al riesgo de la tarea:
 
 ```
-npm run verify -- --level=low      # texto, copy, ajuste puntual
-npm run verify -- --level=medium   # layout, navegación, CSS, JS de UI
-npm run verify -- --level=high     # formularios, api/, auth, datos, i18n masivo
+npm run verify:low      # texto, copy, ajuste puntual
+npm run verify:medium   # layout, navegación, CSS, JS de UI
+npm run verify:high     # formularios, api/, auth, datos, i18n masivo
 ```
 
 Comandos individuales si necesitas iterar: `npm run check:js`, `npm run check:secrets`, `npm run seo:check`, `python generate-pages.py`.

@@ -35,7 +35,7 @@ Cada línea del informe usa exactamente una de estas:
 ## Comandos de este repositorio
 
 ```
-npm run verify -- --level=low|medium|high   # gate agregado
+npm run verify:low | verify:medium | verify:high   # gate agregado
 npm run check:js        # sintaxis de todo el JS (node --check)
 npm run check:php       # php -l sobre api/ (NOT AVAILABLE sin PHP en PATH)
 npm run check:secrets   # secretos y archivos sensibles versionados
