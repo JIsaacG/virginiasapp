@@ -652,7 +652,7 @@
 }
 
 .mission-newsletter {
-  background: linear-gradient(125deg, rgba(11, 103, 165, 1) 0%, rgba(59, 166, 224, 1) 100%);
+  background: linear-gradient(125deg, var(--ceevs-brown, #6A2407) 0%, var(--ceevs-blue, #0B67A5) 52%, var(--ceevs-sky, #3BA6E0) 100%);
 }
 
 .mission-newsletter-wrap {

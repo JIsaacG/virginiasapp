@@ -46,6 +46,9 @@
   background:var(--cream2);
 }
 .vc-media-note { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--gold2); line-height:1.5; }
+/* Con la foto puesta desde el panel, el hueco pasa a ser la imagen del valor */
+.vc-media.img-hueco-lleno { padding:0; overflow:hidden; border-style:solid; border-color:rgba(171,100,35,.22); background:none; }
+.vc-media-img { align-self:stretch; width:100%; min-width:0; object-fit:cover; border-radius:calc(var(--r) - 2px); }
 .vc-back {
   transform:rotateY(180deg);
   background:linear-gradient(155deg, rgba(171,100,35,.16), rgba(255,255,255,.96));

@@ -36,6 +36,9 @@
   .hero-left{ padding:68px 5vw 180px; }
   .hero-eyebrow{ margin-bottom:20px; }
   .eyebrow-text{ font-size:10px; letter-spacing:.1em; }
+  .hero-versiculo{ margin:-10px 0 16px; padding:12px 14px 11px 15px; max-width:100%; }
+  .hero-versiculo-text{ font-size:13.5px; line-height:1.55; }
+  .hero-versiculo-cita{ font-size:9.5px; letter-spacing:.14em; margin-top:8px; }
   .hero-lema{ margin:-8px 0 20px; padding-left:11px; max-width:100%; }
   .hero-lema-text{ font-size:14px; }
   .hero-founding-text{ font-size:11px; padding:5px 12px; margin-bottom:20px; }

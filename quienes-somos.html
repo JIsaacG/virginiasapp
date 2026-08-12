@@ -39,7 +39,7 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet"></noscript>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/main.css?v=20260807-qsnav2">
+  <link rel="stylesheet" href="css/main.css?v=20260812-misionvision">
   <!-- Datos estructurados (JSON-LD) — ruta de navegación -->
   <script type="application/ld+json">
   {
@@ -426,18 +426,26 @@
       <p class="hl-nota">Reseña pendiente</p>
     </li>
 
-    <li class="hl-hito reveal">
+    <li class="hl-hito reveal" data-img-grupo>
       <div class="hl-cabecera">
         <span class="hl-year">Hoy</span>
         <span class="hl-name">64 años de legado</span>
       </div>
       <span class="hl-dot" aria-hidden="true"></span>
-      <!-- Dos huecos reservados: sustituir por <figure class="hl-foto"> con su <img> cuando lleguen las fotos -->
+      <!-- Dos huecos administrables: las fotos se suben desde el panel
+           (claves qs-historia-hoy-a y qs-historia-hoy-b) y sustituyen la trama.
+           No entran en el visor ampliado, igual que el resto de huecos. -->
       <div class="hl-fotos hl-fotos-vacias">
-        <figure class="hl-foto hl-foto-vacia" aria-hidden="true"><span class="hl-vacia"></span></figure>
-        <figure class="hl-foto hl-foto-vacia" aria-hidden="true"><span class="hl-vacia"></span></figure>
+        <figure class="hl-foto hl-foto-vacia" data-img-hueco>
+          <span class="hl-vacia img-hueco-marca" aria-hidden="true"></span>
+          <img data-img-slot data-img-key="qs-historia-hoy-a" alt="El Centro Educativo Evangélico Virginia Sapp en la actualidad" loading="lazy">
+        </figure>
+        <figure class="hl-foto hl-foto-vacia" data-img-hueco>
+          <span class="hl-vacia img-hueco-marca" aria-hidden="true"></span>
+          <img data-img-slot data-img-key="qs-historia-hoy-b" alt="Estudiantes del Centro Educativo Evangélico Virginia Sapp en la actualidad" loading="lazy">
+        </figure>
       </div>
-      <p class="hl-nota">Pendiente poner imágenes</p>
+      <p class="hl-nota img-hueco-marca">Pendiente poner imágenes</p>
       <p class="hl-text"><strong>64 años</strong> de legado. Tres niveles, programa bilingüe y cientos de egresados transformando Honduras.</p>
     </li>
   </ol>
@@ -486,7 +494,10 @@
       <article class="filosofia-pillar reveal" tabindex="0">
         <div class="fp-inner">
           <div class="fp-face fp-front">
-            <div class="fp-media"><span class="fp-media-note">Pendiente poner imagen</span></div>
+            <div class="fp-media" data-img-hueco>
+              <span class="fp-media-note img-hueco-marca">Pendiente poner imagen</span>
+              <img class="fp-media-img" data-img-slot data-img-key="qs-filosofia-principios-biblicos" alt="" loading="lazy">
+            </div>
             <h3>Principios Bíblicos</h3>
           </div>
           <div class="fp-face fp-back">
@@ -499,7 +510,10 @@
       <article class="filosofia-pillar reveal" tabindex="0">
         <div class="fp-inner">
           <div class="fp-face fp-front">
-            <div class="fp-media"><span class="fp-media-note">Pendiente poner imagen</span></div>
+            <div class="fp-media" data-img-hueco>
+              <span class="fp-media-note img-hueco-marca">Pendiente poner imagen</span>
+              <img class="fp-media-img" data-img-slot data-img-key="qs-filosofia-excelencia-academica" alt="" loading="lazy">
+            </div>
             <h3>Excelencia Académica</h3>
           </div>
           <div class="fp-face fp-back">
@@ -512,7 +526,10 @@
       <article class="filosofia-pillar reveal" tabindex="0">
         <div class="fp-inner">
           <div class="fp-face fp-front">
-            <div class="fp-media"><span class="fp-media-note">Pendiente poner imagen</span></div>
+            <div class="fp-media" data-img-hueco>
+              <span class="fp-media-note img-hueco-marca">Pendiente poner imagen</span>
+              <img class="fp-media-img" data-img-slot data-img-key="qs-filosofia-formacion-caracter" alt="" loading="lazy">
+            </div>
             <h3>Formación del Carácter</h3>
           </div>
           <div class="fp-face fp-back">
@@ -525,7 +542,10 @@
       <article class="filosofia-pillar reveal" tabindex="0">
         <div class="fp-inner">
           <div class="fp-face fp-front">
-            <div class="fp-media"><span class="fp-media-note">Pendiente poner imagen</span></div>
+            <div class="fp-media" data-img-hueco>
+              <span class="fp-media-note img-hueco-marca">Pendiente poner imagen</span>
+              <img class="fp-media-img" data-img-slot data-img-key="qs-filosofia-liderazgo" alt="" loading="lazy">
+            </div>
             <h3>Liderazgo Transformador</h3>
           </div>
           <div class="fp-face fp-back">
@@ -538,7 +558,10 @@
       <article class="filosofia-pillar reveal" tabindex="0">
         <div class="fp-inner">
           <div class="fp-face fp-front">
-            <div class="fp-media"><span class="fp-media-note">Pendiente poner imagen</span></div>
+            <div class="fp-media" data-img-hueco>
+              <span class="fp-media-note img-hueco-marca">Pendiente poner imagen</span>
+              <img class="fp-media-img" data-img-slot data-img-key="qs-filosofia-innovacion" alt="" loading="lazy">
+            </div>
             <h3>Innovación Pedagógica</h3>
           </div>
           <div class="fp-face fp-back">
@@ -551,7 +574,10 @@
       <article class="filosofia-pillar reveal" tabindex="0">
         <div class="fp-inner">
           <div class="fp-face fp-front">
-            <div class="fp-media"><span class="fp-media-note">Pendiente poner imagen</span></div>
+            <div class="fp-media" data-img-hueco>
+              <span class="fp-media-note img-hueco-marca">Pendiente poner imagen</span>
+              <img class="fp-media-img" data-img-slot data-img-key="qs-filosofia-comunidad" alt="" loading="lazy">
+            </div>
             <h3>Comunidad de Amor</h3>
           </div>
           <div class="fp-face fp-back">
@@ -640,6 +666,15 @@
       </div>
     </div>
     <div class="f-col">
+      <h4>ADIEEDS</h4>
+      <ul>
+        <li><a href="https://helenluce.edu.hn/" target="_blank" rel="noopener">Helen Luce</a></li>
+        <li><a href="https://evangelicopeniel.edu.hn/" target="_blank" rel="noopener">Evangélico Peniel</a></li>
+        <li><a href="https://jehovajireh.edu.hn/" target="_blank" rel="noopener">Jehová Jireh</a></li>
+        <li><a href="https://adieeds.edu.hn/" target="_blank" rel="noopener">ADIEEDS</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
       <h4>Institución</h4>
       <ul>
         <li><a href="quienes-somos.html#historia">Nuestra historia</a></li>
@@ -667,15 +702,6 @@
         <li><a href="https://portal.edubox.app/login/virginiasapp">Plataforma estudiantil</a></li>
         <li><a href="comunicados.html">Noticias y eventos</a></li>
         <li><a href="contactenos.html#contacto">Contacto</a></li>
-      </ul>
-    </div>
-    <div class="f-col">
-      <h4>ADIEEDS</h4>
-      <ul>
-        <li><a href="https://helenluce.edu.hn/" target="_blank" rel="noopener">Helen Luce</a></li>
-        <li><a href="https://evangelicopeniel.edu.hn/" target="_blank" rel="noopener">Evangélico Peniel</a></li>
-        <li><a href="https://jehovajireh.edu.hn/" target="_blank" rel="noopener">Jehová Jireh</a></li>
-        <li><a href="https://adieeds.edu.hn/" target="_blank" rel="noopener">ADIEEDS</a></li>
       </ul>
     </div>
   </div>

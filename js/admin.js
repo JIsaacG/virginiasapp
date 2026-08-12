@@ -52,6 +52,22 @@
       ]
     },
     {
+      /* Huecos reservados del portal: sin foto muestran el aviso "pendiente";
+         al guardar una imagen aquí, el aviso desaparece solo en el sitio. */
+      page: '🏠 Inicio — Portal de navegación (huecos pendientes)',
+      images: [
+        { key: 'hub-shot-1', label: 'Bajo el video — Foto de apoyo 1' },
+        { key: 'hub-shot-2', label: 'Bajo el video — Foto de apoyo 2' },
+        { key: 'hub-shot-3', label: 'Bajo el video — Foto de apoyo 3' },
+        { key: 'hub-card-quienes-somos', label: 'Tarjeta del portal — Quiénes somos' },
+        { key: 'hub-card-admisiones', label: 'Tarjeta del portal — Admisiones' },
+        { key: 'hub-card-recuerdos', label: 'Tarjeta del portal — Galería y recuerdos' },
+        { key: 'hub-card-interactivo', label: 'Tarjeta del portal — Juega con nosotros' },
+        { key: 'hub-card-mision', label: 'Tarjeta del portal — Misión evangelística' },
+        { key: 'hub-card-contacto', label: 'Tarjeta del portal — Contáctenos' }
+      ]
+    },
+    {
       page: '🎓 Admisiones (admisiones.html)',
       images: [
         { key: 'nivel-preescolar', label: 'Nivel Preescolar — Foto tarjeta', defaultUrl: UNSPLASH + 'photo-1503676260728-1c00da094a0b?w=700&q=70&auto=format' },
@@ -76,13 +92,60 @@
         { key: 'qs-vision-foto', label: 'Visión — Foto de la tarjeta', defaultUrl: 'assets/images/misionvision/vision.jpg' },
         { key: 'qs-acsi-logo', label: 'Acreditación ACSI — Logo ACSI (placa)', defaultUrl: 'assets/images/sections/acsi-logo.png' },
         { key: 'qs-acsi-foto', label: 'Acreditación ACSI — Imagen lateral', defaultUrl: WP + '2025/10/WhatsApp-Image-2025-10-22-at-3.37.19-PM-2-533x400.jpeg' },
-        { key: 'qs-declaracion-logo', label: 'Declaración institucional — Logo', defaultUrl: 'assets/logo principal.png' }
+        { key: 'qs-declaracion-logo', label: 'Declaración institucional — Logo', defaultUrl: 'assets/logo principal.png' },
+        { key: 'qs-historia-hoy-a', label: 'Historia Hoy — Foto 1 (hueco pendiente)' },
+        { key: 'qs-historia-hoy-b', label: 'Historia Hoy — Foto 2 (hueco pendiente)' },
+        { key: 'qs-filosofia-principios-biblicos', label: 'Filosofía — Principios Bíblicos (hueco pendiente)' },
+        { key: 'qs-filosofia-excelencia-academica', label: 'Filosofía — Excelencia Académica (hueco pendiente)' },
+        { key: 'qs-filosofia-formacion-caracter', label: 'Filosofía — Formación del Carácter (hueco pendiente)' },
+        { key: 'qs-filosofia-liderazgo', label: 'Filosofía — Liderazgo Transformador (hueco pendiente)' },
+        { key: 'qs-filosofia-innovacion', label: 'Filosofía — Innovación Pedagógica (hueco pendiente)' },
+        { key: 'qs-filosofia-comunidad', label: 'Filosofía — Comunidad de Amor (hueco pendiente)' }
       ]
     },
     {
       page: '👥 Nosotros (nosotros.html)',
       images: [
-        { key: 'ns-junta-foto', label: 'Junta directiva — Retrato institucional', defaultUrl: 'assets/images/nosotros/junta-directiva.jpg' }
+        { key: 'ns-junta-foto', label: 'Junta directiva — Retrato institucional', defaultUrl: 'assets/images/nosotros/junta-directiva.jpg' },
+        { key: 'ns-perfil-egresado', label: 'Perfil del egresado — Retrato del graduado (hueco pendiente)' }
+      ]
+    },
+    {
+      page: '👥 Nosotros — Valores (huecos pendientes)',
+      images: [
+        { key: 'ns-valor-excelencia', label: 'Valor — Excelencia' },
+        { key: 'ns-valor-integridad', label: 'Valor — Integridad' },
+        { key: 'ns-valor-compromiso', label: 'Valor — Compromiso' },
+        { key: 'ns-valor-humildad', label: 'Valor — Humildad' },
+        { key: 'ns-valor-solidaridad', label: 'Valor — Solidaridad' },
+        { key: 'ns-valor-servicio', label: 'Valor — Servicio' },
+        { key: 'ns-valor-amor', label: 'Valor — Amor' },
+        { key: 'ns-valor-respeto', label: 'Valor — Respeto' },
+        { key: 'ns-valor-gratitud', label: 'Valor — Gratitud' },
+        { key: 'ns-valor-justicia', label: 'Valor — Justicia' }
+      ]
+    },
+    {
+      page: '👥 Nosotros — LAES (huecos pendientes)',
+      images: [
+        { key: 'ns-laes-academicos', label: 'LAES — Académicos' },
+        { key: 'ns-laes-espiritual', label: 'LAES — Espiritual' },
+        { key: 'ns-laes-liderazgo', label: 'LAES — Liderazgo y Servicio' },
+        { key: 'ns-laes-socioemocional', label: 'LAES — Socio-emocional' },
+        { key: 'ns-laes-bilingue', label: 'LAES — Bilingüe' }
+      ]
+    },
+    {
+      /* Sin foto se sigue mostrando el monograma con las iniciales. */
+      page: '👥 Nosotros — Equipo directivo (retratos pendientes)',
+      images: [
+        { key: 'ns-equipo-sara-corrales', label: 'Equipo — Sara Corrales (Directora Ejecutiva)' },
+        { key: 'ns-equipo-dessire-hulse', label: 'Equipo — Dessiré Hulse (Directora de Secundaria)' },
+        { key: 'ns-equipo-ana-avila', label: 'Equipo — Ana Ávila (Directora de Primaria)' },
+        { key: 'ns-equipo-diana-vasquez', label: 'Equipo — Diana Vásquez (Administradora General)' },
+        { key: 'ns-equipo-nadia-irula', label: 'Equipo — Nadia Irula (Talento Humano)' },
+        { key: 'ns-equipo-martha-lopez', label: 'Equipo — Martha López (Pastoral)' },
+        { key: 'ns-equipo-rosa-armijo', label: 'Equipo — Rosa Armijo (Especialista de Español)' }
       ]
     },
     {
@@ -483,7 +546,9 @@
           /* Header */
           '<div class="admin-card-header">' +
             '<span class="admin-card-label">' + img.label + '</span>' +
-            (isCustom ? '<span class="admin-badge-custom">Personalizada</span>' : '<span class="admin-badge-default">Por defecto</span>') +
+            (isCustom
+              ? '<span class="admin-badge-custom">Personalizada</span>'
+              : '<span class="admin-badge-default">' + (img.defaultUrl ? 'Por defecto' : 'Sin imagen todavía') + '</span>') +
           '</div>' +
 
           /* Preview */

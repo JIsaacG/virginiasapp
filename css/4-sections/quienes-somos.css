@@ -253,7 +253,7 @@
 
 /* ── LAES — SDD-F3-QS-007 ── */
 .laes { background: var(--cream); padding: 96px 8vw; }
-.laes-inner { max-width: 820px; margin: 0 auto; text-align: center; }
+.laes-inner { max-width: 1120px; margin: 0 auto; text-align: center; }
 .laes-inner h2 {
   font-family: 'Playfair Display', serif;
   font-size: clamp(30px, 3.6vw, 48px);
@@ -727,6 +727,20 @@
   text-transform: uppercase;
   color: var(--gold2);
 }
+/* Retrato real: al publicarlo desde el panel cubre el hueco reservado */
+.perfil-foto-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--rl);
+}
+.perfil-foto.img-hueco-lleno .perfil-foto-marco {
+  border-style: solid;
+  border-color: rgba(171, 100, 35, 0.28);
+}
+.perfil-foto.img-hueco-lleno .perfil-foto-marco::before { display: none; }
 .perfil-foto-pie {
   margin-top: 12px;
   font-size: 12.5px;
@@ -890,12 +904,15 @@
   font-size: 15px;
   color: var(--muted);
   line-height: 1.7;
-  margin-top: 8px;
-  margin-bottom: 28px;
+  margin: 8px auto 28px;
+  max-width: 780px;
 }
+/* Los cinco ejes van en una sola fila: con auto-fit la última tarjeta quedaba
+   suelta en una segunda línea, así que el número de columnas es explícito y el
+   contenedor de la sección se ensancha lo justo para alojarlas. */
 .laes-ejes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 16px;
 }
 /* Misma modalidad que .valor-card y .filosofia-pillar: la tarjeta gira al pasar el
@@ -957,6 +974,21 @@
   text-transform: uppercase;
   color: var(--gold2);
   line-height: 1.5;
+}
+/* Con la foto puesta desde el panel, el hueco pasa a ser la imagen del eje */
+.le-media.img-hueco-lleno {
+  padding: 0;
+  overflow: hidden;
+  border-style: solid;
+  border-color: rgba(171, 100, 35, 0.22);
+  background: none;
+}
+.le-media-img {
+  align-self: stretch;
+  width: 100%;
+  min-width: 0;
+  object-fit: cover;
+  border-radius: calc(var(--r) - 2px);
 }
 .le-back {
   transform: rotateY(180deg);
@@ -1057,6 +1089,8 @@
   }
   .acsi-foto { max-width: 460px; }
   .acsi-lead { max-width: none; }
+  /* Cinco columnas ya no caben sin estrujar las tarjetas: 3 + 2 se lee mejor. */
+  .laes-ejes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .qs-nav { top: 64px; }
   #historia, #mision, #vision, #filosofia, #declaracion-fe,
   #acsi, #valores, #perfil-egresado, #laes,
@@ -1090,6 +1124,7 @@
   .lead-avatar { width: 84px; height: 84px; }
   .lead-name { font-size: 16px; }
   .lead-modal-card { padding: 38px 24px 32px; }
+  .laes-ejes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .laes-card, .junta-card { padding: 28px 22px; }
   .perfil-cat-list li { font-size: 14px; }
   .junta-retrato { margin-top: 26px; }

@@ -546,6 +546,8 @@ window.CEEVS_I18N = {
   "Escríbenos por WhatsApp o llámanos. Resolvemos todas tus dudas del proceso de admisión.": "Write to us on WhatsApp or call us. We answer all your questions about the admission process.",
   "Escríbenos y te informaremos sobre los próximos programas de capacitación.": "Write to us and we will inform you about upcoming training programs.",
   "Escribir o agendar": "Write or schedule",
+  "El Centro Educativo Evangélico Virginia Sapp en la actualidad": "The Centro Educativo Evangélico Virginia Sapp today",
+  "Egresado del Centro Educativo Evangélico Virginia Sapp": "Graduate of Centro Educativo Evangélico Virginia Sapp",
   "Espacio reservado para el retrato de un egresado CEEVS.": "Space reserved for the portrait of a CEEVS graduate.",
   "Espacios de orientación sobre crianza, límites, mundo digital y acompañamiento espiritual.": "Guidance sessions on parenting, boundaries, the digital world and spiritual support.",
   "español · inglés": "Spanish · English",
@@ -565,6 +567,7 @@ window.CEEVS_I18N = {
   "Estudiantes del Instituto Evangélico Virginia Sapp": "Students of Virginia Sapp Evangelical Institute",
   "Estudiantes en actividades escolares de Virginia Sapp": "Students in school activities at Virginia Sapp",
   "Estudiantes en biblioteca Virginia Sapp": "Students in the Virginia Sapp library",
+  "Estudiantes del Centro Educativo Evangélico Virginia Sapp en la actualidad": "Students of Centro Educativo Evangélico Virginia Sapp today",
   "Estudiantes en el laboratorio de cómputo": "Students in the computer lab",
   "Estudiantes del instituto trabajando en el laboratorio de cómputo": "Institute students working in the computer lab",
   "Evangelio significa \"buenas nuevas\": el mensaje de salvación en Jesucristo.": "Gospel means \"good news\": the message of salvation in Jesus Christ.",
@@ -1413,6 +1416,8 @@ window.CEEVS_I18N = {
   "Devocional 1 — El amor de Dios (Juan 3:16)": "Devotional 1 — The love of God (John 3:16)",
   "Devocional 2 — La paz de Dios (Filipenses 4:6-7)": "Devotional 2 — The peace of God (Philippians 4:6-7)",
   "La creación — Dios hizo todo bueno": "Creation — God made everything good",
-  "David y Goliat — Dios es nuestra fuerza": "David and Goliath — God is our strength"
+  "David y Goliat — Dios es nuestra fuerza": "David and Goliath — God is our strength",
+  "“Yo voy a hacer algo nuevo, ya he empezado a hacerlo. Estoy abriendo un camino en el desierto y haré brotar ríos en la tierra seca”": "“I am going to do something new; I have already begun. I am opening a road in the desert and I will make rivers flow in the dry land”",
+  "Isaías 43:19 · TLA": "Isaiah 43:19 · TLA"
  }
 };

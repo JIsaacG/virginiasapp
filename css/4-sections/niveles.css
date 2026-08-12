@@ -19,9 +19,9 @@
 .mision-tag { display:inline-block; font-size:10px; font-weight:700; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; padding:5px 12px; border:1px solid rgba(171,100,35,.35); border-radius:4px; margin-bottom:20px; }
 .mision-half:first-child .mision-tag { background:rgba(171,100,35,.06); }
 .mision-half:last-child .mision-tag { background:rgba(171,100,35,.08); border-color:rgba(171,100,35,.25); }
-.mision-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3vw,42px); font-weight:700; line-height:1.15; margin-bottom:20px; }
-.mision-half:first-child .mision-title { color:var(--forest); }
-.mision-half:last-child .mision-title { color:var(--forest); }
+/* Naranja institucional: el mismo de "Virginia Sapp" en los títulos del sitio
+   (.declaracion-title em / .bienvenida-title em → var(--gold2)). */
+.mision-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3vw,42px); font-weight:700; line-height:1.15; margin-bottom:20px; color:var(--gold2); }
 .mision-half:first-child .mision-title em { color:var(--gold); font-style:italic; }
 .mision-half:last-child .mision-title em { color:var(--gold2); font-style:italic; }
 .mision-text { font-size:14.5px; line-height:1.8; }
@@ -31,10 +31,13 @@
 /* Espacio para la foto de cada tarjeta (editable desde el panel: qs-mision-foto / qs-vision-foto) */
 .mision-foto {
   margin:28px 0 0; border-radius:14px; overflow:hidden;
-  width:100%; max-width:380px;
+  width:100%; max-width:440px;
   background:rgba(65,36,4,.05);
   box-shadow:0 14px 34px rgba(65,36,4,.12);
   position:relative; z-index:1;
 }
-.mision-foto img { display:block; width:100%; aspect-ratio:3/2; object-fit:cover; }
+/* height:auto es obligatorio: la <img> lleva width/height en el HTML (reserva de
+   espacio para evitar saltos de layout) y ese alto ganaba a aspect-ratio, así que
+   la foto se estiraba a su alto natural. Con height:auto manda el 3/2 recortado. */
+.mision-foto img { display:block; width:100%; height:auto; aspect-ratio:3/2; object-fit:cover; }
 

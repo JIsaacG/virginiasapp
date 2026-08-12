@@ -39,7 +39,7 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet"></noscript>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/main.css?v=20260807-junta1">
+  <link rel="stylesheet" href="css/main.css?v=20260812-misionvision">
   <!-- Datos estructurados (JSON-LD) — ruta de navegación -->
   <script type="application/ld+json">
   {
@@ -236,13 +236,16 @@
     <h2>Los valores que nos <em>definen</em></h2>
     <p>Cada principio que enseñamos lo vivimos primero. Haz clic en un valor para conocer cómo lo practicamos.</p>
   </div>
-  <!-- PENDING_ASSET_VALORES_FOTOS: sustituir cada .vc-media por un <img data-img-key="ns-valor-XXX">
-       cuando estén las fotografías; la tarjeta ya reserva el espacio. -->
+  <!-- PENDING_ASSET_VALORES_FOTOS: cada tarjeta ya tiene su hueco administrable
+       (claves ns-valor-*): la foto se sube desde el panel y sustituye al aviso. -->
   <div class="valores-grid reveal" id="valores-grid">
     <div class="valor-card" data-badge="explorer" data-xp="5" tabindex="0">
       <div class="vc-inner">
         <div class="vc-face vc-front">
-          <div class="vc-media"><span class="vc-media-note">Pendiente de agregar imágenes</span></div>
+          <div class="vc-media" data-img-hueco>
+            <span class="vc-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+            <img class="vc-media-img" data-img-slot data-img-key="ns-valor-excelencia" alt="" loading="lazy">
+          </div>
           <div class="valor-name">Excelencia</div>
         </div>
         <div class="vc-face vc-back">
@@ -255,7 +258,10 @@
     <div class="valor-card" data-xp="5" tabindex="0">
       <div class="vc-inner">
         <div class="vc-face vc-front">
-          <div class="vc-media"><span class="vc-media-note">Pendiente de agregar imágenes</span></div>
+          <div class="vc-media" data-img-hueco>
+            <span class="vc-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+            <img class="vc-media-img" data-img-slot data-img-key="ns-valor-integridad" alt="" loading="lazy">
+          </div>
           <div class="valor-name">Integridad</div>
         </div>
         <div class="vc-face vc-back">
@@ -268,7 +274,10 @@
     <div class="valor-card" data-xp="5" tabindex="0">
       <div class="vc-inner">
         <div class="vc-face vc-front">
-          <div class="vc-media"><span class="vc-media-note">Pendiente de agregar imágenes</span></div>
+          <div class="vc-media" data-img-hueco>
+            <span class="vc-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+            <img class="vc-media-img" data-img-slot data-img-key="ns-valor-compromiso" alt="" loading="lazy">
+          </div>
           <div class="valor-name">Compromiso</div>
         </div>
         <div class="vc-face vc-back">
@@ -281,7 +290,10 @@
     <div class="valor-card" data-xp="5" tabindex="0">
       <div class="vc-inner">
         <div class="vc-face vc-front">
-          <div class="vc-media"><span class="vc-media-note">Pendiente de agregar imágenes</span></div>
+          <div class="vc-media" data-img-hueco>
+            <span class="vc-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+            <img class="vc-media-img" data-img-slot data-img-key="ns-valor-humildad" alt="" loading="lazy">
+          </div>
           <div class="valor-name">Humildad</div>
         </div>
         <div class="vc-face vc-back">
@@ -294,7 +306,10 @@
     <div class="valor-card" data-xp="5" tabindex="0">
       <div class="vc-inner">
         <div class="vc-face vc-front">
-          <div class="vc-media"><span class="vc-media-note">Pendiente de agregar imágenes</span></div>
+          <div class="vc-media" data-img-hueco>
+            <span class="vc-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+            <img class="vc-media-img" data-img-slot data-img-key="ns-valor-solidaridad" alt="" loading="lazy">
+          </div>
           <div class="valor-name">Solidaridad</div>
         </div>
         <div class="vc-face vc-back">
@@ -307,7 +322,10 @@
     <div class="valor-card" data-xp="5" tabindex="0">
       <div class="vc-inner">
         <div class="vc-face vc-front">
-          <div class="vc-media"><span class="vc-media-note">Pendiente de agregar imágenes</span></div>
+          <div class="vc-media" data-img-hueco>
+            <span class="vc-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+            <img class="vc-media-img" data-img-slot data-img-key="ns-valor-servicio" alt="" loading="lazy">
+          </div>
           <div class="valor-name">Servicio</div>
         </div>
         <div class="vc-face vc-back">
@@ -320,7 +338,10 @@
     <div class="valor-card" data-xp="5" tabindex="0">
       <div class="vc-inner">
         <div class="vc-face vc-front">
-          <div class="vc-media"><span class="vc-media-note">Pendiente de agregar imágenes</span></div>
+          <div class="vc-media" data-img-hueco>
+            <span class="vc-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+            <img class="vc-media-img" data-img-slot data-img-key="ns-valor-amor" alt="" loading="lazy">
+          </div>
           <div class="valor-name">Amor</div>
         </div>
         <div class="vc-face vc-back">
@@ -333,7 +354,10 @@
     <div class="valor-card" data-xp="5" tabindex="0">
       <div class="vc-inner">
         <div class="vc-face vc-front">
-          <div class="vc-media"><span class="vc-media-note">Pendiente de agregar imágenes</span></div>
+          <div class="vc-media" data-img-hueco>
+            <span class="vc-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+            <img class="vc-media-img" data-img-slot data-img-key="ns-valor-respeto" alt="" loading="lazy">
+          </div>
           <div class="valor-name">Respeto</div>
         </div>
         <div class="vc-face vc-back">
@@ -346,7 +370,10 @@
     <div class="valor-card" data-xp="5" tabindex="0">
       <div class="vc-inner">
         <div class="vc-face vc-front">
-          <div class="vc-media"><span class="vc-media-note">Pendiente de agregar imágenes</span></div>
+          <div class="vc-media" data-img-hueco>
+            <span class="vc-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+            <img class="vc-media-img" data-img-slot data-img-key="ns-valor-gratitud" alt="" loading="lazy">
+          </div>
           <div class="valor-name">Gratitud</div>
         </div>
         <div class="vc-face vc-back">
@@ -359,7 +386,10 @@
     <div class="valor-card" data-xp="5" tabindex="0">
       <div class="vc-inner">
         <div class="vc-face vc-front">
-          <div class="vc-media"><span class="vc-media-note">Pendiente de agregar imágenes</span></div>
+          <div class="vc-media" data-img-hueco>
+            <span class="vc-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+            <img class="vc-media-img" data-img-slot data-img-key="ns-valor-justicia" alt="" loading="lazy">
+          </div>
           <div class="valor-name">Justicia</div>
         </div>
         <div class="vc-face vc-back">
@@ -387,20 +417,17 @@
       <p>Al final de la formación del estudiante desde preescolar hasta undécimo año, este debe evidenciar en su ser y quehacer los siguientes conocimientos, actitudes y habilidades:</p>
     </div>
     <div class="perfil-layout">
-      <!-- PENDING_ASSET_PERFIL_EGRESADO_FOTO: cuando la institución entregue la fotografía del
-           graduado, agregar dentro de .perfil-foto-marco un
-           <img class="perfil-foto-img" src="..." alt="Egresado del Centro Educativo Evangélico
-           Virginia Sapp" data-img-key="ns-perfil-egresado" width="800" height="1000" loading="lazy">
-           La foto cubre el hueco reservado automáticamente y el marco pasa a filo sólido: no hay
-           que borrar nada. Para poder cambiarla desde el panel, registrar la clave
-           ns-perfil-egresado en IMAGE_CATALOG (js/admin.js). -->
-      <figure class="perfil-foto reveal-left">
+      <!-- PENDING_ASSET_PERFIL_EGRESADO_FOTO: el hueco ya es administrable (clave
+           ns-perfil-egresado). Al subir la fotografía desde el panel cubre el marco
+           reservado, que pasa a filo sólido: no hay que borrar nada del HTML. -->
+      <figure class="perfil-foto reveal-left" data-img-hueco>
         <div class="perfil-foto-marco">
-          <span class="perfil-foto-icono" aria-hidden="true">🎓</span>
-          <span class="perfil-foto-titulo">Fotografía de un graduado</span>
-          <span class="perfil-foto-nota">Pendiente de agregar</span>
+          <span class="perfil-foto-icono img-hueco-marca" aria-hidden="true">🎓</span>
+          <span class="perfil-foto-titulo img-hueco-marca">Fotografía de un graduado</span>
+          <span class="perfil-foto-nota img-hueco-marca">Pendiente de agregar</span>
+          <img class="perfil-foto-img" data-img-slot data-img-key="ns-perfil-egresado" alt="Egresado del Centro Educativo Evangélico Virginia Sapp" loading="lazy">
         </div>
-        <figcaption class="perfil-foto-pie">Espacio reservado para el retrato de un egresado CEEVS.</figcaption>
+        <figcaption class="perfil-foto-pie img-hueco-marca">Espacio reservado para el retrato de un egresado CEEVS.</figcaption>
       </figure>
 
       <div class="perfil-cats reveal">
@@ -483,13 +510,16 @@
     <div class="section-label" style="justify-content:center"><span>Logros de aprendizaje</span></div>
     <h2>Logros de Aprendizaje <em>Esperados</em></h2>
     <p class="laes-intro">LAES — Los ejes que orientan la formación integral del estudiante del Centro Educativo Evangélico Virginia Sapp.</p>
-    <!-- PENDING_ASSET_LAES_FOTOS: sustituir cada .le-media por un <img data-img-key="ns-laes-XXX">
-         cuando estén las fotografías; la tarjeta ya reserva el espacio. -->
+    <!-- PENDING_ASSET_LAES_FOTOS: cada eje ya tiene su hueco administrable
+         (claves ns-laes-*): la foto se sube desde el panel y sustituye al aviso. -->
     <div class="laes-ejes">
       <article class="laes-eje" tabindex="0">
         <div class="le-inner">
           <div class="le-face le-front">
-            <div class="le-media"><span class="le-media-note">Pendiente de agregar imágenes</span></div>
+            <div class="le-media" data-img-hueco>
+              <span class="le-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+              <img class="le-media-img" data-img-slot data-img-key="ns-laes-academicos" alt="" loading="lazy">
+            </div>
             <h3>Académicos</h3>
           </div>
           <div class="le-face le-back">
@@ -502,7 +532,10 @@
       <article class="laes-eje" tabindex="0">
         <div class="le-inner">
           <div class="le-face le-front">
-            <div class="le-media"><span class="le-media-note">Pendiente de agregar imágenes</span></div>
+            <div class="le-media" data-img-hueco>
+              <span class="le-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+              <img class="le-media-img" data-img-slot data-img-key="ns-laes-espiritual" alt="" loading="lazy">
+            </div>
             <h3>Espiritual</h3>
           </div>
           <div class="le-face le-back">
@@ -515,7 +548,10 @@
       <article class="laes-eje" tabindex="0">
         <div class="le-inner">
           <div class="le-face le-front">
-            <div class="le-media"><span class="le-media-note">Pendiente de agregar imágenes</span></div>
+            <div class="le-media" data-img-hueco>
+              <span class="le-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+              <img class="le-media-img" data-img-slot data-img-key="ns-laes-liderazgo" alt="" loading="lazy">
+            </div>
             <h3>Liderazgo y Servicio</h3>
           </div>
           <div class="le-face le-back">
@@ -528,7 +564,10 @@
       <article class="laes-eje" tabindex="0">
         <div class="le-inner">
           <div class="le-face le-front">
-            <div class="le-media"><span class="le-media-note">Pendiente de agregar imágenes</span></div>
+            <div class="le-media" data-img-hueco>
+              <span class="le-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+              <img class="le-media-img" data-img-slot data-img-key="ns-laes-socioemocional" alt="" loading="lazy">
+            </div>
             <h3>Socio-emocional</h3>
           </div>
           <div class="le-face le-back">
@@ -541,7 +580,10 @@
       <article class="laes-eje" tabindex="0">
         <div class="le-inner">
           <div class="le-face le-front">
-            <div class="le-media"><span class="le-media-note">Pendiente de agregar imágenes</span></div>
+            <div class="le-media" data-img-hueco>
+              <span class="le-media-note img-hueco-marca">Pendiente de agregar imágenes</span>
+              <img class="le-media-img" data-img-slot data-img-key="ns-laes-bilingue" alt="" loading="lazy">
+            </div>
             <h3>Bilingüe</h3>
           </div>
           <div class="le-face le-back">
@@ -593,9 +635,9 @@
 </section>
 
 <!-- ─── EQUIPO DIRECTIVO (Fase 3 · SDD-F3-QS-008 · rediseño retratos + modal) ─── -->
-<!-- PENDING_ASSET_EQUIPO_FOTOS: para mostrar retratos reales, agregar dentro de cada
-     .lead-avatar un <img class="lead-photo" data-img-key="qs-equipo-XXX" ...>; la foto
-     cubre el monograma automáticamente. Mientras tanto se muestran las iniciales. -->
+<!-- PENDING_ASSET_EQUIPO_FOTOS: cada retrato ya tiene su hueco administrable
+     (claves ns-equipo-*): al subir la foto desde el panel cubre el monograma.
+     Mientras no haya foto se muestran las iniciales. -->
 <section class="equipo" id="equipo-directivo">
   <div class="equipo-inner">
     <div class="equipo-top">
@@ -614,7 +656,7 @@
               data-role="Directora Ejecutiva"
               data-bio="Líder educativa y coach especializada en desarrollo personal, liderazgo organizacional y gestión educativa, con amplia experiencia en evaluación, formación y acompañamiento institucional cristiano.">
         <span class="lead-badge" aria-hidden="true">✦ Dirección Ejecutiva</span>
-        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">SC</span></span>
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">SC</span><img class="lead-photo" data-img-slot data-img-key="ns-equipo-sara-corrales" alt="" loading="lazy"></span>
         <span class="lead-name">Sara Corrales</span>
         <span class="lead-role">Directora Ejecutiva</span>
         <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
@@ -630,7 +672,7 @@
               data-title="Lic. Dessiré Hulse"
               data-role="Directora de Secundaria"
               data-bio="Directora educativa con más de 22 años de experiencia en gestión académica, liderazgo docente y procesos de calidad educativa, enfocada en la excelencia y el acompañamiento integral.">
-        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">DH</span></span>
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">DH</span><img class="lead-photo" data-img-slot data-img-key="ns-equipo-dessire-hulse" alt="" loading="lazy"></span>
         <span class="lead-name">Dessiré Hulse</span>
         <span class="lead-role">Directora de Secundaria</span>
         <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
@@ -643,7 +685,7 @@
               data-title="Mgtr. Ana Estela Ávila"
               data-role="Directora de Primaria"
               data-bio="Directora de Preescolar y Primaria con 27 años de experiencia en el ámbito educativo y 15 años en dirección de primaria, comprometida con la formación integral y el fortalecimiento institucional.">
-        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">AA</span></span>
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">AA</span><img class="lead-photo" data-img-slot data-img-key="ns-equipo-ana-avila" alt="" loading="lazy"></span>
         <span class="lead-name">Ana Ávila</span>
         <span class="lead-role">Directora de Primaria</span>
         <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
@@ -656,7 +698,7 @@
               data-title="Lic. Diana Vásquez"
               data-role="Administradora General"
               data-bio="Administradora con formación en contaduría pública y 2 años de experiencia en gestión administrativa y financiera institucional.">
-        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">DV</span></span>
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">DV</span><img class="lead-photo" data-img-slot data-img-key="ns-equipo-diana-vasquez" alt="" loading="lazy"></span>
         <span class="lead-name">Diana Vásquez</span>
         <span class="lead-role">Administradora General</span>
         <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
@@ -669,7 +711,7 @@
               data-title="Lic. Nadia Irula"
               data-role="Coordinadora de Talento Humano"
               data-bio="Coordinadora de Talento Humano con formación en psicología y gestión de recursos humanos, con 2 años de experiencia en desarrollo y acompañamiento del personal.">
-        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">NI</span></span>
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">NI</span><img class="lead-photo" data-img-slot data-img-key="ns-equipo-nadia-irula" alt="" loading="lazy"></span>
         <span class="lead-name">Nadia Irula</span>
         <span class="lead-role">Coordinadora de Talento Humano</span>
         <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
@@ -684,7 +726,7 @@
               data-role="Coordinadora de Pastoral"
               data-bio-pending="true"
               data-bio="Reseña profesional pendiente de confirmación institucional.">
-        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">ML</span></span>
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">ML</span><img class="lead-photo" data-img-slot data-img-key="ns-equipo-martha-lopez" alt="" loading="lazy"></span>
         <span class="lead-name">Martha López</span>
         <span class="lead-role">Coordinadora de Pastoral</span>
         <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
@@ -699,7 +741,7 @@
               data-role="Especialista de Español"
               data-bio-pending="true"
               data-bio="Reseña profesional pendiente de confirmación institucional.">
-        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">RA</span></span>
+        <span class="lead-avatar" aria-hidden="true"><span class="lead-mono">RA</span><img class="lead-photo" data-img-slot data-img-key="ns-equipo-rosa-armijo" alt="" loading="lazy"></span>
         <span class="lead-name">Rosa Armijo</span>
         <span class="lead-role">Especialista de Español</span>
         <span class="lead-cta" aria-hidden="true">Ver reseña +</span>
@@ -747,6 +789,15 @@
       </div>
     </div>
     <div class="f-col">
+      <h4>ADIEEDS</h4>
+      <ul>
+        <li><a href="https://helenluce.edu.hn/" target="_blank" rel="noopener">Helen Luce</a></li>
+        <li><a href="https://evangelicopeniel.edu.hn/" target="_blank" rel="noopener">Evangélico Peniel</a></li>
+        <li><a href="https://jehovajireh.edu.hn/" target="_blank" rel="noopener">Jehová Jireh</a></li>
+        <li><a href="https://adieeds.edu.hn/" target="_blank" rel="noopener">ADIEEDS</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
       <h4>Institución</h4>
       <ul>
         <li><a href="quienes-somos.html#historia">Nuestra historia</a></li>
@@ -774,15 +825,6 @@
         <li><a href="https://portal.edubox.app/login/virginiasapp">Plataforma estudiantil</a></li>
         <li><a href="comunicados.html">Noticias y eventos</a></li>
         <li><a href="contactenos.html#contacto">Contacto</a></li>
-      </ul>
-    </div>
-    <div class="f-col">
-      <h4>ADIEEDS</h4>
-      <ul>
-        <li><a href="https://helenluce.edu.hn/" target="_blank" rel="noopener">Helen Luce</a></li>
-        <li><a href="https://evangelicopeniel.edu.hn/" target="_blank" rel="noopener">Evangélico Peniel</a></li>
-        <li><a href="https://jehovajireh.edu.hn/" target="_blank" rel="noopener">Jehová Jireh</a></li>
-        <li><a href="https://adieeds.edu.hn/" target="_blank" rel="noopener">ADIEEDS</a></li>
       </ul>
     </div>
   </div>

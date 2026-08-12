@@ -10,7 +10,7 @@
 @import url('2-components/cards.css');
 @import url('2-components/badges.css');
 @import url('2-components/modals.css');
-@import url('2-components/utils.css');
+@import url('2-components/utils.css?v=20260812-huecos');
 
 /* 3. LAYOUT COMPONENTS */
 @import url('3-layout/gamification.css');
@@ -21,10 +21,10 @@
 
 /* 3. SECTIONS */
 @import url('4-sections/hero.css');
-@import url('4-sections/marquee.css');
+@import url('4-sections/marquee.css?v=20260812-huecos');
 @import url('4-sections/historia.css');
-@import url('4-sections/niveles.css');
-@import url('4-sections/mision.css?v=20260807-valores');
+@import url('4-sections/niveles.css?v=20260812-misionvision');
+@import url('4-sections/mision.css?v=20260812-huecos');
 @import url('4-sections/valores.css');
 @import url('4-sections/quiz.css');
 @import url('4-sections/admisiones.css');
@@ -38,14 +38,14 @@
 @import url('4-sections/portal-educativo.css');
 @import url('4-sections/devocional.css');
 @import url('4-sections/exalumnos.css');
-@import url('4-sections/empleos.css?v=20260807-filosofia');
+@import url('4-sections/empleos.css?v=20260812-huecos');
 @import url('4-sections/page-hero.css');
 @import url('4-sections/interactivo.css');
 @import url('4-sections/mision-evangelistica.css');
 @import url('4-sections/mision-aula.css');
-@import url('4-sections/quienes-somos.css?v=20260807-perfil1');
+@import url('4-sections/quienes-somos.css?v=20260812-huecos');
 @import url('4-sections/bienvenida.css');
-@import url('4-sections/contacto-canales.css?v=20260703-2');
+@import url('4-sections/contacto-canales.css?v=20260812-horario');
 @import url('4-sections/sugerencias.css');
 @import url('4-sections/preinscripcion.css');
 @import url('4-sections/home-mision.css');

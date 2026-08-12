@@ -37,6 +37,9 @@
   background:var(--cream2);
 }
 .fp-media-note { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--gold2); line-height:1.5; }
+/* Con la foto puesta desde el panel, el hueco pasa a ser la imagen del pilar */
+.fp-media.img-hueco-lleno { padding:0; overflow:hidden; border-style:solid; border-color:rgba(171,100,35,.22); background:none; }
+.fp-media-img { align-self:stretch; width:100%; min-width:0; object-fit:cover; border-radius:calc(var(--r) - 2px); }
 .filosofia-pillar h3 { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--forest); margin:0; flex:0 0 auto; }
 .fp-back {
   transform:rotateY(180deg);

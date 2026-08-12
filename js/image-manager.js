@@ -36,6 +36,16 @@
       // URL override
       if (saved[key]) {
         el.setAttribute(attr, saved[key]);
+      } else if (el.hasAttribute('data-img-slot')) {
+        // Hueco reservado sin imagen publicada: se vacía por si tenía una antes.
+        el.removeAttribute(attr);
+      }
+
+      // Hueco reservado: su contenedor avisa si ya tiene foto, para que el
+      // cartel "pendiente" (.img-hueco-marca) desaparezca.
+      if (el.hasAttribute('data-img-slot') && el.closest) {
+        var caja = el.closest('[data-img-hueco]');
+        if (caja) caja.classList.toggle('img-hueco-lleno', !!saved[key]);
       }
 
       // Position & fit settings — solo aplican a <img> reales
@@ -54,6 +64,18 @@
           el.style.transformOrigin = posX + '% ' + posY + '%';
         }
       }
+    }
+
+    // Nota común de un conjunto de huecos: solo se retira cuando TODOS
+    // los huecos del grupo tienen ya su imagen.
+    var grupos = document.querySelectorAll('[data-img-grupo]');
+    for (var g = 0; g < grupos.length; g++) {
+      var huecos = grupos[g].querySelectorAll('img[data-img-slot]');
+      var completo = huecos.length > 0;
+      for (var h = 0; h < huecos.length; h++) {
+        if (!huecos[h].getAttribute('src')) { completo = false; break; }
+      }
+      grupos[g].classList.toggle('img-hueco-lleno', completo);
     }
 
     // Hero parallax background (index.html)

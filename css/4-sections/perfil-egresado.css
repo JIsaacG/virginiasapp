@@ -127,14 +127,14 @@
 
   /* footer */
   footer{ padding:40px 4vw 80px; }
-  .f-brand-name{ font-size:18px; }
-  .f-brand-desc{ font-size:12px; }
+  .f-brand-name{ font-size:22px; }
+  .f-brand-desc{ font-size:14px; }
   .footer-main{ gap:24px; padding-bottom:28px; }
-  .f-col h4{ font-size:12px; }
-  .f-col ul li a{ font-size:12px; }
-  .f-col ul{ gap:6px 12px; }
+  .f-col h4{ font-size:13px; }
+  .f-col ul li a{ font-size:14px; }
+  .f-col ul{ gap:8px 12px; }
   .footer-bottom{ gap:6px; }
-  .footer-bottom span,.footer-bottom a{ font-size:11px; }
+  .footer-bottom span,.footer-bottom a{ font-size:12.5px; }
 
   /* padres band */
   .padres-band{ padding:36px 4vw; }

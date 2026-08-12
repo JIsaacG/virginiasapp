@@ -82,6 +82,13 @@
   display:block; width:100%; aspect-ratio:4/3; border-radius:2px;
   background:repeating-linear-gradient(45deg, rgba(171,100,35,.07) 0 7px, transparent 7px 14px);
 }
+/* Con la foto publicada desde el panel, el hueco vuelve a ser una polaroid */
+.hl-foto-vacia.img-hueco-lleno {
+  background:var(--parch); padding:8px;
+  border-style:solid; border-color:rgba(171,100,35,.22);
+  box-shadow:0 10px 28px rgba(65,36,4,.16);
+}
+.hl-foto-vacia.img-hueco-lleno:hover { transform:rotate(0) translateY(-6px) scale(1.03); box-shadow:0 22px 48px rgba(65,36,4,.26); }
 .hl-nota { font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); text-align:center; margin-top:16px; }
 
 /* La foto es un botón: abre el visor ampliado */
@@ -171,5 +178,7 @@
   .hl-foto:last-child { margin-top:0; }
   /* los huecos siguen en pareja: vacíos no necesitan todo el ancho */
   .hl-fotos-vacias { grid-template-columns:1fr 1fr; gap:12px; }
+  /* …pero en cuanto el panel publica una foto, se lee como el resto */
+  .hl-fotos-vacias:has(img[src]) { grid-template-columns:1fr; gap:22px; }
 }
 
