@@ -19,7 +19,7 @@
 }
 .wa-tooltip {
   position:absolute; left:62px; top:50%; transform:translateY(-50%);
-  background:var(--forest); color:#fff; font-size:12px; font-weight:500;
+  background:var(--forest); color:#fff; font-size:0.9375rem; font-weight:500;
   padding:6px 14px; border-radius:6px; white-space:nowrap;
   opacity:0; pointer-events:none; transition:opacity .2s;
   border:1px solid rgba(171,100,35,.3);

@@ -32,7 +32,7 @@
 .dropdown-menu a {
   display: block;
   padding: 10px 20px;
-  font-size: 0.88rem;
+  font-size: 1.03125rem;
   font-weight: 500;
   color: var(--ceevs-black, #1E1E1E);
   text-decoration: none;

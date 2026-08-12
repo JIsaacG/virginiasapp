@@ -4,9 +4,9 @@
 .admisiones { background:var(--cream); padding:110px 8vw; }
 
 .admisiones-top { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; margin-bottom:72px; }
-.admisiones-top h2 { font-family:'Playfair Display',serif; font-size:clamp(34px,3.8vw,52px); font-weight:700; color:var(--forest); line-height:1.1; }
+.admisiones-top h2 { font-family:'Playfair Display',serif; font-size:clamp(2.1875rem,3.8vw,3.25rem); font-weight:700; color:var(--forest); line-height:1.1; }
 .admisiones-top h2 em { color:var(--gold); font-style:italic; }
-.admisiones-top p { font-size:15px; color:var(--muted); line-height:1.8; margin-top:16px; }
+.admisiones-top p { font-size:1.0625rem; color:var(--muted); line-height:1.8; margin-top:16px; }
 .admisiones-top .btn-cta-main { margin-top:32px; }
 
 .admisiones-levels { display:flex; flex-direction:column; gap:12px; }
@@ -15,26 +15,26 @@
   border:1.5px solid var(--cream2); display:flex; align-items:center; gap:16px; cursor:pointer; transition:all .3s;
 }
 .admission-level:hover { border-color:var(--gold); box-shadow:0 8px 24px rgba(65,36,4,.1); }
-.al-icon { width:44px; height:44px; border-radius:10px; background:var(--parch); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
-.al-name { font-size:14px; font-weight:600; color:var(--forest); }
-.al-grades { font-size:12px; color:var(--muted); margin-top:2px; }
-.al-arrow { margin-left:auto; font-size:16px; color:var(--gold); opacity:0; transition:opacity .2s; }
+.al-icon { width:44px; height:44px; border-radius:10px; background:var(--parch); display:flex; align-items:center; justify-content:center; font-size:1.375rem; flex-shrink:0; }
+.al-name { font-size:1.03125rem; font-weight:600; color:var(--forest); }
+.al-grades { font-size:0.9375rem; color:var(--muted); margin-top:2px; }
+.al-arrow { margin-left:auto; font-size:1.125rem; color:var(--gold); opacity:0; transition:opacity .2s; }
 .admission-level:hover .al-arrow { opacity:1; }
 
 .proceso-intro { text-align:center; max-width:560px; margin:0 auto 48px; }
-.proceso-intro h3 { font-family:'Playfair Display',serif; font-size:clamp(26px,3vw,38px); font-weight:700; color:var(--forest); line-height:1.15; }
+.proceso-intro h3 { font-family:'Playfair Display',serif; font-size:clamp(1.71875rem,3vw,2.40625rem); font-weight:700; color:var(--forest); line-height:1.15; }
 .proceso-intro h3 em { color:var(--gold); font-style:italic; }
-.proceso-intro p { font-size:14.5px; color:var(--muted); margin-top:10px; line-height:1.6; }
+.proceso-intro p { font-size:1.0625rem; color:var(--muted); margin-top:10px; line-height:1.6; }
 
 .steps-row { display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative; max-width:1000px; margin-left:auto; margin-right:auto; }
 .steps-row::before { content:''; position:absolute; top:32px; left:10%; right:10%; height:1px; background:linear-gradient(90deg,var(--gold),rgba(171,100,35,.15)); z-index:0; }
 .step-box { position:relative; z-index:1; padding:0 20px; text-align:center; }
 .step-circle { width:64px; height:64px; border-radius:50%; background:var(--white); border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; position:relative; transition:all .3s; }
 .step-box:hover .step-circle { background:var(--gold); }
-.step-num-inner { font-family:'Playfair Display',serif; font-size:22px; font-weight:900; color:var(--gold); transition:color .3s; }
+.step-num-inner { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:900; color:var(--gold); transition:color .3s; }
 .step-box:hover .step-num-inner { color:var(--forest); }
-.step-title { font-size:14px; font-weight:600; color:var(--forest); margin-bottom:8px; }
-.step-desc { font-size:12.5px; color:var(--muted); line-height:1.6; }
+.step-title { font-size:1.03125rem; font-weight:600; color:var(--forest); margin-bottom:8px; }
+.step-desc { font-size:0.96875rem; color:var(--muted); line-height:1.6; }
 
 .admisiones-cta-block {
   margin-top:64px; background:var(--parch); border-radius:var(--rxl); padding:64px;
@@ -46,8 +46,8 @@
   content:''; position:absolute; top:-100px; right:-100px; width:400px; height:400px;
   border-radius:50%; background:radial-gradient(circle,rgba(171,100,35,.12) 0%,transparent 70%);
 }
-.admisiones-cta-block h3 { font-family:'Playfair Display',serif; font-size:36px; font-weight:700; color:var(--forest); line-height:1.2; position:relative; z-index:1; }
+.admisiones-cta-block h3 { font-family:'Playfair Display',serif; font-size:2.28125rem; font-weight:700; color:var(--forest); line-height:1.2; position:relative; z-index:1; }
 .admisiones-cta-block h3 em { color:var(--gold2); font-style:italic; }
-.admisiones-cta-block p { font-size:14px; color:var(--muted); margin-top:10px; line-height:1.6; position:relative; z-index:1; }
+.admisiones-cta-block p { font-size:1.03125rem; color:var(--muted); margin-top:10px; line-height:1.6; position:relative; z-index:1; }
 .admisiones-cta-btns { display:flex; flex-direction:column; gap:12px; flex-shrink:0; position:relative; z-index:1; }
 

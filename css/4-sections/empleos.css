@@ -3,9 +3,9 @@
 ═══════════════════════════════════════ */
 .filosofia { background:var(--cream); padding:110px 8vw; }
 .filosofia-text { text-align:center; margin-bottom:56px; }
-.filosofia-title { font-family:'Playfair Display',serif; font-size:clamp(34px,4vw,54px); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:20px; }
+.filosofia-title { font-family:'Playfair Display',serif; font-size:clamp(2.1875rem,4vw,3.375rem); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:20px; }
 .filosofia-title em { color:var(--gold); font-style:italic; }
-.filosofia-desc { font-size:15px; color:var(--muted); line-height:1.8; max-width:680px; margin:0 auto; }
+.filosofia-desc { font-size:1.0625rem; color:var(--muted); line-height:1.8; max-width:680px; margin:0 auto; }
 .filosofia-pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
 
 /* Tarjetas que giran al pasar el mouse: al frente el espacio de la imagen,
@@ -36,18 +36,18 @@
   border:1.5px dashed rgba(171,100,35,.45); border-radius:var(--r);
   background:var(--cream2);
 }
-.fp-media-note { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--gold2); line-height:1.5; }
+.fp-media-note { font-size:0.9375rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--gold2); line-height:1.5; }
 /* Con la foto puesta desde el panel, el hueco pasa a ser la imagen del pilar */
 .fp-media.img-hueco-lleno { padding:0; overflow:hidden; border-style:solid; border-color:rgba(171,100,35,.22); background:none; }
 .fp-media-img { align-self:stretch; width:100%; min-width:0; object-fit:cover; border-radius:calc(var(--r) - 2px); }
-.filosofia-pillar h3 { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--forest); margin:0; flex:0 0 auto; }
+.filosofia-pillar h3 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; color:var(--forest); margin:0; flex:0 0 auto; }
 .fp-back {
   transform:rotateY(180deg);
   background:linear-gradient(155deg, rgba(171,100,35,.16), rgba(255,255,255,.96));
   border-color:rgba(171,100,35,.45);
 }
 .fp-back-logo { height:34px; width:auto; display:block; margin:0 auto -4px; flex:0 0 auto; }
-.fp-back-title { font-family:'Playfair Display',serif; font-size:17px; font-weight:700; color:var(--gold2); }
-.filosofia-pillar p { font-size:13.5px; color:var(--muted); line-height:1.7; margin:0; }
+.fp-back-title { font-family:'Playfair Display',serif; font-size:1.1875rem; font-weight:700; color:var(--gold2); }
+.filosofia-pillar p { font-size:1.03125rem; color:var(--muted); line-height:1.7; margin:0; }
 .filosofia-pillar:focus-visible .fp-face { box-shadow:0 0 0 2px var(--gold2); }
 

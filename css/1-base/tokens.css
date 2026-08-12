@@ -32,7 +32,27 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+
+/* ── Escala tipográfica ──────────────────────────────────────────
+   Los tamaños de letra del sitio están en rem, no en px, para que
+   respeten el tamaño de texto configurado en el navegador: quien
+   necesite leer más grande sube ese ajuste y el sitio entero le
+   acompaña. Por eso aquí va `100%` y no un valor fijo en px;
+   ponerle px anularía esa preferencia.
+
+   La escala es graduada: el texto pequeño se subió más que el
+   grande, de modo que nada baja de 14px y los títulos display
+   conservan su tamaño y la jerarquía visual del sitio.
+
+     ≤10px → 14px     13px → 16px     20px → 22px     30px → 30,5px
+      11px → 15px     15px → 17px     24px → 25,5px   40px → 40,5px
+      12px → 15px     16px → 18px     28px → 29px     ≥46px → igual
+
+   Al añadir CSS nuevo, escribe los font-size en rem siguiendo esta
+   escala (1rem = 16px). Evita valores por debajo de 0.875rem (14px)
+   en texto que el visitante deba leer.
+   ───────────────────────────────────────────────────────────────── */
+html { scroll-behavior: smooth; font-size: 100%; }
 
 body {
   font-family: 'Outfit', sans-serif;

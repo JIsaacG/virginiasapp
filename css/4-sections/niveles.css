@@ -13,18 +13,18 @@
 .mision-big {
   position:absolute; bottom:-10px; left:-10px;
   font-family:'Playfair Display',serif;
-  font-size:clamp(100px,12vw,180px); font-weight:900;
+  font-size:clamp(6.25rem,12vw,11.25rem); font-weight:900;
   color:rgba(65,36,4,.06); line-height:1; pointer-events:none; user-select:none;
 }
-.mision-tag { display:inline-block; font-size:10px; font-weight:700; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; padding:5px 12px; border:1px solid rgba(171,100,35,.35); border-radius:4px; margin-bottom:20px; }
+.mision-tag { display:inline-block; font-size:0.875rem; font-weight:700; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; padding:5px 12px; border:1px solid rgba(171,100,35,.35); border-radius:4px; margin-bottom:20px; }
 .mision-half:first-child .mision-tag { background:rgba(171,100,35,.06); }
 .mision-half:last-child .mision-tag { background:rgba(171,100,35,.08); border-color:rgba(171,100,35,.25); }
 /* Naranja institucional: el mismo de "Virginia Sapp" en los títulos del sitio
    (.declaracion-title em / .bienvenida-title em → var(--gold2)). */
-.mision-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3vw,42px); font-weight:700; line-height:1.15; margin-bottom:20px; color:var(--gold2); }
+.mision-title { font-family:'Playfair Display',serif; font-size:clamp(1.8125rem,3vw,2.65625rem); font-weight:700; line-height:1.15; margin-bottom:20px; color:var(--gold2); }
 .mision-half:first-child .mision-title em { color:var(--gold); font-style:italic; }
 .mision-half:last-child .mision-title em { color:var(--gold2); font-style:italic; }
-.mision-text { font-size:14.5px; line-height:1.8; }
+.mision-text { font-size:1.0625rem; line-height:1.8; }
 .mision-half:first-child .mision-text { color:var(--muted); }
 .mision-half:last-child .mision-text { color:var(--muted); }
 

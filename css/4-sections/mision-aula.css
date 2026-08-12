@@ -46,7 +46,7 @@
   position: absolute;
   top: -14px;
   right: 2px;
-  font-size: 74px;
+  font-size: 4.625rem;
   line-height: 1;
   color: var(--gold, #D7AF4A);
   opacity: 0.14;
@@ -55,7 +55,7 @@
 
 .aula-aviso-date {
   display: inline-block;
-  font-size: 0.72rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -67,7 +67,7 @@
 
 .aula-aviso h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.22rem;
+  font-size: 1.34375rem;
   color: var(--ceevs-brown, #6A2407);
   margin-bottom: 8px;
   line-height: 1.28;
@@ -75,7 +75,7 @@
 
 .aula-aviso p {
   margin-bottom: 0;
-  font-size: 0.95rem;
+  font-size: 1.0625rem;
   line-height: 1.7;
 }
 
@@ -105,7 +105,7 @@
   border-radius: 999px;
   background: #fff;
   font-family: 'Outfit', sans-serif;
-  font-size: 0.95rem;
+  font-size: 1.0625rem;
   color: var(--ink, #1E1E1E);
   outline: none;
   box-shadow: 0 4px 14px rgba(106, 36, 7, 0.05);
@@ -129,7 +129,7 @@
   border-radius: 999px;
   background: #fff;
   font-family: 'Outfit', sans-serif;
-  font-size: 0.88rem;
+  font-size: 1.03125rem;
   font-weight: 500;
   color: var(--muted, #5E5145);
   cursor: pointer;
@@ -157,7 +157,7 @@
 
 .aula-count {
   min-height: 1.2em;
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -240,7 +240,7 @@
   width: 84px;
   height: 84px;
   border-radius: 50%;
-  font-size: 38px;
+  font-size: 2.40625rem;
   background: rgba(247, 245, 242, 0.12);
   border: 1.5px solid rgba(215, 175, 74, 0.75);
   box-shadow:
@@ -261,7 +261,7 @@
   border-radius: 999px;
   background: rgba(247, 245, 242, 0.94);
   color: var(--ceevs-brown, #6A2407);
-  font-size: 0.7rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -276,7 +276,7 @@
   border-radius: 999px;
   background: var(--gold, #D7AF4A);
   color: var(--forest3, #4F1B05);
-  font-size: 0.7rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -292,14 +292,14 @@
 
 .aula-card-body h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.28rem;
+  font-size: 1.40625rem;
   color: var(--ceevs-brown, #6A2407);
   line-height: 1.28;
   margin-bottom: 8px;
 }
 
 .aula-card-desc {
-  font-size: 0.92rem;
+  font-size: 1.0625rem;
   line-height: 1.65;
   margin-bottom: 16px;
   display: -webkit-box;
@@ -313,7 +313,7 @@
   justify-content: space-between;
   align-items: baseline;
   gap: 10px;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--muted, #5E5145);
   margin: auto 0 8px;
@@ -357,7 +357,7 @@
 
 .aula-note {
   margin-top: 30px;
-  font-size: 0.85rem;
+  font-size: 1.03125rem;
   text-align: center;
   color: var(--muted, #5E5145);
 }
@@ -366,7 +366,7 @@
   content: '✦';
   display: block;
   color: var(--gold, #D7AF4A);
-  font-size: 0.9rem;
+  font-size: 1.03125rem;
   margin-bottom: 6px;
 }
 
@@ -382,13 +382,13 @@
 }
 
 .aula-empty-icon {
-  font-size: 46px;
+  font-size: 2.875rem;
   margin-bottom: 14px;
 }
 
 .aula-empty-title {
   font-family: 'Playfair Display', serif;
-  font-size: 1.35rem;
+  font-size: 1.46875rem;
   color: var(--ceevs-brown, #6A2407);
   margin-bottom: 6px;
 }
@@ -431,7 +431,7 @@
   background: var(--ceevs-brown, #6A2407);
   color: var(--gold, #D7AF4A);
   font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
+  font-size: 1.4375rem;
   font-weight: 700;
   margin-bottom: 16px;
   box-shadow:
@@ -442,13 +442,13 @@
 
 .aula-step h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.12rem;
+  font-size: 1.25rem;
   color: var(--ceevs-brown, #6A2407);
   margin-bottom: 8px;
 }
 
 .aula-step p {
-  font-size: 0.92rem;
+  font-size: 1.0625rem;
   margin-bottom: 0;
 }
 
@@ -518,7 +518,7 @@ body.aula-viewer-open {
 }
 
 .aula-viewer-kicker {
-  font-size: 0.78rem;
+  font-size: 0.96875rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -532,7 +532,7 @@ body.aula-viewer-open {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
-  font-size: 1rem;
+  font-size: 1.125rem;
   cursor: pointer;
   transition: background 0.2s, transform 0.25s;
 }
@@ -556,7 +556,7 @@ body.aula-viewer-open {
 
 .aula-viewer-head h3 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(23px, 3vw, 32px);
+  font-size: clamp(1.5625rem, 3vw, 2.0625rem);
   color: var(--ceevs-brown, #6A2407);
   line-height: 1.2;
   margin-bottom: 10px;
@@ -581,7 +581,7 @@ body.aula-viewer-open {
 }
 
 .aula-viewer-progress span {
-  font-size: 0.78rem;
+  font-size: 0.96875rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -642,7 +642,7 @@ body.aula-viewer-open {
   border: 1.5px solid var(--parch, #E8DDD1);
   color: var(--ceevs-brown, #6A2407);
   font-family: 'Playfair Display', serif;
-  font-size: 1.05rem;
+  font-size: 1.1875rem;
   font-weight: 700;
   transition: all 0.3s;
 }
@@ -664,18 +664,18 @@ body.aula-viewer-open {
 
 .aula-lesson-info strong {
   color: var(--ink, #1E1E1E);
-  font-size: 0.98rem;
+  font-size: 1.09375rem;
   line-height: 1.35;
 }
 
 .aula-lesson-info small {
   color: var(--muted, #5E5145);
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 
 .aula-lesson-state {
   flex-shrink: 0;
-  font-size: 1.15rem;
+  font-size: 1.28125rem;
   font-weight: 700;
   color: var(--gold2, #F57C00);
   transition: transform 0.3s;
@@ -698,7 +698,7 @@ body.aula-viewer-open {
 .aula-lesson-text p {
   margin: 15px 0 0;
   color: var(--ink, #1E1E1E);
-  font-size: 0.96rem;
+  font-size: 1.09375rem;
   line-height: 1.8;
 }
 
@@ -754,7 +754,7 @@ body.aula-viewer-open {
   border: 1.5px solid var(--parch, #E8DDD1);
   border-radius: 999px;
   background: var(--cream2, #F6F1EA);
-  font-size: 0.9rem;
+  font-size: 1.03125rem;
   font-weight: 600;
   color: var(--ceevs-brown, #6A2407);
   cursor: pointer;

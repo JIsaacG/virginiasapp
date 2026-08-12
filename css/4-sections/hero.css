@@ -35,7 +35,7 @@
   background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25);
   border-radius:var(--rl); color:var(--white);
   padding:6px 14px; cursor:pointer;
-  font-size:13px; font-family:'Outfit',sans-serif;
+  font-size:1rem; font-family:'Outfit',sans-serif;
   backdrop-filter:blur(4px);
   transition:background .2s;
 }
@@ -61,8 +61,8 @@
   position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
   animation:spin-badge 25s linear reverse infinite;
 }
-.hero-badge-year { font-family:'Playfair Display',serif; font-size:30px; font-weight:900; color:var(--gold2); line-height:1; }
-.hero-badge-est { font-size:11px; font-weight:600; color:var(--gold); letter-spacing:.12em; text-transform:uppercase; margin-top:3px; }
+.hero-badge-year { font-family:'Playfair Display',serif; font-size:1.9375rem; font-weight:900; color:var(--gold2); line-height:1; }
+.hero-badge-est { font-size:0.9375rem; font-weight:600; color:var(--gold); letter-spacing:.12em; text-transform:uppercase; margin-top:3px; }
 
 .hero-left {
   display:flex; flex-direction:column; justify-content:center;
@@ -77,7 +77,7 @@
 .hero-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:30px; }
 .eyebrow-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); }
 .eyebrow-line { width:36px; height:1px; background:var(--gold); }
-.eyebrow-text { font-size:11px; font-weight:600; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; }
+.eyebrow-text { font-size:0.9375rem; font-weight:600; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; }
 
 /* Versículo institucional */
 .hero-versiculo {
@@ -89,12 +89,12 @@
 }
 .hero-versiculo-text {
   font-family:'Playfair Display',serif; font-style:italic;
-  font-size:clamp(14px,1.25vw,16.5px); line-height:1.6;
+  font-size:clamp(1.03125rem,1.25vw,1.15625rem); line-height:1.6;
   color:rgba(255,255,255,.9);
 }
 .hero-versiculo-cita {
   display:block; margin-top:9px;
-  font-size:10px; font-weight:600; color:var(--gold);
+  font-size:0.875rem; font-weight:600; color:var(--gold);
   letter-spacing:.18em; text-transform:uppercase;
 }
 
@@ -105,12 +105,12 @@
   padding-left:14px; border-left:2px solid rgba(171,100,35,.45);
 }
 .hero-lema-label {
-  font-size:10px; font-weight:600; color:var(--gold);
+  font-size:0.875rem; font-weight:600; color:var(--gold);
   letter-spacing:.18em; text-transform:uppercase;
 }
 .hero-lema-text {
   font-family:'Playfair Display',serif; font-style:italic;
-  font-size:clamp(15px,1.4vw,18px); line-height:1.5;
+  font-size:clamp(1.0625rem,1.4vw,1.25rem); line-height:1.5;
   color:rgba(255,255,255,.82);
 }
 /* con el versículo encima, el lema ya no necesita subir hacia el eyebrow */
@@ -118,7 +118,7 @@
 
 .hero-headline {
   font-family:'Playfair Display',serif;
-  font-size:clamp(46px,5.8vw,86px);
+  font-size:clamp(2.875rem,5.8vw,5.375rem);
   font-weight:900; line-height:1.02; color:#fff; margin-bottom:8px;
 }
 .hero-headline .line2 { color:var(--gold2); font-style:italic; }
@@ -128,16 +128,16 @@
   display:inline-flex; align-items:center; gap:8px;
   background:rgba(171,100,35,.1); border:1px solid rgba(171,100,35,.25);
   border-radius:4px; padding:6px 14px; margin-bottom:26px;
-  font-size:12px; color:var(--gold3); letter-spacing:.04em;
+  font-size:0.9375rem; color:var(--gold3); letter-spacing:.04em;
 }
 
-.hero-desc { font-size:15.5px; color:rgba(255,255,255,.6); line-height:1.75; max-width:440px; margin-bottom:40px; }
+.hero-desc { font-size:1.09375rem; color:rgba(255,255,255,.6); line-height:1.75; max-width:440px; margin-bottom:40px; }
 
 .hero-ctas { display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
 
 .btn-cta-main {
   padding:16px 34px; background:var(--gold); border:none; border-radius:8px;
-  font-size:14px; font-weight:600; color:var(--forest); cursor:pointer;
+  font-size:1.03125rem; font-weight:600; color:var(--forest); cursor:pointer;
   font-family:'Outfit',sans-serif; letter-spacing:.03em;
   transition:all .25s; text-decoration:none; display:inline-block;
   position:relative; overflow:hidden;
@@ -152,7 +152,7 @@
 
 .btn-cta-ghost {
   padding:15px 28px; border:1.5px solid rgba(255,255,255,.22); border-radius:8px;
-  background:transparent; font-size:14px; color:rgba(255,255,255,.85);
+  background:transparent; font-size:1.03125rem; color:rgba(255,255,255,.85);
   cursor:pointer; font-family:'Outfit',sans-serif; transition:all .25s;
   text-decoration:none; display:inline-flex; align-items:center; gap:8px;
 }
@@ -168,10 +168,10 @@
 .hero-counter:last-child { border-right:none; }
 .counter-num {
   font-family:'Playfair Display',serif;
-  font-size:40px; font-weight:900; color:var(--gold2); line-height:1;
+  font-size:2.53125rem; font-weight:900; color:var(--gold2); line-height:1;
 }
 .counter-num sup { font-size:.45em; vertical-align:super; }
-.counter-label { font-size:11.5px; color:rgba(255,255,255,.38); margin-top:5px; letter-spacing:.03em; }
+.counter-label { font-size:0.9375rem; color:rgba(255,255,255,.38); margin-top:5px; letter-spacing:.03em; }
 
 /* Hero right — photo cards */
 .hero-photo-stack {
@@ -198,7 +198,7 @@
   border-radius:999px;
   background:rgba(12,8,4,.68);
   color:#fff;
-  font-size:32px;
+  font-size:2.0625rem;
   line-height:1;
   cursor:pointer;
   z-index:4;
@@ -263,7 +263,7 @@
   display:flex; align-items:flex-end; justify-content:center;
   padding:16px;
   background:linear-gradient(180deg,transparent,rgba(0,0,0,.62));
-  color:#fff; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:#fff; font-size:0.9375rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
   opacity:0; transition:opacity .24s ease;
 }
 .hero-mini-card:hover .hero-mini-overlay { opacity:1; }
@@ -283,8 +283,8 @@
   box-shadow:0 20px 50px rgba(0,0,0,.25);
   min-width:220px;
 }
-.hero-pill-num { font-family:'Playfair Display',serif; font-size:34px; font-weight:900; color:var(--forest); line-height:1; }
-.hero-pill-label { font-size:12px; color:rgba(65,36,4,.75); font-weight:700; margin-top:4px; }
+.hero-pill-num { font-family:'Playfair Display',serif; font-size:2.1875rem; font-weight:900; color:var(--forest); line-height:1; }
+.hero-pill-label { font-size:0.9375rem; color:rgba(65,36,4,.75); font-weight:700; margin-top:4px; }
 .hero-tag {
   position:relative;
   background:rgba(40,20,2,.88);
@@ -295,7 +295,7 @@
   min-width:220px;
 }
 .hero-tag-dot { width:8px; height:8px; border-radius:50%; background:#22c55e; display:inline-block; margin-right:8px; box-shadow:0 0 6px #22c55e; }
-.hero-tag span { font-size:12px; color:rgba(255,255,255,.90); font-weight:500; }
+.hero-tag span { font-size:0.9375rem; color:rgba(255,255,255,.90); font-weight:500; }
 
 @media (max-width:1080px) {
   .hero-mini-card {
@@ -329,9 +329,9 @@
 .hero-lightbox-inner { position:relative; width:min(92vw,900px); max-height:90vh; display:flex; align-items:center; justify-content:center; }
 .hero-lightbox img { max-width:100%; max-height:100%; object-fit:contain; border-radius:18px; box-shadow:0 38px 120px rgba(0,0,0,.55); transform:scale(.96); opacity:0; transition:transform .3s ease, opacity .3s ease; }
 .hero-lightbox.open img { transform:scale(1); opacity:1; }
-.hero-lightbox-close { position:absolute; top:-18px; right:-18px; width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s ease; z-index:2; }
+.hero-lightbox-close { position:absolute; top:-18px; right:-18px; width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#fff; font-size:1.375rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s ease; z-index:2; }
 .hero-lightbox-close:hover { background:rgba(255,255,255,.18); }
-.hero-lightbox-title { position:absolute; bottom:-32px; left:0; right:0; text-align:center; color:rgba(255,255,255,.88); font-size:13px; line-height:1.3; padding:0 10px; }
+.hero-lightbox-title { position:absolute; bottom:-32px; left:0; right:0; text-align:center; color:rgba(255,255,255,.88); font-size:1rem; line-height:1.3; padding:0 10px; }
 
 /* scroll indicator */
 .scroll-indicator {
@@ -340,7 +340,7 @@
 }
 .scroll-arrow { width:20px; height:20px; border-right:2px solid rgba(171,100,35,.5); border-bottom:2px solid rgba(171,100,35,.5); transform:rotate(45deg); animation:bounce 1.8s ease infinite; }
 @keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(6px)} }
-.scroll-text { font-size:9px; color:rgba(171,100,35,.5); letter-spacing:.14em; text-transform:uppercase; }
+.scroll-text { font-size:0.875rem; color:rgba(171,100,35,.5); letter-spacing:.14em; text-transform:uppercase; }
 
 /* ═══════════════════════════════════════
    MARQUEE
@@ -350,7 +350,7 @@
   display:flex; white-space:nowrap;
 }
 .marquee-track { display:flex; gap:0; animation:marquee 30s linear infinite; will-change:transform; }
-.marquee-item { padding:0 36px; font-size:12px; font-weight:600; color:var(--forest); letter-spacing:.1em; text-transform:uppercase; display:flex; align-items:center; gap:16px; }
-.marquee-item::after { content:'✦'; font-size:10px; opacity:.5; }
+.marquee-item { padding:0 36px; font-size:0.9375rem; font-weight:600; color:var(--forest); letter-spacing:.1em; text-transform:uppercase; display:flex; align-items:center; gap:16px; }
+.marquee-item::after { content:'✦'; font-size:0.875rem; opacity:.5; }
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 

@@ -30,7 +30,7 @@
   flex: 0 0 auto;
   padding: 8px 16px;
   border-radius: 999px;
-  font-size: 15px;
+  font-size: 1.0625rem;
   font-weight: 600;
   color: var(--muted);
   text-decoration: none;
@@ -92,7 +92,7 @@
   border: none;
   cursor: pointer;
   font-family: 'Outfit', sans-serif;
-  font-size: 15px;
+  font-size: 1.0625rem;
   font-weight: 600;
   color: var(--forest);
   text-align: left;
@@ -105,7 +105,7 @@
 
 .qs-acc-icon {
   flex: 0 0 auto;
-  font-size: 18px;
+  font-size: 1.25rem;
   color: var(--gold);
   transition: transform 0.25s;
 }
@@ -114,7 +114,7 @@
 
 .qs-acc-panel {
   padding: 0 24px 20px;
-  font-size: 14px;
+  font-size: 1.03125rem;
   color: var(--muted);
   line-height: 1.75;
 }
@@ -157,10 +157,10 @@
   padding: clamp(32px, 3.6vw, 54px);
 }
 .acsi-top { margin-bottom: 24px; }
-.acsi .section-label span { font-size: 13px; }
+.acsi .section-label span { font-size: 1rem; }
 .acsi-top h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 3.1vw, 42px);
+  font-size: clamp(1.8125rem, 3.1vw, 2.65625rem);
   font-weight: 700;
   color: var(--forest);
   line-height: 1.15;
@@ -193,7 +193,7 @@
   height: auto;
 }
 .acsi-lead {
-  font-size: 17px;
+  font-size: 1.1875rem;
   color: var(--muted);
   line-height: 1.8;
   max-width: 56ch;
@@ -211,7 +211,7 @@
 .acsi-badge {
   position: relative;
   padding-left: 24px;
-  font-size: 15px;
+  font-size: 1.0625rem;
   font-weight: 600;
   color: var(--forest);
   line-height: 1.5;
@@ -256,7 +256,7 @@
 .laes-inner { max-width: 1120px; margin: 0 auto; text-align: center; }
 .laes-inner h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(30px, 3.6vw, 48px);
+  font-size: clamp(1.9375rem, 3.6vw, 3rem);
   font-weight: 700;
   color: var(--forest);
   line-height: 1.15;
@@ -271,11 +271,11 @@
   margin-top: 24px;
   text-align: left;
 }
-.laes-card p { font-size: 15px; color: var(--muted); line-height: 1.8; }
+.laes-card p { font-size: 1.0625rem; color: var(--muted); line-height: 1.8; }
 .laes-pending {
   display: inline-block;
   margin-top: 16px;
-  font-size: 12px;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--gold);
   letter-spacing: 0.04em;
@@ -302,13 +302,13 @@
 .equipo-top { text-align: center; margin-bottom: 52px; }
 .equipo-top h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(30px, 3.6vw, 48px);
+  font-size: clamp(1.9375rem, 3.6vw, 3rem);
   font-weight: 700;
   color: var(--forest);
   line-height: 1.15;
 }
 .equipo-top h2 em { color: var(--gold); font-style: italic; }
-.equipo-top p { font-size: 15px; color: var(--muted); margin-top: 12px; }
+.equipo-top p { font-size: 1.0625rem; color: var(--muted); margin-top: 12px; }
 .equipo-top p strong { color: var(--forest2); }
 
 /* ─ Tarjeta de líder (retrato circular clicable) ─ */
@@ -370,7 +370,7 @@
   background: linear-gradient(140deg, var(--forest2), var(--moss));
   color: #fff;
   font-family: 'Playfair Display', serif;
-  font-size: 30px;
+  font-size: 1.9375rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   border: 3px solid var(--white);
@@ -388,13 +388,13 @@
 
 .lead-name {
   font-family: 'Playfair Display', serif;
-  font-size: 18px;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--forest);
   line-height: 1.2;
 }
 .lead-role {
-  font-size: 12.5px;
+  font-size: 0.96875rem;
   font-weight: 600;
   color: var(--forest2);
   margin-top: 3px;
@@ -402,7 +402,7 @@
 }
 .lead-cta {
   margin-top: 12px;
-  font-size: 11px;
+  font-size: 0.9375rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -427,8 +427,8 @@
   box-shadow: 0 14px 36px rgba(65, 36, 4, 0.10);
 }
 .lead-card--featured .lead-avatar { width: 124px; height: 124px; }
-.lead-card--featured .lead-mono { font-size: 40px; }
-.lead-card--featured .lead-name { font-size: 24px; }
+.lead-card--featured .lead-mono { font-size: 2.53125rem; }
+.lead-card--featured .lead-name { font-size: 1.59375rem; }
 .lead-badge {
   display: inline-flex;
   align-items: center;
@@ -438,7 +438,7 @@
   border-radius: 999px;
   background: linear-gradient(135deg, var(--gold), var(--gold2));
   color: #fff;
-  font-size: 11px;
+  font-size: 0.9375rem;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -501,7 +501,7 @@
   border: none;
   background: var(--cream2);
   color: var(--forest2);
-  font-size: 16px;
+  font-size: 1.125rem;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
 }
@@ -535,13 +535,13 @@
   background: linear-gradient(140deg, var(--forest2), var(--moss));
   color: #fff;
   font-family: 'Playfair Display', serif;
-  font-size: 38px;
+  font-size: 2.40625rem;
   font-weight: 700;
   border: 4px solid var(--white);
 }
 .lead-modal-title {
   display: block;
-  font-size: 12px;
+  font-size: 0.9375rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -549,7 +549,7 @@
 }
 .lead-modal-name {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(24px, 4vw, 30px);
+  font-size: clamp(1.59375rem, 4vw, 1.9375rem);
   font-weight: 700;
   color: var(--forest);
   margin-top: 6px;
@@ -557,7 +557,7 @@
 }
 .lead-modal-role {
   display: block;
-  font-size: 14px;
+  font-size: 1.03125rem;
   font-weight: 600;
   color: var(--forest2);
   margin-top: 6px;
@@ -571,7 +571,7 @@
   background: linear-gradient(90deg, var(--gold), var(--gold2));
 }
 .lead-modal-bio {
-  font-size: 15px;
+  font-size: 1.0625rem;
   color: var(--muted);
   line-height: 1.85;
 }
@@ -582,7 +582,7 @@
 .junta-inner { max-width: 940px; margin: 0 auto; text-align: center; }
 .junta-inner h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(30px, 3.6vw, 48px);
+  font-size: clamp(1.9375rem, 3.6vw, 3rem);
   font-weight: 700;
   color: var(--forest);
   line-height: 1.15;
@@ -634,13 +634,13 @@
   margin-top: 20px;
   padding: 0 2px 12px;
   border-bottom: 1px solid rgba(171, 100, 35, 0.24);
-  font-size: 12.5px;
+  font-size: 0.96875rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
 }
-.junta-caption-mark { color: var(--gold); font-size: 12px; }
+.junta-caption-mark { color: var(--gold); font-size: 0.9375rem; }
 
 .junta-card {
   background: var(--white);
@@ -651,11 +651,11 @@
   text-align: left;
   box-shadow: 0 2px 12px rgba(65, 36, 4, 0.06);
 }
-.junta-card p { font-size: 15px; color: var(--muted); line-height: 1.8; }
+.junta-card p { font-size: 1.0625rem; color: var(--muted); line-height: 1.8; }
 .junta-pending {
   display: inline-block;
   margin-top: 16px;
-  font-size: 12px;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--gold2);
   letter-spacing: 0.04em;
@@ -707,7 +707,7 @@
   height: 68px;
   display: grid;
   place-items: center;
-  font-size: 32px;
+  font-size: 2.0625rem;
   border-radius: 50%;
   background: var(--white);
   border: 1px solid rgba(171, 100, 35, 0.22);
@@ -715,13 +715,13 @@
 }
 .perfil-foto-titulo {
   font-family: 'Playfair Display', serif;
-  font-size: 17px;
+  font-size: 1.1875rem;
   font-weight: 700;
   color: var(--forest);
   line-height: 1.3;
 }
 .perfil-foto-nota {
-  font-size: 10px;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -743,7 +743,7 @@
 .perfil-foto.img-hueco-lleno .perfil-foto-marco::before { display: none; }
 .perfil-foto-pie {
   margin-top: 12px;
-  font-size: 12.5px;
+  font-size: 0.96875rem;
   color: var(--muted);
   line-height: 1.6;
   text-align: center;
@@ -765,7 +765,7 @@
 /* Categorías plegables */
 .perfil-cats { display: flex; flex-direction: column; gap: 12px; }
 .perfil-cats-hint {
-  font-size: 11px;
+  font-size: 0.9375rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -801,11 +801,11 @@
   outline: 2px solid var(--gold);
   outline-offset: -3px;
 }
-.perfil-cat-icon { flex: 0 0 auto; font-size: 24px; line-height: 1; }
+.perfil-cat-icon { flex: 0 0 auto; font-size: 1.59375rem; line-height: 1; }
 .perfil-cat-name {
   flex: 1 1 auto;
   font-family: 'Playfair Display', serif;
-  font-size: 20px;
+  font-size: 1.375rem;
   font-weight: 700;
   color: var(--forest);
 }
@@ -814,7 +814,7 @@
   padding: 4px 10px;
   border-radius: 999px;
   background: rgba(215, 175, 74, 0.16);
-  font-size: 11px;
+  font-size: 0.9375rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -871,7 +871,7 @@
 .perfil-cat-list li {
   position: relative;
   padding-left: 22px;
-  font-size: 13.5px;
+  font-size: 1.03125rem;
   color: var(--muted);
   line-height: 1.65;
 }
@@ -880,7 +880,7 @@
   position: absolute;
   left: 0;
   color: var(--gold);
-  font-size: 12px;
+  font-size: 0.9375rem;
 }
 /* Las viñetas entran escalonadas: el despliegue se lee, no aparece de golpe */
 .perfil-cat-panel:not([hidden]) .perfil-cat-list li {
@@ -901,7 +901,7 @@
 
 /* ── LAES — ejes (SDD-PEND-004) ── */
 .laes-intro {
-  font-size: 15px;
+  font-size: 1.0625rem;
   color: var(--muted);
   line-height: 1.7;
   margin: 8px auto 28px;
@@ -968,7 +968,7 @@
   background: var(--cream2);
 }
 .le-media-note {
-  font-size: 10px;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -998,19 +998,19 @@
 .le-back-logo { height: 28px; width: auto; display: block; margin: 0 auto -4px; flex: 0 0 auto; }
 .le-back-title {
   font-family: 'Playfair Display', serif;
-  font-size: 16px;
+  font-size: 1.125rem;
   font-weight: 700;
   color: var(--gold2);
   flex: 0 0 auto;
 }
 .laes-eje h3 {
-  font-size: 14.5px;
+  font-size: 1.0625rem;
   font-weight: 700;
   color: var(--forest);
   margin: 0;
   flex: 0 0 auto;
 }
-.laes-eje p { font-size: 13px; color: var(--muted); line-height: 1.7; margin: 0; }
+.laes-eje p { font-size: 1rem; color: var(--muted); line-height: 1.7; margin: 0; }
 .laes-eje:focus-visible .le-face { box-shadow: 0 0 0 2px var(--gold2); }
 
 /* ── Junta directiva — listado oficial (SDD-PEND-006) ── */
@@ -1063,16 +1063,16 @@
   border-color: rgba(171, 100, 35, 0.34);
 }
 .junta-item--head::before { opacity: 1; width: 4px; }
-.junta-item--head .junta-nombre { font-size: 18px; font-weight: 600; }
+.junta-item--head .junta-nombre { font-size: 1.25rem; font-weight: 600; }
 .junta-cargo {
-  font-size: 11.5px;
+  font-size: 0.9375rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--gold2);
 }
 .junta-nombre {
-  font-size: 15.5px;
+  font-size: 1.09375rem;
   color: var(--ink);
   font-weight: 500;
   line-height: 1.35;
@@ -1111,8 +1111,8 @@
 @media (max-width: 700px) {
   .acsi, .laes, .equipo, .junta { padding: 64px 6vw; }
   .perfil-cat-trigger { padding: 16px 14px; gap: 10px; }
-  .perfil-cat-name { font-size: 17px; }
-  .perfil-cat-count { padding: 3px 8px; font-size: 10px; }
+  .perfil-cat-name { font-size: 1.1875rem; }
+  .perfil-cat-count { padding: 3px 8px; font-size: 0.875rem; }
   .perfil-cat-toggle { width: 24px; height: 24px; }
   .perfil-cat-panel { padding: 0 14px 18px; }
   .acsi-lead-row { gap: 18px; }
@@ -1122,22 +1122,22 @@
   .lead-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
   .lead-card { padding: 22px 12px 20px; }
   .lead-avatar { width: 84px; height: 84px; }
-  .lead-name { font-size: 16px; }
+  .lead-name { font-size: 1.125rem; }
   .lead-modal-card { padding: 38px 24px 32px; }
   .laes-ejes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .laes-card, .junta-card { padding: 28px 22px; }
-  .perfil-cat-list li { font-size: 14px; }
+  .perfil-cat-list li { font-size: 1.03125rem; }
   .junta-retrato { margin-top: 26px; }
   .junta-marco { padding: 9px; }
   .junta-marco::after { inset: 4px; }
   .junta-caption {
     margin-top: 16px;
-    font-size: 11px;
+    font-size: 0.9375rem;
     letter-spacing: 0.06em;
     line-height: 1.5;
     text-align: left;
     align-items: flex-start;
   }
   .junta-caption-mark { padding-top: 2px; }
-  .junta-item--head .junta-nombre { font-size: 16.5px; }
+  .junta-item--head .junta-nombre { font-size: 1.15625rem; }
 }

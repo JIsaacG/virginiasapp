@@ -18,17 +18,17 @@
   flex-shrink: 0; box-shadow: 0 0 0 4px rgba(171,100,35,.14), 0 8px 24px rgba(0,0,0,.25);
 }
 .footer-logo-icon img { width: 100%; height: 100%; object-fit: cover; }
-.footer-brand-name { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 20px; color: #fff; }
-.footer-brand-sub  { font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: var(--gold2); }
-.footer-desc { color: rgba(255,255,255,.45); font-size: 15px; line-height: 1.7; max-width: 290px; }
+.footer-brand-name { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.375rem; color: #fff; }
+.footer-brand-sub  { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1875rem; color: var(--gold2); }
+.footer-desc { color: rgba(255,255,255,.45); font-size: 1.0625rem; line-height: 1.7; max-width: 290px; }
 .footer-nav-label {
-  font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 13px;
+  font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem;
   text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.35); margin-bottom: 14px;
 }
 .footer-nav-list { display: flex; flex-direction: column; gap: 10px; }
-.footer-link { color: rgba(255,255,255,.55); font-size: 16px; text-decoration: none; transition: color .2s; }
+.footer-link { color: rgba(255,255,255,.55); font-size: 1.125rem; text-decoration: none; transition: color .2s; }
 .footer-link:hover { color: #d4882e; }
-.footer-link-active { color: var(--gold2); font-size: 16px; text-decoration: none; }
+.footer-link-active { color: var(--gold2); font-size: 1.125rem; text-decoration: none; }
 
 /* Admin link in footer */
 .admin-footer-link {
@@ -36,7 +36,7 @@
   padding: 10px 24px;
   background: rgba(171,100,35,.1); color: var(--gold);
   border: 1px solid rgba(171,100,35,.25); border-radius: 8px;
-  text-decoration: none; font-size: 13px; font-weight: 500;
+  text-decoration: none; font-size: 1rem; font-weight: 500;
   font-family: 'Outfit', sans-serif; transition: all .2s;
 }
 .admin-footer-link:hover {
@@ -50,7 +50,7 @@
   padding: 13px 32px;
   background: var(--forest); color: #fff;
   border-radius: 10px; text-decoration: none;
-  font-weight: 600; font-size: 14px;
+  font-weight: 600; font-size: 1.03125rem;
   font-family: 'Outfit', sans-serif; transition: background .2s;
 }
 .btn-recuerdos:hover { background: #5a3508; }
@@ -58,17 +58,17 @@
 /* FB Config panel close/apply buttons */
 .fb-config-close {
   background: none; border: none; color: rgba(255,255,255,.4);
-  cursor: pointer; font-size: 18px; font-family: Outfit, sans-serif;
+  cursor: pointer; font-size: 1.25rem; font-family: Outfit, sans-serif;
 }
 .fb-apply-btn {
   flex: 1; padding: 12px; background: var(--gold); border: none;
-  border-radius: 8px; font-size: 13px; font-weight: 700;
+  border-radius: 8px; font-size: 1rem; font-weight: 700;
   color: var(--forest); cursor: pointer; font-family: Outfit, sans-serif; transition: background .2s;
 }
 .fb-apply-btn:hover { background: #d4882e; }
 .fb-token-link {
   padding: 12px 16px; border: 1px solid rgba(255,255,255,.15); border-radius: 8px;
-  font-size: 12px; color: rgba(255,255,255,.6); text-decoration: none;
+  font-size: 0.9375rem; color: rgba(255,255,255,.6); text-decoration: none;
   display: flex; align-items: center; white-space: nowrap; transition: all .2s;
 }
 .fb-token-link:hover { border-color: var(--gold); }
@@ -78,14 +78,14 @@
   display: inline-block; padding: 14px 32px;
   background: var(--forest); color: #fff;
   border-radius: 10px; text-decoration: none;
-  font-weight: 600; font-size: 15px; transition: background .2s;
+  font-weight: 600; font-size: 1.0625rem; transition: background .2s;
 }
 .btn-cta-forest:hover { background: #5a3508; }
 .btn-cta-gold {
   display: inline-block; padding: 14px 32px;
   background: var(--gold); color: #fff;
   border-radius: 10px; text-decoration: none;
-  font-weight: 600; font-size: 15px; transition: background .2s;
+  font-weight: 600; font-size: 1.0625rem; transition: background .2s;
 }
 .btn-cta-gold:hover { background: #c77a2a; }
 
@@ -105,6 +105,6 @@ img[data-img-slot]:not([src]) { display: none; }
   background: transparent; color: var(--muted);
   border: 1.5px solid rgba(65,36,4,.2); border-radius: 8px;
   cursor: pointer; font-family: 'Outfit', sans-serif;
-  font-size: 14px; transition: all .2s;
+  font-size: 1.03125rem; transition: all .2s;
 }
 .btn-quiz-restart:hover { border-color: rgba(65,36,4,.4); color: var(--forest); }

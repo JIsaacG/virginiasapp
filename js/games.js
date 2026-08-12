@@ -360,7 +360,7 @@ const Games = {
       <div class="game-modal-title">🧠 Trivia Bíblica</div>
       <div class="game-modal-sub">¡Completada!</div>
       <div class="trivia-score-wrap">
-        <div class="trivia-score-num">${score}<span style="font-size:24px;opacity:.5">/10</span></div>
+        <div class="trivia-score-num">${score}<span style="font-size:1.59375rem;opacity:.5">/10</span></div>
         <div class="trivia-score-sub">${msgs[msgIdx]}</div>
         <div class="trivia-result-stats">
           <div class="trivia-rs"><span class="trivia-rs-num">${Math.round(score / 10 * 100)}%</span><span class="trivia-rs-lbl">Acierto</span></div>
@@ -845,7 +845,7 @@ const Games = {
       <div class="game-modal-title">📜 Ordena el Versículo</div>
       <div class="game-modal-sub">¡Completado!</div>
       <div class="trivia-score-wrap">
-        <div class="trivia-score-num">${st.correct}<span style="font-size:24px;opacity:.5">/${st.total}</span></div>
+        <div class="trivia-score-num">${st.correct}<span style="font-size:1.59375rem;opacity:.5">/${st.total}</span></div>
         <div class="trivia-score-sub">¡Versículos reconstruidos! +${st.correct * 6 + bonus} XP ganados</div>
       </div>
       <button class="trivia-btn-again" data-replay="ordena">🔄 Jugar de nuevo</button>`;

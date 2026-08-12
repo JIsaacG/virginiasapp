@@ -4,9 +4,9 @@
 .valores { background:var(--parch); padding:110px 8vw; }
 
 .valores-header { text-align:center; margin-bottom:64px; }
-.valores-header h2 { font-family:'Playfair Display',serif; font-size:clamp(36px,4vw,56px); font-weight:700; color:var(--forest); line-height:1.1; }
+.valores-header h2 { font-family:'Playfair Display',serif; font-size:clamp(2.28125rem,4vw,3.5rem); font-weight:700; color:var(--forest); line-height:1.1; }
 .valores-header h2 em { color:var(--gold); font-style:italic; }
-.valores-header p { font-size:15px; color:var(--muted); margin-top:16px; max-width:500px; margin-left:auto; margin-right:auto; }
+.valores-header p { font-size:1.0625rem; color:var(--muted); margin-top:16px; max-width:500px; margin-left:auto; margin-right:auto; }
 
 .valores-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-bottom:60px; }
 
@@ -45,7 +45,7 @@
   border:1.5px dashed rgba(171,100,35,.45); border-radius:var(--r);
   background:var(--cream2);
 }
-.vc-media-note { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--gold2); line-height:1.5; }
+.vc-media-note { font-size:0.875rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--gold2); line-height:1.5; }
 /* Con la foto puesta desde el panel, el hueco pasa a ser la imagen del valor */
 .vc-media.img-hueco-lleno { padding:0; overflow:hidden; border-style:solid; border-color:rgba(171,100,35,.22); background:none; }
 .vc-media-img { align-self:stretch; width:100%; min-width:0; object-fit:cover; border-radius:calc(var(--r) - 2px); }
@@ -55,9 +55,9 @@
   border-color:rgba(171,100,35,.45);
 }
 .vc-back-logo { height:28px; width:auto; display:block; margin:0 auto -4px; flex:0 0 auto; }
-.vc-back-title { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--gold2); flex:0 0 auto; }
-.valores-grid .valor-name { font-size:13px; font-weight:600; color:var(--forest); margin:0; flex:0 0 auto; }
-.valores-grid .valor-desc { font-size:12px; color:var(--muted); line-height:1.6; opacity:1; max-height:none; overflow:visible; margin:0; }
+.vc-back-title { font-family:'Playfair Display',serif; font-size:1.125rem; font-weight:700; color:var(--gold2); flex:0 0 auto; }
+.valores-grid .valor-name { font-size:1rem; font-weight:600; color:var(--forest); margin:0; flex:0 0 auto; }
+.valores-grid .valor-desc { font-size:0.9375rem; color:var(--muted); line-height:1.6; opacity:1; max-height:none; overflow:visible; margin:0; }
 .valor-card:focus-visible .vc-face { box-shadow:0 0 0 2px var(--gold2); }
 
 @media(max-width:900px){

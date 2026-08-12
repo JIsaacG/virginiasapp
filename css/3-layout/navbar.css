@@ -63,7 +63,7 @@
 
 .nav-wordmark strong,
 .nav-wordmark b {
-  font-size: clamp(0.68rem, 1vw, 0.88rem);
+  font-size: clamp(0.9375rem, 1vw, 1.03125rem);
   letter-spacing: 0.03em;
   color: var(--forest, #6A2407);
   font-weight: 700;
@@ -73,7 +73,7 @@
 }
 
 .nav-wordmark small {
-  font-size: 0.70rem;
+  font-size: 0.9375rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold2, #F57C00);
@@ -94,7 +94,7 @@
   color: var(--ink, #1E1E1E);
   text-decoration: none;
   font-weight: 600;
-  font-size: 0.90rem;
+  font-size: 1.03125rem;
   position: relative;
   padding: 8px 0;
   white-space: nowrap;
@@ -145,7 +145,7 @@
   justify-content: center;
   text-decoration: none;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 1.03125rem;
   white-space: nowrap;
   transition: all 0.2s;
   cursor: pointer;
@@ -270,7 +270,7 @@ button:focus-visible {
 }
 
 .mm-logo {
-  font-size: 1.1rem;
+  font-size: 1.21875rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   color: var(--forest, #6A2407);
@@ -282,7 +282,7 @@ button:focus-visible {
   border: 0;
   background: var(--cream2, #F8EBDD);
   border-radius: 8px;
-  font-size: 1.1rem;
+  font-size: 1.21875rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -309,7 +309,7 @@ button:focus-visible {
   padding: 13px 24px;
   color: var(--ink, #1E1E1E);
   text-decoration: none;
-  font-size: 0.97rem;
+  font-size: 1.09375rem;
   font-weight: 600;
   transition: background 0.15s, color 0.15s;
   border-left: 3px solid transparent;
@@ -324,7 +324,7 @@ button:focus-visible {
 }
 
 .mm-num {
-  font-size: 0.72rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: var(--gold2, #F57C00);
   letter-spacing: 0.08em;
@@ -349,7 +349,7 @@ button:focus-visible {
   padding: 13px 20px;
   border-radius: 10px;
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 1.0625rem;
   text-decoration: none;
   transition: all 0.2s;
   text-align: center;
@@ -380,7 +380,7 @@ button:focus-visible {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.78rem;
+  font-size: 0.96875rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   padding: 12px 24px;
@@ -397,7 +397,7 @@ button:focus-visible {
   border: 0;
   background: transparent;
   font-family: 'Outfit', sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.96875rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--muted, #6F5C4C);

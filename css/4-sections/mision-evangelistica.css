@@ -13,7 +13,7 @@
 
 .mission-section h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: clamp(1.8125rem, 3.5vw, 2.75rem);
   font-weight: 700;
   color: var(--ceevs-brown, #6A2407);
   margin-bottom: 20px;
@@ -21,7 +21,7 @@
 }
 
 .mission-section p {
-  font-size: 1rem;
+  font-size: 1.125rem;
   color: var(--muted, #7a6248);
   line-height: 1.8;
   margin-bottom: 12px;
@@ -98,7 +98,7 @@
 
 .mission-hero-note-kicker {
   display: block;
-  font-size: 0.76rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -126,7 +126,7 @@
 
 .mission-ribbon-item span {
   display: block;
-  font-size: 0.78rem;
+  font-size: 0.96875rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ceevs-blue, #0B67A5);
@@ -135,7 +135,7 @@
 
 .mission-ribbon-item strong {
   font-family: 'Playfair Display', serif;
-  font-size: 1.1rem;
+  font-size: 1.21875rem;
   color: var(--ceevs-brown, #6A2407);
 }
 
@@ -181,7 +181,7 @@
   z-index: 1;
   color: #fff;
   font-family: 'Playfair Display', serif;
-  font-size: 1.06rem;
+  font-size: 1.1875rem;
   line-height: 1.35;
 }
 
@@ -236,7 +236,7 @@
   border-radius: 14px;
   padding: 14px 16px;
   font-family: 'Outfit', sans-serif;
-  font-size: 1rem;
+  font-size: 1.125rem;
   color: var(--ink, #1E1E1E);
   background: rgba(255, 255, 255, 0.96);
 }
@@ -244,7 +244,7 @@
 .mission-form-error,
 .mission-form-note {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: 1.0625rem;
   line-height: 1.6;
 }
 
@@ -264,7 +264,7 @@
 }
 
 .hud-score {
-  font-size: 18px;
+  font-size: 1.25rem;
 }
 
 .hud-badges {
@@ -274,7 +274,7 @@
 .hud-badge {
   width: 26px;
   height: 26px;
-  font-size: 13px;
+  font-size: 1rem;
 }
 
 #toast {
@@ -317,7 +317,7 @@
   justify-content: center;
   padding: 6px 12px;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.96875rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -358,7 +358,7 @@
 
 .mission-stat strong {
   display: block;
-  font-size: clamp(32px, 4vw, 44px);
+  font-size: clamp(2.0625rem, 4vw, 2.75rem);
   line-height: 1;
   color: #fff;
   margin-bottom: 8px;
@@ -686,7 +686,7 @@
 }
 
 .mission-newsletter-form span {
-  font-size: 0.92rem;
+  font-size: 1.0625rem;
   font-weight: 600;
   color: #fff;
 }
@@ -697,7 +697,7 @@
   border-radius: 14px;
   padding: 14px 16px;
   font-family: 'Outfit', sans-serif;
-  font-size: 1rem;
+  font-size: 1.125rem;
   color: var(--ink, #1E1E1E);
   background: rgba(255, 255, 255, 0.96);
 }

@@ -14,9 +14,9 @@
 }
 #toast.show { transform:translateX(0); }
 .toast-inner { display:flex; gap:10px; align-items:center; }
-.toast-icon { font-size:20px; }
-.toast-text strong { display:block; font-size:13px; color:var(--gold2); }
-.toast-text span { font-size:12px; color:rgba(255,255,255,0.6); }
+.toast-icon { font-size:1.375rem; }
+.toast-text strong { display:block; font-size:1rem; color:var(--gold2); }
+.toast-text span { font-size:0.9375rem; color:rgba(255,255,255,0.6); }
 
 /* Lightbox */
 #lightbox {
@@ -40,7 +40,7 @@
 .rec-lb-close {
   position:absolute; top:20px; right:20px;
   background:rgba(255,255,255,.12); border:none;
-  color:#fff; font-size:22px; width:44px; height:44px;
+  color:#fff; font-size:1.5rem; width:44px; height:44px;
   border-radius:50%; cursor:pointer; transition:background .2s;
 }
 .rec-lb-close:hover { background:rgba(255,255,255,.25); }
@@ -48,7 +48,7 @@
 .rec-lb-nav {
   position:absolute; top:50%; transform:translateY(-50%);
   background:rgba(255,255,255,.1); border:none;
-  color:#fff; font-size:28px; width:48px; height:48px;
+  color:#fff; font-size:1.8125rem; width:48px; height:48px;
   border-radius:50%; cursor:pointer; transition:background .2s;
 }
 .rec-lb-nav:hover { background:rgba(255,255,255,.25); }
@@ -65,7 +65,7 @@
 .gallery-lightbox-close {
   position:absolute; top:20px; right:20px;
   background:transparent; border:none; color:#fff;
-  font-size:32px; cursor:pointer; z-index:100;
+  font-size:2.0625rem; cursor:pointer; z-index:100;
 }
 
 /* Quiz Result Modal */
@@ -73,13 +73,13 @@
   display:none; text-align:center; padding:20px 0;
 }
 .quiz-result.show { display:block; animation:fadeInUp .5s ease; }
-.quiz-result-emoji { font-size:64px; margin-bottom:20px; display:block; }
+.quiz-result-emoji { font-size:4rem; margin-bottom:20px; display:block; }
 .quiz-result-title {
-  font-family:'Playfair Display',serif; font-size:32px;
+  font-family:'Playfair Display',serif; font-size:2.0625rem;
   font-weight:700; color:#fff; margin-bottom:12px;
 }
 .quiz-result-subtitle {
-  font-size:15px; color:rgba(255,255,255,.55);
+  font-size:1.0625rem; color:rgba(255,255,255,.55);
   line-height:1.7; max-width:480px; margin:0 auto 32px;
 }
 .quiz-result-recommendation {
@@ -88,11 +88,11 @@
   text-align:left;
 }
 .quiz-result-rec-label {
-  font-size:11px; font-weight:700; color:var(--gold);
+  font-size:0.9375rem; font-weight:700; color:var(--gold);
   letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px;
 }
 .quiz-result-rec-text {
-  font-size:15px; color:rgba(255,255,255,.8); line-height:1.6;
+  font-size:1.0625rem; color:rgba(255,255,255,.8); line-height:1.6;
 }
 .quiz-result-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
 
@@ -111,6 +111,6 @@
 .login-error {
   display:none; background:#fff0f0; color:#c33;
   padding:10px 14px; border-radius:var(--r);
-  font-size:13px; margin-bottom:14px;
+  font-size:1rem; margin-bottom:14px;
   border:1px solid #fdd;
 }

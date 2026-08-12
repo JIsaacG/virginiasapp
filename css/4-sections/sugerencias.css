@@ -20,7 +20,7 @@
 
 .sugerencias-intro h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 3.4vw, 44px);
+  font-size: clamp(1.8125rem, 3.4vw, 2.75rem);
   font-weight: 700;
   color: var(--forest);
   line-height: 1.15;
@@ -28,7 +28,7 @@
 }
 .sugerencias-intro h2 em { color: var(--gold); font-style: italic; }
 .sugerencias-intro p {
-  font-size: 15px;
+  font-size: 1.0625rem;
   color: var(--muted);
   line-height: 1.75;
 }
@@ -53,7 +53,7 @@
 }
 
 .sg-label {
-  font-size: 13px;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--forest);
   margin-bottom: 6px;
@@ -62,7 +62,7 @@
 .sg-optional {
   font-weight: 400;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 0.9375rem;
 }
 
 .sg-required {
@@ -80,7 +80,7 @@
   background: var(--cream);
   color: var(--ink);
   font-family: 'Outfit', sans-serif;
-  font-size: 14px;
+  font-size: 1.03125rem;
   transition: border-color 0.2s;
 }
 
@@ -102,7 +102,7 @@
   background: var(--gold);
   border: none;
   border-radius: var(--r);
-  font-size: 15px;
+  font-size: 1.0625rem;
   font-weight: 700;
   color: #fff;
   cursor: pointer;
@@ -117,7 +117,7 @@
 
 .sg-note {
   margin-top: 14px;
-  font-size: 12.5px;
+  font-size: 0.96875rem;
   color: var(--muted);
   text-align: center;
   line-height: 1.6;
@@ -125,7 +125,7 @@
 
 .sg-error {
   margin-top: 10px;
-  font-size: 13px;
+  font-size: 1rem;
   color: #c0392b;
   text-align: center;
 }

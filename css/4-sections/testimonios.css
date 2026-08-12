@@ -4,11 +4,11 @@
 .galeria { background:var(--cream2); padding:110px 0 0; overflow:hidden; }
 .galeria-inner-wrap { padding:0 8vw; }
 .galeria-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px; flex-wrap:wrap; gap:20px; }
-.galeria-top h2 { font-family:'Playfair Display',serif; font-size:clamp(34px,3.5vw,50px); font-weight:700; color:var(--forest); line-height:1.1; }
+.galeria-top h2 { font-family:'Playfair Display',serif; font-size:clamp(2.1875rem,3.5vw,3.125rem); font-weight:700; color:var(--forest); line-height:1.1; }
 .galeria-top h2 em { color:var(--gold2); font-style:italic; }
 
 .galeria-filters { display:flex; gap:8px; flex-wrap:wrap; }
-.gal-filter { padding:8px 18px; border:1.5px solid rgba(171,100,35,.3); border-radius:20px; background:transparent; font-size:12px; color:var(--muted); cursor:pointer; font-family:'Outfit',sans-serif; transition:all .25s; font-weight:500; }
+.gal-filter { padding:8px 18px; border:1.5px solid rgba(171,100,35,.3); border-radius:20px; background:transparent; font-size:0.9375rem; color:var(--muted); cursor:pointer; font-family:'Outfit',sans-serif; transition:all .25s; font-weight:500; }
 .gal-filter.active,.gal-filter:hover { background:var(--gold); border-color:var(--gold); color:var(--forest); font-weight:600; }
 
 /* ── MAIN CAROUSEL STAGE ── */
@@ -90,7 +90,7 @@
 
 .c-slide-tag {
   display:inline-flex; align-items:center; gap:8px;
-  font-size:10px; font-weight:700; color:var(--gold2);
+  font-size:0.875rem; font-weight:700; color:var(--gold2);
   letter-spacing:.14em; text-transform:uppercase;
   background:rgba(171,100,35,.2); border:1px solid rgba(171,100,35,.4);
   border-radius:4px; padding:5px 12px; margin-bottom:14px;
@@ -98,11 +98,11 @@
 .c-slide-tag-dot { width:5px; height:5px; border-radius:50%; background:var(--gold2); }
 .c-slide-title {
   font-family:'Playfair Display',serif;
-  font-size:clamp(28px,4vw,54px); font-weight:900;
+  font-size:clamp(1.8125rem,4vw,3.375rem); font-weight:900;
   color:#fff; line-height:1.05; margin-bottom:10px;
 }
 .c-slide-title em { color:var(--gold2); font-style:italic; }
-.c-slide-sub { font-size:14px; color:rgba(255,255,255,.55); line-height:1.6; }
+.c-slide-sub { font-size:1.03125rem; color:rgba(255,255,255,.55); line-height:1.6; }
 
 /* ── PROGRESS BARS ── */
 .c-progress-row {
@@ -128,7 +128,7 @@
   background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18);
   backdrop-filter:blur(8px); cursor:pointer;
   display:flex; align-items:center; justify-content:center;
-  transition:all .25s; color:#fff; font-size:18px;
+  transition:all .25s; color:#fff; font-size:1.25rem;
   opacity:0; transition:opacity .3s, background .2s;
 }
 .carousel-stage:hover .c-ctrl { opacity:1; }
@@ -140,9 +140,9 @@
 .c-counter {
   position:absolute; top:24px; right:8vw; z-index:4;
   font-family:'Playfair Display',serif;
-  font-size:13px; color:rgba(255,255,255,.5); letter-spacing:.08em;
+  font-size:1rem; color:rgba(255,255,255,.5); letter-spacing:.08em;
 }
-.c-counter strong { color:var(--gold2); font-size:20px; }
+.c-counter strong { color:var(--gold2); font-size:1.375rem; }
 .c-ig-badge {
   position:absolute; top:60px; right:8vw; z-index:4;
   display:inline-flex; align-items:center; gap:6px;
@@ -150,7 +150,7 @@
   border:1px solid rgba(255,255,255,.15);
   backdrop-filter:blur(8px);
   border-radius:16px; padding:5px 12px;
-  font-size:11px; font-weight:600; color:#fff;
+  font-size:0.9375rem; font-weight:600; color:#fff;
   text-decoration:none; letter-spacing:.04em;
   transition:all .25s; box-shadow:0 4px 16px rgba(0,0,0,.25);
 }
@@ -167,7 +167,7 @@
 }
 .carousel-stage:hover .c-playpause { opacity:1; }
 .c-playpause:hover { background:rgba(171,100,35,.4); border-color:var(--gold); }
-.c-playpause-icon { font-size:12px; color:#fff; pointer-events:none; }
+.c-playpause-icon { font-size:0.9375rem; color:#fff; pointer-events:none; }
 
 /* ── FILMSTRIP THUMBNAILS ── */
 .c-filmstrip {
@@ -197,7 +197,7 @@
   opacity:0; transition:opacity .2s;
 }
 .c-thumb:hover .c-thumb-label,.c-thumb.active .c-thumb-label { opacity:1; }
-.c-thumb-label span { font-size:9.5px; font-weight:600; color:#fff; letter-spacing:.05em; text-transform:uppercase; line-height:1.3; }
+.c-thumb-label span { font-size:0.875rem; font-weight:600; color:#fff; letter-spacing:.05em; text-transform:uppercase; line-height:1.3; }
 
 /* ── RECUERDOS ── */
 .recuerdos-section {
@@ -207,13 +207,13 @@
 .recuerdos-header { text-align:center; margin-bottom:32px; }
 .recuerdos-title {
   font-family:'Playfair Display',serif;
-  font-size:clamp(24px,3.5vw,36px);
+  font-size:clamp(1.59375rem,3.5vw,2.28125rem);
   font-weight:700; color:#fff;
   margin-bottom:6px;
   letter-spacing:.02em;
 }
 .recuerdos-sub {
-  font-size:14px; color:rgba(255,255,255,.45);
+  font-size:1.03125rem; color:rgba(255,255,255,.45);
 }
 .recuerdos-grid {
   display:grid;
@@ -261,12 +261,12 @@
 }
 .recuerdo-day {
   display:block;
-  font-size:20px;
+  font-size:1.375rem;
   font-weight:700;
 }
 .recuerdo-month {
   display:block;
-  font-size:10px;
+  font-size:0.875rem;
   font-weight:600;
   text-transform:uppercase;
   letter-spacing:.05em;
@@ -280,14 +280,14 @@
 }
 .recuerdo-name {
   font-family:'Playfair Display',serif;
-  font-size:16px;
+  font-size:1.125rem;
   font-weight:700;
   color:var(--forest);
   margin-bottom:4px;
   line-height:1.2;
 }
 .recuerdo-desc {
-  font-size:13px;
+  font-size:1rem;
   color:#8a7a6a;
   line-height:1.4;
   flex:1;
@@ -295,7 +295,7 @@
 }
 .recuerdo-btn {
   display:inline-block;
-  font-size:12px;
+  font-size:0.9375rem;
   font-weight:600;
   color:var(--gold);
   letter-spacing:.02em;
@@ -323,7 +323,7 @@
 .c-ig-cta-btn {
   padding:10px 24px; flex-shrink:0;
   background:linear-gradient(135deg,#1877f2,#0a5dc9);
-  border:none; border-radius:20px; font-size:13px; font-weight:600;
+  border:none; border-radius:20px; font-size:1rem; font-weight:600;
   color:#fff; text-decoration:none; cursor:pointer;
   transition:all .25s; white-space:nowrap;
   box-shadow:0 4px 20px rgba(24,119,242,.3);
@@ -360,7 +360,7 @@
   position:absolute; top:20px; right:20px;
   width:40px; height:40px; border-radius:50%;
   background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
-  color:#fff; font-size:18px; cursor:pointer;
+  color:#fff; font-size:1.25rem; cursor:pointer;
   display:flex; align-items:center; justify-content:center;
   transition:all .2s; z-index:10;
 }
@@ -369,20 +369,20 @@
   position:absolute; bottom:24px; left:50%; transform:translateX(-50%);
   text-align:center;
 }
-.lb-info-tag { font-size:10px; color:var(--gold2); letter-spacing:.12em; text-transform:uppercase; font-weight:700; }
-.lb-info-title { font-family:'Playfair Display',serif; font-size:20px; color:#fff; margin-top:4px; }
+.lb-info-tag { font-size:0.875rem; color:var(--gold2); letter-spacing:.12em; text-transform:uppercase; font-weight:700; }
+.lb-info-title { font-family:'Playfair Display',serif; font-size:1.375rem; color:#fff; margin-top:4px; }
 .lb-ig-btn {
   display:inline-flex; align-items:center; gap:8px;
   margin-top:14px; padding:10px 20px;
   background:linear-gradient(135deg,#1877f2,#0a5dc9);
-  border-radius:20px; font-size:12.5px; font-weight:600;
+  border-radius:20px; font-size:0.96875rem; font-weight:600;
   color:#fff; text-decoration:none; letter-spacing:.04em;
   transition:all .25s; box-shadow:0 4px 20px rgba(24,119,242,.3);
 }
 .lb-ig-btn:hover { transform:scale(1.05); box-shadow:0 6px 28px rgba(24,119,242,.45); }
 .c-ig-hint {
   display:inline-flex; align-items:center; gap:6px;
-  margin-top:14px; font-size:11px; font-weight:600;
+  margin-top:14px; font-size:0.9375rem; font-weight:600;
   color:rgba(255,255,255,.4); letter-spacing:.08em; text-transform:uppercase;
   border:1px solid rgba(255,255,255,.1); border-radius:4px; padding:4px 10px;
   transition:all .3s;
@@ -394,7 +394,7 @@
   width:44px; height:44px; border-radius:50%;
   background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
   color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;
-  font-size:20px; transition:all .2s;
+  font-size:1.375rem; transition:all .2s;
 }
 .lb-nav:hover { background:rgba(171,100,35,.5); }
 .lb-prev { left:16px; }
@@ -415,11 +415,11 @@
 .c-swipe-hint {
   position:absolute; bottom:60px; right:8vw; z-index:4;
   display:flex; align-items:center; gap:8px;
-  font-size:11px; color:rgba(255,255,255,.35); letter-spacing:.06em;
+  font-size:0.9375rem; color:rgba(255,255,255,.35); letter-spacing:.06em;
   animation:fade-hint 3s 2s ease-out forwards;
 }
 @keyframes fade-hint { to { opacity:0; } }
-.c-swipe-icon { font-size:18px; animation:swipe-left 1.5s 2s ease-in-out infinite; }
+.c-swipe-icon { font-size:1.25rem; animation:swipe-left 1.5s 2s ease-in-out infinite; }
 @keyframes swipe-left {
   0%,100% { transform:translateX(0); }
   50%     { transform:translateX(-8px); }
@@ -438,11 +438,11 @@
   animation:ticker-scroll 25s linear infinite;
 }
 .c-ticker-item {
-  padding:0 32px; font-size:10px; font-weight:600;
+  padding:0 32px; font-size:0.875rem; font-weight:600;
   color:rgba(255,255,255,.4); letter-spacing:.1em; text-transform:uppercase;
   display:flex; align-items:center; gap:20px;
 }
-.c-ticker-item::after { content:'✦'; font-size:8px; opacity:.5; }
+.c-ticker-item::after { content:'✦'; font-size:0.78125rem; opacity:.5; }
 @keyframes ticker-scroll {
   from { transform:translateX(0); }
   to   { transform:translateX(-50%); }

@@ -9,17 +9,17 @@
    internal @media rules. This file is temporary during the modular CSS transition.
 ═══════════════════════════════════════ */
 .declaracion-fe { background:var(--cream2); padding:110px 8vw; position:relative; overflow:hidden; }
-.declaracion-fe::before { content:'✝'; position:absolute; right:5vw; top:50%; transform:translateY(-50%); font-size:clamp(200px,22vw,400px); color:rgba(171,100,35,.04); pointer-events:none; user-select:none; line-height:1; }
+.declaracion-fe::before { content:'✝'; position:absolute; right:5vw; top:50%; transform:translateY(-50%); font-size:clamp(12.5rem,22vw,25rem); color:rgba(171,100,35,.04); pointer-events:none; user-select:none; line-height:1; }
 .declaracion-inner { position:relative; z-index:1; }
-.declaracion-title { font-family:'Playfair Display',serif; font-size:clamp(34px,4vw,54px); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:16px; text-align:center; }
+.declaracion-title { font-family:'Playfair Display',serif; font-size:clamp(2.1875rem,4vw,3.375rem); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:16px; text-align:center; }
 .declaracion-title em { color:var(--gold2); font-style:italic; }
-.declaracion-intro { font-size:15px; color:var(--muted); line-height:1.8; max-width:600px; margin:0 auto 56px; text-align:center; }
+.declaracion-intro { font-size:1.0625rem; color:var(--muted); line-height:1.8; max-width:600px; margin:0 auto 56px; text-align:center; }
 .declaracion-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
 .declaracion-card { background:var(--white); border:1px solid rgba(171,100,35,.15); border-radius:var(--rl); padding:28px 24px; transition:all .3s; }
 .declaracion-card:hover { border-color:rgba(171,100,35,.4); background:var(--cream2); transform:translateY(-2px); }
-.dc-num { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--gold2); margin-bottom:12px; }
-.declaracion-card h3 { font-size:16px; font-weight:700; color:var(--forest); margin-bottom:8px; }
-.declaracion-card p { font-size:13px; color:var(--muted); line-height:1.7; }
+.dc-num { font-family:'Playfair Display',serif; font-size:1.59375rem; font-weight:900; color:var(--gold2); margin-bottom:12px; }
+.declaracion-card h3 { font-size:1.125rem; font-weight:700; color:var(--forest); margin-bottom:8px; }
+.declaracion-card p { font-size:1rem; color:var(--muted); line-height:1.7; }
 
 /* ── Resumen institucional: logo + tarjetas flip (giran al pasar el mouse) ── */
 .declaracion-logo { display:block; margin:0 auto 22px; width:120px; height:auto; filter:drop-shadow(0 8px 22px rgba(30,30,30,.15)); }
@@ -34,16 +34,16 @@
   background:var(--white); border:1px solid rgba(171,100,35,.18); box-shadow:0 8px 24px rgba(30,30,30,.06);
   -webkit-backface-visibility:hidden; backface-visibility:hidden;
 }
-.dc-icon { font-size:28px; line-height:1; margin-bottom:2px; }
-.dc-front h3 { font-family:'Playfair Display',serif; font-size:clamp(17px,1.5vw,22px); font-weight:800; color:var(--forest); line-height:1.1; margin:0; }
-.dc-sub { font-size:11.5px; color:var(--muted); line-height:1.35; }
+.dc-icon { font-size:1.8125rem; line-height:1; margin-bottom:2px; }
+.dc-front h3 { font-family:'Playfair Display',serif; font-size:clamp(1.1875rem,1.5vw,1.5rem); font-weight:800; color:var(--forest); line-height:1.1; margin:0; }
+.dc-sub { font-size:0.9375rem; color:var(--muted); line-height:1.35; }
 .dc-back {
   transform:rotateX(180deg);
   background:linear-gradient(155deg, rgba(171,100,35,.16), rgba(255,255,255,.96));
   border-color:rgba(171,100,35,.45);
 }
-.dc-back-title { font-family:'Playfair Display',serif; font-size:13px; font-weight:700; color:var(--gold2); }
-.dc-back p { font-size:11.5px; color:var(--muted); line-height:1.5; margin:0; }
+.dc-back-title { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--gold2); }
+.dc-back p { font-size:0.9375rem; color:var(--muted); line-height:1.5; margin:0; }
 .dc-flip:focus-visible .dc-face { box-shadow:0 0 0 2px var(--gold2); }
 
 /* ═══════════════════════════════════════
@@ -51,32 +51,32 @@
 ═══════════════════════════════════════ */
 .perfil-egresado { background:var(--parch); padding:110px 8vw; }
 .perfil-top { text-align:center; margin-bottom:56px; }
-.perfil-top h2 { font-family:'Playfair Display',serif; font-size:clamp(34px,4vw,54px); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:16px; }
+.perfil-top h2 { font-family:'Playfair Display',serif; font-size:clamp(2.1875rem,4vw,3.375rem); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:16px; }
 .perfil-top h2 em { color:var(--gold); font-style:italic; }
-.perfil-top p { font-size:15px; color:var(--muted); line-height:1.8; max-width:600px; margin:0 auto; }
+.perfil-top p { font-size:1.0625rem; color:var(--muted); line-height:1.8; max-width:600px; margin:0 auto; }
 .perfil-traits { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
 .perfil-trait { background:var(--white); border-radius:var(--rl); padding:32px 24px; border:1.5px solid transparent; transition:all .3s; text-align:center; }
 .perfil-trait:hover { border-color:rgba(171,100,35,.3); box-shadow:0 12px 36px rgba(65,36,4,.1); transform:translateY(-3px); }
-.pt-icon { font-size:32px; margin-bottom:14px; display:block; }
-.perfil-trait h3 { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--forest); margin-bottom:10px; }
-.perfil-trait p { font-size:13.5px; color:var(--muted); line-height:1.7; }
+.pt-icon { font-size:2.0625rem; margin-bottom:14px; display:block; }
+.perfil-trait h3 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; color:var(--forest); margin-bottom:10px; }
+.perfil-trait p { font-size:1.03125rem; color:var(--muted); line-height:1.7; }
 
 /* ═══════════════════════════════════════
    PORTAL EDUCATIVO
 ═══════════════════════════════════════ */
 .portal-educativo { background:var(--parch); padding:80px 8vw; border-top:2px solid rgba(171,100,35,.18); border-bottom:2px solid rgba(171,100,35,.18); }
 .portal-header { text-align:center; margin-bottom:48px; }
-.portal-header h2 { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,46px); font-weight:700; color:var(--forest); line-height:1.1; }
+.portal-header h2 { font-family:'Playfair Display',serif; font-size:clamp(1.8125rem,3.5vw,2.875rem); font-weight:700; color:var(--forest); line-height:1.1; }
 .portal-header h2 em { color:var(--gold2); font-style:italic; }
-.portal-header p { font-size:14.5px; color:var(--muted); margin-top:14px; max-width:540px; margin-left:auto; margin-right:auto; }
+.portal-header p { font-size:1.0625rem; color:var(--muted); margin-top:14px; max-width:540px; margin-left:auto; margin-right:auto; }
 .portal-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
 .portal-card { background:var(--white); border:1px solid rgba(171,100,35,.18); border-radius:var(--rl); padding:36px 28px; text-align:center; transition:all .3s; display:flex; flex-direction:column; box-shadow:0 2px 12px rgba(65,36,4,.06); }
 .portal-card:hover { border-color:var(--gold); background:var(--cream2); transform:translateY(-3px); box-shadow:0 16px 48px rgba(65,36,4,.12); }
-.pc-icon { font-size:36px; margin-bottom:16px; display:block; }
-.portal-card h3 { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:var(--forest); margin-bottom:10px; }
-.portal-card p { font-size:13.5px; color:var(--muted); line-height:1.7; margin-bottom:14px; }
-.pc-user { font-size:11px; color:var(--gold2); letter-spacing:.06em; display:block; margin-bottom:20px; font-weight:600; }
-.btn-portal { display:inline-block; padding:12px 24px; background:var(--gold); border:none; border-radius:8px; font-size:13px; font-weight:600; color:var(--forest); cursor:pointer; font-family:'Outfit',sans-serif; transition:all .2s; text-decoration:none; margin-top:auto; }
+.pc-icon { font-size:2.28125rem; margin-bottom:16px; display:block; }
+.portal-card h3 { font-family:'Playfair Display',serif; font-size:1.375rem; font-weight:700; color:var(--forest); margin-bottom:10px; }
+.portal-card p { font-size:1.03125rem; color:var(--muted); line-height:1.7; margin-bottom:14px; }
+.pc-user { font-size:0.9375rem; color:var(--gold2); letter-spacing:.06em; display:block; margin-bottom:20px; font-weight:600; }
+.btn-portal { display:inline-block; padding:12px 24px; background:var(--gold); border:none; border-radius:8px; font-size:1rem; font-weight:600; color:var(--forest); cursor:pointer; font-family:'Outfit',sans-serif; transition:all .2s; text-decoration:none; margin-top:auto; }
 .btn-portal:hover { background:var(--gold2); transform:translateY(-1px); box-shadow:0 8px 24px rgba(171,100,35,.35); }
 
 /* ═══════════════════════════════════════
@@ -84,10 +84,10 @@
 ═══════════════════════════════════════ */
 .devocional { background:var(--parch); padding:64px 8vw; text-align:center; }
 .devocional-inner { max-width:640px; margin:0 auto; }
-.devocional-cross { font-size:32px; color:var(--gold); margin-bottom:12px; }
-.devocional-label { font-size:10px; font-weight:700; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; margin-bottom:20px; }
-.devocional-verse { font-family:'Playfair Display',serif; font-size:clamp(20px,2.5vw,30px); font-weight:400; font-style:italic; color:var(--forest); line-height:1.6; margin-bottom:16px; border:none; padding:0; }
-.devocional-cite { font-size:13px; color:var(--muted); font-style:normal; letter-spacing:.04em; }
+.devocional-cross { font-size:2.0625rem; color:var(--gold); margin-bottom:12px; }
+.devocional-label { font-size:0.875rem; font-weight:700; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; margin-bottom:20px; }
+.devocional-verse { font-family:'Playfair Display',serif; font-size:clamp(1.375rem,2.5vw,1.9375rem); font-weight:400; font-style:italic; color:var(--forest); line-height:1.6; margin-bottom:16px; border:none; padding:0; }
+.devocional-cite { font-size:1rem; color:var(--muted); font-style:normal; letter-spacing:.04em; }
 
 /* ═══════════════════════════════════════
    EXALUMNOS
@@ -95,18 +95,18 @@
 .exalumnos-section { background:var(--cream); padding:80px 8vw; }
 .exalumnos-inner { max-width:800px; margin:0 auto; }
 .exalumnos-text { margin-bottom:32px; }
-.exalumnos-text h2 { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,46px); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:18px; }
+.exalumnos-text h2 { font-family:'Playfair Display',serif; font-size:clamp(1.8125rem,3.5vw,2.875rem); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:18px; }
 .exalumnos-text h2 em { color:var(--gold); font-style:italic; }
-.exalumnos-text p { font-size:15px; color:var(--muted); line-height:1.8; margin-bottom:12px; }
+.exalumnos-text p { font-size:1.0625rem; color:var(--muted); line-height:1.8; margin-bottom:12px; }
 
 /* ═══════════════════════════════════════
    EMPLEOS
 ═══════════════════════════════════════ */
 .empleos-section { background:var(--cream2); padding:56px 8vw; border-top:1px solid rgba(171,100,35,.1); }
 .empleos-inner { max-width:700px; margin:0 auto; text-align:center; }
-.empleos-icon { font-size:36px; margin-bottom:14px; }
-.empleos-inner h3 { font-family:'Playfair Display',serif; font-size:clamp(22px,2.5vw,32px); font-weight:700; color:var(--forest); margin-bottom:14px; }
-.empleos-inner p { font-size:14px; color:var(--muted); line-height:1.75; margin-bottom:28px; }
+.empleos-icon { font-size:2.28125rem; margin-bottom:14px; }
+.empleos-inner h3 { font-family:'Playfair Display',serif; font-size:clamp(1.5rem,2.5vw,2.0625rem); font-weight:700; color:var(--forest); margin-bottom:14px; }
+.empleos-inner p { font-size:1.03125rem; color:var(--muted); line-height:1.75; margin-bottom:28px; }
 
 /* ═══════════════════════════════════════
    NAVBAR — RESPONSIVE (Fase 1)
@@ -128,7 +128,7 @@
 
   .nav-wordmark strong,
   .nav-wordmark b {
-    font-size: clamp(0.60rem, 2.2vw, 0.78rem);
+    font-size: clamp(0.875rem, 2.2vw, 0.96875rem);
   }
 }
 
@@ -181,27 +181,27 @@
 }
 @media(max-width:600px){
   .filosofia{ padding:56px 5vw; }
-  .filosofia-title{ font-size:clamp(28px,8vw,40px); }
+  .filosofia-title{ font-size:clamp(1.8125rem,8vw,2.53125rem); }
   .filosofia-pillars{ grid-template-columns:1fr; gap:12px; }
   .filosofia-pillar,
   .filosofia-pillar .fp-inner{ min-height:260px; }
   .filosofia-pillar .fp-face{ padding:20px 18px; }
   .declaracion-fe{ padding:56px 5vw; }
-  .declaracion-title{ font-size:clamp(28px,8vw,40px); }
+  .declaracion-title{ font-size:clamp(1.8125rem,8vw,2.53125rem); }
   .declaracion-grid{ gap:10px; }
   .declaracion-card{ padding:22px 18px; }
   .perfil-egresado{ padding:56px 5vw; }
-  .perfil-top h2{ font-size:clamp(28px,8vw,40px); }
+  .perfil-top h2{ font-size:clamp(1.8125rem,8vw,2.53125rem); }
   .perfil-traits{ grid-template-columns:1fr; gap:12px; }
   .perfil-trait{ padding:24px 18px; }
   .portal-educativo{ padding:48px 5vw; }
-  .portal-header h2{ font-size:clamp(24px,7vw,36px); }
+  .portal-header h2{ font-size:clamp(1.59375rem,7vw,2.28125rem); }
   .portal-cards{ gap:12px; }
   .portal-card{ padding:28px 20px; }
   .devocional{ padding:40px 5vw; }
-  .devocional-verse{ font-size:clamp(18px,5vw,24px); }
+  .devocional-verse{ font-size:clamp(1.25rem,5vw,1.59375rem); }
   .exalumnos-section{ padding:48px 5vw; }
-  .exalumnos-text h2{ font-size:clamp(24px,7vw,36px); }
+  .exalumnos-text h2{ font-size:clamp(1.59375rem,7vw,2.28125rem); }
   .empleos-section{ padding:36px 5vw; }
 }
 @media(max-width:390px){
@@ -231,11 +231,11 @@
   }
 
   .hud-header { margin-bottom: 8px; }
-  .hud-title { font-size: 12.5px; letter-spacing: 0.08em; }
-  .hud-score { font-size: 22px; }
-  .hud-xp-label { font-size: 12px; }
+  .hud-title { font-size: 0.96875rem; letter-spacing: 0.08em; }
+  .hud-score { font-size: 1.5rem; }
+  .hud-xp-label { font-size: 0.9375rem; }
   .hud-badges { gap: 5px; }
-  .hud-badge { width: 28px; height: 28px; font-size: 14px; }
+  .hud-badge { width: 28px; height: 28px; font-size: 1.03125rem; }
 
   #toast {
     right: 12px;
@@ -260,10 +260,10 @@
     border-radius: 12px;
   }
 
-  .hud-title { font-size: 12px; }
-  .hud-score { font-size: 20px; }
-  .hud-xp-label { font-size: 11.5px; }
-  .hud-badge { width: 26px; height: 26px; font-size: 13px; }
+  .hud-title { font-size: 0.9375rem; }
+  .hud-score { font-size: 1.375rem; }
+  .hud-xp-label { font-size: 0.9375rem; }
+  .hud-badge { width: 26px; height: 26px; font-size: 1rem; }
 
   #toast {
     right: 10px;

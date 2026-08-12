@@ -23,7 +23,7 @@
 
 .preins-head h1 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 5.2vw, 3.1rem);
+  font-size: clamp(2.0625rem, 5.2vw, 3.09375rem);
   line-height: 1.1;
   color: var(--forest2);
   margin-bottom: 14px;
@@ -35,7 +35,7 @@
   max-width: 560px;
   margin: 0 auto;
   color: var(--muted);
-  font-size: 1.05rem;
+  font-size: 1.1875rem;
   line-height: 1.65;
 }
 
@@ -52,7 +52,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: .82rem;
+  font-size: 1rem;
   color: var(--muted);
   background: rgba(255, 255, 255, .7);
   border: 1px solid rgba(171, 100, 35, .16);
@@ -85,12 +85,12 @@
 
 .preins-progress-step {
   font-weight: 600;
-  font-size: .92rem;
+  font-size: 1.0625rem;
   color: var(--forest2);
 }
 
 .preins-progress-pct {
-  font-size: .82rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--gold2);
 }
@@ -135,14 +135,14 @@
   place-items: center;
   border-radius: 50%;
   border: 1.5px solid rgba(171, 100, 35, .35);
-  font-size: .74rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: var(--muted);
   background: #fff;
   transition: all .3s;
 }
 
-.preins-dots li small { font-size: .64rem; color: var(--muted); letter-spacing: .02em; }
+.preins-dots li small { font-size: 0.875rem; color: var(--muted); letter-spacing: .02em; }
 
 .preins-dots li.done { opacity: 1; }
 .preins-dots li.done span {
@@ -151,7 +151,7 @@
   color: #fff;
   font-size: 0;                      /* oculta el número y deja solo el ✓ */
 }
-.preins-dots li.done span::after { content: '✓'; font-size: .85rem; }
+.preins-dots li.done span::after { content: '✓'; font-size: 1.03125rem; }
 
 .preins-dots li.current { opacity: 1; }
 .preins-dots li.current span {
@@ -175,8 +175,8 @@
   margin-bottom: 18px;
 }
 
-.preins-draft > span { font-size: 1.3rem; }
-.preins-draft p { flex: 1; min-width: 200px; font-size: .9rem; color: var(--forest3); }
+.preins-draft > span { font-size: 1.4375rem; }
+.preins-draft p { flex: 1; min-width: 200px; font-size: 1.03125rem; color: var(--forest3); }
 .preins-draft-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 
 /* ─── Tarjeta del formulario ─── */
@@ -217,7 +217,7 @@
 }
 
 .preins-step-icon {
-  font-size: 1.7rem;
+  font-size: 1.78125rem;
   line-height: 1;
   flex-shrink: 0;
   width: 48px;
@@ -230,13 +230,13 @@
 
 .preins-step-head h2 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
+  font-size: 1.59375rem;
   color: var(--forest2);
   margin-bottom: 4px;
   line-height: 1.2;
 }
 
-.preins-step-head p { font-size: .89rem; color: var(--muted); line-height: 1.5; }
+.preins-step-head p { font-size: 1.03125rem; color: var(--muted); line-height: 1.5; }
 
 /* ─── Campos ─── */
 
@@ -245,7 +245,7 @@
 .preins-field label,
 .preins-label {
   display: block;
-  font-size: .85rem;
+  font-size: 1.03125rem;
   font-weight: 600;
   color: var(--forest3);
   margin-bottom: 7px;
@@ -262,7 +262,7 @@
 .preins-field select {
   width: 100%;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 1.125rem;
   color: var(--ink);
   background: var(--cream2);
   border: 1.5px solid rgba(171, 100, 35, .22);
@@ -298,7 +298,7 @@
   box-shadow: 0 0 0 4px rgba(192, 57, 43, .1);
 }
 
-.preins-hint { display: block; font-size: .76rem; color: var(--muted); margin-top: 6px; line-height: 1.45; }
+.preins-hint { display: block; font-size: 0.9375rem; color: var(--muted); margin-top: 6px; line-height: 1.45; }
 .preins-hint.err { color: #C0392B; font-weight: 600; }
 
 .preins-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0 16px; }
@@ -321,7 +321,7 @@
   text-align: center;
   min-height: 84px;
   padding: 12px 8px;
-  font-size: .84rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--forest3);
   background: var(--cream2);
@@ -330,7 +330,7 @@
   transition: all .2s;
 }
 
-.preins-choice-emoji { font-size: 1.5rem; line-height: 1; }
+.preins-choice-emoji { font-size: 1.59375rem; line-height: 1; }
 
 .preins-choice:hover .preins-choice-box {
   border-color: var(--gold);
@@ -359,7 +359,7 @@
   background: var(--cream2);
   border: 1.5px solid rgba(171, 100, 35, .18);
   border-radius: 12px;
-  font-size: .92rem;
+  font-size: 1.0625rem;
   color: var(--forest3);
   transition: all .2s;
 }
@@ -378,7 +378,7 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  font-size: .87rem;
+  font-size: 1.03125rem;
   color: var(--muted);
   background: rgba(171, 100, 35, .06);
   border: 1px dashed rgba(171, 100, 35, .3);
@@ -390,7 +390,7 @@
 .preins-skip input { width: 18px; height: 18px; accent-color: var(--gold2); flex-shrink: 0; }
 .preins-skip:has(input:checked) { background: rgba(215, 175, 74, .18); border-style: solid; border-color: var(--gold); color: var(--forest3); font-weight: 600; }
 
-.preins-skip--declara { align-items: flex-start; font-size: .84rem; line-height: 1.5; }
+.preins-skip--declara { align-items: flex-start; font-size: 1rem; line-height: 1.5; }
 .preins-skip--declara input { margin-top: 2px; }
 
 .preins-parent.off { opacity: .35; pointer-events: none; filter: grayscale(1); }
@@ -410,7 +410,7 @@
 }
 
 .preins-photo-info h3 {
-  font-size: 1.02rem;
+  font-size: 1.15625rem;
   color: var(--forest2);
   margin-bottom: 6px;
   display: flex;
@@ -418,14 +418,14 @@
   gap: 8px;
 }
 
-.preins-photo-info > p { font-size: .85rem; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+.preins-photo-info > p { font-size: 1.03125rem; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
 
 .preins-photo-tips { list-style: none; display: grid; gap: 7px; }
 
 .preins-photo-tips li {
   position: relative;
   padding-left: 20px;
-  font-size: .82rem;
+  font-size: 1rem;
   color: var(--forest3);
   line-height: 1.45;
 }
@@ -454,7 +454,7 @@
 .preins-photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
 .preins-photo-empty {
-  font-size: .82rem;
+  font-size: 1rem;
   color: var(--muted);
   text-align: center;
   line-height: 1.5;
@@ -472,7 +472,7 @@
   width: 100%;
   padding: 13px 16px;
   font-family: inherit;
-  font-size: .88rem;
+  font-size: 1.03125rem;
   font-weight: 600;
   color: #fff;
   background: linear-gradient(135deg, var(--gold), var(--gold2));
@@ -499,12 +499,12 @@
 .preins-block { margin-bottom: 30px; }
 
 .preins-block h3 {
-  font-size: 1.02rem;
+  font-size: 1.15625rem;
   color: var(--forest2);
   margin-bottom: 10px;
 }
 
-.preins-block-hint { font-size: .8rem; color: var(--muted); margin-bottom: 10px; }
+.preins-block-hint { font-size: 1rem; color: var(--muted); margin-bottom: 10px; }
 
 .preins-hermanos { display: grid; gap: 12px; margin-bottom: 12px; }
 
@@ -523,7 +523,7 @@
 .preins-hermano input[type="number"] {
   width: 100%;
   font-family: inherit;
-  font-size: .92rem;
+  font-size: 1.0625rem;
   background: #fff;
   border: 1.5px solid rgba(171, 100, 35, .2);
   border-radius: 9px;
@@ -537,7 +537,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: .78rem;
+  font-size: 0.96875rem;
   color: var(--muted);
   white-space: nowrap;
 }
@@ -553,7 +553,7 @@
   border-radius: 9px;
   background: rgba(192, 57, 43, .1);
   color: #C0392B;
-  font-size: 1rem;
+  font-size: 1.125rem;
   cursor: none;
   transition: background .2s;
 }
@@ -585,7 +585,7 @@
 }
 
 .preins-review-head h3 {
-  font-size: .82rem;
+  font-size: 1rem;
   letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--gold2);
@@ -593,7 +593,7 @@
 }
 
 .preins-review-edit {
-  font-size: .78rem;
+  font-size: 0.96875rem;
   font-weight: 600;
   color: var(--forest2);
   background: none;
@@ -612,7 +612,7 @@
   display: grid;
   grid-template-columns: 160px 1fr;
   gap: 10px;
-  font-size: .87rem;
+  font-size: 1.03125rem;
   line-height: 1.5;
 }
 
@@ -635,7 +635,7 @@
   margin-bottom: 20px;
 }
 
-.preins-notice p { font-size: .87rem; color: var(--forest3); line-height: 1.55; }
+.preins-notice p { font-size: 1.03125rem; color: var(--forest3); line-height: 1.55; }
 
 /* ─── Errores y navegación ─── */
 
@@ -645,7 +645,7 @@
   color: #A93226;
   border-radius: 12px;
   padding: 12px 16px;
-  font-size: .88rem;
+  font-size: 1.03125rem;
   font-weight: 600;
   margin-bottom: 16px;
 }
@@ -658,7 +658,7 @@
   border-top: 1px solid rgba(171, 100, 35, .13);
 }
 
-.preins-saved { flex: 1; font-size: .76rem; color: var(--muted); text-align: center; }
+.preins-saved { flex: 1; font-size: 0.9375rem; color: var(--muted); text-align: center; }
 
 .preins-btn-back,
 .preins-btn-next,
@@ -677,7 +677,7 @@
   border: 1.5px solid rgba(171, 100, 35, .3);
   color: var(--forest2);
   padding: 13px 24px;
-  font-size: .92rem;
+  font-size: 1.0625rem;
 }
 
 .preins-btn-back:hover { border-color: var(--forest2); background: rgba(171, 100, 35, .07); }
@@ -687,7 +687,7 @@
   background: linear-gradient(135deg, var(--gold), var(--gold2));
   color: #fff;
   padding: 14px 32px;
-  font-size: .98rem;
+  font-size: 1.09375rem;
   box-shadow: 0 10px 26px rgba(245, 124, 0, .28);
 }
 
@@ -702,7 +702,7 @@
   background: rgba(171, 100, 35, .1);
   color: var(--forest2);
   padding: 9px 17px;
-  font-size: .83rem;
+  font-size: 1rem;
   border: 1px solid rgba(171, 100, 35, .22);
 }
 
@@ -711,7 +711,7 @@
 
 .preins-help {
   text-align: center;
-  font-size: .84rem;
+  font-size: 1rem;
   color: var(--muted);
   margin-top: 22px;
 }
@@ -731,18 +731,18 @@
   animation: preinsIn .5s cubic-bezier(.4, 0, .2, 1);
 }
 
-.preins-done-seal { font-size: 3.4rem; margin-bottom: 14px; }
+.preins-done-seal { font-size: 3.40625rem; margin-bottom: 14px; }
 
 .preins-done h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.7rem, 4.4vw, 2.4rem);
+  font-size: clamp(1.78125rem, 4.4vw, 2.4375rem);
   color: var(--forest2);
   margin-bottom: 12px;
 }
 
 .preins-done-num {
   display: inline-block;
-  font-size: 1rem;
+  font-size: 1.125rem;
   color: var(--forest3);
   background: linear-gradient(135deg, rgba(215, 175, 74, .22), rgba(245, 124, 0, .14));
   border: 1px solid rgba(215, 175, 74, .5);
@@ -751,7 +751,7 @@
   margin-bottom: 18px;
 }
 
-.preins-done-num strong { font-size: 1.35rem; color: var(--gold2); letter-spacing: .04em; }
+.preins-done-num strong { font-size: 1.46875rem; color: var(--gold2); letter-spacing: .04em; }
 
 .preins-done-desc { max-width: 520px; margin: 0 auto 30px; color: var(--muted); line-height: 1.7; }
 
@@ -764,9 +764,9 @@
   padding: 22px 24px;
 }
 
-.preins-done-next h3 { font-size: .95rem; color: var(--forest2); margin-bottom: 12px; }
+.preins-done-next h3 { font-size: 1.0625rem; color: var(--forest2); margin-bottom: 12px; }
 .preins-done-next ul { list-style: none; display: grid; gap: 10px; }
-.preins-done-next li { display: flex; gap: 10px; font-size: .88rem; color: var(--forest3); line-height: 1.55; }
+.preins-done-next li { display: flex; gap: 10px; font-size: 1.03125rem; color: var(--forest3); line-height: 1.55; }
 .preins-done-next a { color: var(--gold2); font-weight: 600; }
 
 /* ─── Copia de la solicitud en PDF ─── */
@@ -781,10 +781,10 @@
   text-align: center;
 }
 
-.preins-done-pdf h3 { font-size: 1rem; color: var(--forest2); margin-bottom: 8px; }
+.preins-done-pdf h3 { font-size: 1.125rem; color: var(--forest2); margin-bottom: 8px; }
 
 .preins-done-pdf p {
-  font-size: .86rem;
+  font-size: 1.03125rem;
   color: var(--forest3);
   line-height: 1.6;
   margin-bottom: 16px;
@@ -826,7 +826,7 @@
 
 .preins-closed h2 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.7rem;
+  font-size: 1.78125rem;
   color: var(--forest2);
   margin-bottom: 10px;
 }
@@ -850,29 +850,29 @@
 
   /* Encabezado compacto: en el celular cada píxel de alto se paga con scroll */
   .preins-head { margin-bottom: 18px; }
-  .preins-head h1 { font-size: 1.75rem; margin-bottom: 10px; }
-  .preins-head-desc { font-size: .92rem; line-height: 1.55; }
+  .preins-head h1 { font-size: 1.8125rem; margin-bottom: 10px; }
+  .preins-head-desc { font-size: 1.0625rem; line-height: 1.55; }
   .preins-head-facts { gap: 7px; margin-top: 15px; }
-  .preins-head-facts li { font-size: .72rem; padding: 6px 11px; gap: 5px; }
+  .preins-head-facts li { font-size: 0.9375rem; padding: 6px 11px; gap: 5px; }
 
   /* Ya en marcha, la presentación estorba: se queda solo el título */
   .preins.avanzado .preins-head { margin-bottom: 12px; }
   .preins.avanzado .preins-head .section-label,
   .preins.avanzado .preins-head-desc,
   .preins.avanzado .preins-head-facts { display: none; }
-  .preins.avanzado .preins-head h1 { font-size: 1.35rem; margin-bottom: 0; }
+  .preins.avanzado .preins-head h1 { font-size: 1.46875rem; margin-bottom: 0; }
 
   .preins-progress { top: 62px; padding: 12px 14px 9px; border-radius: var(--rl); }
-  .preins-progress-step { font-size: .84rem; }
+  .preins-progress-step { font-size: 1rem; }
   .preins-dots { margin-top: 10px; gap: 2px; }
   .preins-dots li small { display: none; }
-  .preins-dots li span { width: 23px; height: 23px; font-size: .7rem; }
+  .preins-dots li span { width: 23px; height: 23px; font-size: 0.9375rem; }
 
   .preins-card { padding: 22px 16px 18px; border-radius: var(--rl); }
   .preins-step-head { gap: 11px; padding-bottom: 14px; margin-bottom: 18px; }
-  .preins-step-icon { width: 42px; height: 42px; font-size: 1.45rem; }
-  .preins-step-head h2 { font-size: 1.28rem; }
-  .preins-step-head p { font-size: .85rem; }
+  .preins-step-icon { width: 42px; height: 42px; font-size: 1.5625rem; }
+  .preins-step-head h2 { font-size: 1.40625rem; }
+  .preins-step-head p { font-size: 1.03125rem; }
 
   .preins-row { grid-template-columns: 1fr; }
   /* La edad es un campo calculado: en móvil basta con verla en la ayuda
@@ -880,7 +880,7 @@
   .preins-row .preins-field--narrow { display: none; }
 
   .preins-choices--4 { grid-template-columns: repeat(2, 1fr); }
-  .preins-choice-box { min-height: 76px; font-size: .8rem; }
+  .preins-choice-box { min-height: 76px; font-size: 1rem; }
 
   .preins-photo { padding: 18px 15px; gap: 18px; }
   .preins-photo-frame { width: 135px; height: 162px; }
@@ -896,7 +896,7 @@
   .preins-hermano-del { position: absolute; top: 9px; right: 9px; }
 
   .preins-review-list div { grid-template-columns: 1fr; gap: 0; }
-  .preins-review-list .k { font-size: .76rem; }
+  .preins-review-list .k { font-size: 0.9375rem; }
   .preins-review-card { padding: 14px 15px; }
 
   /* Navegación siempre a la mano, pegada abajo */
@@ -917,7 +917,7 @@
     position: absolute;
     top: -20px;
     right: 16px;
-    font-size: .7rem;
+    font-size: 0.9375rem;
     color: var(--gold2);
     font-weight: 600;
     background: rgba(247, 245, 242, .92);
@@ -925,7 +925,7 @@
     border-radius: 999px;
   }
 
-  .preins-btn-back { padding: 13px 18px; font-size: .88rem; }
+  .preins-btn-back { padding: 13px 18px; font-size: 1.03125rem; }
   .preins-btn-next, .preins-btn-send { flex: 1; padding: 14px 20px; }
 
   /* WhatsApp no debe tapar el botón de continuar */
@@ -942,7 +942,7 @@
   .preins-closed-btns .btn-cta-ghost { width: 100%; text-align: center; }
 
   .preins-draft { padding: 12px 14px; gap: 8px 10px; }
-  .preins-draft p { font-size: .84rem; }
+  .preins-draft p { font-size: 1rem; }
   .preins-draft-btns { width: 100%; }
   .preins-draft-btns .preins-btn-mini { flex: 1; }
 }
@@ -951,11 +951,11 @@
   .preins { padding: 80px 10px 36px; }
   .preins-card { padding: 20px 13px 16px; }
   .preins-step-head { gap: 9px; }
-  .preins-step-icon { width: 38px; height: 38px; font-size: 1.3rem; }
-  .preins-step-head h2 { font-size: 1.18rem; }
-  .preins-head h1 { font-size: 1.55rem; }
+  .preins-step-icon { width: 38px; height: 38px; font-size: 1.4375rem; }
+  .preins-step-head h2 { font-size: 1.3125rem; }
+  .preins-head h1 { font-size: 1.65625rem; }
   .preins-nav { margin: 16px -13px -16px; padding-left: 13px; padding-right: 13px; }
-  .preins-btn-back { padding: 13px 14px; font-size: .84rem; }
+  .preins-btn-back { padding: 13px 14px; font-size: 1rem; }
   .preins-hermano { grid-template-columns: 72px 1fr 1fr; gap: 8px; }
-  .preins-hermano-flag { font-size: .74rem; }
+  .preins-hermano-flag { font-size: 0.9375rem; }
 }

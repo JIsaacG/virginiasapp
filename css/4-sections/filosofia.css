@@ -10,10 +10,10 @@
   nav{ padding:0 20px; height:64px; }
   nav.scrolled{ height:56px; }
   .nav-links{ display:none; }
-  .nav-wordmark b{ font-size:12px; }
+  .nav-wordmark b{ font-size:0.9375rem; }
   .nav-wordmark small{ display:none; }
   .btn-nav-ghost{ display:none; }
-  .btn-nav-solid{ padding:8px 14px; font-size:12px; }
+  .btn-nav-solid{ padding:8px 14px; font-size:0.9375rem; }
 
   /* HUD — más compacto en tablet */
   #game-hud{ bottom:16px; right:16px; min-width:190px; padding:12px 14px; }
@@ -27,15 +27,15 @@
   .hero-left{ padding:72px 6vw 56px; justify-content:flex-end; min-height:100svh; }
   .hero-counters{ margin-top:36px; padding-top:28px; gap:0; }
   .hero-counter{ padding:0 16px; }
-  .counter-num{ font-size:32px; }
+  .counter-num{ font-size:2.0625rem; }
 
   /* marquee */
   .marquee-strip{ padding:11px 0; }
-  .marquee-item{ font-size:11px; padding:0 24px; }
+  .marquee-item{ font-size:0.9375rem; padding:0 24px; }
 
   /* historia */
   .historia{ padding:72px 6vw; }
-  .historia::before{ font-size:clamp(80px,18vw,160px); }
+  .historia::before{ font-size:clamp(5rem,18vw,10rem); }
   .historia-intro{ grid-template-columns:1fr; gap:24px; }
 
   /* niveles */
@@ -49,7 +49,7 @@
   /* mision split */
   .mision-split{ grid-template-columns:1fr; min-height:auto; }
   .mision-half{ padding:56px 6vw; }
-  .mision-big{ font-size:clamp(80px,20vw,140px); }
+  .mision-big{ font-size:clamp(5rem,20vw,8.75rem); }
 
   /* valores */
   .valores{ padding:72px 6vw; }
@@ -61,8 +61,8 @@
   .quiz-section{ padding:72px 6vw; }
   .quiz-card{ padding:32px 28px; }
   .quiz-options{ gap:10px; }
-  .quiz-opt{ padding:18px 10px 16px; gap:10px; font-size:13px; }
-  .quiz-opt-icon{ width:46px; height:46px; font-size:21px; }
+  .quiz-opt{ padding:18px 10px 16px; gap:10px; font-size:1rem; }
+  .quiz-opt-icon{ width:46px; height:46px; font-size:1.4375rem; }
 
   /* admisiones */
   .admisiones{ padding:72px 6vw; }
@@ -70,7 +70,7 @@
   .steps-row{ grid-template-columns:1fr 1fr; gap:28px; }
   .steps-row::before{ display:none; }
   .admisiones-cta-block{ grid-template-columns:1fr; gap:24px; padding:40px; }
-  .admisiones-cta-block h3{ font-size:28px; }
+  .admisiones-cta-block h3{ font-size:1.8125rem; }
 
   /* testimonios */
   .testimonios{ padding:72px 6vw; }

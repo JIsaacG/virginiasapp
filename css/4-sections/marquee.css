@@ -6,23 +6,23 @@
 }
 .historia::before {
   content:'1962'; position:absolute; right:-2vw; top:40px;
-  font-family:'Playfair Display',serif; font-size:clamp(120px,18vw,240px);
+  font-family:'Playfair Display',serif; font-size:clamp(7.5rem,18vw,15rem);
   font-weight:900; color:rgba(65,36,4,.06); line-height:1;
   pointer-events:none; user-select:none;
 }
 
 .section-label { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
 .section-label::before { content:''; width:28px; height:2px; background:var(--gold); }
-.section-label span { font-size:11px; font-weight:600; color:var(--gold); letter-spacing:.12em; text-transform:uppercase; }
+.section-label span { font-size:0.9375rem; font-weight:600; color:var(--gold); letter-spacing:.12em; text-transform:uppercase; }
 
 /* Intro: titular a la izquierda, párrafos a la derecha */
 .historia-intro { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(32px,5vw,80px); align-items:start; margin-top:40px; }
 .historia-intro h2 {
   font-family:'Playfair Display',serif;
-  font-size:clamp(34px,4vw,54px); font-weight:700; color:var(--forest); line-height:1.12;
+  font-size:clamp(2.1875rem,4vw,3.375rem); font-weight:700; color:var(--forest); line-height:1.12;
 }
 .historia-intro h2 em { font-style:italic; color:var(--gold); }
-.historia-intro-text p { font-size:15px; color:var(--muted); line-height:1.8; margin-bottom:16px; }
+.historia-intro-text p { font-size:1.0625rem; color:var(--muted); line-height:1.8; margin-bottom:16px; }
 .historia-intro-text p:last-child { margin-bottom:0; }
 .historia-intro-text p strong { color:var(--forest); font-weight:600; }
 
@@ -44,15 +44,15 @@
 .hl-hito { position:relative; padding-top:calc(var(--hl-eje) + 34px); }
 
 .hl-cabecera { position:absolute; top:0; left:0; right:0; height:var(--hl-eje); display:flex; flex-direction:column; align-items:center; justify-content:flex-start; text-align:center; }
-.hl-year { font-family:'Playfair Display',serif; font-size:clamp(26px,2.8vw,38px); font-weight:700; color:var(--forest); line-height:1.05; }
-.hl-name { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; margin-top:6px; }
+.hl-year { font-family:'Playfair Display',serif; font-size:clamp(1.71875rem,2.8vw,2.40625rem); font-weight:700; color:var(--forest); line-height:1.05; }
+.hl-name { font-size:0.9375rem; font-weight:700; color:var(--gold); letter-spacing:.14em; text-transform:uppercase; margin-top:6px; }
 
 .hl-dot {
   position:absolute; top:var(--hl-eje); left:50%; transform:translate(-50%,-50%);
   width:18px; height:18px; border-radius:4px; background:var(--gold);
   box-shadow:0 0 0 6px var(--cream), 0 0 0 8px rgba(171,100,35,.28);
 }
-.hl-dot::after { content:'+'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; line-height:1; color:var(--cream); }
+.hl-dot::after { content:'+'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:1.03125rem; font-weight:700; line-height:1; color:var(--cream); }
 
 /* Fotos tipo polaroid: dos por hito, con inclinaciones opuestas */
 .hl-fotos { display:grid; grid-template-columns:1.08fr .92fr; gap:clamp(8px,.9vw,14px); align-items:start; }
@@ -71,7 +71,7 @@
   transition:filter .35s ease;
 }
 .hl-foto:hover img { filter:none; }
-.hl-foto figcaption { font-family:'Playfair Display',serif; font-style:italic; font-size:11.5px; color:var(--muted); line-height:1.35; text-align:center; padding:9px 2px 11px; }
+.hl-foto figcaption { font-family:'Playfair Display',serif; font-style:italic; font-size:0.9375rem; color:var(--muted); line-height:1.35; text-align:center; padding:9px 2px 11px; }
 
 /* Huecos reservados: mantienen el sitio de las fotos que aún no existen */
 .hl-foto-vacia { background:rgba(171,100,35,.04); border-style:dashed; border-color:rgba(171,100,35,.38); box-shadow:none; padding:8px; }
@@ -89,13 +89,13 @@
   box-shadow:0 10px 28px rgba(65,36,4,.16);
 }
 .hl-foto-vacia.img-hueco-lleno:hover { transform:rotate(0) translateY(-6px) scale(1.03); box-shadow:0 22px 48px rgba(65,36,4,.26); }
-.hl-nota { font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); text-align:center; margin-top:16px; }
+.hl-nota { font-size:0.9375rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); text-align:center; margin-top:16px; }
 
 /* La foto es un botón: abre el visor ampliado */
 .hl-zoom { display:block; width:100%; padding:0; border:0; background:none; cursor:zoom-in; border-radius:2px; }
 .hl-zoom:focus-visible { outline:2px solid var(--gold2); outline-offset:4px; }
 
-.hl-text { font-size:14px; color:var(--muted); line-height:1.7; text-align:center; margin-top:26px; }
+.hl-text { font-size:1.03125rem; color:var(--muted); line-height:1.7; text-align:center; margin-top:26px; }
 .hl-text strong { color:var(--forest); font-weight:600; }
 
 /* ── Visor ampliado de las fotos históricas ──
@@ -127,12 +127,12 @@
 .hl-lb-caption {
   display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center;
   font-family:'Playfair Display',serif; font-style:italic;
-  font-size:clamp(13px,1.4vw,17px); color:rgba(255,255,255,.85);
+  font-size:clamp(1rem,1.4vw,1.1875rem); color:rgba(255,255,255,.85);
   opacity:0; transform:translateY(14px);
   transition:opacity .45s ease .18s, transform .45s ease .18s;
 }
 .hl-lightbox.is-ready .hl-lb-caption { opacity:1; transform:none; }
-.hl-lb-count { font-family:'Outfit',sans-serif; font-style:normal; font-size:11px; letter-spacing:.16em; color:var(--gold); }
+.hl-lb-count { font-family:'Outfit',sans-serif; font-style:normal; font-size:0.9375rem; letter-spacing:.16em; color:var(--gold); }
 
 .hl-lb-close, .hl-lb-nav {
   position:absolute; display:flex; align-items:center; justify-content:center;
@@ -142,8 +142,8 @@
 }
 .hl-lb-close:hover, .hl-lb-nav:hover { background:rgba(255,255,255,.26); transform:scale(1.08); }
 .hl-lb-close:focus-visible, .hl-lb-nav:focus-visible { outline:2px solid var(--gold2); outline-offset:3px; }
-.hl-lb-close { top:clamp(12px,2vw,26px); right:clamp(12px,2vw,26px); width:46px; height:46px; font-size:18px; }
-.hl-lb-nav { top:50%; width:52px; height:52px; font-size:30px; margin-top:-26px; padding-bottom:5px; }
+.hl-lb-close { top:clamp(12px,2vw,26px); right:clamp(12px,2vw,26px); width:46px; height:46px; font-size:1.25rem; }
+.hl-lb-nav { top:50%; width:52px; height:52px; font-size:1.9375rem; margin-top:-26px; padding-bottom:5px; }
 .hl-lb-prev { left:clamp(8px,2vw,30px); }
 .hl-lb-next { right:clamp(8px,2vw,30px); }
 
@@ -151,7 +151,7 @@
   .hl-lb-img { max-height:58vh; }
   .hl-lb-close { width:40px; height:40px; }
   /* las flechas bajan al pie para no taparse con la foto */
-  .hl-lb-nav { top:auto; bottom:clamp(14px,5vw,28px); margin-top:0; width:44px; height:44px; font-size:26px; }
+  .hl-lb-nav { top:auto; bottom:clamp(14px,5vw,28px); margin-top:0; width:44px; height:44px; font-size:1.71875rem; }
   .hl-lb-prev { left:calc(50% - 62px); }
   .hl-lb-next { right:calc(50% - 62px); }
 }

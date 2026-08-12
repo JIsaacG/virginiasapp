@@ -8,14 +8,14 @@
 .capacitate-intro { background: var(--cream); padding: 80px 8vw; text-align: center; }
 .capacitate-intro h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 3.4vw, 44px);
+  font-size: clamp(1.8125rem, 3.4vw, 2.75rem);
   font-weight: 700;
   color: var(--forest);
   margin-bottom: 14px;
 }
 .capacitate-intro h2 em { color: var(--gold); font-style: italic; }
 .capacitate-intro p {
-  font-size: 15px;
+  font-size: 1.0625rem;
   color: var(--muted);
   line-height: 1.85;
   max-width: 680px;
@@ -26,12 +26,12 @@
 .capacitate-head { text-align: center; margin-bottom: 40px; }
 .capacitate-head h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(26px, 3vw, 40px);
+  font-size: clamp(1.71875rem, 3vw, 2.53125rem);
   font-weight: 700;
   color: var(--forest);
 }
 .capacitate-head h2 em { color: var(--gold); font-style: italic; }
-.capacitate-head p { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
+.capacitate-head p { font-size: 1.0625rem; color: var(--muted); margin-top: 10px; }
 
 .programa-grid {
   display: grid;
@@ -48,23 +48,23 @@
 }
 .programa-placeholder { border-style: dashed; }
 
-.programa-icon { font-size: 34px; display: block; margin-bottom: 14px; }
+.programa-icon { font-size: 2.1875rem; display: block; margin-bottom: 14px; }
 .programa-card h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 18px;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--forest);
   margin-bottom: 10px;
 }
 .programa-card p {
-  font-size: 13.5px;
+  font-size: 1.03125rem;
   color: var(--muted);
   line-height: 1.7;
   margin-bottom: 14px;
 }
 .programa-pending {
   display: inline-block;
-  font-size: 11.5px;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--gold);
   letter-spacing: 0.04em;
@@ -78,14 +78,14 @@
 }
 .capacitate-cta h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(26px, 3vw, 40px);
+  font-size: clamp(1.71875rem, 3vw, 2.53125rem);
   font-weight: 700;
   color: var(--forest);
   margin-bottom: 12px;
 }
 .capacitate-cta h2 em { color: var(--gold2); font-style: italic; }
 .capacitate-cta p {
-  font-size: 15px;
+  font-size: 1.0625rem;
   color: var(--muted);
   margin-bottom: 28px;
 }
@@ -102,7 +102,7 @@
   border-radius: 10px;
   text-decoration: none;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 1.0625rem;
   transition: background 0.2s;
 }
 .capacitate-cta .btn-cta-ghost:hover { background: rgba(171,100,35,.08); }

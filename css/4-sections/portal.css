@@ -8,11 +8,11 @@
 .hub-head .section-label { justify-content: center; margin-bottom: 18px; }
 .hub-head h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 4vw, 46px);
+  font-size: clamp(1.8125rem, 4vw, 2.875rem);
   font-weight: 900; line-height: 1.08; margin-bottom: 14px;
 }
 .hub-head h2 em { color: var(--gold2); font-style: italic; }
-.hub-head p { font-size: 16px; line-height: 1.7; }
+.hub-head p { font-size: 1.125rem; line-height: 1.7; }
 
 /* ═══════════════════════════════════════
    SECCIÓN VIDEO — fondo oscuro cinematográfico
@@ -87,11 +87,11 @@
 }
 .hub-video-ph-text {
   position: relative; z-index: 2;
-  font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #fff;
+  font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #fff;
 }
 .hub-video-ph-sub {
   position: relative; z-index: 2;
-  font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+  font-size: 1rem; letter-spacing: .08em; text-transform: uppercase;
   color: rgba(255,255,255,.4);
 }
 
@@ -129,7 +129,7 @@
 .hub-shots-note {
   margin-top: 12px;
   text-align: center;
-  font-size: 12px;
+  font-size: 0.9375rem;
   letter-spacing: .08em;
   text-transform: uppercase;
   color: rgba(255,255,255,.38);
@@ -204,7 +204,7 @@
   transition: border-color .3s ease, background-color .3s ease;
 }
 .hub-card-media-note {
-  font-size: 13px; font-weight: 600; line-height: 1.4;
+  font-size: 1rem; font-weight: 600; line-height: 1.4;
   letter-spacing: .04em; text-transform: uppercase;
   color: color-mix(in srgb, var(--pc) 62%, var(--muted));
 }
@@ -219,14 +219,14 @@
 
 .hub-card-title {
   font-family: 'Playfair Display', serif;
-  font-size: 25px; font-weight: 700; line-height: 1.2; color: var(--ink);
+  font-size: 1.65625rem; font-weight: 700; line-height: 1.2; color: var(--ink);
 }
 .hub-card-desc {
-  font-size: 16px; line-height: 1.55; color: var(--muted); flex-grow: 1;
+  font-size: 1.125rem; line-height: 1.55; color: var(--muted); flex-grow: 1;
 }
 .hub-card-arrow {
   margin-top: 4px;
-  font-size: 16px; font-weight: 600;
+  font-size: 1.125rem; font-weight: 600;
   color: var(--pc);
   display: inline-flex; align-items: center; gap: 7px;
 }
@@ -242,7 +242,7 @@
   display: inline-flex; align-items: center; gap: 6px;
   padding: 10px 20px; border-radius: 100px;
   background: #F7F5F2; border: 1px solid rgba(106,36,7,.14);
-  color: var(--forest2); font-size: 14px; font-weight: 500;
+  color: var(--forest2); font-size: 1.03125rem; font-weight: 500;
   text-decoration: none; transition: all .25s ease;
 }
 .hub-quicklink:hover {
@@ -270,7 +270,7 @@
   .hub-card-media-img { max-height: 150px; }
   .hub-video-play { width: 70px; height: 70px; }
   .hub-video-play svg { width: 28px; height: 28px; }
-  .hub-video-ph-text { font-size: 19px; }
+  .hub-video-ph-text { font-size: 1.3125rem; }
   .hub-shots-row { gap: 10px; }
   .hub-shot,
   .hub-shot-img { max-height: 96px; }

@@ -19,7 +19,7 @@
 
 .home-mision-text h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 3.4vw, 44px);
+  font-size: clamp(1.8125rem, 3.4vw, 2.75rem);
   font-weight: 700;
   color: var(--forest);
   line-height: 1.18;
@@ -28,7 +28,7 @@
 .home-mision-text h2 em { color: var(--gold); font-style: italic; }
 
 .home-mision-text p {
-  font-size: 15px;
+  font-size: 1.0625rem;
   color: var(--muted);
   line-height: 1.85;
   margin-bottom: 26px;
@@ -44,14 +44,14 @@
 }
 
 .hm-icon {
-  font-size: 38px;
+  font-size: 2.40625rem;
   display: block;
   margin-bottom: 18px;
 }
 
 .hm-verse {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(17px, 1.8vw, 21px);
+  font-size: clamp(1.1875rem, 1.8vw, 1.4375rem);
   font-style: italic;
   color: var(--forest);
   line-height: 1.6;
@@ -59,7 +59,7 @@
 }
 
 .hm-cite {
-  font-size: 13px;
+  font-size: 1rem;
   color: var(--gold2);
   font-weight: 600;
   letter-spacing: 0.04em;

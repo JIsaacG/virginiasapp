@@ -34,13 +34,13 @@
 .canales-head { margin-bottom: 28px; }
 .canales-title {
   font-family: 'Playfair Display', serif;
-  font-size: 26px;
+  font-size: 1.71875rem;
   font-weight: 700;
   color: var(--forest);
   margin-bottom: 8px;
 }
 .canales-subtitle {
-  font-size: 13.5px;
+  font-size: 1.03125rem;
   color: var(--muted);
   line-height: 1.6;
 }
@@ -62,14 +62,14 @@
   flex-shrink: 0;
 }
 .canales-horario-label {
-  font-size: 11px;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: var(--gold2);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .canales-horario-value {
-  font-size: 13.5px;
+  font-size: 1.03125rem;
   color: var(--muted);
 }
 
@@ -108,7 +108,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 1.375rem;
 }
 
 .canal-info {
@@ -120,19 +120,19 @@
 }
 
 .canal-name {
-  font-size: 14.5px;
+  font-size: 1.0625rem;
   font-weight: 700;
   color: var(--ink);
 }
 
 .canal-detail {
-  font-size: 12.5px;
+  font-size: 0.96875rem;
   color: var(--muted);
 }
 
 .canal-arrow {
   flex: 0 0 auto;
-  font-size: 18px;
+  font-size: 1.25rem;
   color: var(--gold2);
   transition: transform 0.2s;
 }
@@ -141,7 +141,7 @@
 
 .canales-note {
   margin-top: 24px;
-  font-size: 13px;
+  font-size: 1rem;
   color: var(--muted);
   line-height: 1.6;
 }
@@ -155,7 +155,7 @@
 
 /* Empleos — nota explicativa del mailto */
 .empleos-hint {
-  font-size: 13px !important;
+  font-size: 1rem !important;
   color: rgba(255, 255, 255, 0.4) !important;
   margin: 0 auto 20px !important;
   max-width: 520px;
@@ -179,14 +179,14 @@
 .mapa-head .section-label { justify-content: center; }
 .mapa-head h2 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 4vw, 40px);
+  font-size: clamp(1.8125rem, 4vw, 2.53125rem);
   font-weight: 900;
   color: #1e1e1e;
   margin: 10px 0 12px;
 }
 .mapa-head h2 em { color: var(--gold2); font-style: italic; }
 .mapa-desc {
-  font-size: 14.5px;
+  font-size: 1.0625rem;
   color: var(--muted);
   line-height: 1.65;
 }
@@ -214,7 +214,7 @@
   padding: 12px 18px;
   background: var(--gold);
   color: #1e0e02;
-  font-size: 13.5px;
+  font-size: 1.03125rem;
   font-weight: 700;
   text-decoration: none;
   border-radius: var(--r);
@@ -227,10 +227,10 @@
   transform: translateY(-2px);
   outline: none;
 }
-.mapa-cta-icon { font-size: 15px; }
+.mapa-cta-icon { font-size: 1.0625rem; }
 
 @media (max-width: 640px) {
   .mapa-section { padding: 56px 6vw 64px; }
   .mapa-frame iframe { height: 340px; }
-  .mapa-cta { left: 12px; bottom: 12px; padding: 10px 14px; font-size: 12.5px; }
+  .mapa-cta { left: 12px; bottom: 12px; padding: 10px 14px; font-size: 0.96875rem; }
 }
