@@ -121,6 +121,8 @@
   color: var(--muted);
   text-align: center;
   line-height: 1.6;
+  /* Contiene administracion.general@virginiasapp.edu.hn, sin puntos de corte. */
+  overflow-wrap: anywhere;
 }
 
 .sg-error {

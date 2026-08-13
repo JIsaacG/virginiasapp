@@ -3,6 +3,9 @@
 ═══════════════════════════════════════ */
 .faq-section { background:var(--cream2); padding:96px 8vw; }
 .faq-grid { display:grid; grid-template-columns:1fr 2fr; gap:72px; align-items:start; }
+/* Sin esto los items no bajan de su ancho min-content y desbordan la pantalla
+   en móviles estrechos (mismo motivo que en .contacto y .perfil-layout). */
+.faq-grid > * { min-width: 0; }
 .faq-left h2 {
   font-family:'Playfair Display',serif;
   font-size:clamp(1.8125rem,3vw,2.65625rem); font-weight:700; color:var(--forest); line-height:1.1;
@@ -37,6 +40,8 @@
 .faq-a-inner {
   padding:14px 22px 20px; font-size:1.03125rem; color:var(--muted);
   line-height:1.8; border-top:1px solid rgba(171,100,35,.1);
+  /* Las respuestas citan URLs sin puntos de corte (portal.edubox.app/...). */
+  overflow-wrap:anywhere;
 }
 @media(max-width:900px){ .faq-grid{ grid-template-columns:1fr; gap:40px; } }
 @media(max-width:600px){ .faq-section{ padding:72px 6vw; } .faq-q{ padding:16px 18px; } .faq-q-text{ font-size:1.03125rem; } }

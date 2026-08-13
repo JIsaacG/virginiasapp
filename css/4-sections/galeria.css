@@ -2,6 +2,11 @@
    CONTACTO
 ═══════════════════════════════════════ */
 .contacto { background:var(--cream2); padding:110px 8vw; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+/* Los items de una rejilla nacen con min-width:auto y por tanto no bajan de su
+   ancho min-content: sin esto, un correo sin puntos de corte ensancha la
+   columna por encima del viewport y el contenido se corta (body oculta el
+   desbordamiento horizontal). */
+.contacto > * { min-width: 0; }
 .contacto-left h2 { font-family:'Playfair Display',serif; font-size:clamp(2.1875rem,3.5vw,3.125rem); font-weight:700; color:var(--forest); line-height:1.1; }
 .contacto-left h2 em { color:var(--gold2); font-style:italic; }
 .contacto-desc { font-size:1.0625rem; color:var(--muted); line-height:1.8; margin:20px 0 40px; }

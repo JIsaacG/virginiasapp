@@ -97,6 +97,20 @@
   font-size:0.875rem; font-weight:600; color:var(--gold);
   letter-spacing:.18em; text-transform:uppercase;
 }
+/* Escritorio: el versículo cabe en dos líneas y la cita queda en la tercera.
+   La columna izquierda es estrecha, así que la caja aprovecha el canalón central
+   (sin llegar a tocar la foto) y el cuerpo baja de tamaño lo justo. */
+@media(min-width:1360px){
+  .hero-versiculo {
+    margin-right:-5vw; max-width:560px;
+    padding:13px 16px 12px 17px;
+  }
+  .hero-versiculo-text {
+    font-size:clamp(0.859375rem,0.88vw,0.9375rem);
+    line-height:1.55; text-wrap:balance;
+  }
+  .hero-versiculo-cita { margin-top:7px; }
+}
 
 /* Lema institucional */
 .hero-lema {

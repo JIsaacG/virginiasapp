@@ -3,58 +3,58 @@
    ═══════════════════════════════════════════════════════════════ */
 
 /* 1. BASE STYLES */
-@import url('1-base/tokens.css');
+@import url('1-base/tokens.css?v=20260812-tipografia');
 
 /* 2. REUSABLE COMPONENTS */
-@import url('2-components/buttons.css');
-@import url('2-components/cards.css');
-@import url('2-components/badges.css');
-@import url('2-components/modals.css');
-@import url('2-components/utils.css?v=20260812-huecos');
+@import url('2-components/buttons.css?v=20260812-tipografia');
+@import url('2-components/cards.css?v=20260812-tipografia');
+@import url('2-components/badges.css?v=20260812-tipografia');
+@import url('2-components/modals.css?v=20260812-tipografia');
+@import url('2-components/utils.css?v=20260812-tipografia');
 
 /* 3. LAYOUT COMPONENTS */
-@import url('3-layout/gamification.css');
-@import url('3-layout/navbar.css');
-@import url('3-layout/footer.css');
-@import url('3-layout/dropdown.css');
-@import url('3-layout/mascota.css');
+@import url('3-layout/gamification.css?v=20260812-tipografia');
+@import url('3-layout/navbar.css?v=20260812-tipografia');
+@import url('3-layout/footer.css?v=20260812-tipografia');
+@import url('3-layout/dropdown.css?v=20260812-tipografia');
+@import url('3-layout/mascota.css?v=20260812-tipografia');
 
 /* 3. SECTIONS */
-@import url('4-sections/hero.css');
-@import url('4-sections/marquee.css?v=20260812-huecos');
-@import url('4-sections/historia.css');
-@import url('4-sections/niveles.css?v=20260812-misionvision');
-@import url('4-sections/mision.css?v=20260812-huecos');
-@import url('4-sections/valores.css');
-@import url('4-sections/quiz.css');
-@import url('4-sections/admisiones.css');
-@import url('4-sections/testimonios.css');
-@import url('4-sections/galeria.css');
-@import url('4-sections/grados.css');
-@import url('4-sections/contacto.css');
-@import url('4-sections/filosofia.css');
-@import url('4-sections/declaracion-fe.css');
-@import url('4-sections/perfil-egresado.css');
-@import url('4-sections/portal-educativo.css');
-@import url('4-sections/devocional.css');
-@import url('4-sections/exalumnos.css');
-@import url('4-sections/empleos.css?v=20260812-huecos');
-@import url('4-sections/page-hero.css');
-@import url('4-sections/interactivo.css');
-@import url('4-sections/mision-evangelistica.css');
-@import url('4-sections/mision-aula.css');
-@import url('4-sections/quienes-somos.css?v=20260812-huecos');
-@import url('4-sections/bienvenida.css');
-@import url('4-sections/contacto-canales.css?v=20260812-horario');
-@import url('4-sections/sugerencias.css');
-@import url('4-sections/preinscripcion.css');
-@import url('4-sections/home-mision.css');
-@import url('4-sections/comunicados.css');
-@import url('4-sections/capacitate.css');
-@import url('4-sections/portal.css');
+@import url('4-sections/hero.css?v=20260812-tipografia');
+@import url('4-sections/marquee.css?v=20260812-tipografia');
+@import url('4-sections/historia.css?v=20260812-tipografia');
+@import url('4-sections/niveles.css?v=20260812-tipografia');
+@import url('4-sections/mision.css?v=20260812-tipografia');
+@import url('4-sections/valores.css?v=20260812-tipografia');
+@import url('4-sections/quiz.css?v=20260812-tipografia');
+@import url('4-sections/admisiones.css?v=20260812-tipografia');
+@import url('4-sections/testimonios.css?v=20260812-tipografia');
+@import url('4-sections/galeria.css?v=20260812-tipografia');
+@import url('4-sections/grados.css?v=20260812-tipografia');
+@import url('4-sections/contacto.css?v=20260812-tipografia');
+@import url('4-sections/filosofia.css?v=20260812-tipografia');
+@import url('4-sections/declaracion-fe.css?v=20260812-tipografia');
+@import url('4-sections/perfil-egresado.css?v=20260812-tipografia');
+@import url('4-sections/portal-educativo.css?v=20260812-tipografia');
+@import url('4-sections/devocional.css?v=20260812-tipografia');
+@import url('4-sections/exalumnos.css?v=20260812-tipografia');
+@import url('4-sections/empleos.css?v=20260812-tipografia');
+@import url('4-sections/page-hero.css?v=20260812-tipografia');
+@import url('4-sections/interactivo.css?v=20260812-tipografia');
+@import url('4-sections/mision-evangelistica.css?v=20260812-tipografia');
+@import url('4-sections/mision-aula.css?v=20260812-tipografia');
+@import url('4-sections/quienes-somos.css?v=20260812-tipografia');
+@import url('4-sections/bienvenida.css?v=20260812-tipografia');
+@import url('4-sections/contacto-canales.css?v=20260812-tipografia');
+@import url('4-sections/sugerencias.css?v=20260812-tipografia');
+@import url('4-sections/preinscripcion.css?v=20260812-tipografia');
+@import url('4-sections/home-mision.css?v=20260812-tipografia');
+@import url('4-sections/comunicados.css?v=20260812-tipografia');
+@import url('4-sections/capacitate.css?v=20260812-tipografia');
+@import url('4-sections/portal.css?v=20260812-tipografia');
 
 /* 4. RESPONSIVE DESIGN */
-@import url('5-responsive/media-queries.css?v=20260807-filosofia');
+@import url('5-responsive/media-queries.css?v=20260812-tipografia');
 
 /* ═══════════════════════════════════════════════════════════════
    Estructura modular de CSS

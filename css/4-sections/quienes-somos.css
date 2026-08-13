@@ -675,6 +675,10 @@
   gap: clamp(28px, 4vw, 56px);
   align-items: start;
 }
+/* En una sola columna (≤1024px) los items vuelven a min-width:auto y la pista
+   se dimensiona al min-content de las tarjetas, que desborda en pantallas
+   estrechas. */
+.perfil-layout > * { min-width: 0; }
 
 /* Retrato del egresado: marco vertical que acompaña la lectura al desplegar */
 .perfil-foto { position: sticky; top: 140px; }

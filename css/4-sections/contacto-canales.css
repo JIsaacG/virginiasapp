@@ -128,6 +128,11 @@
 .canal-detail {
   font-size: 0.96875rem;
   color: var(--muted);
+  /* Los correos largos (admisiones@virginiasapp.edu.hn) no tienen dónde partir
+     y fijaban el ancho mínimo de toda la tarjeta, cortando el contenido en
+     móvil. `anywhere` —y no `break-word`— es el que además reduce el
+     ancho min-content, que es lo que empujaba la rejilla. */
+  overflow-wrap: anywhere;
 }
 
 .canal-arrow {
