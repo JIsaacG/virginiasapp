@@ -97,19 +97,26 @@
   font-size:0.875rem; font-weight:600; color:var(--gold);
   letter-spacing:.18em; text-transform:uppercase;
 }
-/* Escritorio: el versículo cabe en dos líneas y la cita queda en la tercera.
-   La columna izquierda es estrecha, así que la caja aprovecha el canalón central
-   (sin llegar a tocar la foto) y el cuerpo baja de tamaño lo justo. */
+/* Escritorio: el versículo se lee en UNA sola línea y con más cuerpo.
+   La columna izquierda no da ese ancho, así que la caja se dimensiona al texto
+   (`max-content`) y se sale hacia la derecha por el hueco que queda encima de la
+   foto —que está centrada mucho más abajo—, deteniéndose antes del sello
+   giratorio de la esquina (ocupa los últimos 230px: right:80 + 150 de ancho).
+   El cuerpo se calcula para que el versículo, que mide 55.3em en Playfair
+   italic, quepa siempre en una línea con ~60px de holgura. Si alguna vez no
+   cupiera, la caja topa con su max-width y el texto vuelve a partirse en dos
+   líneas en vez de desbordarse. */
 @media(min-width:1360px){
   .hero-versiculo {
-    margin-right:-5vw; max-width:560px;
-    padding:13px 16px 12px 17px;
+    width:max-content; max-width:calc(92vw - 250px);
+    margin-right:0;
+    padding:16px 24px 15px 24px;
   }
   .hero-versiculo-text {
-    font-size:clamp(0.859375rem,0.88vw,0.9375rem);
-    line-height:1.55; text-wrap:balance;
+    font-size:clamp(1rem, calc(1.55vw - 5px), 1.75rem);
+    line-height:1.5;
   }
-  .hero-versiculo-cita { margin-top:7px; }
+  .hero-versiculo-cita { margin-top:9px; }
 }
 
 /* Lema institucional */
