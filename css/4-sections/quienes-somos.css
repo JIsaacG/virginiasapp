@@ -393,12 +393,18 @@
   color: var(--forest);
   line-height: 1.2;
 }
-/* Título académico dentro del nombre (mismo dato que muestra el modal) */
+/* Título académico sobre el nombre (mismo dato que muestra el modal).
+   Va en su propia línea: con seis tarjetas por fila, "Lic. Diana Vásquez"
+   en una sola línea partiría el nombre por la mitad. */
 .lead-degree {
-  font-size: 0.78em;
-  font-weight: 600;
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--gold2);
-  letter-spacing: 0.01em;
+  margin-bottom: 2px;
 }
 .lead-role {
   font-size: 0.96875rem;
@@ -452,13 +458,24 @@
   box-shadow: 0 6px 16px rgba(245, 124, 0, 0.28);
 }
 
-/* ─ Rejilla del resto del equipo ─ */
+/* ─ Rejilla del resto del equipo ─
+   Seis columnas fijas: el equipo entra completo en una sola fila y nadie
+   queda descolgado abajo. Las columnas se estrechan, así que la tarjeta
+   afina su relleno y su nombre. */
 .lead-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
   align-items: stretch;
 }
+.lead-grid .lead-card { padding: 24px 12px 20px; }
+.lead-grid .lead-avatar { width: 88px; height: 88px; }
+.lead-grid .lead-mono { font-size: 1.75rem; }
+.lead-grid .lead-name { font-size: 1.125rem; }
+.lead-grid .lead-role { font-size: 0.90625rem; }
+.lead-grid .lead-cta { font-size: 0.84375rem; letter-spacing: 0.06em; }
+.lead-grid .lead-card:hover .lead-cta,
+.lead-grid .lead-card:focus-visible .lead-cta { letter-spacing: 0.1em; }
 
 /* ═ Modal de reseña ═ */
 .lead-modal {
@@ -1090,6 +1107,14 @@
 }
 
 /* ── Responsive ── */
+
+/* Por debajo de este ancho la fila de seis empieza a partir los nombres. */
+@media (max-width: 1240px) {
+  .lead-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .lead-grid .lead-avatar { width: 96px; height: 96px; }
+  .lead-grid .lead-mono { font-size: 1.9375rem; }
+  .lead-grid .lead-name { font-size: 1.25rem; }
+}
 @media (max-width: 1024px) {
   /* La hoja sigue siendo una sola: la foto pasa a ser su cabecera. */
   .acsi-inner { grid-template-columns: 1fr; gap: 0; }
@@ -1130,10 +1155,13 @@
   .acsi-sello-frame { padding: 0 0 16px; max-width: 100%; }
   .acsi-sello { width: 150px; max-width: 100%; }
   .acsi-badges { grid-template-columns: 1fr; gap: 12px; padding-top: 24px; }
-  .lead-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+  .lead-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
   .lead-card { padding: 22px 12px 20px; }
   .lead-avatar { width: 84px; height: 84px; }
   .lead-name { font-size: 1.125rem; }
+  .lead-grid .lead-avatar { width: 84px; height: 84px; }
+  .lead-grid .lead-mono { font-size: 1.6875rem; }
+  .lead-grid .lead-name { font-size: 1.125rem; }
   .lead-modal-card { padding: 38px 24px 32px; }
   .laes-ejes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .laes-card, .junta-card { padding: 28px 22px; }
