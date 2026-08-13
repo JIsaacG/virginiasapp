@@ -393,6 +393,13 @@
   color: var(--forest);
   line-height: 1.2;
 }
+/* Título académico dentro del nombre (mismo dato que muestra el modal) */
+.lead-degree {
+  font-size: 0.78em;
+  font-weight: 600;
+  color: var(--gold2);
+  letter-spacing: 0.01em;
+}
 .lead-role {
   font-size: 0.96875rem;
   font-weight: 600;

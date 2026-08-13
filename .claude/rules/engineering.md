@@ -7,32 +7,32 @@ compartida del equipo.
 
 ---
 
-## REGLA CERO — pregunta antes de encender el pipeline
+## REGLA CERO — los agentes y los tests solo se ejecutan si el usuario los pide
 
-**El pipeline completo NO es el modo por defecto.** Por defecto se hace el trabajo y se
-ejecuta el gate mínimo. Nada más.
+**El modo por defecto es trabajo normal: haces el cambio y lo entregas.** Nada de agentes,
+nada de pipeline, nada de `verify:*`, nada de baterías de pruebas — porque consumen tokens
+y tiempo que el usuario no pidió gastar.
 
-Antes de invocar más de un agente de revisión, o de ejecutar `verify:medium` / `verify:high`,
-**pregúntale al usuario** con qué profundidad quiere trabajar. Una sola pregunta, con estas
-opciones:
+Se activan **únicamente** cuando el usuario lo solicita de forma explícita, con palabras
+suyas: *"pásalo por los agentes"*, *"revísalo a fondo"*, *"pipeline completo"*,
+*"corre verify"*, *"hazle tests"*. Si no lo dice, no se hace — tampoco "por si acaso",
+tampoco porque el cambio toque `api/`, formularios o la base de datos, tampoco como
+sugerencia disfrazada de ejecución.
 
-| Opción | Qué se ejecuta | Cuánto tarda |
-|---|---|---|
-| **Rápido** (por defecto) | El cambio + `npm run verify:low` | segundos |
-| **Normal** | + Web Quality + Adversarial Reviewer + Quality Gate | minutos |
-| **Completo** | Los 7 agentes + Lighthouse + Security Reviewer | varios minutos |
+Cuando el usuario sí lo pide, esta es la escala:
 
-Excepciones en las que **no** hace falta preguntar:
+| Nivel (lo pide el usuario) | Qué se ejecuta |
+|---|---|
+| **Rápido** | El cambio + `npm run verify:low` |
+| **Normal** | + Web Quality + Adversarial Reviewer + Quality Gate |
+| **Completo** | Los 7 agentes + Lighthouse + Security Reviewer |
 
-- El usuario ya dijo el nivel ("hazlo rápido", "revísalo a fondo", "pipeline completo").
-- El cambio toca `api/`, autenticación, formularios, base de datos, solicitudes de
-  admisión o `.htaccess`: ahí se asume **Completo** y se avisa, no se pregunta. Son datos
-  de familias reales.
-- Es una pregunta, no un cambio: no se ejecuta ningún gate.
+Qué sí se hace siempre, sin pedir permiso y sin coste: leer el código antes de tocarlo,
+hacer el cambio mínimo, y **decir con honestidad qué se verificó y qué no**. Entregar sin
+tests no es entregar diciendo que está probado: es entregar diciendo `UNVERIFIED`.
 
-Corregir un texto, un color o un enlace **no** justifica siete agentes. Si el usuario pide
-algo simple, hazlo, ejecuta `verify:low` y entrega. El sistema es proporcional al riesgo o
-no sirve: un gate que estorba en lo trivial se acaba desactivando en lo importante.
+Si un cambio te parece arriesgado y crees que merece revisión, **dilo en una frase y ofrécelo**;
+la decisión de gastar en ello es del usuario, no tuya.
 
 ---
 
@@ -96,6 +96,10 @@ Lighthouse o cualquier comando si no lo ejecutaste.** Distingue siempre entre:
 ---
 
 ## Clasificación de riesgo — el sistema es proporcional
+
+> Esta tabla describe **qué pipeline corresponde a cada nivel cuando el usuario pide
+> revisión** (REGLA CERO). No autoriza a lanzarlo por tu cuenta: sin petición explícita,
+> ningún pipeline se ejecuta, sea cual sea el riesgo.
 
 No conviertas un cambio de una palabra en una operación de treinta minutos.
 
