@@ -652,7 +652,7 @@
 }
 
 .mission-newsletter {
-  background: linear-gradient(125deg, var(--ceevs-brown, #6A2407) 0%, var(--ceevs-blue, #0B67A5) 52%, var(--ceevs-sky, #3BA6E0) 100%);
+  background: linear-gradient(125deg, var(--forest3, #4F1B05) 0%, var(--ceevs-brown, #6A2407) 52%, var(--moss, #8F3A10) 100%);
 }
 
 .mission-newsletter-wrap {
@@ -707,7 +707,7 @@
 }
 
 .mission-cta {
-  background: var(--ceevs-blue, #0B67A5);
+  background: var(--ceevs-brown, #6A2407);
   text-align: center;
 }
 
