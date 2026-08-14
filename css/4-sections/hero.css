@@ -64,9 +64,15 @@
 .hero-badge-year { font-family:'Playfair Display',serif; font-size:1.9375rem; font-weight:900; color:var(--gold2); line-height:1; }
 .hero-badge-est { font-size:0.9375rem; font-weight:600; color:var(--gold); letter-spacing:.12em; text-transform:uppercase; margin-top:3px; }
 
+/* `min-width:0` es imprescindible: el versículo usa `width:max-content` en
+   escritorio y, sin esto, su ancho intrínseco se convierte en el mínimo
+   automático de esta celda del grid, ensancha la columna izquierda y empuja la
+   foto/galería de la derecha. Con el mínimo en 0 las columnas siguen siendo
+   1fr 1fr y el versículo solo se desborda visualmente, como está previsto. */
 .hero-left {
   display:flex; flex-direction:column; justify-content:center;
   padding:80px 5vw 80px 8vw; position:relative; z-index:3;
+  min-width:0;
 }
 .hero-right {
   position:relative; z-index:3;
@@ -145,8 +151,12 @@
 .hero-headline .line2 { color:var(--gold2); font-style:italic; }
 .hero-headline .line3 { font-weight:400; font-size:.55em; font-style:normal; color:rgba(255,255,255,.55); letter-spacing:.01em; display:block; margin-top:4px; }
 
+/* `align-self:flex-start` para que la cajita mida su propio texto: como es hijo
+   de un flex column (.hero-left), el estirado por defecto la hacía tan ancha
+   como la columna (y por tanto como el versículo de arriba). */
 .hero-founding-text {
   display:inline-flex; align-items:center; gap:8px;
+  align-self:flex-start;
   background:rgba(171,100,35,.1); border:1px solid rgba(171,100,35,.25);
   border-radius:4px; padding:6px 14px; margin-bottom:26px;
   font-size:0.9375rem; color:var(--gold3); letter-spacing:.04em;
