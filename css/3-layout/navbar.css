@@ -3,27 +3,41 @@
    Diseño liviano con paleta institucional
 ═══════════════════════════════════════ */
 
+/* La barra vive en DOS PISOS a partir de 1025px:
+     · piso 1 — logo + nombre institucional a la izquierda, ES/EN y los dos
+       botones a la derecha;
+     · piso 2 — los siete enlaces centrados, bajo un filete fino.
+   En una sola fila el conjunto necesitaba ~1830px, así que casi ningún portátil
+   llegaba a verla y se quedaba con la hamburguesa. Repartida en dos pisos entra
+   holgada desde 1025px y la navegación está siempre a la vista. */
 #navbar {
   position: sticky;
   top: 0;
   z-index: 1000;
-  min-height: 72px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  padding: 12px clamp(18px, 4vw, 56px);
+  column-gap: 24px;
+  row-gap: 0;
+  padding: 10px clamp(18px, 3vw, 48px) 0;
   background: var(--cream, #FFF9F2);
   color: var(--ink, #1E1E1E);
   border-bottom: 1px solid var(--parch, #EBD7C0);
   box-shadow: 0 8px 24px rgba(30, 30, 30, 0.06);
   backdrop-filter: blur(12px);
-  transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s, padding 0.3s;
 }
 
+/* Al bajar, la barra se estrecha un poco en vez de desaparecer. */
 #navbar.scrolled {
   box-shadow: 0 10px 30px rgba(30, 30, 30, 0.10);
+  padding-top: 6px;
 }
+
+.nav-logo { order: 1; }
+.nav-cta  { order: 2; }
+.nav-links { order: 3; }
 
 /* ── Logo ── */
 .nav-logo {
@@ -43,6 +57,7 @@
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
+  transition: height 0.3s;
 }
 
 .nav-logo-image {
@@ -52,7 +67,11 @@
   max-width: 92px;
   object-fit: contain;
   display: block;
+  transition: max-height 0.3s;
 }
+
+#navbar.scrolled .nav-logo-img { height: 38px; }
+#navbar.scrolled .nav-logo-image { max-height: 38px; }
 
 .nav-wordmark {
   display: flex;
@@ -80,37 +99,47 @@
   font-weight: 600;
 }
 
-/* ── Links principales ── */
+/* ── Links principales — segundo piso, a todo lo ancho ── */
 .nav-links {
+  flex: 1 0 100%;
   display: flex;
   align-items: center;
-  /* Separación algo más ajustada para compensar el texto más grande. */
-  gap: clamp(10px, 1.3vw, 18px);
+  justify-content: center;
+  gap: clamp(14px, 2.1vw, 36px);
   list-style: none;
-  margin: 0;
-  padding: 0;
+  margin: 8px 0 0;
+  padding: 7px 0 9px;
+  border-top: 1px solid var(--parch, #EBD7C0);
+  transition: margin 0.3s, padding 0.3s;
+}
+
+#navbar.scrolled .nav-links {
+  margin-top: 5px;
+  padding: 5px 0 7px;
 }
 
 .nav-links a {
   color: var(--ink, #1E1E1E);
   text-decoration: none;
   font-weight: 600;
-  /* 16px: +11% sobre los 14,4px originales. No sube a 16,5px como el resto de
-     la escala porque la barra horizontal no da más de sí a lo ancho. */
+  /* 16px: +11% sobre los 14,4px originales. Cabe sin apreturas porque los
+     enlaces tienen ahora una fila entera para ellos. */
   font-size: 1rem;
+  letter-spacing: 0.01em;
   position: relative;
-  padding: 8px 0;
+  padding: 6px 2px;
   white-space: nowrap;
   transition: color 0.2s;
 }
 
+/* Filete fino: 2px, no 3px — con la fila propia se lee mejor discreto. */
 .nav-links a::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 2px;
-  height: 3px;
+  bottom: 0;
+  height: 2px;
   border-radius: 999px;
   background: var(--gold, #D7AF4A);
   transform: scaleX(0);
@@ -429,6 +458,6 @@ button:focus-visible {
 }
 
 /* Emparejado con el colapso a hamburguesa de 5-responsive/media-queries.css. */
-@media (max-width: 1860px) {
+@media (max-width: 1024px) {
   .nav-lang { display: none; }
 }

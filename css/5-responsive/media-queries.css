@@ -111,12 +111,14 @@
 /* ═══════════════════════════════════════
    NAVBAR — RESPONSIVE (Fase 1)
 ═══════════════════════════════════════ */
-/* El corte subió de 1660px a 1860px al agrandar la tipografía: con los enlaces
-   a 16px la barra horizontal completa (7 enlaces + 2 CTAs + conmutador ES/EN)
-   necesita ~1830px. Por debajo de 1860px se usa el menú lateral, que además da
-   objetivos táctiles mayores. Va emparejado con el mismo corte de .nav-lang en
-   3-layout/navbar.css. */
-@media (max-width: 1860px) {
+/* El corte baja de 1860px a 1024px. En una sola fila el conjunto (7 enlaces +
+   2 CTAs + conmutador ES/EN + el nombre institucional) pedía ~1830px, así que
+   en la práctica ningún portátil veía la navegación: se quedaba siempre con la
+   hamburguesa. Ahora la barra se reparte en dos pisos (ver 3-layout/navbar.css)
+   y entra holgada desde 1025px. Por debajo, tablet y móvil siguen con el menú
+   lateral, que da objetivos táctiles mayores. Va emparejado con el mismo corte
+   de .nav-lang en 3-layout/navbar.css. */
+@media (max-width: 1024px) {
   .nav-links,
   .nav-cta .btn-nav-ghost,
   .nav-cta .btn-nav-solid {
@@ -127,8 +129,14 @@
     display: inline-flex;
   }
 
-  #navbar {
+  /* Sin segundo piso vuelve a ser una barra de una sola fila: nowrap explícito
+     para que en pantallas estrechas el nombre se recorte con puntos suspensivos
+     en vez de empujar la hamburguesa a una segunda línea. */
+  #navbar,
+  #navbar.scrolled {
+    flex-wrap: nowrap;
     min-height: 64px;
+    padding: 12px clamp(18px, 4vw, 56px);
   }
 
   .nav-wordmark strong,
@@ -138,7 +146,8 @@
 }
 
 @media (max-width: 480px) {
-  #navbar {
+  #navbar,
+  #navbar.scrolled {
     padding: 10px 16px;
     gap: 12px;
   }
