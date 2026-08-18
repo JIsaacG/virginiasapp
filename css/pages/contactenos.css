@@ -65,3 +65,46 @@
     font-size: clamp(1.9375rem, 8.75vw, 2.1875rem);
   }
 }
+
+/* ── Foto de la columna "Hablemos" (clave cn-hablemos-foto) ──
+   Cierra el hueco que dejaba la columna izquierda frente a los canales
+   directos. La imagen es administrable desde el panel; el zoom que aplica
+   image-manager.js va sobre el <img>, por eso el realce del hover vive en la
+   figura y no se pisan entre sí. */
+#contacto .contacto-visual {
+  position: relative;
+  margin: 40px 0 0;
+  overflow: hidden;
+  border: 1px solid rgba(171, 100, 35, .18);
+  border-radius: var(--rxl);
+  background: var(--cream2);
+  box-shadow: 0 16px 40px rgba(65, 36, 4, .12);
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+
+#contacto .contacto-visual:hover {
+  transform: translateY(-4px);
+  border-color: rgba(171, 100, 35, .34);
+  box-shadow: 0 24px 54px rgba(65, 36, 4, .18);
+}
+
+#contacto .contacto-visual img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Sin imagen publicada ni por defecto no se deja un marco vacío. */
+#contacto .contacto-visual img:not([src]) { display: none; }
+
+@media (max-width: 900px) {
+  #contacto .contacto-visual { margin-top: 32px; }
+  #contacto .contacto-visual img { aspect-ratio: 16 / 10; }
+}
+
+@media (max-width: 600px) {
+  #contacto .contacto-visual { margin-top: 28px; border-radius: var(--rl); }
+  #contacto .contacto-visual img { aspect-ratio: 4 / 3; }
+}

@@ -187,6 +187,48 @@
 
 .mission-gallery-card-lg {
   min-height: 420px;
+  grid-row: span 2;
+}
+
+/* Huecos reservados del mosaico (me-momento-4/5): sin foto publicada se ve el
+   aviso "pendiente"; al guardarla desde el panel aparece la imagen y su pie.
+   La clase .img-hueco-lleno la pone image-manager.js. */
+.mission-gallery-card-hueco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  background: var(--cream2, #FBF6EE);
+  border: 1.5px dashed rgba(171, 100, 35, 0.45);
+  box-shadow: none;
+}
+
+.mission-gallery-card-hueco::after,
+.mission-gallery-card-hueco figcaption {
+  display: none;
+}
+
+.mission-gallery-note {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold2, #AB6423);
+  line-height: 1.5;
+}
+
+.mission-gallery-card-hueco.img-hueco-lleno {
+  display: block;
+  padding: 0;
+  border-style: solid;
+  border-color: rgba(171, 100, 35, 0.22);
+  box-shadow: 0 24px 56px rgba(30, 30, 30, 0.12);
+}
+
+.mission-gallery-card-hueco.img-hueco-lleno::after,
+.mission-gallery-card-hueco.img-hueco-lleno figcaption {
+  display: block;
 }
 
 .mission-card-media,
@@ -618,6 +660,49 @@
   align-items: start;
 }
 
+/* Foto administrable de la columna de texto (me-conecta-foto) */
+.mission-connect-visual {
+  margin-top: 22px;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  overflow: hidden;
+  border: 1.5px dashed rgba(171, 100, 35, 0.45);
+  border-radius: 22px;
+  background: var(--cream2, #FBF6EE);
+}
+
+.mission-connect-visual img {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 20px;
+}
+
+.mission-connect-visual.img-hueco-lleno {
+  display: block;
+  padding: 0;
+  min-height: 0;
+  border-style: solid;
+  border-color: rgba(171, 100, 35, 0.22);
+  box-shadow: 0 18px 44px rgba(30, 30, 30, 0.08);
+}
+
+.mission-connect-note {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold2, #AB6423);
+  line-height: 1.5;
+}
+
 .mission-connect-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -671,6 +756,49 @@
   color: rgba(255, 255, 255, 0.82);
 }
 
+/* Foto administrable del bloque de suscripción (me-suscripcion-foto) */
+.mission-newsletter-visual {
+  margin-top: 22px;
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  overflow: hidden;
+  border: 1.5px dashed rgba(255, 255, 255, 0.42);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mission-newsletter-visual img {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 22px;
+}
+
+.mission-newsletter-visual.img-hueco-lleno {
+  display: block;
+  padding: 0;
+  min-height: 0;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.22);
+}
+
+.mission-newsletter-note {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.5;
+}
+
 .mission-newsletter-form {
   display: grid;
   gap: 16px;
@@ -707,8 +835,34 @@
 }
 
 .mission-cta {
+  position: relative;
+  overflow: hidden;
   background: var(--ceevs-brown, #6A2407);
   text-align: center;
+}
+
+/* Fondo opcional del cierre: sin imagen publicada el bloque queda igual que
+   antes (image-manager.js oculta el <img> vacío); con imagen se le pone un velo
+   para que el texto siga legible. */
+.mission-cta-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.mission-cta.img-hueco-lleno::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(58, 20, 4, 0.82) 0%, rgba(58, 20, 4, 0.9) 100%);
+}
+
+.mission-cta > .container {
+  position: relative;
+  z-index: 1;
 }
 
 .mission-cta h2 {
@@ -747,6 +901,10 @@
   .mission-hero-showcase {
     grid-template-columns: 1fr;
     max-width: 760px;
+  }
+
+  .mission-gallery-card-lg {
+    grid-row: auto;
   }
 
   .mission-hero-side {

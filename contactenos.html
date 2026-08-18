@@ -39,8 +39,8 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet"></noscript>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="dist/main.min.css?v=20260814-navbar">
-  <link rel="stylesheet" href="css/pages/contactenos.css?v=20260812-tipografia">
+  <link rel="stylesheet" href="dist/main.min.css?v=20260818-exalumnos">
+  <link rel="stylesheet" href="css/pages/contactenos.css?v=20260818-hablemos">
   <!-- Datos estructurados (JSON-LD) — ruta de navegación -->
   <script type="application/ld+json">
   {
@@ -301,6 +301,15 @@
       <a class="soc-btn" href="https://www.instagram.com/sappvirginia/" target="_blank" rel="noopener" title="Instagram CEEVS">ig</a>
       <span class="soc-btn soc-disabled" title="YouTube (próximamente)" aria-disabled="true">yt</span>
     </div>
+    <!-- Foto administrable de la columna (clave cn-hablemos-foto, panel →
+         pestaña Imágenes → "📞 Contáctenos"). Ocupa el aire que dejaba esta
+         columna frente a los canales directos; se cambia desde el panel sin
+         tocar el HTML y acepta posición/ajuste/zoom como el resto. -->
+    <figure class="contacto-visual">
+      <img data-img-key="cn-hablemos-foto"
+           src="https://virginiasapp.edu.hn/wp-content/uploads/2026/01/IMG_5896.jpg"
+           alt="Estudiantes del Centro Educativo Evangélico Virginia Sapp en clase" loading="lazy">
+    </figure>
   </div>
 
   <!-- ─── CANALES DIRECTOS (Fase 4 · SDD-F4-CONTACT-001/002/003) ─── -->
@@ -376,13 +385,30 @@
   <div class="exalumnos-inner">
     <div class="section-label"><span>Comunidad de egresados</span></div>
     <div class="exalumnos-content reveal">
-      <div class="exalumnos-text">
-        <h2>Una vez Virginia Sapp, <em>siempre</em> Virginia Sapp</h2>
-        <p>Más de seis décadas de egresados que llevan con orgullo el sello CEEVS. Nuestra comunidad de exalumnos es testimonio vivo de una formación que trasciende las aulas.</p>
-        <p>Si eres exalumno/a del Centro Educativo Evangélico Virginia Sapp, te invitamos a mantenerte conectado con tu alma máter. Escríbenos por WhatsApp y comparte tu historia con la comunidad CEEVS.</p>
+      <!-- Dos huecos administrables (claves cn-exalumnos-1 y cn-exalumnos-2):
+           la foto se sube desde el panel (pestaña Imágenes, sección
+           "Contáctenos") y sustituye la trama; el aviso "pendiente"
+           desaparece solo cuando están las dos. -->
+      <div class="exalumnos-fotos" data-img-grupo>
+        <figure class="exalumnos-foto" data-img-hueco>
+          <span class="exalumnos-foto-vacia img-hueco-marca" aria-hidden="true"></span>
+          <img data-img-slot data-img-key="cn-exalumnos-1" alt="Egresados del Centro Educativo Evangélico Virginia Sapp" loading="lazy">
+        </figure>
+        <figure class="exalumnos-foto" data-img-hueco>
+          <span class="exalumnos-foto-vacia img-hueco-marca" aria-hidden="true"></span>
+          <img data-img-slot data-img-key="cn-exalumnos-2" alt="Comunidad de exalumnos del Centro Educativo Evangélico Virginia Sapp" loading="lazy">
+        </figure>
+        <p class="exalumnos-nota img-hueco-marca">Pendiente subir imágenes</p>
       </div>
-      <div class="exalumnos-cta">
-        <a href="https://wa.me/50492215752?text=Hola%2C%20soy%20exalumno%2Fa%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp%20y%20quiero%20mantenerme%20conectado%2Fa." target="_blank" rel="noopener" class="btn-cta-main">Escríbenos como exalumno/a</a>
+      <div class="exalumnos-col">
+        <div class="exalumnos-text">
+          <h2>Una vez Virginia Sapp, <em>siempre</em> Virginia Sapp</h2>
+          <p>Más de seis décadas de egresados que llevan con orgullo el sello CEEVS. Nuestra comunidad de exalumnos es testimonio vivo de una formación que trasciende las aulas.</p>
+          <p>Si eres exalumno/a del Centro Educativo Evangélico Virginia Sapp, te invitamos a mantenerte conectado con tu alma máter. Escríbenos por WhatsApp y comparte tu historia con la comunidad CEEVS.</p>
+        </div>
+        <div class="exalumnos-cta">
+          <a href="https://wa.me/50492215752?text=Hola%2C%20soy%20exalumno%2Fa%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp%20y%20quiero%20mantenerme%20conectado%2Fa." target="_blank" rel="noopener" class="btn-cta-main">Escríbenos como exalumno/a</a>
+        </div>
       </div>
     </div>
   </div>

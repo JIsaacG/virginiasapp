@@ -158,6 +158,32 @@
         { key: 'me-momento-3', label: 'Momentos — Foto 3: Campus', defaultUrl: WP + '2025/12/IMG_2006.jpg' }
       ]
     },
+    {
+      /* Huecos reservados de la página: sin foto se muestra el aviso "pendiente";
+         al guardar una imagen aquí, el aviso desaparece solo en el sitio. */
+      page: '✝️ Misión Evangelística (huecos pendientes)',
+      images: [
+        { key: 'me-paso-1', label: 'Cómo funciona — Paso 1: Explora los cursos' },
+        { key: 'me-paso-2', label: 'Cómo funciona — Paso 2: Abre las lecciones' },
+        { key: 'me-paso-3', label: 'Cómo funciona — Paso 3: Marca tu avance' },
+        { key: 'me-momento-4', label: 'Momentos — Foto 4: Oración y reflexión' },
+        { key: 'me-momento-5', label: 'Momentos — Foto 5: Familias' },
+        { key: 'me-conecta-foto', label: 'Conecta con nosotros — Foto de la columna de texto' },
+        { key: 'me-suscripcion-foto', label: 'Suscripción — Foto del bloque de correo' },
+        { key: 'me-cta-fondo', label: 'Cierre — Imagen de fondo del bloque final' }
+      ]
+    },
+    {
+      /* La foto de "Hablemos" trae imagen por defecto; los dos huecos de
+         exalumnos no: sin foto muestran el aviso "pendiente", que desaparece
+         solo al guardar la imagen aquí. */
+      page: '📞 Contáctenos (contactenos.html)',
+      images: [
+        { key: 'cn-hablemos-foto', label: 'Hablemos — Foto junto a los canales directos', defaultUrl: WP + '2026/01/IMG_5896.jpg' },
+        { key: 'cn-exalumnos-1', label: 'Comunidad de egresados — Foto 1 (hueco pendiente)' },
+        { key: 'cn-exalumnos-2', label: 'Comunidad de egresados — Foto 2 (hueco pendiente)' }
+      ]
+    },
     albumSection(1, 'Graduación 2023 (11vo B y C Bilingüe)', [
       UNSPLASH + 'photo-1523580846011-d3a5bc25702b?w=800&q=75&auto=format',
       UNSPLASH + 'photo-1540575467063-178a50c2df87?w=500&q=70&auto=format',

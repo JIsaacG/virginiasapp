@@ -17,6 +17,9 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  /* Centrado; "safe" evita que se recorte el primer enlace si no cabe */
+  justify-content: center;
+  justify-content: safe center;
   padding: 12px clamp(16px, 4vw, 56px);
   overflow-x: auto;
   scrollbar-width: thin;
