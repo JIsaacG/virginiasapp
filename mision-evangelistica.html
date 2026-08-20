@@ -422,6 +422,12 @@
         </figure>
       </div>
       <form class="mission-newsletter-form" id="mission-newsletter-form" novalidate>
+        <!-- Campo trampa anti-robots: invisible para las personas -->
+        <div class="form-hp" aria-hidden="true">
+          <label for="mn-sitio-web">No llenar este campo</label>
+          <input type="text" id="mn-sitio-web" tabindex="-1" autocomplete="off">
+        </div>
+
         <label>
           <span>Nombre</span>
           <input type="text" id="mn-nombre" name="nombre" placeholder="Tu nombre completo" autocomplete="name">

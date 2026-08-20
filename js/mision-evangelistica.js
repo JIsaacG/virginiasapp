@@ -3,9 +3,10 @@
 const MisionEvangelistica = {
   name: 'MisionEvangelistica',
 
-  WEB3FORMS_KEY: '61f1a5f2-8d5e-4634-9d1e-0f1aa515f9cb',
-  API_URL: 'https://api.web3forms.com/submit',
-  SUBJECT: 'SUSCRIPCION MISION EVANGELISTICA CEEVS',
+  /* El correo lo manda api/contacto.php desde la cuenta institucional. Antes
+     salía por Web3Forms, con la clave del servicio escrita aquí mismo y por
+     tanto legible por cualquiera que abriera este archivo. */
+  API_URL: 'api/contacto.php',
 
   DAILY_LIMIT: 2,
   RATE_KEY: 'ceevs_mission_newsletter_rate',
@@ -101,25 +102,25 @@ const MisionEvangelistica = {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
+        // El texto del correo lo arma el servidor: así el formato no depende de
+        // lo que mande el navegador, que es manipulable.
         body: JSON.stringify({
-          access_key: this.WEB3FORMS_KEY,
-          subject: this.SUBJECT,
-          from_name: nombre || 'Suscriptor Mision Evangelistica CEEVS',
-          replyto: correo,
-          message: [
-            'Nueva suscripción a Misión Evangelística CEEVS',
-            '',
-            'Nombre: ' + (nombre || '(no indicado)'),
-            'Correo: ' + correo,
-            'Perfil: ' + (perfil || '(no indicado)'),
-            '',
-            'Origen: mision-evangelistica.html',
-          ].join('\n'),
+          tipo: 'suscripcion',
+          nombre,
+          correo,
+          perfil,
+          sitio_web: value('mn-sitio-web'),
         }),
       });
 
       const json = await response.json().catch(() => ({}));
-      if (!response.ok || json.success === false) throw new Error(json.message || `HTTP ${response.status}`);
+      if (!response.ok || json.ok !== true) {
+        // Cuando el servidor explica el motivo (cupo agotado, correo inválido…),
+        // se le enseña a la persona en vez de culpar a su conexión.
+        const err = new Error(json.error || `HTTP ${response.status}`);
+        err.delServidor = typeof json.error === 'string' && json.error !== '';
+        throw err;
+      }
 
       this._recordSubmission();
       form?.reset();
@@ -143,8 +144,8 @@ const MisionEvangelistica = {
       }
 
       this._updateRateUI();
-    } catch {
-      fail('No se pudo registrar la suscripción. Revisa tu conexión e intenta de nuevo.');
+    } catch (err) {
+      fail(err?.delServidor ? err.message : 'No se pudo registrar la suscripción. Revisa tu conexión e intenta de nuevo.');
       this._updateRateUI();
     }
   },

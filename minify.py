@@ -25,12 +25,60 @@ JS_FILES = [
 ]
 
 
+# calc(), min(), max() y clamp() son funciones matematicas: CSS EXIGE espacio
+# alrededor de '+' y '-'. Como el minificador colapsa los espacios pegados a
+# '+' (lo necesita para el combinador hermano `a + b`), su contenido se aparta
+# antes de minificar y se restaura al final. Sin esto, `calc(100% + 8px)` sale
+# como `calc(100%+8px)`: el navegador descarta la declaracion y la regla se
+# pierde en dist/main.min.css aunque el CSS de origen este bien escrito.
+MATH_FN_RE = re.compile(r'(?<![\w-])(calc|min|max|clamp)\(', re.IGNORECASE)
+
+
+def compact_math(expr):
+    """Compacta una funcion matematica sin tocar los espacios obligatorios."""
+    expr = re.sub(r'\s+', ' ', expr)
+    expr = re.sub(r'\(\s+', '(', expr)
+    expr = re.sub(r'\s+\)', ')', expr)
+    expr = re.sub(r'\s*,\s*', ',', expr)
+    expr = re.sub(r'\s*([*/])\s*', r'\1', expr)
+    return expr
+
+
+def protect_math(text):
+    """Aparta cada funcion matematica tras un marcador sin espacios."""
+    parts, stash, i = [], [], 0
+    while True:
+        m = MATH_FN_RE.search(text, i)
+        if not m:
+            parts.append(text[i:])
+            break
+        parts.append(text[i:m.start()])
+        depth, end = 0, len(text)
+        for k in range(m.end() - 1, len(text)):
+            if text[k] == '(':
+                depth += 1
+            elif text[k] == ')':
+                depth -= 1
+                if depth == 0:
+                    end = k + 1
+                    break
+        stash.append(compact_math(text[m.start():end]))
+        parts.append('\x00{}\x00'.format(len(stash) - 1))
+        i = end
+    return ''.join(parts), stash
+
+
+def restore_math(text, stash):
+    return re.sub(r'\x00(\d+)\x00', lambda m: stash[int(m.group(1))], text)
+
+
 def minify_css(text):
     text = re.sub(r'/\*.*?\*/', '', text, flags=re.DOTALL)
+    text, math = protect_math(text)
     text = re.sub(r'\s+', ' ', text)
     text = re.sub(r'\s*([{}:;,>~+])\s*', r'\1', text)
     text = re.sub(r';\}', '}', text)
-    return text.strip()
+    return restore_math(text.strip(), math)
 
 
 def minify_js(text):

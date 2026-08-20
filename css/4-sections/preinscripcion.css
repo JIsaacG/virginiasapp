@@ -190,8 +190,11 @@
 }
 
 /* Campo trampa anti-robots: fuera de la vista, pero no display:none
-   (algunos robots ignoran los ocultos con display). */
-.preins-hp {
+   (algunos robots ignoran los ocultos con display).
+   .form-hp es el mismo recurso para el resto de formularios del sitio
+   (sugerencias, suscripción a Misión Evangelística). */
+.preins-hp,
+.form-hp {
   position: absolute;
   left: -9999px;
   width: 1px;

@@ -31,6 +31,7 @@ return array(
   'from_email'    => '', // Cuenta autorizada para enviar (la misma del usuario SMTP)
   'from_name'     => 'Centro Educativo Evangélico Virginia Sapp',
   'admissions_to' => '', // Dirección institucional que recibirá las solicitudes
+  'forms_to'      => '', // Sugerencias y suscripciones (vacío = administracion.general@)
 
   'timeout'       => 15,
 );

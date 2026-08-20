@@ -2,23 +2,18 @@
 
 /* ═══════════════════════════════════════
    SUGERENCIAS — Fase 4 CEEVS
-   Envío directo vía Web3Forms (sin cliente de correo).
-   Rate limit: máx. 3 envíos por día por navegador.
+   El correo lo manda api/contacto.php desde la cuenta institucional del sitio.
+   Antes salía por Web3Forms, un servicio externo cuya clave viajaba en este
+   mismo archivo: cualquiera podía leerla y escribirle al buzón del colegio.
 
-   ► CONFIGURACIÓN REQUERIDA:
-     1. Ve a https://web3forms.com
-     2. Ingresa: administracion.general@virginiasapp.edu.hn
-     3. Confirma el correo de activación
-     4. Copia el access key y reemplaza el valor de WEB3FORMS_KEY abajo
+   Este freno (3 al día) es solo comodidad para el usuario; el que de verdad
+   protege es el del servidor, que no depende del localStorage del navegador.
 ═══════════════════════════════════════ */
 
 const Sugerencias = {
   name: 'Sugerencias',
 
-  WEB3FORMS_KEY: '61f1a5f2-8d5e-4634-9d1e-0f1aa515f9cb',
-
-  SUBJECT: 'OPORTUNIDAD DE MEJORA CEEVS',
-  API_URL: 'https://api.web3forms.com/submit',
+  API_URL: 'api/contacto.php',
 
   // Rate limit: máx. 3 envíos al día por navegador (localStorage)
   DAILY_LIMIT: 3,
@@ -102,27 +97,30 @@ const Sugerencias = {
       const res = await fetch(this.API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        // El texto del correo lo arma el servidor: así el formato no depende de
+        // lo que mande el navegador, que es manipulable.
         body: JSON.stringify({
-          access_key: this.WEB3FORMS_KEY,
-          subject:    this.SUBJECT,
-          from_name:  nombre || 'Anónimo (CEEVS)',
-          message: [
-            'Nombre:    ' + (nombre   || '(no indicado)'),
-            'Nivel:     ' + nivel,
-            'Grado:     ' + (grado    || '(no indicado)'),
-            'Sección:   ' + (seccion  || '(no indicada)'),
-            'Área:      ' + (area     || '(no indicada)'),
-            '',
-            'Mensaje:',
-            mensaje,
-            '',
-            'Contacto:  ' + (contacto || '(no indicado)'),
-          ].join('\n'),
+          tipo: 'sugerencia',
+          nombre,
+          nivel,
+          grado,
+          seccion,
+          area,
+          mensaje,
+          contacto,
+          sitio_web: val('sg-sitio-web'),
         }),
       });
 
       const json = await res.json().catch(() => ({}));
-      if (!res.ok || json.success === false) throw new Error(json.message || `HTTP ${res.status}`);
+      if (!res.ok || json.ok !== true) {
+        // Cuando el servidor explica el motivo (cupo agotado, dato inválido…),
+        // se le enseña a la persona: vale más que "revisa tu conexión" cuando la
+        // conexión no tiene nada que ver.
+        const err = new Error(json.error || `HTTP ${res.status}`);
+        err.delServidor = typeof json.error === 'string' && json.error !== '';
+        throw err;
+      }
 
       this._recordSubmission();
       document.getElementById('sugerencias-form')?.reset();
@@ -145,8 +143,8 @@ const Sugerencias = {
 
       this._updateRateUI();
 
-    } catch {
-      fail('No se pudo enviar. Revisa tu conexión e intenta de nuevo.');
+    } catch (err) {
+      fail(err?.delServidor ? err.message : 'No se pudo enviar. Revisa tu conexión e intenta de nuevo.');
       if (btn) { btn.disabled = false; btn.textContent = 'Enviar sugerencia'; }
     }
   },

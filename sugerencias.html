@@ -39,7 +39,7 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet"></noscript>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="dist/main.min.css?v=20260814-navbar">
+  <link rel="stylesheet" href="dist/main.min.css?v=20260820-calc">
   <!-- Datos estructurados (JSON-LD) — ruta de navegación -->
   <script type="application/ld+json">
   {
@@ -227,6 +227,12 @@
 
       <div class="sugerencias-card">
         <form id="sugerencias-form" novalidate>
+          <!-- Campo trampa anti-robots: invisible para las personas -->
+          <div class="form-hp" aria-hidden="true">
+            <label for="sg-sitio-web">No llenar este campo</label>
+            <input type="text" id="sg-sitio-web" tabindex="-1" autocomplete="off">
+          </div>
+
           <div class="sg-row">
             <div class="sg-group">
               <label class="sg-label" for="sg-nombre">Nombre <span class="sg-optional">(opcional)</span></label>

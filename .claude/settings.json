@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(python generate-pages.py 2>&1)"
+      "PowerShell(python generate-pages.py 2>&1)",
+      "Bash(sed -i \"s|^import puppeteer from .*|import puppeteer from 'file:///C:/xampp1/VirginiaSappAlex/virginiasapp/node_modules/puppeteer-core/lib/esm/puppeteer/puppeteer-core.js';|\" audit.mjs)",
+      "Bash(node audit.mjs)"
     ]
   }
 }
