@@ -40,7 +40,7 @@ const Mascota = (function () {
 
   // Frames servidos como WebP 256px (los PNG 1254px originales quedan como
   // fuente en assets/animacion/; regenerar con Pillow si se editan).
-  const ASSET_VER = '3';   // súbelo si vuelves a editar los frames (rompe caché)
+  const ASSET_VER = '4';   // súbelo si vuelves a editar los frames (rompe caché)
   const rnd = (a, b) => a + Math.random() * (b - a);
   const src = (n) => BASE + n + '.webp?v=' + ASSET_VER;
 
