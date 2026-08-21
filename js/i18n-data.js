@@ -683,6 +683,7 @@ window.CEEVS_I18N = {
   "Habilidades": "Skills",
   "Hablar con un asesor": "Talk to an advisor",
   "💬 Hablar por WhatsApp": "💬 Chat on WhatsApp",
+  "💬 Contáctenos": "💬 Contact us",
   "Hablemos": "Let's talk",
   "Hacer una pregunta": "Ask a question",
   "Has alcanzado el límite de 2 registros por día. Vuelve mañana.": "You have reached the limit of 2 registrations per day. Come back tomorrow.",
