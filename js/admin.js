@@ -1035,10 +1035,12 @@
       if (cfg.image && cfg.enabled) {
         box.innerHTML = '<p>✅ Comunicado <strong>activo</strong>. Se muestra ' +
           (cfg.repeat ? 'en cada página que visite el usuario' : 'una vez por visita') + '.</p>' +
-          '<img src="' + escapeHtml(cfg.image) + '" alt="Vista previa del comunicado" class="com-admin-preview">';
+          '<img src="' + escapeHtml(cfg.image) + '" alt="Vista previa del comunicado" class="com-admin-preview">' +
+          (cfg.alt ? '<p class="com-admin-msg">' + escapeHtml(cfg.alt) + '</p>' : '');
       } else if (cfg.image) {
         box.innerHTML = '<p>⏸ Comunicado cargado pero <strong>desactivado</strong>: los visitantes no lo ven.</p>' +
-          '<img src="' + escapeHtml(cfg.image) + '" alt="Vista previa del comunicado" class="com-admin-preview">';
+          '<img src="' + escapeHtml(cfg.image) + '" alt="Vista previa del comunicado" class="com-admin-preview">' +
+          (cfg.alt ? '<p class="com-admin-msg">' + escapeHtml(cfg.alt) + '</p>' : '');
       } else {
         box.innerHTML = '<p>Sin comunicado configurado. El sitio abre directamente en la página.</p>';
       }

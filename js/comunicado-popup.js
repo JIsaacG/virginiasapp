@@ -69,9 +69,17 @@
     var card = document.createElement('div');
     card.className = 'com-popup-card';
 
+    var body = document.createElement('div');
+    body.className = 'com-popup-body';
+
     var img = document.createElement('img');
     img.className = 'com-popup-img';
     img.alt = DEFAULT_ALT;
+
+    var msg = document.createElement('p');
+    msg.className = 'com-popup-msg';
+    msg.id = 'comunicado-popup-msg';
+    msg.hidden = true;
 
     var closeX = document.createElement('button');
     closeX.type = 'button';
@@ -88,7 +96,9 @@
     closeBtn.textContent = 'Cerrar y continuar';
     foot.appendChild(closeBtn);
 
-    card.appendChild(img);
+    body.appendChild(img);
+    body.appendChild(msg);
+    card.appendChild(body);
     card.appendChild(closeX);
     card.appendChild(foot);
     overlay.appendChild(card);
@@ -123,6 +133,7 @@
     img.addEventListener('error', function () { close(); });
 
     overlay.__img = img;
+    overlay.__msg = msg;
     overlay.__closeBtn = closeBtn;
     return overlay;
   }
@@ -134,9 +145,23 @@
     var el = build();
     var img = el.__img;
     if (img.getAttribute('src') !== cfg.image) img.setAttribute('src', cfg.image);
-    var alt = (cfg.alt || '').trim() || DEFAULT_ALT;
-    img.alt = alt;
-    el.setAttribute('aria-label', alt);
+    var texto = (cfg.alt || '').trim();
+    var msg = el.__msg;
+    if (texto) {
+      // El mensaje se muestra debajo de la imagen y además la describe:
+      // por eso la imagen queda con alt vacío (si no, se leería dos veces).
+      msg.textContent = texto;
+      msg.hidden = false;
+      img.alt = '';
+      el.setAttribute('aria-labelledby', msg.id);
+      el.removeAttribute('aria-label');
+    } else {
+      msg.textContent = '';
+      msg.hidden = true;
+      img.alt = DEFAULT_ALT;
+      el.removeAttribute('aria-labelledby');
+      el.setAttribute('aria-label', DEFAULT_ALT);
+    }
     el.hidden = false;
     el.classList.add('open');
     document.documentElement.classList.add('com-popup-lock');

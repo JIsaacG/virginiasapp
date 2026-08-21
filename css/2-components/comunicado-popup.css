@@ -36,12 +36,30 @@
   animation: comPopupIn .45s cubic-bezier(.34, 1.4, .64, 1) both;
 }
 
+.com-popup-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 14px;
+}
+
 .com-popup-img {
   display: block;
   width: 100%;
-  max-height: calc(100vh - 150px);
+  max-height: 70vh;
   object-fit: contain;
   background: var(--cream2);
+}
+
+.com-popup-msg {
+  margin: 0;
+  padding: 18px 24px 4px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--ink);
+  text-align: center;
+  white-space: pre-line;
 }
 
 .com-popup-foot {
@@ -50,6 +68,7 @@
   justify-content: center;
   padding: 14px 18px 16px;
   background: var(--cream);
+  border-top: 1px solid rgba(30, 30, 30, 0.08);
 }
 
 .com-popup-btn {
@@ -109,7 +128,8 @@
 @media (max-width: 640px) {
   .com-popup { padding: 16px 12px; }
   .com-popup-card { border-radius: var(--r); }
-  .com-popup-img { max-height: calc(100vh - 140px); }
+  .com-popup-img { max-height: 60vh; }
+  .com-popup-msg { padding: 14px 16px 2px; font-size: 1rem; }
   .com-popup-btn { width: 100%; }
 }
 

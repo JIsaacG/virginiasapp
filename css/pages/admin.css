@@ -1401,3 +1401,18 @@ details.admin-section > .admin-card { margin-top: 14px; }
   border: 1px solid rgba(65, 36, 4, 0.15);
   box-shadow: 0 6px 18px rgba(65, 36, 4, 0.12);
 }
+
+.com-msg-input {
+  resize: vertical;
+  min-height: 76px;
+  font-family: 'Outfit', sans-serif;
+  line-height: 1.5;
+}
+
+.com-admin-msg {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--forest, #412404);
+  white-space: pre-line;
+}
