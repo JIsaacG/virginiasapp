@@ -1208,6 +1208,7 @@ window.CEEVS_I18N = {
   "Solicitar admisión 2026–2027": "Request admission 2026–2027",
   "Solicitar admisión ahora": "Request admission now",
   "🎓 Solicitar admisión en EDUBOX": "🎓 Request admission in EDUBOX",
+  "🎓 Solicitar admisión en línea": "🎓 Request admission online",
   "Solicitud de Admisión": "Admission Application",
   "Solidaridad": "Solidarity",
   "Solo en español": "Spanish only",

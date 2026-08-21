@@ -15,6 +15,9 @@ const Quiz = {
 
   // Fuente de verdad de redirecciones (espejo de data/redirects.json)
   REDIRECTS: {
+    // La solicitud de admisión se hace en el formulario propio del sitio,
+    // no en EDUBOX (EDUBOX queda solo para la matrícula/plataforma).
+    preinscripcion: 'preinscripcion.html',
     edubox: 'https://portal.edubox.app/login/virginiasapp',
     waGeneral: 'https://wa.me/50492215752?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp.',
     waPrimaria: 'https://wa.me/50492215752?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20de%20Primaria%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp.',
@@ -180,7 +183,7 @@ const Quiz = {
         ? '💬 Consultar por WhatsApp Secundaria'
         : '💬 Consultar por WhatsApp Primaria';
       ctas = [
-        { label: '🎓 Solicitar admisión en EDUBOX', href: R.edubox, cls: 'btn-cta-main', external: true },
+        { label: '🎓 Solicitar admisión en línea', href: R.preinscripcion, cls: 'btn-cta-main', external: false },
         { label: waLabel, href: wa, cls: 'btn-cta-ghost', external: true },
       ];
     }

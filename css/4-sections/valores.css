@@ -74,4 +74,12 @@
 .quiz-result-action-hint { font-size:1rem; color:var(--muted); margin-bottom:16px; }
 .quiz-result-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; align-items:center; }
 .quiz-result-btns .quiz-cta-dynamic { display:inline-flex; align-items:center; justify-content:center; }
+/* .btn-cta-ghost nace blanco sobre fondo oscuro (hero); el resultado del quiz esta
+   sobre fondo claro, asi que el texto quedaba ilegible. Se recolorea solo aqui. */
+.quiz-result-btns .btn-cta-ghost {
+  border-color:rgba(171,100,35,.38); color:var(--forest2); background:rgba(247,245,242,.5);
+}
+.quiz-result-btns .btn-cta-ghost:hover {
+  border-color:var(--gold2); color:var(--gold2); background:rgba(247,245,242,.85);
+}
 
