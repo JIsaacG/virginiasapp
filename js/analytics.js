@@ -1,12 +1,20 @@
-/* ════════════════════════════════════════════════════════════════════
+/* ═════════════════════════════════════════════════════════════════════
    Analítica CEEVS — Google Analytics 4 + Microsoft Clarity
    --------------------------------------------------------------------
-   👉 PASO ÚNICO: pega tus IDs reales abajo.
-      · GA4      → crea una propiedad en https://analytics.google.com  → "G-XXXXXXXXXX"
-      · Clarity  → crea un proyecto en https://clarity.microsoft.com   → ID del proyecto
+   Cuenta oficial de las dos herramientas: adminwebvs@gmail.com
+   (la misma del panel admin). No usar cuentas personales: el histórico
+   se pierde con la persona que las creó.
 
-   Mientras los IDs contengan "XXXX" NO se carga ninguna analítica
-   (así este archivo es seguro de publicar sin activar seguimiento todavía).
+   Único lugar donde se cambian los IDs:
+      · GA4      → https://analytics.google.com   → "G-XXXXXXXXXX"
+      · Clarity  → https://clarity.microsoft.com  → ID del proyecto
+
+   Procedimiento completo (crear la propiedad, dimensión personalizada
+   del evento contacto_click, Search Console): Docs/SEO_OPERATIONS.md
+   → sección "Analítica y Search Console".
+
+   Mientras un ID contenga "XXXX" ese proveedor NO se carga (así este
+   archivo es seguro de publicar sin activar seguimiento todavía).
    Tampoco se carga en localhost ni en el panel de administración.
    ════════════════════════════════════════════════════════════════════ */
 (function () {

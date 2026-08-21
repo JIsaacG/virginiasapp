@@ -264,7 +264,9 @@ button:focus-visible {
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 999;
+  /* Por encima del navbar (1000), del HUD (500), de la mascota (520) y del
+     toast (600): mientras el cajon esta abierto nada debe quedar delante. */
+  z-index: 1100;
   background: rgba(30, 30, 30, 0.55);
   backdrop-filter: blur(4px);
 }
@@ -327,11 +329,17 @@ button:focus-visible {
   background: var(--parch, #EBD7C0);
 }
 
+/* `flex: 1 0 auto` y no `flex: 1`: con flex-basis en 0% la lista de enlaces se
+   quedaba con el hueco sobrante (281px medidos en 390x640) en vez de con su
+   altura real (~400px), y los enlaces 07 y 08 se dibujaban FUERA de la caja,
+   debajo de los botones "Portal" y "Solicitar admision" — imposibles de pulsar
+   en movil. Con flex-basis:auto la lista nunca baja de su contenido: si sobra
+   espacio crece (los botones siguen abajo) y si falta, el cajon hace scroll. */
 .mm-links {
   display: flex;
   flex-direction: column;
   padding: 16px 0;
-  flex: 1;
+  flex: 1 0 auto;
 }
 
 .mm-links a {

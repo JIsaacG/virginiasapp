@@ -3,7 +3,8 @@
 ═══════════════════════════════════════ */
 @media(max-width:390px){
   /* nav */
-  nav{ padding:0 12px; }
+  /* `#navbar` y no `nav`: ver la nota en 4-sections/filosofia.css. */
+  #navbar{ padding:0 12px; }
   .nav-wordmark b{ font-size:0.90625rem; }
   .nav-seal{ width:30px; height:30px; font-size:0.9375rem; }
   .btn-nav-solid{ padding:6px 10px; font-size:0.9375rem; }
@@ -73,9 +74,8 @@
   .admisiones{ padding:48px 4vw; }
   .admisiones-top h2{ font-size:clamp(1.59375rem,7vw,2.28125rem); }
   .admisiones-top p{ font-size:1rem; }
-  .step-box{ padding:16px 0; }
-  .step-circle{ width:48px; height:48px; }
-  .step-num-inner{ font-size:1.125rem; }
+  .step-box{ --dot:50px; --pad-t:18px; --pad-b:22px; column-gap:14px; }
+  .step-num-inner{ font-size:1.1875rem; }
   .step-title{ font-size:1rem; }
   .step-desc{ font-size:0.9375rem; }
   .admisiones-cta-block{ padding:24px 16px; margin-top:32px; }
@@ -179,7 +179,11 @@
 .nav-hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4.5px,4.5px);}
 .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
 .nav-hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(4.5px,-4.5px);}
-#mobile-menu{position:fixed;inset:0;z-index:450;background:rgba(25,10,1,.93);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s;}
+/* z-index 1100: con 450 el cajon quedaba POR DEBAJO del HUD (500), del boton
+   de WhatsApp (501), de la mascota (520), del toast (600) y del navbar
+   (1000), que le robaban los toques justo encima de "Portal" y "Solicitar
+   admision" y tapaban la ✕ del propio cajon. Abierto, el menu manda. */
+#mobile-menu{position:fixed;inset:0;z-index:1100;background:rgba(25,10,1,.93);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s;}
 #mobile-menu.open{opacity:1;pointer-events:all;}
 .mm-inner{position:absolute;top:0;right:0;bottom:0;width:min(300px,92vw);background:var(--forest);border-left:1px solid rgba(171,100,35,.2);display:flex;flex-direction:column;padding:20px 20px 28px;transform:translateX(100%);transition:transform .35s cubic-bezier(.25,.8,.25,1);overflow-y:auto;}
 #mobile-menu.open .mm-inner{transform:translateX(0);}
@@ -187,7 +191,9 @@
 .mm-logo{font-family:'Playfair Display',serif;font-size:1.375rem;font-weight:900;color:#fff;}
 .mm-logo span{color:var(--gold);}
 .mm-close{background:none;border:1px solid rgba(255,255,255,.12);border-radius:6px;color:rgba(255,255,255,.6);width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:"Outfit",sans-serif;}
-.mm-links{display:flex;flex-direction:column;gap:0;margin-bottom:0;flex-shrink:0;}
+/* flex:1 0 auto (no flex-shrink:0 suelto): heredaba flex-basis:0% de
+   3-layout/navbar.css y los enlaces 07-08 acababan solapados por .mm-actions. */
+.mm-links{display:flex;flex-direction:column;gap:0;margin-bottom:0;flex:1 0 auto;}
 .mm-links a{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:1.0625rem;font-weight:500;color:rgba(255,255,255,.75);text-decoration:none;transition:all .2s;}
 .mm-links a:last-child{border-bottom:none;}
 .mm-links a:hover{color:var(--gold2);padding-left:4px;}

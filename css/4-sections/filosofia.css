@@ -7,8 +7,14 @@
   body{ cursor:auto; }
 
   /* nav */
-  nav{ padding:0 20px; height:64px; }
-  nav.scrolled{ height:56px; }
+  /* `#navbar`, no `nav`: el selector desnudo alcanzaba a TODOS los <nav> de
+     la pagina — incluido <nav class="mm-links"> del cajon movil, al que le
+     imponia height:64px. Los 8 enlaces (~415px) se desbordaban fuera de su
+     caja y se dibujaban encima de los botones Portal / Solicitar admision,
+     que quedaban por delante (z-index:2) y robaban los toques de 07 y 08.
+     Tambien afectaba a <nav class="qs-nav"> de quienes-somos y nosotros. */
+  #navbar{ padding:0 20px; height:64px; }
+  #navbar.scrolled{ height:56px; }
   .nav-links{ display:none; }
   .nav-wordmark b{ font-size:0.9375rem; }
   .nav-wordmark small{ display:none; }

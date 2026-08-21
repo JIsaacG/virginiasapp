@@ -35,6 +35,8 @@
 .step-box:hover .step-num-inner { color:var(--forest); }
 .step-title { font-size:1.03125rem; font-weight:600; color:var(--forest); margin-bottom:8px; }
 .step-desc { font-size:0.96875rem; color:var(--muted); line-height:1.6; }
+.step-desc a { color:var(--gold2); font-weight:600; text-underline-offset:2px; text-decoration-thickness:1px; transition:color .25s; }
+.step-desc a:hover { color:var(--forest2); }
 
 .admisiones-cta-block {
   margin-top:64px; background:var(--parch); border-radius:var(--rxl); padding:64px;
@@ -50,4 +52,12 @@
 .admisiones-cta-block h3 em { color:var(--gold2); font-style:italic; }
 .admisiones-cta-block p { font-size:1.03125rem; color:var(--muted); margin-top:10px; line-height:1.6; position:relative; z-index:1; }
 .admisiones-cta-btns { display:flex; flex-direction:column; gap:12px; flex-shrink:0; position:relative; z-index:1; }
+/* .btn-cta-ghost es blanco sobre fondo oscuro (hero); aqui el bloque es --parch,
+   asi que el texto blanco quedaba ilegible. Se recolorea solo dentro del bloque. */
+.admisiones-cta-block .btn-cta-ghost {
+  border-color:rgba(171,100,35,.38); color:var(--forest2); background:rgba(247,245,242,.5);
+}
+.admisiones-cta-block .btn-cta-ghost:hover {
+  border-color:var(--gold2); color:var(--gold2); background:rgba(247,245,242,.85);
+}
 

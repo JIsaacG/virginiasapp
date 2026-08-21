@@ -3,7 +3,8 @@
 ═══════════════════════════════════════ */
 @media(max-width:600px){
   /* nav */
-  nav{ padding:0 16px; height:60px; }
+  /* `#navbar` y no `nav`: ver la nota en 4-sections/filosofia.css. */
+  #navbar{ padding:0 16px; height:60px; }
   .nav-seal{ width:34px; height:34px; font-size:1rem; }
   .nav-wordmark b{ font-size:0.9375rem; }
   .btn-nav-solid{ padding:7px 12px; font-size:0.9375rem; }
@@ -105,15 +106,42 @@
   .admisiones{ padding:56px 5vw; }
   .admisiones-top h2{ font-size:clamp(1.8125rem,8vw,2.53125rem); }
   .steps-row{ grid-template-columns:1fr; gap:0; }
+  /* Stepper vertical: circulo a la izquierda, titulo y descripcion apilados a su
+     derecha. Las areas son explicitas porque el auto-placement metia .step-desc
+     en la columna del numero y el texto salia a una palabra por linea. */
   .step-box{
-    display:grid; grid-template-columns:64px 1fr; gap:16px; align-items:start;
-    text-align:left; padding:20px 0;
-    border-bottom:1px solid var(--cream2);
+    --dot:56px; --pad-t:22px; --pad-b:26px;
+    display:grid;
+    grid-template-columns:var(--dot) minmax(0,1fr);
+    grid-template-rows:var(--dot) auto;
+    grid-template-areas:
+      "num title"
+      "num desc";
+    column-gap:18px; row-gap:2px;
+    text-align:left; padding:var(--pad-t) 0 var(--pad-b);
   }
-  .step-box:last-child{ border-bottom:none; }
-  .step-circle{ margin:0; flex-shrink:0; }
-  .step-title{ font-size:1.03125rem; margin-bottom:6px; margin-top:4px; }
-  .step-desc{ font-size:0.96875rem; }
+  /* Rail que enlaza los pasos: el equivalente vertical de .steps-row::before,
+     que en escritorio dibuja la linea horizontal entre los circulos. */
+  .step-box:not(:last-child)::after{
+    content:''; position:absolute; z-index:0;
+    left:calc(var(--dot) / 2); width:1px;
+    top:calc(var(--pad-t) + var(--dot) + 8px);
+    bottom:calc(8px - var(--pad-t));
+    background:linear-gradient(180deg,var(--gold),rgba(171,100,35,.12));
+  }
+  .step-circle{
+    grid-area:num; margin:0; flex-shrink:0; z-index:1;
+    width:var(--dot); height:var(--dot); align-self:start;
+  }
+  .step-title{
+    grid-area:title; align-self:center;
+    font-size:1.0625rem; line-height:1.3; margin:0;
+    text-wrap:balance;
+  }
+  .step-desc{
+    grid-area:desc; font-size:0.96875rem; line-height:1.65;
+    text-wrap:pretty;
+  }
   .admisiones-cta-block{ padding:28px 20px; border-radius:var(--rl); margin-top:40px; }
   .admisiones-cta-block h3{ font-size:1.5rem; }
   .admisiones-cta-block p{ font-size:1rem; }
