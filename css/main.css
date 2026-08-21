@@ -11,6 +11,7 @@
 @import url('2-components/badges.css?v=20260812-tipografia');
 @import url('2-components/modals.css?v=20260812-tipografia');
 @import url('2-components/utils.css?v=20260812-tipografia');
+@import url('2-components/comunicado-popup.css?v=20260821-comunicado');
 
 /* 3. LAYOUT COMPONENTS */
 @import url('3-layout/gamification.css?v=20260812-tipografia');

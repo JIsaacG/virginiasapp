@@ -94,6 +94,9 @@
         <span class="admin-tab-icon">📋</span> Pre-inscripciones
         <span class="admin-tab-badge" id="preins-tab-badge" hidden>0</span>
       </button>
+      <button class="admin-tab-btn" data-tab="comunicado">
+        <span class="admin-tab-icon">📣</span> Comunicado
+      </button>
       <button class="admin-tab-btn" data-tab="respaldo">
         <span class="admin-tab-icon">💾</span> Respaldo
       </button>
@@ -700,6 +703,67 @@
     </div>
   </div>
 
+  <!-- ─── PANEL: Comunicado emergente ─── -->
+  <div class="admin-tab-panel" id="panel-comunicado">
+    <div class="admin-main">
+      <div class="admin-header">
+        <h2>Comunicado Emergente</h2>
+        <p>Muestra un comunicado como <strong>lo primero que ve el visitante</strong> al entrar al sitio: la imagen aparece centrada sobre la página, con el fondo desenfocado y un botón para cerrarla y seguir navegando.</p>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>📣 Aviso de bienvenida</h3>
+        </div>
+        <p class="admin-card-desc">Sube la imagen del comunicado (JPG o PNG) y actívalo. Mientras esté desactivado, el sitio abre normalmente sin ningún aviso.</p>
+
+        <div class="admin-form-group">
+          <label class="admin-checkbox-label">
+            <input type="checkbox" id="com-enabled-check" class="admin-checkbox">
+            <span>Mostrar el comunicado en el sitio</span>
+          </label>
+          <small class="admin-input-hint">Desactívalo cuando el comunicado ya no sea vigente: la imagen se conserva para volver a usarla.</small>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-input-label" for="com-image-input">Imagen del comunicado</label>
+          <div class="admin-input-row">
+            <input type="text" id="com-image-input" class="admin-input" placeholder="https://ejemplo.com/comunicado.jpg">
+            <button type="button" class="admin-btn-upload" data-upload-target="com-image-input" data-upload-accept="image/jpeg,image/png,image/webp">📤 Subir</button>
+          </div>
+          <small class="admin-input-hint">Recomendado: JPG vertical u horizontal, máximo 1600 px de ancho para que cargue rápido.</small>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-input-label" for="com-alt-input">Descripción de la imagen (accesibilidad)</label>
+          <input type="text" id="com-alt-input" class="admin-input" placeholder="Comunicado importante">
+          <small class="admin-input-hint">Texto que leen los lectores de pantalla y que se muestra si la imagen no carga.</small>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-checkbox-label">
+            <input type="checkbox" id="com-repeat-check" class="admin-checkbox">
+            <span>Mostrarlo en cada página que visite</span>
+          </label>
+          <small class="admin-input-hint">Sin marcar (recomendado), el comunicado aparece una sola vez por visita: al cerrarlo, el visitante navega sin interrupciones. Si cambias la imagen, vuelve a mostrarse a todos.</small>
+        </div>
+
+        <div class="admin-form-actions">
+          <button class="admin-btn-save" id="btn-save-comunicado">💾 Guardar Comunicado</button>
+          <button class="admin-btn-secondary" id="btn-preview-comunicado">👁️ Vista previa</button>
+          <button class="admin-btn-secondary" id="btn-reset-comunicado">↺ Quitar comunicado</button>
+        </div>
+
+        <div class="video-preview-section">
+          <h3>Estado actual</h3>
+          <div class="video-preview-box" id="com-status-box">
+            <p>Cargando configuración...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── PANEL: Respaldo ─── -->
   <div class="admin-tab-panel" id="panel-respaldo">
     <div class="admin-main">
@@ -850,6 +914,7 @@
 <script src="js/inventory.js?v=20260719-2"></script>
 <script src="js/mision-aula.js?v=20260719-2"></script>
 <script src="js/image-manager.js?v=20260719-2"></script>
+<script src="js/comunicado-popup.js?v=20260821-1"></script>
 <script src="js/gallery-extra.js?v=20260719-2"></script>
 <script src="js/solicitud-hoja.js?v=20260727-1"></script>
 <script src="js/preinscripciones-admin.js?v=20260727-3"></script>

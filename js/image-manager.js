@@ -139,7 +139,7 @@
   var REMOTE_CONFIG_KEYS = [
     'ceevs_images', 'ceevs_image_settings', 'ceevs_gallery',
     'ceevs_video_settings', 'ceevs_hub_video', 'ceevs_theme', 'ceevs_inventory',
-    'ceevs_mision_aula'
+    'ceevs_mision_aula', 'ceevs_comunicado'
   ];
 
   /** Re-aplica toda la configuración visible en la página actual. */
@@ -153,6 +153,7 @@
       }
     } catch (e) {}
     try { if (window.ceevsGalleryExtra) window.ceevsGalleryExtra.apply(); } catch (e) {}
+    try { if (window.ceevsComunicadoPopup) window.ceevsComunicadoPopup.apply(); } catch (e) {}
     try {
       // El catálogo público de inventario se re-renderiza pulsando el filtro activo
       var invBtn = document.querySelector('.inv-filter-btn.active');

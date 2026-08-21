@@ -1,0 +1,120 @@
+/* ═══════════════════════════════════════
+   COMUNICADO POPUP — Aviso emergente al entrar al sitio
+   Se muestra sobre todo el contenido con desenfoque detrás.
+   Lo controla el panel de administración (clave ceevs_comunicado).
+═══════════════════════════════════════ */
+
+.com-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 10500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: rgba(30, 30, 30, 0.55);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+}
+
+.com-popup.open {
+  display: flex;
+  animation: comPopupFade .35s ease both;
+}
+
+.com-popup-card {
+  position: relative;
+  width: min(620px, 100%);
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  background: var(--cream);
+  border: 2px solid var(--gold);
+  border-radius: var(--rl);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  animation: comPopupIn .45s cubic-bezier(.34, 1.4, .64, 1) both;
+}
+
+.com-popup-img {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 150px);
+  object-fit: contain;
+  background: var(--cream2);
+}
+
+.com-popup-foot {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  padding: 14px 18px 16px;
+  background: var(--cream);
+}
+
+.com-popup-btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cream);
+  background: var(--forest2);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 11px 30px;
+  cursor: pointer;
+  transition: background .25s ease, transform .25s ease;
+}
+
+.com-popup-btn:hover,
+.com-popup-btn:focus-visible {
+  background: var(--moss);
+  transform: translateY(-2px);
+}
+
+.com-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.375rem;
+  line-height: 1;
+  color: var(--cream);
+  background: rgba(30, 30, 30, 0.62);
+  border: 1px solid rgba(247, 245, 242, 0.35);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background .25s ease, transform .25s ease;
+}
+
+.com-popup-close:hover,
+.com-popup-close:focus-visible {
+  background: var(--forest2);
+  transform: rotate(90deg);
+}
+
+@keyframes comPopupFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes comPopupIn {
+  from { opacity: 0; transform: translateY(24px) scale(.94); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 640px) {
+  .com-popup { padding: 16px 12px; }
+  .com-popup-card { border-radius: var(--r); }
+  .com-popup-img { max-height: calc(100vh - 140px); }
+  .com-popup-btn { width: 100%; }
+}
+
+/* Bloquea el desplazamiento del sitio mientras el aviso está abierto */
+html.com-popup-lock,
+html.com-popup-lock body {
+  overflow: hidden;
+}

@@ -256,6 +256,7 @@ window.CEEVS_I18N = {
   "CENTRO EDUCATIVO EVANGÉLICO VIRGINIA SAPP": "VIRGINIA SAPP EVANGELICAL EDUCATIONAL CENTER",
   "Centro Educativo Evangélico Virginia Sapp": "Virginia Sapp Evangelical Educational Center",
   "Cerrar": "Close",
+  "Cerrar y continuar": "Close and continue",
   "Cerrar imagen": "Close image",
   "Cerrar juego": "Close game",
   "Cerrar menú principal": "Close main menu",

@@ -46,7 +46,8 @@ const CEEVS_CONFIG_KEYS = array(
   'ceevs_hub_video',
   'ceevs_theme',
   'ceevs_inventory',
-  'ceevs_mision_aula'
+  'ceevs_mision_aula',
+  'ceevs_comunicado'
 );
 
 define('CEEVS_DATA_DIR', dirname(__DIR__) . '/server-data');

@@ -416,7 +416,8 @@
     ceevs_hub_video: 'Video del portal',
     ceevs_theme: 'Paleta de colores',
     ceevs_inventory: 'Inventario',
-    ceevs_mision_aula: 'Aula virtual (Misión Evangelística)'
+    ceevs_mision_aula: 'Aula virtual (Misión Evangelística)',
+    ceevs_comunicado: 'Comunicado emergente'
   };
 
   function friendlyAuditDetail(d) {
@@ -846,6 +847,7 @@
         if (tabName === 'preinscripciones' && window.ceevsPreins) window.ceevsPreins.render();
         if (tabName === 'galeria') renderGalleryPanel();
         if (tabName === 'video') { loadVideoSettings(); loadHubVideoSettings(); }
+        if (tabName === 'comunicado') loadComunicadoSettings();
         if (tabName === 'respaldo') renderBackupStatus();
       });
     });
@@ -1009,6 +1011,90 @@
     loadHubVideoSettings();
   }
 
+  /* ─── Comunicado emergente (aviso al entrar al sitio) ─── */
+  function comPopup() { return window.ceevsComunicadoPopup || null; }
+
+  function getComunicadoConfig() {
+    var mod = comPopup();
+    if (mod && mod.get) return mod.get();
+    try { return JSON.parse(localStorage.getItem('ceevs_comunicado')) || {}; } catch (e) { return {}; }
+  }
+
+  function loadComunicadoSettings() {
+    var cfg = getComunicadoConfig();
+    var imgInput = document.getElementById('com-image-input');
+    var altInput = document.getElementById('com-alt-input');
+    var enabled = document.getElementById('com-enabled-check');
+    var repeat = document.getElementById('com-repeat-check');
+    var box = document.getElementById('com-status-box');
+    if (imgInput) imgInput.value = cfg.image || '';
+    if (altInput) altInput.value = cfg.alt || '';
+    if (enabled) enabled.checked = !!cfg.enabled;
+    if (repeat) repeat.checked = !!cfg.repeat;
+    if (box) {
+      if (cfg.image && cfg.enabled) {
+        box.innerHTML = '<p>✅ Comunicado <strong>activo</strong>. Se muestra ' +
+          (cfg.repeat ? 'en cada página que visite el usuario' : 'una vez por visita') + '.</p>' +
+          '<img src="' + escapeHtml(cfg.image) + '" alt="Vista previa del comunicado" class="com-admin-preview">';
+      } else if (cfg.image) {
+        box.innerHTML = '<p>⏸ Comunicado cargado pero <strong>desactivado</strong>: los visitantes no lo ven.</p>' +
+          '<img src="' + escapeHtml(cfg.image) + '" alt="Vista previa del comunicado" class="com-admin-preview">';
+      } else {
+        box.innerHTML = '<p>Sin comunicado configurado. El sitio abre directamente en la página.</p>';
+      }
+    }
+  }
+
+  function saveComunicadoSettings() {
+    var image = ((document.getElementById('com-image-input') || {}).value || '').trim();
+    var alt = ((document.getElementById('com-alt-input') || {}).value || '').trim();
+    var enabled = (document.getElementById('com-enabled-check') || {}).checked || false;
+    var repeat = (document.getElementById('com-repeat-check') || {}).checked || false;
+    if (image && !isMediaUrl(image)) {
+      showToast('Ingresa una URL válida o sube la imagen con el botón 📤');
+      return;
+    }
+    if (enabled && !image) {
+      showToast('Sube primero la imagen del comunicado');
+      return;
+    }
+    var cfg = { enabled: enabled, image: image, alt: alt, repeat: repeat };
+    var mod = comPopup();
+    if (mod && mod.save) {
+      mod.save(cfg);
+    } else {
+      try { localStorage.setItem('ceevs_comunicado', JSON.stringify(cfg)); } catch (e) {}
+    }
+    showToast(enabled ? 'Comunicado guardado y activado' : 'Comunicado guardado (desactivado)');
+    loadComunicadoSettings();
+  }
+
+  function previewComunicado() {
+    var image = ((document.getElementById('com-image-input') || {}).value || '').trim();
+    if (!image) { showToast('Sube o escribe primero la imagen del comunicado'); return; }
+    var mod = comPopup();
+    if (!mod || !mod.preview) { showToast('Vista previa no disponible en esta página'); return; }
+    // La vista previa usa lo guardado: si hay cambios sin guardar, avisamos.
+    var saved = getComunicadoConfig();
+    if ((saved.image || '') !== image) {
+      showToast('Guarda primero para ver la vista previa con la imagen nueva');
+      return;
+    }
+    mod.preview();
+  }
+
+  function resetComunicadoSettings() {
+    if (!confirm('¿Quitar el comunicado emergente?\n\nLos visitantes dejarán de verlo y se borrará la configuración guardada.')) return;
+    var mod = comPopup();
+    if (mod && mod.reset) {
+      mod.reset();
+    } else {
+      try { localStorage.removeItem('ceevs_comunicado'); } catch (e) {}
+    }
+    showToast('Comunicado quitado del sitio');
+    loadComunicadoSettings();
+  }
+
   /* ─── Galería de Recuerdos (fotos y álbumes extra) ─── */
   function gal() { return window.ceevsGalleryExtra || null; }
 
@@ -1165,7 +1251,8 @@
     { key: 'ceevs_hub_video', label: 'Video de presentación' },
     { key: 'ceevs_theme', label: 'Paleta de colores' },
     { key: 'ceevs_inventory', label: 'Inventario de productos' },
-    { key: 'ceevs_mision_aula', label: 'Aula virtual de la Misión Evangelística' }
+    { key: 'ceevs_mision_aula', label: 'Aula virtual de la Misión Evangelística' },
+    { key: 'ceevs_comunicado', label: 'Comunicado emergente de bienvenida' }
   ];
 
   function exportBackup() {
@@ -1214,6 +1301,7 @@
         renderGalleryPanel();
         loadVideoSettings();
         loadHubVideoSettings();
+        loadComunicadoSettings();
       } catch (e) {
         showToast('No se pudo leer el archivo: ¿es un respaldo válido?');
       }
@@ -1262,6 +1350,7 @@
     renderGalleryPanel();
     loadVideoSettings();
     loadHubVideoSettings();
+    loadComunicadoSettings();
   }
 
   /* ─── Inventory Panel ─── */
@@ -1535,6 +1624,15 @@
     var resetHubBtn = document.getElementById('btn-reset-hub-video');
     if (resetHubBtn) resetHubBtn.addEventListener('click', resetHubVideoSettings);
 
+    var saveComBtn = document.getElementById('btn-save-comunicado');
+    if (saveComBtn) saveComBtn.addEventListener('click', saveComunicadoSettings);
+
+    var previewComBtn = document.getElementById('btn-preview-comunicado');
+    if (previewComBtn) previewComBtn.addEventListener('click', previewComunicado);
+
+    var resetComBtn = document.getElementById('btn-reset-comunicado');
+    if (resetComBtn) resetComBtn.addEventListener('click', resetComunicadoSettings);
+
     var searchInput = document.getElementById('img-search');
     if (searchInput) searchInput.addEventListener('input', applySearchFilter);
 
@@ -1681,6 +1779,7 @@
       renderGalleryPanel();
       loadVideoSettings();
       loadHubVideoSettings();
+      loadComunicadoSettings();
       renderBackupStatus();
       renderInventoryList();
       renderPalettePanel();
