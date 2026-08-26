@@ -122,9 +122,10 @@
   color: var(--ink, #1E1E1E);
   text-decoration: none;
   font-weight: 600;
-  /* 16px: +11% sobre los 14,4px originales. Cabe sin apreturas porque los
-     enlaces tienen ahora una fila entera para ellos. */
-  font-size: 1rem;
+  /* Escala con el ancho: 16px es el suelo (a 1025px, donde la fila ya iba
+     justa con los siete enlaces) y sube hasta 20px en pantallas anchas, que
+     es donde sobraba sitio y las letras se veian pequenas. */
+  font-size: clamp(1rem, 1.35vw, 1.25rem);
   letter-spacing: 0.01em;
   position: relative;
   padding: 6px 2px;

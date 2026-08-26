@@ -1424,6 +1424,9 @@ window.CEEVS_I18N = {
   "La creación — Dios hizo todo bueno": "Creation — God made everything good",
   "David y Goliat — Dios es nuestra fuerza": "David and Goliath — God is our strength",
   "“Yo voy a hacer algo nuevo, ya he empezado a hacerlo. Estoy abriendo un camino en el desierto y haré brotar ríos en la tierra seca”": "“I am going to do something new; I have already begun. I am opening a road in the desert and I will make rivers flow in the dry land”",
-  "Isaías 43:19 · TLA": "Isaiah 43:19 · TLA"
+  "Isaías 43:19 · TLA": "Isaiah 43:19 · TLA",
+  "Acreditación ACSI: ver información": "ACSI Accreditation: view information",
+  "Logotipo de Association of Christian Schools International (ACSI)": "Association of Christian Schools International (ACSI) logo",
+  "Acreditada por Association of Christian Schools International (ACSI), nuestra institución reafirma su compromiso con una educación cristiana de excelencia, basada en estándares internacionales de calidad académica, formación espiritual y mejora continua.": "Accredited by the Association of Christian Schools International (ACSI), our institution reaffirms its commitment to Christian education of excellence, grounded in international standards of academic quality, spiritual formation and continuous improvement."
  }
 };

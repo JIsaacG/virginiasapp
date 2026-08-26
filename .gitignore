@@ -16,3 +16,4 @@ api/db-config.php
 .env
 .env.*
 !.env.example
+Docs/Manual-Panel-Administracion-CEEVS-CoreStructs.docx

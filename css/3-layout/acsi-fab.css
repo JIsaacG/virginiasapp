@@ -1,0 +1,314 @@
+/* ═══════════════════════════════════════
+   SELLO ACSI FLOTANTE — Acreditación institucional
+
+   Placa flotante que vive justo ENCIMA del botón de WhatsApp
+   (#wa-fab, en 4-sections/portal-educativo.css) y, al pulsarla,
+   despliega un cuadro con la información de la acreditación.
+
+   La posición se calcula a partir de dónde está el FAB de WhatsApp
+   en cada breakpoint, para que ambos se muevan juntos:
+
+     --wa-bottom · --wa-left · --wa-size  → copian los valores de #wa-fab
+     --acsi-gap                           → separación entre ambos
+
+   Si algún día cambian las medidas de #wa-fab, basta actualizar estas
+   variables (no hay ningún otro sitio donde estén repetidas).
+═══════════════════════════════════════ */
+:root {
+  --wa-bottom: 24px;
+  --wa-left: 24px;
+  --wa-size: 52px;
+  --acsi-gap: 14px;
+  --acsi-fab-h: 44px;
+}
+
+@media (max-width: 600px) {
+  :root { --wa-bottom: 88px; --wa-left: 16px; --wa-size: 46px; --acsi-fab-h: 40px; }
+}
+
+@media (max-width: 390px) {
+  :root { --wa-bottom: 96px; --wa-left: 12px; --wa-size: 42px; --acsi-fab-h: 38px; }
+}
+
+/* La página de preinscripción sube el FAB para no tapar "Continuar" */
+@media (max-width: 720px) {
+  body.pagina-preinscripcion { --wa-bottom: 92px; }
+}
+
+/* ── La placa ── */
+#acsi-fab {
+  position: fixed;
+  z-index: 502;
+  left: var(--wa-left);
+  bottom: calc(var(--wa-bottom) + var(--wa-size) + var(--acsi-gap));
+  height: var(--acsi-fab-h);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 13px;
+  background: var(--white);
+  border: 1.5px solid var(--gold);
+  border-radius: 999px;
+  box-shadow: 0 8px 28px rgba(30, 30, 30, .22);
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  animation: acsiFabFloat 3.4s ease-in-out infinite;
+  transition: box-shadow .25s ease, border-color .25s ease, background .25s ease;
+}
+
+#acsi-fab img {
+  display: block;
+  height: calc(var(--acsi-fab-h) * .42);
+  width: auto;
+}
+
+/* Punto dorado: recuerda que la placa es pulsable */
+#acsi-fab::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold2);
+  box-shadow: 0 0 0 3px rgba(245, 124, 0, .18);
+  flex-shrink: 0;
+}
+
+#acsi-fab:hover,
+#acsi-fab:focus-visible {
+  background: var(--cream);
+  border-color: var(--gold2);
+  box-shadow: 0 14px 38px rgba(30, 30, 30, .3);
+}
+
+#acsi-fab[aria-expanded='true'] {
+  animation-play-state: paused;
+  border-color: var(--gold2);
+}
+
+/* El flotado: sube y baja despacio, sin desplazar nada a su alrededor */
+@keyframes acsiFabFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+/* ── Etiqueta al pasar el ratón (mismo recurso que .wa-tooltip) ── */
+.acsi-fab-tip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--forest);
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+  border: 1px solid rgba(171, 100, 35, .3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+}
+
+.acsi-fab-tip::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-right-color: var(--forest);
+}
+
+#acsi-fab:hover .acsi-fab-tip,
+#acsi-fab:focus-visible .acsi-fab-tip { opacity: 1; }
+
+/* ── El cuadro de información ── */
+.acsi-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 10400;
+  display: none;
+}
+
+.acsi-panel.open { display: block; }
+
+.acsi-panel-veil {
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 30, 30, .5);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  animation: acsiVeilIn .3s ease both;
+}
+
+/* En escritorio el cuadro sale del propio sello, hacia arriba */
+.acsi-panel-card {
+  position: absolute;
+  left: var(--wa-left);
+  bottom: calc(var(--wa-bottom) + var(--wa-size) + var(--acsi-gap) + var(--acsi-fab-h) + 12px);
+  width: min(380px, calc(100vw - 32px));
+  max-height: calc(100vh - var(--wa-bottom) - var(--wa-size) - var(--acsi-fab-h) - 56px);
+  overflow-y: auto;
+  background: var(--cream);
+  border: 2px solid var(--gold);
+  border-radius: var(--rl);
+  box-shadow: 0 26px 64px rgba(0, 0, 0, .42);
+  padding: 22px 22px 20px;
+  animation: acsiPanelIn .38s cubic-bezier(.34, 1.4, .64, 1) both;
+}
+
+.acsi-panel-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1;
+  color: var(--cream);
+  background: rgba(30, 30, 30, .6);
+  border: 1px solid rgba(247, 245, 242, .3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background .25s ease, transform .25s ease;
+}
+
+.acsi-panel-close:hover,
+.acsi-panel-close:focus-visible {
+  background: var(--forest2);
+  transform: rotate(90deg);
+}
+
+.acsi-panel-logo {
+  display: block;
+  width: 132px;
+  max-width: 60%;
+  height: auto;
+  margin-bottom: 14px;
+}
+
+.acsi-panel-kicker {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin-bottom: 4px;
+}
+
+.acsi-panel-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--forest2);
+  margin-bottom: 6px;
+}
+
+.acsi-panel-sub {
+  font-size: 0.9375rem;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.acsi-panel-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.acsi-panel-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.acsi-panel-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.90625rem;
+  font-weight: 500;
+  color: var(--forest2);
+  background: var(--parch);
+  border: 1px solid rgba(215, 175, 74, .5);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+.acsi-panel-list li::before {
+  content: '✦';
+  color: var(--gold2);
+  font-size: 0.875rem;
+}
+
+.acsi-panel-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cream);
+  background: var(--forest2);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 10px 22px;
+  text-decoration: none;
+  transition: background .25s ease, transform .25s ease;
+}
+
+.acsi-panel-link:hover,
+.acsi-panel-link:focus-visible {
+  background: var(--moss);
+  transform: translateY(-2px);
+}
+
+@keyframes acsiVeilIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes acsiPanelIn {
+  from { opacity: 0; transform: translateY(18px) scale(.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* En pantallas pequeñas el cuadro se centra: anclado al sello no cabría */
+@media (max-width: 600px) {
+  #acsi-fab { padding: 0 11px; gap: 7px; }
+  .acsi-fab-tip { display: none; }
+
+  .acsi-panel-card {
+    left: 50%;
+    top: 50%;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    width: min(400px, calc(100vw - 24px));
+    max-height: calc(100vh - 32px);
+    padding: 20px 18px 18px;
+    animation: acsiPanelInMobile .38s cubic-bezier(.34, 1.4, .64, 1) both;
+  }
+
+  .acsi-panel-card h2 { font-size: 1.375rem; }
+  .acsi-panel-link { width: 100%; justify-content: center; }
+}
+
+@keyframes acsiPanelInMobile {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 18px)) scale(.95); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Mientras el cuadro está abierto, el sitio de detrás no se desplaza */
+html.acsi-panel-lock,
+html.acsi-panel-lock body { overflow: hidden; }
