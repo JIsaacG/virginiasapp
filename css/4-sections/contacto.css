@@ -7,8 +7,14 @@ footer { background:#1e0e02; padding:72px 8vw 32px; border-top:1px solid rgba(17
 .f-brand-name span { color:var(--gold); }
 .f-brand-year { font-size:0.96875rem; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:16px; }
 .f-brand-desc { font-size:1.0625rem; color:rgba(255,255,255,.3); line-height:1.7; max-width:270px; margin-bottom:24px; }
-.f-member { display:flex; flex-direction:column; gap:3px; max-width:270px; margin:-4px 0 18px; padding-left:11px; border-left:2px solid rgba(171,100,35,.45); text-decoration:none; transition:border-color .25s ease; }
+.f-member { display:flex; align-items:center; gap:12px; max-width:310px; margin:-4px 0 18px; padding-left:11px; border-left:2px solid rgba(171,100,35,.45); text-decoration:none; transition:border-color .25s ease; }
 .f-member:hover { border-left-color:var(--gold); }
+/* Sello ACSI: misma placa blanca con filo dorado que el botón flotante
+   (css/3-layout/acsi-fab.css), para que se lea como la misma marca. */
+.f-member-seal { flex-shrink:0; display:flex; align-items:center; justify-content:center; width:76px; height:34px; padding:0 9px; border-radius:999px; background:var(--white); border:1.5px solid rgba(171,100,35,.55); box-shadow:0 6px 18px rgba(0,0,0,.28); transition:border-color .25s ease, box-shadow .25s ease; }
+.f-member-seal img { display:block; width:100%; height:auto; }
+.f-member:hover .f-member-seal { border-color:var(--gold); box-shadow:0 8px 22px rgba(0,0,0,.34); }
+.f-member-txt { display:flex; flex-direction:column; gap:3px; min-width:0; text-decoration:none; }
 .f-member-title { font-size:1rem; font-weight:700; color:var(--gold); letter-spacing:.08em; text-transform:uppercase; }
 .f-member-sub { font-size:0.96875rem; color:rgba(255,255,255,.38); line-height:1.45; transition:color .25s ease; }
 .f-member:hover .f-member-sub { color:rgba(255,255,255,.6); }
