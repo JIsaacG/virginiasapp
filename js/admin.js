@@ -193,7 +193,7 @@
     albumSection(2, 'Graduación 2023 (Prom. Dr. Juan Almendares)', [
       UNSPLASH + 'photo-1627556704302-624286467c65?w=800&q=75&auto=format',
       UNSPLASH + 'photo-1607453998774-d533f65dac99?w=500&q=70&auto=format',
-      UNSPLASH + 'photo-1525921429824-6b2f5e936ebc?w=500&q=70&auto=format',
+      UNSPLASH + 'photo-1571260899304-425eee4c7efc?w=500&q=70&auto=format',
       UNSPLASH + 'photo-1541339907198-e08756dedf3f?w=500&q=70&auto=format'
     ]),
     albumSection(3, 'Honor Roll 2023 (Primaria)', [
@@ -1104,21 +1104,23 @@
     var api = gal();
     if (!api) return;
     var data = api.getData();
+    var albums = api.getAlbums();
 
     // Poblar el selector de álbum destino (fijos + personalizados)
     var select = document.getElementById('gal-album-select');
     if (select) {
       var current = select.value;
       var html = '';
-      api.FIXED_ALBUMS.forEach(function (a) {
-        html += '<option value="' + a.id + '">Álbum ' + a.id + ' — ' + a.title + '</option>';
-      });
-      data.albums.forEach(function (a) {
-        html += '<option value="' + a.id + '">Álbum nuevo — ' + escapeHtml(a.title) + '</option>';
+      albums.forEach(function (a) {
+        html += '<option value="' + escapeHtml(a.id) + '">' +
+          (a.fixed ? 'Álbum ' + a.id : 'Álbum nuevo') + ' — ' + escapeHtml(a.title) + '</option>';
       });
       select.innerHTML = html;
       if (current) select.value = current;
     }
+
+    // Formulario de nombres (títulos y fechas de todos los álbumes)
+    renderAlbumNames(albums);
 
     // Contador
     var countEl = document.getElementById('gal-count');
@@ -1138,11 +1140,11 @@
 
     var out = '';
 
-    api.FIXED_ALBUMS.forEach(function (album) {
+    albums.filter(function (a) { return a.fixed; }).forEach(function (album) {
       var photos = data.photos.filter(function (p) { return p.album === album.id; });
       if (!photos.length) return;
       out += '<div class="gal-group">' +
-        '<div class="gal-group-title">Álbum ' + album.id + ' — ' + album.title + ' <span>(' + photos.length + ' agregada' + (photos.length !== 1 ? 's' : '') + ')</span></div>' +
+        '<div class="gal-group-title">Álbum ' + album.id + ' — ' + escapeHtml(album.title) + ' <span>(' + photos.length + ' agregada' + (photos.length !== 1 ? 's' : '') + ')</span></div>' +
         galThumbs(photos) + '</div>';
     });
 
@@ -1215,12 +1217,89 @@
     if (select) select.value = id;
   }
 
+  /* ─── Nombres de los álbumes (fijos y nuevos) ─── */
+
+  function renderAlbumNames(albums) {
+    var api = gal();
+    var box = document.getElementById('gal-album-names');
+    if (!api || !box) return;
+    if (!albums) albums = api.getAlbums();
+
+    var out = '';
+    albums.forEach(function (a) {
+      var etiqueta = a.fixed ? 'Álbum ' + a.id : '🗂️ Álbum nuevo';
+      out += '<div class="gal-name-row" data-gal-name-id="' + escapeHtml(a.id) + '">' +
+        '<div class="gal-name-tag">' + etiqueta +
+          (a.renamed ? ' <span class="gal-name-flag">renombrado</span>' : '') + '</div>' +
+        '<div class="gal-name-fields">' +
+          '<input type="text" class="admin-input gal-name-title" value="' + escapeHtml(a.title) +
+            '" placeholder="Título del álbum" aria-label="Título de ' + escapeHtml(etiqueta) + '">' +
+          '<input type="text" class="admin-input gal-name-date" value="' + escapeHtml(a.date) +
+            '" placeholder="Fecha (opcional)" aria-label="Fecha de ' + escapeHtml(etiqueta) + '">' +
+        '</div>' +
+        (a.fixed && a.renamed
+          ? '<button class="admin-btn-secondary gal-name-reset" data-gal-reset-name="' + escapeHtml(a.id) + '">↩︎ Restaurar</button>'
+          : '') +
+        '</div>';
+    });
+    box.innerHTML = out;
+  }
+
+  function galSaveNames() {
+    var api = gal();
+    if (!api) return;
+
+    var actuales = {};
+    api.getAlbums().forEach(function (a) { actuales[a.id] = a; });
+
+    var rows = document.querySelectorAll('#gal-album-names [data-gal-name-id]');
+    var guardados = 0;
+    var sinTitulo = 0;
+
+    Array.prototype.forEach.call(rows, function (row) {
+      var id = row.getAttribute('data-gal-name-id');
+      var actual = actuales[id];
+      if (!actual) return;
+      var titleEl = row.querySelector('.gal-name-title');
+      var dateEl = row.querySelector('.gal-name-date');
+      var title = (titleEl && titleEl.value || '').trim();
+      var date = (dateEl && dateEl.value || '').trim();
+      if (!title) { sinTitulo++; return; }
+      if (title === actual.title && date === actual.date) return;
+      if (api.renameAlbum(id, title, date)) guardados++;
+    });
+
+    if (sinTitulo) {
+      showToast('Hay ' + sinTitulo + ' álbum(es) sin título: escribe el título para guardarlo');
+    } else if (!guardados) {
+      showToast('No hay cambios en los nombres');
+    } else {
+      showToast(guardados === 1 ? 'Nombre del álbum actualizado' : guardados + ' álbumes actualizados');
+    }
+    renderGalleryPanel();
+  }
+
   function bindGalleryEvents() {
     var addPhotoBtn = document.getElementById('btn-gal-add-photo');
     if (addPhotoBtn) addPhotoBtn.addEventListener('click', galAddPhoto);
 
     var addAlbumBtn = document.getElementById('btn-gal-add-album');
     if (addAlbumBtn) addAlbumBtn.addEventListener('click', galAddAlbum);
+
+    var saveNamesBtn = document.getElementById('btn-gal-save-names');
+    if (saveNamesBtn) saveNamesBtn.addEventListener('click', galSaveNames);
+
+    var names = document.getElementById('gal-album-names');
+    if (names && !names.dataset.galBound) {
+      names.dataset.galBound = 'true';
+      names.addEventListener('click', function (e) {
+        var reset = e.target.closest('[data-gal-reset-name]');
+        if (!reset) return;
+        gal().resetAlbumName(reset.getAttribute('data-gal-reset-name'));
+        showToast('Nombre original restaurado');
+        renderGalleryPanel();
+      });
+    }
 
     var list = document.getElementById('gal-extra-list');
     if (list && !list.dataset.galBound) {
@@ -1326,7 +1405,9 @@
           } else if (item.key === 'ceevs_inventory' && Array.isArray(parsed)) {
             detail = ' (' + parsed.length + ' productos)';
           } else if (item.key === 'ceevs_gallery') {
-            detail = ' (' + ((parsed.photos || []).length) + ' fotos, ' + ((parsed.albums || []).length) + ' álbumes)';
+            var renombres = Object.keys(parsed.titles || {}).length;
+            detail = ' (' + ((parsed.photos || []).length) + ' fotos, ' + ((parsed.albums || []).length) + ' álbumes' +
+              (renombres ? ', ' + renombres + ' renombrado' + (renombres !== 1 ? 's' : '') : '') + ')';
           } else if (item.key === 'ceevs_mision_aula') {
             detail = ' (' + ((parsed.cursos || []).length) + ' cursos, ' + ((parsed.avisos || []).length) + ' avisos)';
           }

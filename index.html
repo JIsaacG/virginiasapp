@@ -39,7 +39,7 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet"></noscript>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="dist/main.min.css?v=20260826-acsi">
+  <link rel="stylesheet" href="dist/main.min.css?v=20260827-galeria">
 
   <!-- Datos estructurados (JSON-LD) — perfil de la institución para Google -->
   <script type="application/ld+json">
@@ -547,11 +547,13 @@
   <div class="devocional-inner reveal">
     <div class="devocional-cross">✝</div>
     <div class="devocional-label">Versículo del día</div>
-    <blockquote class="devocional-verse">
+    <!-- El texto se reemplaza cada día con el versículo que devuelve la API
+         bíblica (js/modules/versiculo-dia.js). Lo escrito aquí es el respaldo
+         que se ve si la API no responde o el visitante no tiene JavaScript. -->
+    <blockquote class="devocional-verse" data-versiculo-texto>
       «Instruye al niño en su camino, y aun cuando fuere viejo no se apartará de él.»
     </blockquote>
-    <cite class="devocional-cite">— Proverbios 22:6 (RVR1960)</cite>
-    <!-- FUTURA INTEGRACIÓN: Conectar con API de versículos para rotación diaria automática -->
+    <cite class="devocional-cite" data-versiculo-cita>— Proverbios 22:6 (RVR1960)</cite>
   </div>
 </section>
 
@@ -652,6 +654,7 @@
   <script src="js/comunicado-popup.js?v=20260821-comunicado2"></script>
   <script src="js/modules/mascota.js"></script>
   <script src="js/modules/acsi-fab.js?v=20260826-acsi"></script>
+  <script src="js/modules/versiculo-dia.js?v=20260827-versiculo"></script>
   <script>App.init();</script>
 </body>
 </html>

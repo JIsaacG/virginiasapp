@@ -9,4 +9,7 @@ const CONFIG = {
   TOAST_DELAY_MOBILE: 2000,
   WELCOME_XP_DELAY: 2000,
   HUD_MINIMIZE_DELAY: 3500,
+  // Ancho máximo en el que el HUD arranca plegado. Cubre tablets y portátiles
+  // de 13" (1280/1366/1440), donde el panel abierto tapaba el contenido.
+  HUD_MINIMIZE_MAX_WIDTH: 1500,
 };

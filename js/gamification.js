@@ -7,6 +7,7 @@ const Gamification = {
   earnedBadges: new Set(),
   sectionEarned: new Set(),
   hudMinimized: false,
+  hudTouched: false,
 
   init() {
     this.xp = parseInt(localStorage.getItem('ceevs_xp') || '0');
@@ -124,13 +125,23 @@ const Gamification = {
   },
 
   toggleHUD() {
-    this.hudMinimized = !this.hudMinimized;
+    this.hudTouched = true;   // el usuario decidió: no lo pleguemos por su cuenta
+    this.setHUDMinimized(!this.hudMinimized);
+  },
+
+  setHUDMinimized(minimized) {
+    this.hudMinimized = minimized;
+    const hud = document.getElementById('game-hud');
     const main = document.getElementById('hud-main-content');
     const min = document.getElementById('hud-min-content');
     const toggle = document.getElementById('hud-toggle');
-    if (main) main.style.display = this.hudMinimized ? 'none' : 'block';
-    if (min) min.style.display = this.hudMinimized ? 'block' : 'none';
-    if (toggle) toggle.textContent = this.hudMinimized ? '+' : '−';
+    if (hud) hud.classList.toggle('minimized', minimized);
+    if (main) main.style.display = minimized ? 'none' : 'block';
+    if (min) min.style.display = minimized ? 'block' : 'none';
+    if (toggle) {
+      toggle.textContent = minimized ? '+' : '−';
+      toggle.setAttribute('aria-label', minimized ? 'Abrir mi perfil CEEVS' : 'Plegar mi perfil CEEVS');
+    }
   },
 
   _bindButtons() {
@@ -196,16 +207,15 @@ const Gamification = {
     }
   },
 
+  /* En pantallas que no son de escritorio grande (tablets y portátiles de 13")
+     el panel abierto se queda encima del contenido — fotos de la galería,
+     títulos de los álbumes. Se pliega solo pasados unos segundos; el usuario
+     puede volver a abrirlo con el botón +, y ahí ya se queda abierto. */
   _autoMinimizeMobile() {
-    if (window.innerWidth <= CONFIG.MOBILE_BREAKPOINT) {
+    const limite = CONFIG.HUD_MINIMIZE_MAX_WIDTH || CONFIG.MOBILE_BREAKPOINT;
+    if (window.innerWidth <= limite) {
       setTimeout(() => {
-        const main = document.getElementById('hud-main-content');
-        const min = document.getElementById('hud-min-content');
-        const toggle = document.getElementById('hud-toggle');
-        if (main) main.style.display = 'none';
-        if (min) min.style.display = 'block';
-        if (toggle) toggle.textContent = '+';
-        this.hudMinimized = true;
+        if (!this.hudTouched && !this.hudMinimized) this.setHUDMinimized(true);
       }, CONFIG.HUD_MINIMIZE_DELAY);
     }
   },

@@ -1185,6 +1185,54 @@ details.admin-section > .admin-card { margin-top: 14px; }
   padding: 8px 0;
 }
 
+/* ─── Nombres de los álbumes ─── */
+.gal-name-row {
+  display: grid;
+  grid-template-columns: 132px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0e9de;
+}
+.gal-name-row:last-child { border-bottom: none; }
+.gal-name-tag {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #8a7a6a;
+}
+.gal-name-flag {
+  display: inline-block;
+  margin-top: 3px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(213,175,74,.18);
+  border: 1px solid rgba(213,175,74,.42);
+  color: #8a6a1a;
+  font-size: 10px;
+  letter-spacing: .04em;
+  text-transform: none;
+}
+.gal-name-fields {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 8px;
+  min-width: 0;
+}
+.gal-name-fields .admin-input { min-width: 0; }
+.gal-name-reset {
+  padding: 6px 12px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .gal-name-row { grid-template-columns: 1fr; gap: 8px; }
+  .gal-name-fields { grid-template-columns: 1fr; }
+  .gal-name-reset { justify-self: start; }
+}
+
 /* ─── Responsive nuevos paneles ─── */
 @media (max-width: 768px) {
   .admin-tabs-container { padding: 0 12px; }

@@ -261,7 +261,9 @@
   .hud-title { font-size: 0.96875rem; letter-spacing: 0.08em; }
   .hud-score { font-size: 1.5rem; }
   .hud-xp-label { font-size: 0.9375rem; }
-  .hud-badges { gap: 5px; }
+  /* Rejilla fija de 4×2: en fila las 8 insignias no caben en el panel
+     estrecho y se repartían de forma irregular. */
+  .hud-badges { display: grid; grid-template-columns: repeat(4, auto); gap: 5px; justify-content: end; }
   .hud-badge { width: 28px; height: 28px; font-size: 1.03125rem; }
 
   #toast {
@@ -271,8 +273,10 @@
     bottom: 96px;
   }
 
+  /* El león pasa POR DETRÁS del HUD (z-index 500): con 520 se le montaba
+     encima en tablets y tapaba los XP. */
   .mascota {
-    z-index: 520;
+    z-index: 480;
     bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
   }
 }

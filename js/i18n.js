@@ -115,6 +115,11 @@ const I18n = {
     if (lang === 'en') this._apply();
     else this._restore();
     this._reflectActive();
+
+    // Aviso para los módulos que generan su propio texto y no pueden traducirse
+    // desde el diccionario (p. ej. js/modules/versiculo-dia.js, que pide el
+    // versículo a la API en la versión del idioma elegido).
+    document.dispatchEvent(new CustomEvent('ceevs:lang', { detail: { lang } }));
   },
 
   // ── Contenido dinámico: traducir nodos añadidos después de cargar ──
