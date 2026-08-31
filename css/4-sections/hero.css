@@ -328,6 +328,30 @@
 .hero-tag-dot { width:8px; height:8px; border-radius:50%; background:#22c55e; display:inline-block; margin-right:8px; box-shadow:0 0 6px #22c55e; }
 .hero-tag span { font-size:0.9375rem; color:rgba(255,255,255,.90); font-weight:500; }
 
+/* Zona ciega entre el apilado de tablet (max-width:900px, en filosofia.css)
+   y el ancho desde el que el grid de 2 columnas respira (min-width:1360px,
+   arriba). Sin este bloque, el hero se queda en `grid-template-columns:1fr 1fr`
+   con el ancho mínimo de contenido de `.hero-right` (foto/carrusel) empujando
+   `.hero-left` a una franja tan angosta que el versículo se parte palabra por
+   palabra. Mismo tratamiento que ya usa la tablet: una sola columna y la
+   galería oculta, para no inventar un diseño intermedio nuevo. */
+@media (max-width:1359px) and (min-width:901px) {
+  .hero { grid-template-columns:1fr; min-height:100svh; }
+  .hero-right, .hero-founding-badge { display:none; }
+  /* max-width + centrado: sin esto, en el extremo ancho de este rango
+     (~1150-1359px) el texto queda pegado a la izquierda con una franja vacía
+     enorme a la derecha y los contadores se estiran de más — el bloque de
+     tablet del que viene esta regla nunca necesitó resolverlo porque ahí el
+     contenedor ya era angosto de por sí. */
+  .hero-left {
+    padding:72px 6vw 56px; justify-content:flex-end; min-height:100svh;
+    max-width:640px; margin:0 auto; justify-self:center;
+  }
+  .hero-counters { margin-top:36px; padding-top:28px; gap:0; }
+  .hero-counter { padding:0 16px; }
+  .counter-num { font-size:2.0625rem; }
+}
+
 @media (max-width:1080px) {
   .hero-mini-card {
     flex:0 0 76%;
