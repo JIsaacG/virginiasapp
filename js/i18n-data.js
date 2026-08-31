@@ -948,6 +948,7 @@ window.CEEVS_I18N = {
   "Nuestros docentes": "Our teachers",
   "Nuestros docentes y líderes participan activamente en procesos de certificación ACSI, reflejando el compromiso institucional con la excelencia educativa, la actualización profesional y la formación de estudiantes preparados para impactar positivamente su entorno y su futuro.": "Our teachers and leaders actively participate in ACSI certification processes, reflecting the institutional commitment to educational excellence, professional development and the formation of students prepared to positively impact their environment and their future.",
   "Nuestros estudiantes": "Our students",
+  "Nuevas instalaciones y mejoras en infraestructura consolidan la propuesta educativa del Instituto.": "New facilities and infrastructure improvements strengthen the Institute's educational offering.",
   "¡Nuevo logro!": "New achievement!",
   "Obramos con equidad y rectitud, reflejando el carácter justo de Dios.": "We act with fairness and uprightness, reflecting the just character of God.",
   "Obra de ampliación de las instalaciones del campus": "Construction work expanding the campus facilities",
