@@ -72,6 +72,7 @@ const QuienesSomos = {
 
     const els = {
       mono: document.getElementById('lead-modal-mono'),
+      photo: document.getElementById('lead-modal-photo'),
       title: document.getElementById('lead-modal-title'),
       name: document.getElementById('lead-modal-name'),
       role: document.getElementById('lead-modal-role'),
@@ -82,6 +83,13 @@ const QuienesSomos = {
     const open = card => {
       lastFocused = card;
       els.mono.textContent = card.dataset.mono || '';
+      const cardPhoto = card.querySelector('.lead-photo');
+      const src = cardPhoto && (cardPhoto.currentSrc || cardPhoto.getAttribute('src'));
+      if (src) {
+        els.photo.src = src;
+      } else {
+        els.photo.removeAttribute('src');
+      }
       els.title.textContent = card.dataset.title || '';
       els.name.textContent = card.dataset.name || '';
       els.role.textContent = card.dataset.role || '';
