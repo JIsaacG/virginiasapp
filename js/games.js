@@ -407,8 +407,7 @@ const Games = {
       return true;
     };
 
-    const words = this._SOPA_WORDS
-      .map(w => this._normWord(w.word))
+    const words = [...new Set(this._SOPA_WORDS.map(w => this._normWord(w.word)))]
       .filter(w => w.length >= 2 && w.length <= size)
       .sort((a, b) => b.length - a.length);
 
@@ -471,7 +470,9 @@ const Games = {
     if (!sopaGrid) return;
     sopaGrid.addEventListener('click', e => {
       const cell = e.target.closest('.sopa-cell');
-      if (!cell || cell.classList.contains('found')) return;
+      // Las celdas ya encontradas siguen activas: las palabras se cruzan y una
+      // puede empezar o terminar en una letra que ya está marcada.
+      if (!cell) return;
       this._startSopaTimer();
       this._handleSopaCellClick(cell);
     });

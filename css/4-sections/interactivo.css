@@ -281,7 +281,9 @@
 }
 .sopa-cell:hover { background:rgba(171,100,35,.28); color:#fff; border-color:rgba(230,177,126,.6); }
 .sopa-cell.selecting { background:rgba(171,100,35,.45); color:#fff; border-color:var(--gold2); }
-.sopa-cell.found { background:rgba(76,175,80,.3); color:#f4fff4; border-color:#6ccf72; cursor:default; }
+.sopa-cell.found { background:rgba(76,175,80,.3); color:#f4fff4; border-color:#6ccf72; }
+/* Sigue siendo clicable: las palabras se cruzan y otra puede empezar aqui */
+.sopa-cell.found:hover { background:rgba(76,175,80,.46); border-color:#9be09f; }
 .sopa-cell.first-sel { background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#fff; border-color:var(--gold2); }
 .sopa-words-list { display:flex; flex-direction:column; gap:7px; }
 .sopa-word-item {
