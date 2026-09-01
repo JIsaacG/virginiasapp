@@ -35,7 +35,7 @@ Si el cambio cae en uno de esos huecos, dilo y verifícalo a mano.
 
 ## SEO
 
-Comprueba, cuando aplique al cambio: title, meta description, canonical, robots, sitemap, Open Graph, Twitter, jerarquía de encabezados, enlaces, datos estructurados JSON-LD, indexabilidad. Origen canónico del sitio: `https://prueba.virginiasapp.edu.hn`. El host `www.` no es canónico y `seo:check` lo rechaza.
+Comprueba, cuando aplique al cambio: title, meta description, canonical, robots, sitemap, Open Graph, Twitter, jerarquía de encabezados, enlaces, datos estructurados JSON-LD, indexabilidad. Origen canónico del sitio: `https://virginiasapp.edu.hn`. El host `www.` no es canónico y `seo:check` lo rechaza.
 
 ## Rendimiento
 

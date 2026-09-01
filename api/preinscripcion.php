@@ -327,7 +327,7 @@ if (
     . "\n\n────────────────────────────────────────\n"
     . "Esta solicitud también quedó guardada en el archivo privado de admisiones.\n"
     . "Entra al panel para gestionarla, ver la fotografía y descargar el PDF:\n"
-    . 'https://' . ($host !== '' ? $host : 'www.virginiasapp.edu.hn') . "/admin.html\n\n"
+    . 'https://' . ($host !== '' ? $host : 'virginiasapp.edu.hn') . "/admin.html\n\n"
     . "— Aviso automático del sitio del Centro Educativo Evangélico Virginia Sapp.";
   $correoEnviado = ceevs_send_mail(
     $destinoAdmisiones,

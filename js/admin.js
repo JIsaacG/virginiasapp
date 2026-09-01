@@ -14,7 +14,12 @@
   /* Catálogo completo de imágenes editables del sitio.
      Cada key corresponde a un data-img-key en el HTML (aplicado por image-manager.js). */
 
-  var WP = 'https://virginiasapp.edu.hn/wp-content/uploads/';
+  /* Fotos institucionales. Vivieron en el WordPress viejo
+     (virginiasapp.edu.hn/wp-content/uploads/) hasta la migración a Hostinger:
+     al mover el registro A ese WordPress deja de existir y esas URLs devolverían
+     404, así que las fotos se descargaron, se redimensionaron a 1600 px y ahora
+     se sirven desde el propio sitio. No volver a apuntar a wp-content. */
+  var WP = 'assets/images/wp/';
   var UNSPLASH = 'https://images.unsplash.com/';
 
   function albumSection(num, title, urls) {
@@ -43,12 +48,12 @@
       page: '🏠 Inicio (index.html)',
       images: [
         { key: 'hero-bg', label: 'Hero — Fondo (imagen parallax y portada del video)', defaultUrl: UNSPLASH + 'photo-1580582932707-520aed937b7b?w=1600&q=75&auto=format', type: 'bg' },
-        { key: 'hero-slide-1', label: 'Galería del hero — Foto 1: Vida escolar', defaultUrl: WP + '2025/10/IMG_1816-1400x786.jpg' },
-        { key: 'hero-slide-2', label: 'Galería del hero — Foto 2: Aula dinámica', defaultUrl: WP + '2026/01/IMG_5896.jpg' },
-        { key: 'hero-slide-3', label: 'Galería del hero — Foto 3: Momentos de estudio', defaultUrl: WP + '2025/12/IMG_4411.jpg' },
-        { key: 'hero-slide-4', label: 'Galería del hero — Foto 4: Campus y comunidad', defaultUrl: WP + '2025/12/IMG_2006.jpg' },
-        { key: 'hero-slide-5', label: 'Galería del hero — Foto 5: Biblioteca', defaultUrl: WP + '2026/03/IMG_7464.JPG-712x400.jpeg' },
-        { key: 'hero-slide-6', label: 'Galería del hero — Foto 6: Aula activa', defaultUrl: WP + '2026/01/IMG_8171.jpg' }
+        { key: 'hero-slide-1', label: 'Galería del hero — Foto 1: Vida escolar', defaultUrl: WP + 'IMG_1816-1400x786.jpg' },
+        { key: 'hero-slide-2', label: 'Galería del hero — Foto 2: Aula dinámica', defaultUrl: WP + 'IMG_5896.jpg' },
+        { key: 'hero-slide-3', label: 'Galería del hero — Foto 3: Momentos de estudio', defaultUrl: WP + 'IMG_4411.jpg' },
+        { key: 'hero-slide-4', label: 'Galería del hero — Foto 4: Campus y comunidad', defaultUrl: WP + 'IMG_2006.jpg' },
+        { key: 'hero-slide-5', label: 'Galería del hero — Foto 5: Biblioteca', defaultUrl: WP + 'IMG_7464.JPG-712x400.jpeg' },
+        { key: 'hero-slide-6', label: 'Galería del hero — Foto 6: Aula activa', defaultUrl: WP + 'IMG_8171.jpg' }
       ]
     },
     {
@@ -78,10 +83,10 @@
     {
       page: '🏛️ Quiénes Somos (quienes-somos.html)',
       images: [
-        { key: 'qs-bienvenida-estudiantes', label: 'Bienvenida — Estudiantes en clase', defaultUrl: WP + '2026/01/IMG_5958.jpg' },
-        { key: 'qs-bienvenida-docentes', label: 'Bienvenida — Docentes', defaultUrl: WP + '2026/01/IMG_9784.jpg' },
-        { key: 'qs-bienvenida-comunidad', label: 'Bienvenida — Comunidad educativa', defaultUrl: WP + '2025/10/WhatsApp-Image-2025-10-22-at-3.37.19-PM-2-533x400.jpeg' },
-        { key: 'qs-bienvenida-ninos', label: 'Bienvenida — Niños', defaultUrl: WP + '2026/01/IMG_5896.jpg' },
+        { key: 'qs-bienvenida-estudiantes', label: 'Bienvenida — Estudiantes en clase', defaultUrl: WP + 'IMG_5958.jpg' },
+        { key: 'qs-bienvenida-docentes', label: 'Bienvenida — Docentes', defaultUrl: WP + 'IMG_9784.jpg' },
+        { key: 'qs-bienvenida-comunidad', label: 'Bienvenida — Comunidad educativa', defaultUrl: WP + 'WhatsApp-Image-2025-10-22-at-3.37.19-PM-2-533x400.jpeg' },
+        { key: 'qs-bienvenida-ninos', label: 'Bienvenida — Niños', defaultUrl: WP + 'IMG_5896.jpg' },
         { key: 'qs-historia-1962-a', label: 'Historia 1962 — Campus en sus primeros años', defaultUrl: 'assets/images/timeline/Imagen%201.jpg' },
         { key: 'qs-historia-1962-b', label: 'Historia 1962 — Fachada y lema fundacional', defaultUrl: 'assets/images/timeline/45.jpg' },
         { key: 'qs-historia-7080-a', label: 'Historia 70–80 — Bus escolar y pabellones', defaultUrl: 'assets/images/timeline/33.jpg' },
@@ -91,7 +96,7 @@
         { key: 'qs-mision-foto', label: 'Misión — Foto de la tarjeta', defaultUrl: 'assets/images/misionvision/mision.jpg' },
         { key: 'qs-vision-foto', label: 'Visión — Foto de la tarjeta', defaultUrl: 'assets/images/misionvision/vision.jpg' },
         { key: 'qs-acsi-logo', label: 'Acreditación ACSI — Logo ACSI (placa)', defaultUrl: 'assets/images/sections/acsi-logo.png' },
-        { key: 'qs-acsi-foto', label: 'Acreditación ACSI — Imagen lateral', defaultUrl: WP + '2025/10/WhatsApp-Image-2025-10-22-at-3.37.19-PM-2-533x400.jpeg' },
+        { key: 'qs-acsi-foto', label: 'Acreditación ACSI — Imagen lateral', defaultUrl: WP + 'WhatsApp-Image-2025-10-22-at-3.37.19-PM-2-533x400.jpeg' },
         { key: 'qs-declaracion-logo', label: 'Declaración institucional — Logo', defaultUrl: 'assets/logo principal.png' },
         { key: 'qs-historia-hoy-a', label: 'Historia Hoy — Foto 1 (hueco pendiente)' },
         { key: 'qs-historia-hoy-b', label: 'Historia Hoy — Foto 2 (hueco pendiente)' },
@@ -151,11 +156,11 @@
     {
       page: '✝️ Misión Evangelística (mision-evangelistica.html)',
       images: [
-        { key: 'me-portada-estudiantes', label: 'Portada — Estudiantes en clase', defaultUrl: WP + '2026/01/IMG_5958.jpg' },
-        { key: 'me-portada-docentes', label: 'Portada — Docentes (flotante)', defaultUrl: WP + '2026/01/IMG_9784.jpg' },
-        { key: 'me-momento-1', label: 'Momentos — Foto 1: Actividades escolares', defaultUrl: WP + '2025/10/IMG_1816-1400x786.jpg' },
-        { key: 'me-momento-2', label: 'Momentos — Foto 2: Niños', defaultUrl: WP + '2026/01/IMG_5896.jpg' },
-        { key: 'me-momento-3', label: 'Momentos — Foto 3: Campus', defaultUrl: WP + '2025/12/IMG_2006.jpg' }
+        { key: 'me-portada-estudiantes', label: 'Portada — Estudiantes en clase', defaultUrl: WP + 'IMG_5958.jpg' },
+        { key: 'me-portada-docentes', label: 'Portada — Docentes (flotante)', defaultUrl: WP + 'IMG_9784.jpg' },
+        { key: 'me-momento-1', label: 'Momentos — Foto 1: Actividades escolares', defaultUrl: WP + 'IMG_1816-1400x786.jpg' },
+        { key: 'me-momento-2', label: 'Momentos — Foto 2: Niños', defaultUrl: WP + 'IMG_5896.jpg' },
+        { key: 'me-momento-3', label: 'Momentos — Foto 3: Campus', defaultUrl: WP + 'IMG_2006.jpg' }
       ]
     },
     {
@@ -179,7 +184,7 @@
          solo al guardar la imagen aquí. */
       page: '📞 Contáctenos (contactenos.html)',
       images: [
-        { key: 'cn-hablemos-foto', label: 'Hablemos — Foto junto a los canales directos', defaultUrl: WP + '2026/01/IMG_5896.jpg' },
+        { key: 'cn-hablemos-foto', label: 'Hablemos — Foto junto a los canales directos', defaultUrl: WP + 'IMG_5896.jpg' },
         { key: 'cn-exalumnos-1', label: 'Comunidad de egresados — Foto 1 (hueco pendiente)' },
         { key: 'cn-exalumnos-2', label: 'Comunidad de egresados — Foto 2 (hueco pendiente)' }
       ]

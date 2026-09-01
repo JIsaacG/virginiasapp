@@ -2,10 +2,18 @@
 
 ## Dominios
 
-- Dominio público y origen canónico: `https://prueba.virginiasapp.edu.hn/`
-- Dominio que todavía aloja parte de las imágenes: `https://virginiasapp.edu.hn/`
+- Dominio público y origen canónico: `https://virginiasapp.edu.hn/` (sin `www`)
 
-Toda la metadata SEO, el sitemap y las pruebas usan el dominio de Hostinger como canónico. La respuesta pública de Hostinger entrega actualmente una regla que bloquea a Googlebot; para poder aparecer en Google, elimina ese bloqueo desde hPanel o solicita a soporte de Hostinger que habilite el rastreo del dominio.
+Toda la metadata SEO, el sitemap y las pruebas usan ese dominio como canónico. El host
+`www` no es canónico: `.htaccess` lo redirige con un 301 a la raíz y `seo:check` lo rechaza.
+
+Hasta agosto de 2026 el canónico fue `prueba.virginiasapp.edu.hn` y parte de las fotos se
+servían desde el WordPress viejo (`virginiasapp.edu.hn/wp-content/`). Las dos cosas se
+resolvieron al preparar la migración: ver `Docs/HOSTINGER_RUNBOOK.md` §9.
+
+La respuesta pública de Hostinger entregaba una regla que bloqueaba a Googlebot; para poder
+aparecer en Google, elimina ese bloqueo desde hPanel o solicita a soporte de Hostinger que
+habilite el rastreo del dominio.
 
 ## Comandos
 
@@ -19,13 +27,13 @@ npm run seo:production  # Comprueba la publicación temporal después de despleg
 Para comprobar otra publicación:
 
 ```bash
-SEO_TARGET_URL=https://prueba.virginiasapp.edu.hn npm run seo:production
+SEO_TARGET_URL=https://virginiasapp.edu.hn npm run seo:production
 ```
 
 En PowerShell:
 
 ```powershell
-$env:SEO_TARGET_URL='https://prueba.virginiasapp.edu.hn'; npm run seo:production
+$env:SEO_TARGET_URL='https://virginiasapp.edu.hn'; npm run seo:production
 ```
 
 Los pull requests y cambios a `main` ejecutan la auditoría local mediante `.github/workflows/seo-quality.yml`. Los informes Lighthouse quedan adjuntos a la ejecución durante 14 días.
@@ -45,8 +53,8 @@ ese proveedor no se carga (el archivo es seguro de publicar sin activar seguimie
 
 1. `analytics.google.com` → Administrar → Crear propiedad.
 2. Nombre `CEEVS — Virginia Sapp`, zona horaria **(GMT-06:00) Tegucigalpa**, moneda Lempira.
-3. Flujo de datos → Web → URL `https://prueba.virginiasapp.edu.hn` (el **dominio canónico**;
-   no `virginiasapp.edu.hn`, que solo aloja imágenes). Medición mejorada activada.
+3. Flujo de datos → Web → URL `https://virginiasapp.edu.hn` (el **dominio canónico**,
+   sin `www`). Medición mejorada activada.
 4. Copiar el ID de medición `G-XXXXXXXXXX` y pegarlo en `GA4_ID` (`js/analytics.js`).
 5. La propiedad anterior `G-HH474WYK57` queda archivada en su cuenta de origen; la nueva
    empieza a contar de cero. Exportar antes lo que se quiera conservar.
@@ -77,7 +85,7 @@ Orden de preferencia para verificar:
 ⚠️ Antes de intentar verificar hay que resolver el bloqueo a Googlebot descrito arriba: con el
 rastreo bloqueado, los métodos 2 y 3 pueden fallar porque Google no puede leer la página.
 
-Después de verificar: enviar `https://prueba.virginiasapp.edu.hn/sitemap.xml` y vincular la
+Después de verificar: enviar `https://virginiasapp.edu.hn/sitemap.xml` y vincular la
 propiedad a GA4 (*Administrar → Enlaces de Search Console*).
 
 ### Comprobar que realmente mide
@@ -102,7 +110,7 @@ codex mcp add openseo --url https://app.openseo.so/mcp
 
 Después de autorizar:
 
-1. Crea o selecciona el proyecto `prueba.virginiasapp.edu.hn`.
+1. Crea o selecciona el proyecto `virginiasapp.edu.hn`.
 2. Conecta Google Search Console cuando Googlebot pueda rastrear el dominio.
 3. Ejecuta una auditoría de sitio después de cada despliegue importante.
 4. Revisa semanalmente posiciones, páginas con impresiones y errores de indexación.

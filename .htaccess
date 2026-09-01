@@ -8,6 +8,15 @@
 
   RewriteCond %{THE_REQUEST} \s/+index\.html(?:[?\s]) [NC]
   RewriteRule ^index\.html$ / [R=301,L]
+
+  # www -> dominio raíz. El origen canónico declarado en cada página, en el
+  # sitemap y en Search Console es https://virginiasapp.edu.hn (sin www); si el
+  # DNS resuelve también www, sin este 301 el sitio quedaría accesible por dos
+  # hosts y Google repartiría la autoridad entre ambos. La condición nombra el
+  # host explícitamente para no tocar la URL temporal de Hostinger ni un
+  # subdominio de staging.
+  RewriteCond %{HTTP_HOST} ^www\.virginiasapp\.edu\.hn$ [NC]
+  RewriteRule ^ https://virginiasapp.edu.hn%{REQUEST_URI} [R=301,L,NE]
 </IfModule>
 
 # Archivos ocultos y de configuración: nunca se sirven.

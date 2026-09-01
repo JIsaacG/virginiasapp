@@ -17,7 +17,9 @@
     "verify": "node scripts/verify.mjs",
     "verify:low": "node scripts/verify.mjs --level=low",
     "verify:medium": "node scripts/verify.mjs --level=medium",
-    "verify:high": "node scripts/verify.mjs --level=high"
+    "verify:high": "node scripts/verify.mjs --level=high",
+    "deploy:build": "node scripts/build-deploy.mjs",
+    "deploy:list": "node scripts/build-deploy.mjs --list"
   },
   "devDependencies": {
     "@lhci/cli": "0.15.1",

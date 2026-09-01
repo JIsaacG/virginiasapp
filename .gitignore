@@ -17,3 +17,7 @@ api/db-config.php
 .env.*
 !.env.example
 Docs/Manual-Panel-Administracion-CEEVS-CoreStructs.docx
+
+# Paquete de publicación armado por scripts/build-deploy.mjs.
+# Es una copia de archivos que ya están versionados: se regenera, no se guarda.
+output/deploy/
