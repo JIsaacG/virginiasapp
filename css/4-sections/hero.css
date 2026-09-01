@@ -74,10 +74,18 @@
   padding:80px 5vw 80px 8vw; position:relative; z-index:3;
   min-width:0;
 }
+/* `min-width:0` por el mismo motivo que en `.hero-left`, pero aquí el culpable
+   es la galeria: `.hero-photo-stack` mide 980px de ancho intrinseco
+   (`max-width`) y, sin este cerrojo, ese ancho se convertia en el minimo
+   automatico de la segunda columna del grid. Resultado: en portatiles
+   (1360-1500px, p.ej. un MacBook Air M2 a 1470px) las columnas dejaban de ser
+   `1fr 1fr` y quedaban en ~343px / ~1127px, con el titular desbordado por
+   debajo de la foto y el parrafo partido palabra por palabra. */
 .hero-right {
   position:relative; z-index:3;
   display:flex; align-items:center; justify-content:center;
   padding:80px 8vw 80px 2vw;
+  min-width:0;
 }
 
 .hero-eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:30px; }
@@ -112,7 +120,7 @@
    italic, quepa siempre en una línea con ~60px de holgura. Si alguna vez no
    cupiera, la caja topa con su max-width y el texto vuelve a partirse en dos
    líneas en vez de desbordarse. */
-@media(min-width:1360px){
+@media(min-width:1180px){
   .hero-versiculo {
     width:max-content; max-width:calc(92vw - 250px);
     margin-right:0;
@@ -328,14 +336,14 @@
 .hero-tag-dot { width:8px; height:8px; border-radius:50%; background:#22c55e; display:inline-block; margin-right:8px; box-shadow:0 0 6px #22c55e; }
 .hero-tag span { font-size:0.9375rem; color:rgba(255,255,255,.90); font-weight:500; }
 
-/* Zona ciega entre el apilado de tablet (max-width:900px, en filosofia.css)
-   y el ancho desde el que el grid de 2 columnas respira (min-width:1360px,
-   arriba). Sin este bloque, el hero se queda en `grid-template-columns:1fr 1fr`
-   con el ancho mínimo de contenido de `.hero-right` (foto/carrusel) empujando
-   `.hero-left` a una franja tan angosta que el versículo se parte palabra por
-   palabra. Mismo tratamiento que ya usa la tablet: una sola columna y la
-   galería oculta, para no inventar un diseño intermedio nuevo. */
-@media (max-width:1359px) and (min-width:901px) {
+/* Franja entre el apilado de tablet (max-width:900px, en filosofia.css) y el
+   ancho desde el que el grid de 2 columnas respira. Ese limite era 1360px
+   mientras `.hero-right` no tenia `min-width:0`: sin el cerrojo, el ancho
+   intrinseco de la galeria empujaba `.hero-left` a una franja tan angosta que
+   el versiculo se partia palabra por palabra. Corregido eso, las 2 columnas
+   funcionan ya desde 1180px (portatiles de 1280px, iPad Pro en horizontal),
+   asi que este apilado a una columna solo cubre 901-1179px. */
+@media (max-width:1179px) and (min-width:901px) {
   .hero { grid-template-columns:1fr; min-height:100svh; }
   .hero-right, .hero-founding-badge { display:none; }
   /* max-width + centrado: sin esto, en el extremo ancho de este rango

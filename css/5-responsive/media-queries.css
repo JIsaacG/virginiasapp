@@ -15,6 +15,17 @@
 .declaracion-title em { color:var(--gold2); font-style:italic; }
 .declaracion-intro { font-size:1.0625rem; color:var(--muted); line-height:1.8; max-width:600px; margin:0 auto 56px; text-align:center; }
 .declaracion-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+
+/* La fila de seis solo cabe de verdad en pantallas anchas. Al estrecharse, la
+   columna baja de ~200px y el texto del dorso de la tarjeta (`.dc-back`) se
+   sale de los 180px de alto fijos de `.dc-flip`: medido, se desborda ya a
+   1366px y a 1470px (un MacBook Air M2) solo le sobraban 10px, margen que la
+   traduccion al ingles se come. El escalon a 3 columnas existia pero arrancaba
+   en 1100px, demasiado tarde; aqui se adelanta a 1500px. Mismo criterio que
+   `.lead-grid`, que ya baja a 3 columnas en 1240px. */
+@media(max-width:1500px){
+  .declaracion-grid{ grid-template-columns:repeat(3,1fr); }
+}
 .declaracion-card { background:var(--white); border:1px solid rgba(171,100,35,.15); border-radius:var(--rl); padding:28px 24px; transition:all .3s; }
 .declaracion-card:hover { border-color:rgba(171,100,35,.4); background:var(--cream2); transform:translateY(-2px); }
 .dc-num { font-family:'Playfair Display',serif; font-size:1.59375rem; font-weight:900; color:var(--gold2); margin-bottom:12px; }
