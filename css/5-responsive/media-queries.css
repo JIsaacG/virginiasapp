@@ -14,9 +14,10 @@
 .declaracion-title { font-family:'Playfair Display',serif; font-size:clamp(2.1875rem,4vw,3.375rem); font-weight:700; color:var(--forest); line-height:1.12; margin-bottom:16px; text-align:center; }
 .declaracion-title em { color:var(--gold2); font-style:italic; }
 .declaracion-intro { font-size:1.0625rem; color:var(--muted); line-height:1.8; max-width:600px; margin:0 auto 56px; text-align:center; }
-.declaracion-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+.declaracion-grid { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+.declaracion-grid > * { flex:0 1 calc((100% - 50px) / 5); }
 
-/* La fila de seis solo cabe de verdad en pantallas anchas. Al estrecharse, la
+/* La fila de cinco solo cabe de verdad en pantallas anchas. Al estrecharse, la
    columna baja de ~200px y el texto del dorso de la tarjeta (`.dc-back`) se
    sale de los 180px de alto fijos de `.dc-flip`: medido, se desborda ya a
    1366px y a 1470px (un MacBook Air M2) solo le sobraban 10px, margen que la
@@ -24,7 +25,7 @@
    en 1100px, demasiado tarde; aqui se adelanta a 1500px. Mismo criterio que
    `.lead-grid`, que ya baja a 3 columnas en 1240px. */
 @media(max-width:1500px){
-  .declaracion-grid{ grid-template-columns:repeat(3,1fr); }
+  .declaracion-grid > *{ flex-basis:calc((100% - 26px) / 3); }
 }
 .declaracion-card { background:var(--white); border:1px solid rgba(171,100,35,.15); border-radius:var(--rl); padding:28px 24px; transition:all .3s; }
 .declaracion-card:hover { border-color:rgba(171,100,35,.4); background:var(--cream2); transform:translateY(-2px); }
@@ -198,7 +199,7 @@
 ═══════════════════════════════════════ */
 @media(max-width:1100px){
   .filosofia-pillars{ grid-template-columns:repeat(2,1fr); }
-  .declaracion-grid{ grid-template-columns:repeat(3,1fr); }
+  .declaracion-grid > *{ flex-basis:calc((100% - 26px) / 3); }
   .perfil-traits{ grid-template-columns:repeat(2,1fr); }
   .portal-cards{ grid-template-columns:repeat(2,1fr); }
 }
@@ -213,7 +214,7 @@
   .exalumnos-fotos{ grid-template-columns:1fr 1fr; }
   .exalumnos-nota{ grid-column:1 / -1; }
   .empleos-section{ padding:44px 6vw; }
-  .declaracion-grid{ grid-template-columns:1fr; }
+  .declaracion-grid > *{ flex-basis:100%; }
   .portal-cards{ grid-template-columns:1fr; }
 }
 @media(max-width:600px){
