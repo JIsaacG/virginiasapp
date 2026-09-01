@@ -26,7 +26,8 @@ const Games = {
   },
 
   // SDD-F5-ACT-002 — palabras de la sopa de letras desde data/word-search.json.
-  // _SOPA_WORDS (más abajo) es el listado por defecto si la carga falla.
+  // Ese archivo es el diccionario editable (100 palabras); _SOPA_WORDS (más
+  // abajo) es solo el respaldo mínimo por si la carga falla.
   _loadWordSearch() {
     fetch('data/word-search.json')
       .then(r => (r.ok ? r.json() : null))
@@ -34,6 +35,8 @@ const Games = {
         if (data && data.status === 'approved' &&
             Array.isArray(data.words) && data.words.length) {
           this._SOPA_WORDS = data.words;
+          const perGame = Number(data.wordsPerGame);
+          if (Number.isFinite(perGame) && perGame >= 1) this._SOPA_PER_GAME = perGame;
         }
       })
       .catch(() => { /* se mantiene el listado por defecto embebido */ });
@@ -383,6 +386,19 @@ const Games = {
 
   _GRID_SIZE: 12,
 
+  // Palabras que se sortean en cada partida (data/word-search.json lo sobrescribe)
+  _SOPA_PER_GAME: 12,
+
+  // Fisher-Yates sobre una copia: no toca el diccionario original
+  _shuffle(arr) {
+    const out = arr.slice();
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+  },
+
   // Normaliza a A-Z sin acentos para que coincida con la rejilla
   _normWord(w) {
     return (w || '').toUpperCase()
@@ -407,11 +423,7 @@ const Games = {
       return true;
     };
 
-    const words = [...new Set(this._SOPA_WORDS.map(w => this._normWord(w.word)))]
-      .filter(w => w.length >= 2 && w.length <= size)
-      .sort((a, b) => b.length - a.length);
-
-    words.forEach(word => {
+    const place = word => {
       for (let tries = 0; tries < 250; tries++) {
         const [dr, dc] = dirs[Math.floor(Math.random() * dirs.length)];
         const r = Math.floor(Math.random() * size);
@@ -424,8 +436,25 @@ const Games = {
           cells.push([rr, cc]);
         }
         placements.push({ word, cells });
-        break;
+        return true;
       }
+      return false;
+    };
+
+    // El diccionario tiene muchas más palabras de las que caben: cada partida
+    // sortea un subconjunto distinto, así que la sopa nunca se repite.
+    const pool = this._shuffle(
+      [...new Set(this._SOPA_WORDS.map(w => this._normWord(w.word)))]
+        .filter(w => w.length >= 2 && w.length <= size)
+    );
+    const chosen = pool.slice(0, this._SOPA_PER_GAME).sort((a, b) => b.length - a.length);
+    const spares = pool.slice(this._SOPA_PER_GAME);
+
+    chosen.forEach(word => {
+      if (place(word)) return;
+      // Si no cupo porque la rejilla ya está muy ocupada, se sustituye por otra
+      // del diccionario para no anunciar menos palabras de las que hay.
+      while (spares.length) if (place(spares.shift())) return;
     });
 
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
