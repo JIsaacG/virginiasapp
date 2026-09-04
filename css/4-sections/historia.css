@@ -6,7 +6,12 @@
 .niveles-intro { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:60px; gap:40px; flex-wrap:wrap; }
 .niveles-intro h2 { font-family:'Playfair Display',serif; font-size:clamp(2.28125rem,4.2vw,3.75rem); font-weight:700; color:var(--forest); line-height:1.1; }
 .niveles-intro h2 em { color:var(--gold2); font-style:italic; }
-.niveles-intro p { font-size:1.0625rem; color:var(--muted); max-width:320px; line-height:1.7; }
+/* Alineado al final de la fila (align-self, no el align-items del contenedor):
+   el título queda arriba, pegado a la etiqueta "Oferta académica"; el texto
+   queda abajo, pegado a las tarjetas que siguen. max-width más ancho que el
+   resto de intros de la página a propósito: este texto es una sola oración
+   y a 320px caía en 4 líneas; a 440px cae en 2. */
+.niveles-intro p { font-size:1.0625rem; color:var(--muted); max-width:560px; line-height:1.7; align-self:flex-end; }
 
 .niveles-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
 
