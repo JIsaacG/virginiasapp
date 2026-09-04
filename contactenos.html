@@ -421,8 +421,51 @@
     <div class="empleos-icon">👩‍🏫</div>
     <h3>Forma parte de nuestro equipo</h3>
     <p>En el Centro Educativo Evangélico Virginia Sapp buscamos profesionales comprometidos con la educación cristiana, la excelencia académica y la formación integral. Si compartes nuestra visión, nos encantaría conocerte.</p>
-    <p class="empleos-hint">Envía tu hoja de vida (CV) indicando el puesto de interés. Al hacer clic se abrirá tu cliente de correo con el mensaje preparado.</p>
-    <a href="mailto:empleosadieeds@gmail.com?subject=Aplicaci%C3%B3n%20de%20empleo%20-%20%5BNombre%5D&body=Estimado%20equipo%2C%0A%0AAdjunto%20mi%20hoja%20de%20vida%20para%20su%20consideraci%C3%B3n.%0A%0ANombre%3A%0APuesto%20de%20inter%C3%A9s%3A%0ANivel%2F%C3%A1rea%3A%0ATel%C3%A9fono%3A%0A%0AGracias." class="btn-cta-ghost" style="border-color:rgba(171,100,35,.4);color:var(--gold2);">Enviar hoja de vida por correo →</a>
+    <p class="empleos-hint">Completa el formulario y adjunta tu hoja de vida en PDF. La recibirá directamente el equipo de Recursos Humanos.</p>
+
+    <form class="empleos-form" id="empleos-form" novalidate>
+      <!-- Campo trampa anti-robots: invisible para las personas -->
+      <div class="form-hp" aria-hidden="true">
+        <label for="em-sitio-web">No llenar este campo</label>
+        <input type="text" id="em-sitio-web" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="empleos-row">
+        <div class="empleos-group">
+          <label class="empleos-label" for="em-nombre">Nombre completo <span class="empleos-required" aria-hidden="true">*</span></label>
+          <input class="empleos-input" id="em-nombre" name="nombre" type="text" autocomplete="name" required aria-required="true">
+        </div>
+        <div class="empleos-group">
+          <label class="empleos-label" for="em-correo">Correo electrónico <span class="empleos-required" aria-hidden="true">*</span></label>
+          <input class="empleos-input" id="em-correo" name="correo" type="email" autocomplete="email" required aria-required="true">
+        </div>
+      </div>
+      <div class="empleos-row">
+        <div class="empleos-group">
+          <label class="empleos-label" for="em-telefono">Teléfono <span class="empleos-optional">(opcional)</span></label>
+          <input class="empleos-input" id="em-telefono" name="telefono" type="tel" autocomplete="tel">
+        </div>
+        <div class="empleos-group">
+          <label class="empleos-label" for="em-puesto">Puesto de interés <span class="empleos-required" aria-hidden="true">*</span></label>
+          <input class="empleos-input" id="em-puesto" name="puesto" type="text" placeholder="Ej. Docente de Primaria Bilingüe" required aria-required="true">
+        </div>
+      </div>
+      <div class="empleos-group">
+        <label class="empleos-label" for="em-nivel-area">Nivel/área <span class="empleos-optional">(opcional)</span></label>
+        <input class="empleos-input" id="em-nivel-area" name="nivel_area" type="text" placeholder="Ej. Preescolar, Secundaria, Administración…">
+      </div>
+      <div class="empleos-group">
+        <label class="empleos-label" for="em-mensaje">Mensaje adicional <span class="empleos-optional">(opcional)</span></label>
+        <textarea class="empleos-textarea" id="em-mensaje" name="mensaje" placeholder="Cuéntanos brevemente tu experiencia…"></textarea>
+      </div>
+      <div class="empleos-group">
+        <label class="empleos-label" for="em-cv">Hoja de vida — PDF, máx. 5 MB <span class="empleos-required" aria-hidden="true">*</span></label>
+        <input class="empleos-file" id="em-cv" name="cv" type="file" accept="application/pdf" required aria-required="true">
+      </div>
+      <button class="empleos-submit" type="submit">Enviar aplicación</button>
+      <p class="empleos-error" id="empleos-error" role="alert" hidden></p>
+      <p class="empleos-note">Tu aplicación se enviará directamente al equipo de Recursos Humanos. Máximo 3 envíos por día.</p>
+    </form>
   </div>
 </section>
 
@@ -604,6 +647,7 @@
   <script src="js/comunicado-popup.js?v=20260821-comunicado2"></script>
   <script src="js/modules/mascota.js"></script>
   <script src="js/modules/acsi-fab.js?v=20260826-acsi"></script>
+  <script src="js/empleos.js"></script>
   <script>App.init();</script>
 </body>
 </html>

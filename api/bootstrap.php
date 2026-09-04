@@ -501,6 +501,7 @@ function ceevs_mail_config(): array {
     'from_name'     => 'Centro Educativo Evangélico Virginia Sapp',
     'admissions_to' => '',
     'forms_to'      => '',
+    'empleos_to'    => '',
     'timeout'       => 15,
   );
 
@@ -525,6 +526,7 @@ function ceevs_mail_config(): array {
     'from_name'     => 'CEEVS_SMTP_FROM_NAME',
     'admissions_to' => 'CEEVS_ADMISSIONS_TO',
     'forms_to'      => 'CEEVS_FORMS_TO',
+    'empleos_to'    => 'CEEVS_EMPLEOS_TO',
     'timeout'       => 'CEEVS_SMTP_TIMEOUT',
   );
   foreach ($env as $key => $name) {
@@ -546,6 +548,7 @@ function ceevs_mail_config(): array {
   $config['from_name'] = trim(str_replace(array("\r", "\n"), ' ', (string) $config['from_name']));
   $config['admissions_to'] = trim((string) $config['admissions_to']);
   $config['forms_to'] = trim((string) $config['forms_to']);
+  $config['empleos_to'] = trim((string) $config['empleos_to']);
   $config['timeout'] = max(5, min(60, (int) $config['timeout']));
   return $config;
 }
@@ -559,6 +562,12 @@ function ceevs_admissions_recipient(string $fallback): string {
 /** Destinatario de los formularios abiertos (sugerencias, suscripciones). */
 function ceevs_forms_recipient(string $fallback): string {
   $configured = (string) ceevs_mail_config()['forms_to'];
+  return filter_var($configured, FILTER_VALIDATE_EMAIL) ? $configured : $fallback;
+}
+
+/** Destinatario de las aplicaciones de empleo ("Forma parte de nuestro equipo"). */
+function ceevs_empleos_recipient(string $fallback): string {
+  $configured = (string) ceevs_mail_config()['empleos_to'];
   return filter_var($configured, FILTER_VALIDATE_EMAIL) ? $configured : $fallback;
 }
 
@@ -595,15 +604,52 @@ function ceevs_smtp_command($socket, string $command, array $expected): bool {
   return ceevs_smtp_response($socket, $expected);
 }
 
-/** Construye un mensaje de texto UTF-8 listo para transmitir por SMTP. */
-function ceevs_smtp_message(array $to, string $subject, string $text, array $config, string $replyTo = ''): string {
+/** Boundary aleatorio para separar las partes de un mensaje multipart/mixed. */
+function ceevs_mime_boundary(): string {
+  return 'CEEVS-' . bin2hex(random_bytes(16));
+}
+
+/**
+ * Cuerpo multipart/mixed: el texto plano del mensaje seguido de un único
+ * adjunto ({name, mime, content}), ambos en base64. $content va en binario.
+ */
+function ceevs_mime_attachment_body(string $text, string $boundary, array $attachment): string {
+  $normalized = str_replace(array("\r\n", "\r"), "\n", $text);
+  // Sin comillas ni acentos en el nombre: algunos clientes de correo cortan
+  // el encabezado Content-Disposition si el filename lleva caracteres raros.
+  $name = preg_replace('/[^A-Za-z0-9._-]/', '_', (string) $attachment['name']);
+
+  $parts = array(
+    '--' . $boundary,
+    'Content-Type: text/plain; charset=UTF-8',
+    'Content-Transfer-Encoding: base64',
+    '',
+    rtrim(chunk_split(base64_encode($normalized), 76, "\r\n")),
+    '--' . $boundary,
+    'Content-Type: ' . (string) $attachment['mime'] . '; name="' . $name . '"',
+    'Content-Disposition: attachment; filename="' . $name . '"',
+    'Content-Transfer-Encoding: base64',
+    '',
+    rtrim(chunk_split(base64_encode((string) $attachment['content']), 76, "\r\n")),
+    '--' . $boundary . '--',
+  );
+  return implode("\r\n", $parts) . "\r\n";
+}
+
+/**
+ * Construye un mensaje de texto UTF-8 listo para transmitir por SMTP.
+ *
+ * $attachment, si se pasa, es {name, mime, content} y el mensaje sale como
+ * multipart/mixed; si no, el resultado es idéntico al de siempre (texto
+ * plano en base64).
+ */
+function ceevs_smtp_message(array $to, string $subject, string $text, array $config, string $replyTo = '', ?array $attachment = null): string {
   $fromName = (string) $config['from_name'];
   $fromEmail = (string) $config['from_email'];
   $host = preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
   $messageHost = is_string($host) && preg_match('/^[A-Za-z0-9.-]+$/', $host) === 1 ? $host : 'localhost';
   $encodedName = '=?UTF-8?B?' . base64_encode($fromName !== '' ? $fromName : 'CEEVS') . '?=';
   $encodedSubject = '=?UTF-8?B?' . base64_encode(str_replace(array("\r", "\n"), ' ', $subject)) . '?=';
-  $normalized = str_replace(array("\r\n", "\r"), "\n", $text);
 
   $headers = array(
     'Date: ' . date(DATE_RFC2822),
@@ -622,11 +668,20 @@ function ceevs_smtp_message(array $to, string $subject, string $text, array $con
     'To: ' . implode(', ', $to),
     'Subject: ' . $encodedSubject,
     'MIME-Version: 1.0',
-    'Content-Type: text/plain; charset=UTF-8',
-    'Content-Transfer-Encoding: base64',
   ));
-  return implode("\r\n", $headers) . "\r\n\r\n"
-    . rtrim(chunk_split(base64_encode($normalized), 76, "\r\n")) . "\r\n";
+
+  if ($attachment !== null) {
+    $boundary = ceevs_mime_boundary();
+    $headers[] = 'Content-Type: multipart/mixed; boundary="' . $boundary . '"';
+    $body = ceevs_mime_attachment_body($text, $boundary, $attachment);
+  } else {
+    $headers[] = 'Content-Type: text/plain; charset=UTF-8';
+    $headers[] = 'Content-Transfer-Encoding: base64';
+    $normalized = str_replace(array("\r\n", "\r"), "\n", $text);
+    $body = rtrim(chunk_split(base64_encode($normalized), 76, "\r\n")) . "\r\n";
+  }
+
+  return implode("\r\n", $headers) . "\r\n\r\n" . $body;
 }
 
 /**
@@ -635,7 +690,7 @@ function ceevs_smtp_message(array $to, string $subject, string $text, array $con
  * La contraseña solo sale del archivo privado/variables de entorno y nunca se
  * devuelve al navegador, se registra en la bitácora ni se incorpora al mensaje.
  */
-function ceevs_send_smtp(array $to, string $subject, string $text, array $config, string $replyTo = ''): bool {
+function ceevs_send_smtp(array $to, string $subject, string $text, array $config, string $replyTo = '', ?array $attachment = null): bool {
   $host = (string) $config['smtp_host'];
   $port = (int) $config['smtp_port'];
   $security = (string) $config['smtp_security'];
@@ -705,7 +760,7 @@ function ceevs_send_smtp(array $to, string $subject, string $text, array $config
     $ok = ceevs_smtp_command($socket, 'DATA', array(354));
   }
   if ($ok) {
-    $message = ceevs_smtp_message($to, $subject, $text, $config, $replyTo);
+    $message = ceevs_smtp_message($to, $subject, $text, $config, $replyTo, $attachment);
     // SMTP termina el cuerpo con una línea que contiene solo un punto.
     $message = preg_replace('/(?m)^\./', '..', $message);
     $ok = is_string($message)
@@ -718,7 +773,8 @@ function ceevs_send_smtp(array $to, string $subject, string $text, array $config
   return $ok;
 }
 
-function ceevs_send_mail(string $to, string $subject, string $text, string $replyTo = ''): bool {
+/** $attachment, si se pasa, es {name, mime, content} y viaja como adjunto MIME. */
+function ceevs_send_mail(string $to, string $subject, string $text, string $replyTo = '', ?array $attachment = null): bool {
   $addresses = ceevs_mail_addresses($to);
   if (!$addresses) {
     return false;
@@ -726,7 +782,7 @@ function ceevs_send_mail(string $to, string $subject, string $text, string $repl
 
   $config = ceevs_mail_config();
   if ((string) $config['smtp_host'] !== '') {
-    return ceevs_send_smtp($addresses, $subject, $text, $config, $replyTo);
+    return ceevs_send_smtp($addresses, $subject, $text, $config, $replyTo, $attachment);
   }
 
   // Respaldo para instalaciones que todavía usan mail() nativo.
@@ -742,9 +798,18 @@ function ceevs_send_mail(string $to, string $subject, string $text, string $repl
   if (filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
     $headers .= 'Reply-To: ' . $replyTo . "\r\n";
   }
+  $encSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+
+  if ($attachment !== null) {
+    $boundary = ceevs_mime_boundary();
+    $headers .= 'MIME-Version: 1.0' . "\r\n"
+      . 'Content-Type: multipart/mixed; boundary="' . $boundary . '"' . "\r\n";
+    $body = ceevs_mime_attachment_body($text, $boundary, $attachment);
+    return @mail(implode(', ', $addresses), $encSubject, $body, $headers);
+  }
+
   $headers .= "Content-Type: text/plain; charset=UTF-8\r\n"
     . "Content-Transfer-Encoding: 8bit\r\n";
-  $encSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
   return @mail(implode(', ', $addresses), $encSubject, $text, $headers);
 }
 

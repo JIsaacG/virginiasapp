@@ -32,6 +32,7 @@ return array(
   'from_name'     => 'Centro Educativo Evangélico Virginia Sapp',
   'admissions_to' => '', // Dirección institucional que recibirá las solicitudes
   'forms_to'      => '', // Sugerencias y suscripciones (vacío = administracion.general@)
+  'empleos_to'    => '', // Aplicaciones de empleo (vacío = empleosadieeds@gmail.com)
 
   'timeout'       => 15,
 );
