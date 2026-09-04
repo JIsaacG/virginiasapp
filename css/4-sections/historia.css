@@ -3,7 +3,7 @@
 ═══════════════════════════════════════ */
 .niveles { background:var(--cream2); padding:110px 8vw; }
 
-.niveles-intro { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:60px; gap:40px; flex-wrap:wrap; }
+.niveles-intro { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:60px; gap:40px; flex-wrap:wrap; }
 .niveles-intro h2 { font-family:'Playfair Display',serif; font-size:clamp(2.28125rem,4.2vw,3.75rem); font-weight:700; color:var(--forest); line-height:1.1; }
 .niveles-intro h2 em { color:var(--gold2); font-style:italic; }
 .niveles-intro p { font-size:1.0625rem; color:var(--muted); max-width:320px; line-height:1.7; }
