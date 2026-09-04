@@ -39,7 +39,7 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet"></noscript>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="dist/main.min.css?v=20260901-sopa-cruces">
+  <link rel="stylesheet" href="dist/main.min.css?v=20260903-footer-hero-fix">
   <!-- Datos estructurados (JSON-LD) — ruta de navegación -->
   <script type="application/ld+json">
   {
@@ -334,60 +334,70 @@
 
 </main>
 
-<!-- ─── FOOTER ─── -->
+<!-- ─── FOOTER (estándar completo del sitio) ─── -->
 <footer>
   <div class="footer-main">
     <div>
-      <div class="footer-logo-wrap">
+      <div class="f-brand-row">
         <span class="f-acsi-seal">
           <img src="assets/acsi-badge.png" alt="Acreditación de Association of Christian Schools International (ACSI)" width="420" height="145" loading="lazy" decoding="async">
         </span>
-        <div class="footer-logo-icon">
-          <img src="assets/logo.jpg" alt="CEEVS" data-img-key="footer-logo" onerror="this.style.display='none'">
+        <div style="width:60px;height:60px;border-radius:50%;overflow:hidden;border:2px solid rgba(171,100,35,.5);background:#fff;flex-shrink:0;box-shadow:0 0 0 4px rgba(171,100,35,.14),0 8px 24px rgba(0,0,0,.25);">
+          <img src="assets/logo.jpg" alt="Logo Virginia Sapp" data-img-key="footer-logo" style="width:100%;height:100%;object-fit:cover;object-position:center 18%;transform:scale(1.08);">
         </div>
-        <div>
-          <div class="footer-brand-name">Instituto Evangélico</div>
-          <div class="footer-brand-sub">Virginia Sapp</div>
-        </div>
+        <div class="f-brand-name" style="margin-bottom:0">Virginia <span>Sapp</span></div>
       </div>
-      <p class="footer-desc">Formando líderes con fe, excelencia y valores eternos desde 1962 en Tegucigalpa, Honduras.</p>
+      <div class="f-brand-year">✦ CEEVS · Centro Educativo Evangélico Virginia Sapp · Fundado en 1962</div>
       <a href="https://adieeds.edu.hn/" target="_blank" rel="noopener" class="f-member">
         <span class="f-member-title">Miembro de ADIEEDS</span>
         <span class="f-member-sub">Asociación de Instituciones Educativas Evangélicas de Santidad</span>
       </a>
-    </div>
-    <div>
-      <div class="footer-nav-label">ADIEEDS</div>
-      <div class="footer-nav-list">
-        <a href="https://helenluce.edu.hn/" target="_blank" rel="noopener" class="footer-link">Helen Luce</a>
-        <a href="https://evangelicopeniel.edu.hn/" target="_blank" rel="noopener" class="footer-link">Evangélico Peniel</a>
-        <a href="https://jehovajireh.edu.hn/" target="_blank" rel="noopener" class="footer-link">Jehová Jireh</a>
-        <a href="https://adieeds.edu.hn/" target="_blank" rel="noopener" class="footer-link">ADIEEDS</a>
+      <p class="f-brand-desc">Más de seis décadas formando líderes con fe, excelencia académica y valores eternos en Tegucigalpa, Honduras.</p>
+      <div class="f-soc">
+        <a href="https://www.facebook.com/ieevs.edu.hn/" target="_blank" rel="noopener" class="soc-btn" aria-label="Facebook">f</a>
+        <a href="https://portal.edubox.app/login/virginiasapp" target="_blank" rel="noopener" class="soc-btn" aria-label="Portal">↗</a>
       </div>
     </div>
-    <div>
-      <div class="footer-nav-label">Navegación</div>
-      <div class="footer-nav-list">
-        <a href="index.html" class="footer-link">Inicio</a>
-        <a href="quienes-somos.html" class="footer-link">Quiénes Somos</a>
-        <a href="admisiones.html" class="footer-link">Admisiones</a>
-        <a href="contactenos.html" class="footer-link">Contáctenos</a>
-        <a href="interactivo.html" class="footer-link-active">Juega con nosotros</a>
-      </div>
+    <div class="f-col">
+      <h4>ADIEEDS</h4>
+      <ul>
+        <li><a href="https://helenluce.edu.hn/" target="_blank" rel="noopener">Helen Luce</a></li>
+        <li><a href="https://evangelicopeniel.edu.hn/" target="_blank" rel="noopener">Evangélico Peniel</a></li>
+        <li><a href="https://jehovajireh.edu.hn/" target="_blank" rel="noopener">Jehová Jireh</a></li>
+        <li><a href="https://adieeds.edu.hn/" target="_blank" rel="noopener">ADIEEDS</a></li>
+      </ul>
     </div>
-    <div>
-      <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:14px;">Contacto</div>
-      <div style="display:flex;flex-direction:column;gap:10px;color:rgba(255,255,255,.55);font-size:1.125rem;">
-        <span>📍 Tegucigalpa, Honduras</span>
-        <span>📞 +504 9221-5752</span>
-        <span>✉️ info@ceevs.edu.hn</span>
-        <a href="https://wa.me/50492215752?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20del%20Centro%20Educativo%20Evang%C3%A9lico%20Virginia%20Sapp." target="_blank" rel="noopener" style="color:var(--gold2);text-decoration:none;">💬 WhatsApp</a>
-      </div>
+    <div class="f-col">
+      <h4>Institución</h4>
+      <ul>
+        <li><a href="quienes-somos.html">Quiénes somos</a></li>
+        <li><a href="quienes-somos.html#historia">Nuestra historia</a></li>
+        <li><a href="quienes-somos.html#filosofia">Filosofía educativa</a></li>
+        <li><a href="mision-evangelistica.html">Misión evangelística</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h4>Admisiones</h4>
+      <ul>
+        <li><a href="admisiones.html#niveles">Niveles educativos</a></li>
+        <li><a href="admisiones.html#admisiones">Proceso de admisión</a></li>
+        <li><a href="capacitate.html">Capacítate con nosotros</a></li>
+        <li><a href="https://virginiasapp.edubox.app/" target="_blank" rel="noopener">Matrícula en línea</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h4>Comunidad</h4>
+      <ul>
+        <li><a href="recuerdos.html">Galería y recuerdos</a></li>
+        <li><a href="interactivo.html">Juega con nosotros</a></li>
+        <li><a href="comunicados.html">Comunicados</a></li>
+        <li><a href="contactenos.html">Contáctenos</a></li>
+      </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 Centro Educativo Evangélico Virginia Sapp (CEEVS) · Tegucigalpa, Honduras</span>
-    <span>Formando líderes desde 1962 ✦</span>
+    <p class="f-copy">© 2026 Centro Educativo Evangélico Virginia Sapp (CEEVS). Todos los derechos reservados.</p>
+    <div class="f-adieeds">Miembro certificado de <span>ADIEEDS</span></div>
   </div>
   <!-- Acceso al panel de administración: oculto a peticion del usuario. Para reactivarlo, quitar este comentario.
   <div style="text-align:center;padding:18px 0 10px;border-top:1px solid rgba(171,100,35,.12)">
