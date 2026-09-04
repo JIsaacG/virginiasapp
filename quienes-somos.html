@@ -237,11 +237,11 @@
 <!-- ─── NAVEGACIÓN INTERNA (Fase 3 · SDD-F3-QS-001) — sticky bajo la bienvenida ─── -->
 <nav class="qs-nav" aria-label="Secciones de Quiénes somos">
   <div class="qs-nav-inner">
+    <a href="#declaracion-fe">Nuestra institución</a>
     <a href="quienes-somos.html#historia">Historia</a>
     <a href="#mision">Misión</a>
     <a href="#vision">Visión</a>
     <a href="#filosofia">Filosofía</a>
-    <a href="#declaracion-fe">Nuestra institución</a>
     <a href="#acsi">Acreditación ACSI</a>
   </div>
 </nav>
@@ -420,15 +420,20 @@
       <span class="hl-dot" aria-hidden="true"></span>
       <!-- Dos huecos administrables: las fotos se suben desde el panel
            (claves qs-historia-hoy-a y qs-historia-hoy-b) y sustituyen la trama.
-           No entran en el visor ampliado, igual que el resto de huecos. -->
+           Entran al visor ampliado igual que las demás en cuanto tienen foto
+           publicada (js/quienes-somos.js filtra los huecos aún vacíos). -->
       <div class="hl-fotos hl-fotos-vacias">
         <figure class="hl-foto hl-foto-vacia" data-img-hueco>
           <span class="hl-vacia img-hueco-marca" aria-hidden="true"></span>
-          <img data-img-slot data-img-key="qs-historia-hoy-a" alt="El Centro Educativo Evangélico Virginia Sapp en la actualidad" loading="lazy">
+          <button type="button" class="hl-zoom" aria-haspopup="dialog">
+            <img data-img-slot data-img-key="qs-historia-hoy-a" alt="El Centro Educativo Evangélico Virginia Sapp en la actualidad" loading="lazy">
+          </button>
         </figure>
         <figure class="hl-foto hl-foto-vacia" data-img-hueco>
           <span class="hl-vacia img-hueco-marca" aria-hidden="true"></span>
-          <img data-img-slot data-img-key="qs-historia-hoy-b" alt="Estudiantes del Centro Educativo Evangélico Virginia Sapp en la actualidad" loading="lazy">
+          <button type="button" class="hl-zoom" aria-haspopup="dialog">
+            <img data-img-slot data-img-key="qs-historia-hoy-b" alt="Estudiantes del Centro Educativo Evangélico Virginia Sapp en la actualidad" loading="lazy">
+          </button>
         </figure>
       </div>
       <p class="hl-nota img-hueco-marca">Pendiente poner imágenes</p>
