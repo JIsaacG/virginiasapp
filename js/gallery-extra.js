@@ -279,17 +279,36 @@
       }
       block.appendChild(header);
 
-      var grid = document.createElement('div');
-      grid.className = 'album-photos album-photos--flat';
       var photos = data.photos.filter(function (p) { return p.album === album.id; });
-      photos.forEach(function (p) { grid.appendChild(buildPhotoDiv(p)); });
+
       if (!photos.length) {
+        var emptyGrid = document.createElement('div');
+        emptyGrid.className = 'album-photos album-photos--flat';
         var empty = document.createElement('p');
         empty.className = 'album-empty-note';
         empty.textContent = 'Este álbum aún no tiene fotos.';
-        grid.appendChild(empty);
+        emptyGrid.appendChild(empty);
+        block.appendChild(emptyGrid);
+      } else if (photos.length >= 4) {
+        // Mismo mosaico de 4 celdas que los álbumes originales (foto grande +
+        // mediana + 2 medianas); de la 5ta foto en adelante, cuadrícula fluida debajo.
+        var mosaic = document.createElement('div');
+        mosaic.className = 'album-photos';
+        photos.slice(0, 4).forEach(function (p) { mosaic.appendChild(buildPhotoDiv(p)); });
+        block.appendChild(mosaic);
+        if (photos.length > 4) {
+          var extra = document.createElement('div');
+          extra.className = 'album-photos album-photos--flat';
+          photos.slice(4).forEach(function (p) { extra.appendChild(buildPhotoDiv(p)); });
+          block.appendChild(extra);
+        }
+      } else {
+        // Menos de 4 fotos: el mosaico dejaría celdas vacías, se usa la cuadrícula fluida.
+        var flat = document.createElement('div');
+        flat.className = 'album-photos album-photos--flat';
+        photos.forEach(function (p) { flat.appendChild(buildPhotoDiv(p)); });
+        block.appendChild(flat);
       }
-      block.appendChild(grid);
 
       wrap.appendChild(block);
     });

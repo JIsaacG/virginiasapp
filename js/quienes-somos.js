@@ -127,8 +127,12 @@ const QuienesSomos = {
     const lbFig = lb && lb.querySelector('.hl-lb-figure');
     const lbCap = DOM.byId('hl-lb-caption');
     const lbCount = DOM.byId('hl-lb-count');
-    // Solo las polaroids con foto real: los huecos reservados no entran en el visor
-    const zooms = Array.from(DOM.selectAll('.historia-linea .hl-zoom'));
+    // Solo las polaroids con foto real: un hueco (data-img-slot) reservado que
+    // aún no tiene imagen publicada no entra en el visor.
+    const zooms = Array.from(DOM.selectAll('.historia-linea .hl-zoom')).filter(btn => {
+      const img = btn.querySelector('img');
+      return img && (!img.hasAttribute('data-img-slot') || img.hasAttribute('src'));
+    });
     const fotos = zooms.map(btn => btn.closest('.hl-foto'));
     if (!lb || !lbFig || !fotos.length) return;
 
