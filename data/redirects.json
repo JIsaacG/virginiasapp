@@ -5,6 +5,12 @@
     "target": "_blank",
     "rel": "noopener"
   },
+  "matricula": {
+    "label": "Matrícula EDUBOX",
+    "url": "https://virginiasapp.edubox.app/core_sc/control_matricula_login/",
+    "target": "_blank",
+    "rel": "noopener"
+  },
   "whatsapp": {
     "general": {
       "label": "WhatsApp general",

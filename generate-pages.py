@@ -65,6 +65,8 @@ DATA_FILES = [
 # Fase 2 — números/URL placeholder prohibidos
 PLACEHOLDER_PHONE = '50422000000'
 ALT_EDUBOX_URL = 'virginiasapp.edubox.app/core_sc'
+# Única URL de core_sc permitida: botón Matrícula (documentada en data/redirects.json)
+MATRICULA_URL = 'https://virginiasapp.edubox.app/core_sc/control_matricula_login/'
 
 # Fase 3 — secciones requeridas en quienes-somos.html
 QS_REQUIRED_IDS = [
@@ -153,7 +155,7 @@ def check_page(path):
         errors.append(f'Número WhatsApp placeholder "{PLACEHOLDER_PHONE}" presente')
 
     # ── Fase 2: URL EDUBOX alternativa no documentada ──
-    if ALT_EDUBOX_URL in content:
+    if ALT_EDUBOX_URL in content.replace(MATRICULA_URL, ''):
         errors.append('URL EDUBOX alternativa no documentada (virginiasapp.edubox.app/core_sc)')
 
     # ── Fase 2: enlaces WhatsApp seguros (target + rel) ──

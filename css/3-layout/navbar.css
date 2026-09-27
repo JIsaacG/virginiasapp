@@ -99,6 +99,24 @@
   font-weight: 600;
 }
 
+/* Con tres botones (Portal Educativo, Matrícula, Solicitar admisión) el piso 1
+   ya no cabe en una fila entre 1025px y ~1110px (en inglés hasta ~1170px) y los
+   botones saltaban a una fila propia. En vez de eso, el logo cede espacio: base
+   0 para que no fuerce el salto de fila, pero nunca más ancho que su contenido
+   (así en pantallas anchas se ve y se pulsa exactamente igual que antes), y el
+   nombre institucional puede partirse en dos líneas solo cuando no cabe. */
+@media (min-width: 1025px) {
+  .nav-logo {
+    flex: 1 1 0;
+    max-width: max-content;
+  }
+
+  .nav-wordmark strong,
+  .nav-wordmark b {
+    white-space: normal;
+  }
+}
+
 /* ── Links principales — segundo piso, a todo lo ancho ── */
 .nav-links {
   flex: 1 0 100%;
