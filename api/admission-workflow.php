@@ -33,6 +33,41 @@ function ceevs_admision_firma_valida(string $timestamp, string $path, string $ra
   return hash_equals($expected, $signature);
 }
 
+/** Validates the complete signed Matrícula request before it can claim a replay ID. */
+function ceevs_admision_consulta_validar(string $method, bool $isHttps, string $timestamp,
+    string $signature, string $raw, string $secret, ?int $now = null): array {
+  if ($method !== 'POST') return array('status' => 405, 'error' => 'Método no permitido.');
+  if (!$isHttps) return array('status' => 403, 'error' => 'La integración requiere HTTPS.');
+  if (strlen($secret) < 32) return array('status' => 503, 'error' => 'Integración no configurada.');
+  if (strlen($raw) > 8192) return array('status' => 413, 'error' => 'La solicitud es demasiado grande.');
+  if (!ceevs_admision_timestamp_valido($timestamp, $now)
+      || preg_match('/^[a-f0-9]{64}$/', $signature) !== 1
+      || !ceevs_admision_firma_valida($timestamp, '/api/matricula-admisiones.php', $raw, $signature, $secret)) {
+    return array('status' => 401, 'error' => 'Solicitud de integración inválida o vencida.');
+  }
+  $decoded = json_decode($raw);
+  if (!is_object($decoded) || json_last_error() !== JSON_ERROR_NONE) {
+    return array('status' => 400, 'error' => 'El cuerpo JSON no es válido.');
+  }
+  $request = get_object_vars($decoded);
+  $keys = array_keys($request);
+  sort($keys);
+  if ($keys !== array('parent_email', 'request_id', 'year')
+      || !is_string($request['parent_email'])
+      || !is_int($request['year'])
+      || $request['year'] < 2020 || $request['year'] > 2100
+      || !is_string($request['request_id'])
+      || preg_match('/^[a-f0-9]{32}$/', $request['request_id']) !== 1) {
+    return array('status' => 400, 'error' => 'Parámetros inválidos.');
+  }
+  $email = strtolower(trim($request['parent_email']));
+  if (strlen($email) > 254 || filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+    return array('status' => 400, 'error' => 'Parámetros inválidos.');
+  }
+  $request['parent_email'] = $email;
+  return array('status' => 200, 'request' => $request);
+}
+
 function ceevs_admision_timestamp_valido(string $timestamp, ?int $now = null): bool {
   if ($timestamp === '' || !ctype_digit($timestamp) || strlen($timestamp) > 12) return false;
   $now = $now ?? time();

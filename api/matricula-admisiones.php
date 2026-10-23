@@ -20,34 +20,28 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') matricula_admisiones_fail('M�
 $isHttps = (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off')
   || (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443;
 if (!$isHttps) matricula_admisiones_fail('La integración requiere HTTPS.', 403);
-$secret = getenv('CEEVS_MATRICULA_SHARED_SECRET');
-if (!is_string($secret) || strlen($secret) < 32) matricula_admisiones_fail('Integración no configurada.', 503);
+$secret = ceevs_app_env('CEEVS_MATRICULA_SHARED_SECRET');
 $timestamp = (string) ($_SERVER['HTTP_X_CEEVS_TIMESTAMP'] ?? '');
 $signature = (string) ($_SERVER['HTTP_X_CEEVS_SIGNATURE'] ?? '');
-$raw = file_get_contents('php://input');
-if (!is_string($raw) || strlen($raw) > 8192 || !ceevs_admision_timestamp_valido($timestamp)
-    || preg_match('/^[a-f0-9]{64}$/', $signature) !== 1) {
-  matricula_admisiones_fail('Solicitud de integración inválida o vencida.', 401);
-}
-$path = '/api/matricula-admisiones.php';
-if (!ceevs_admision_firma_valida($timestamp, $path, $raw, $signature, $secret)) {
-  matricula_admisiones_fail('Firma de integración no válida.', 401);
-}
-$request = json_decode($raw, true);
-$requestId = is_array($request) ? ($request['request_id'] ?? '') : '';
-if (!is_string($requestId) || preg_match('/^[a-f0-9]{32}$/', $requestId) !== 1) {
-  matricula_admisiones_fail('Identificador de solicitud inválido.', 400);
-}
+$declaredLength = filter_var($_SERVER['CONTENT_LENGTH'] ?? null, FILTER_VALIDATE_INT);
+if (is_int($declaredLength) && $declaredLength > 8192) matricula_admisiones_fail('La solicitud es demasiado grande.', 413);
+$input = @fopen('php://input', 'rb');
+$raw = $input === false ? false : stream_get_contents($input, 8193);
+if (is_resource($input)) fclose($input);
+if (!is_string($raw)) matricula_admisiones_fail('No se pudo leer la solicitud.', 400);
+$validation = ceevs_admision_consulta_validar(
+  (string) ($_SERVER['REQUEST_METHOD'] ?? ''), $isHttps, $timestamp, $signature, $raw, $secret
+);
+if ($validation['status'] !== 200) matricula_admisiones_fail($validation['error'], $validation['status']);
+$request = $validation['request'];
+$requestId = $request['request_id'];
 ceevs_ensure_data_dir();
 $claimed = ceevs_admision_replay_claim($requestId,
   CEEVS_DATA_DIR . '/admissions-replay.php');
 if ($claimed === false) matricula_admisiones_fail('Solicitud repetida.', 409);
 if ($claimed !== true) matricula_admisiones_fail('No se pudo asegurar la unicidad de la solicitud.', 503);
-$email = is_array($request) ? strtolower(trim((string) ($request['parent_email'] ?? ''))) : '';
-$year = is_array($request) ? filter_var($request['year'] ?? null, FILTER_VALIDATE_INT) : false;
-if (!is_string($email) || filter_var($email, FILTER_VALIDATE_EMAIL) === false || !$year || $year < 2020 || $year > 2100) {
-  matricula_admisiones_fail('Parámetros inválidos.', 400);
-}
+$email = $request['parent_email'];
+$year = $request['year'];
 
 $index = ceevs_preins_index();
 $candidates = array();

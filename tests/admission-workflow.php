@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../api/bootstrap.php';
+require_once __DIR__ . '/../api/db.php';
 require_once __DIR__ . '/../api/admission-workflow.php';
 
 function check(bool $condition, string $message): void {
@@ -24,11 +25,36 @@ $record = array(
   ),
 );
 
-$secret = 'isolated-integration-key-only-for-tests';
+$secret = bin2hex(random_bytes(24));
 $timestamp = '1800000000';
 $path = '/api/matricula-admisiones.php';
 $rawBody = '{"parent_email":"parent@example.test","year":2027,"request_id":"0123456789abcdef0123456789abcdef"}';
 $signature = hash_hmac('sha256', $timestamp . "\n" . $path . "\n" . $rawBody, $secret);
+$requestValidation = ceevs_admision_consulta_validar('POST', true, $timestamp,
+  $signature, $rawBody, $secret, 1800000000);
+check($requestValidation['status'] === 200
+  && $requestValidation['request']['parent_email'] === 'parent@example.test',
+  'el contrato HTTP firmado y sus campos tipados se aceptan');
+check(ceevs_admision_consulta_validar('GET', true, $timestamp, $signature,
+  $rawBody, $secret, 1800000000)['status'] === 405, 'método distinto de POST se rechaza');
+check(ceevs_admision_consulta_validar('POST', false, $timestamp, $signature,
+  $rawBody, $secret, 1800000000)['status'] === 403, 'HTTP sin TLS se rechaza');
+check(ceevs_admision_consulta_validar('POST', true, $timestamp, $signature,
+  $rawBody, 'short', 1800000000)['status'] === 503, 'secreto ausente o corto falla cerrado');
+check(ceevs_admision_consulta_validar('POST', true, $timestamp, str_repeat('0', 64),
+  $rawBody, $secret, 1800000000)['status'] === 401, 'firma inválida se rechaza');
+check(ceevs_admision_consulta_validar('POST', true, '1799999939', $signature,
+  $rawBody, $secret, 1800000000)['status'] === 401, 'timestamp vencido se rechaza en el contrato');
+check(ceevs_admision_consulta_validar('POST', true, $timestamp, $signature,
+  str_repeat('x', 8193), $secret, 1800000000)['status'] === 413, 'cuerpo sobre el límite se rechaza');
+$malformedBody = '{"parent_email":';
+$malformedSignature = hash_hmac('sha256', $timestamp . "\n" . $path . "\n" . $malformedBody, $secret);
+check(ceevs_admision_consulta_validar('POST', true, $timestamp, $malformedSignature,
+  $malformedBody, $secret, 1800000000)['status'] === 400, 'JSON malformado se rechaza');
+$extraBody = '{"parent_email":"parent@example.test","year":2027,"request_id":"0123456789abcdef0123456789abcdef","role":"admin"}';
+$extraSignature = hash_hmac('sha256', $timestamp . "\n" . $path . "\n" . $extraBody, $secret);
+check(ceevs_admision_consulta_validar('POST', true, $timestamp, $extraSignature,
+  $extraBody, $secret, 1800000000)['status'] === 400, 'campos fuera del contrato se rechazan');
 check(ceevs_admision_firma_valida($timestamp, $path, $rawBody, $signature, $secret),
   'la firma HMAC del cliente se acepta con el contrato compartido');
 check(!ceevs_admision_firma_valida($timestamp, $path, $rawBody . ' ', $signature, $secret),
@@ -43,6 +69,17 @@ check(!ceevs_admision_timestamp_valido('1799999939', 1800000000),
   'una marca vencida se rechaza');
 check(!ceevs_admision_timestamp_valido('1800000061', 1800000000),
   'una marca futura fuera de ventana se rechaza');
+
+$privateEnvSecret = bin2hex(random_bytes(24));
+$privateEnv = "# isolated fixture\nCEEVS_MATRICULA_SHARED_SECRET='" . $privateEnvSecret
+  . "'\nCEEVS_PARENT_PORTAL_URL=https://portal.example.test # comment\nUNRELATED_SECRET=must-not-load\n";
+$parsedConfig = ceevs_db_env_parse($privateEnv);
+check(($parsedConfig['CEEVS_MATRICULA_SHARED_SECRET'] ?? '') === $privateEnvSecret,
+  'el .env privado permite cargar la clave de integración');
+check(($parsedConfig['CEEVS_PARENT_PORTAL_URL'] ?? '') === 'https://portal.example.test',
+  'el .env privado permite cargar el portal institucional');
+check(!array_key_exists('UNRELATED_SECRET', $parsedConfig),
+  'el cargador ignora variables no permitidas');
 
 $replayCache = sys_get_temp_dir() . '/ceevs-admission-replay-' . bin2hex(random_bytes(8)) . '.php';
 check(ceevs_admision_replay_claim('0123456789abcdef0123456789abcdef', $replayCache, 1800000000) === true,

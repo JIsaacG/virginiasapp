@@ -483,7 +483,7 @@ if ($action === 'gestion_admision') {
     }
     if (!empty($body['send_portal'])) {
       $eligibility = ceevs_admision_elegibilidad($rec, $to, $cycleYear);
-      $portalUrl = trim((string) getenv('CEEVS_PARENT_PORTAL_URL'));
+      $portalUrl = trim(ceevs_app_env('CEEVS_PARENT_PORTAL_URL'));
       if (!$eligibility['elegible']) json_fail('El portal solo se notifica después de aprobar solicitud, examen, entrevista y autorización institucional.');
       if (filter_var($portalUrl, FILTER_VALIDATE_URL) === false || strtolower((string) parse_url($portalUrl, PHP_URL_SCHEME)) !== 'https') {
         json_fail('El enlace institucional seguro del Portal de Padres no está configurado.', 503);

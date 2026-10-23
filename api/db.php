@@ -166,13 +166,55 @@ function ceevs_db_env_map(): array {
 }
 
 /**
- * Valores CEEVS_DB_* leídos de un archivo .env.
+ * Valores de configuración privada leídos de un archivo .env.
  *
  * Se busca primero fuera de public_html (donde sobrevive a las publicaciones) y
  * después en la raíz del sitio. No se usa parse_ini_file a propósito: en
  * formato .ini una almohadilla abre un comentario, y las contraseñas que genera
  * el hosting suelen llevarla, así que la contraseña se cortaría por la mitad.
  */
+function ceevs_db_env_parse(string $raw): array {
+  $allowed = array_merge(array_values(ceevs_db_env_map()), array(
+    'CEEVS_MATRICULA_SHARED_SECRET',
+    'CEEVS_PARENT_PORTAL_URL',
+  ));
+  $values = array();
+  foreach (preg_split('/\r\n|\r|\n/', $raw) ?: array() as $line) {
+    $line = trim($line);
+    if ($line === '' || $line[0] === '#') continue;
+    if (strncmp($line, 'export ', 7) === 0) $line = trim(substr($line, 7));
+    $split = strpos($line, '=');
+    if ($split === false) continue;
+    $key = trim(substr($line, 0, $split));
+    if (!in_array($key, $allowed, true)) continue;
+    $value = trim(substr($line, $split + 1));
+    $quote = $value === '' ? '' : $value[0];
+    if (($quote === '"' || $quote === "'") && substr($value, -1) === $quote && strlen($value) > 1) {
+      $value = substr($value, 1, -1);
+      if ($quote === '"') $value = str_replace(array('\\"', '\\\\'), array('"', '\\'), $value);
+    } elseif (preg_match('/\s#/', $value) === 1) {
+      $value = rtrim((string) preg_replace('/\s#.*$/', '', $value));
+    }
+    $values[$key] = $value;
+  }
+  return $values;
+}
+
+/**
+ * Carga configuración sensible desde el mecanismo privado existente.
+ * El entorno del proceso tiene prioridad; luego se usa el .env privado que ya
+ * carga db.php fuera de public_html (o el archivo protegido de la raíz del sitio).
+ */
+function ceevs_app_env(string $name): string {
+  if (!in_array($name, array('CEEVS_MATRICULA_SHARED_SECRET', 'CEEVS_PARENT_PORTAL_URL'), true)) {
+    return '';
+  }
+  $value = getenv($name);
+  if (is_string($value) && $value !== '') return $value;
+  $values = ceevs_db_env_file();
+  return is_string($values[$name] ?? null) ? $values[$name] : '';
+}
+
 function ceevs_db_env_file(bool $recargar = false): array {
   static $vals = null;
   if ($recargar) {
@@ -205,36 +247,7 @@ function ceevs_db_env_file(bool $recargar = false): array {
     return $vals;
   }
 
-  foreach (preg_split('/\r\n|\r|\n/', $raw) ?: array() as $linea) {
-    $linea = trim($linea);
-    if ($linea === '' || $linea[0] === '#') {
-      continue;
-    }
-    if (strncmp($linea, 'export ', 7) === 0) {
-      $linea = trim(substr($linea, 7));
-    }
-    $corte = strpos($linea, '=');
-    if ($corte === false) {
-      continue;
-    }
-    $clave = trim(substr($linea, 0, $corte));
-    if (preg_match('/^CEEVS_DB_[A-Z0-9_]+$/', $clave) !== 1) {
-      continue;   // este archivo solo manda sobre la base de datos
-    }
-    $valor = trim(substr($linea, $corte + 1));
-    $comilla = $valor === '' ? '' : $valor[0];
-    if (($comilla === '"' || $comilla === "'") && substr($valor, -1) === $comilla && strlen($valor) > 1) {
-      $valor = substr($valor, 1, -1);
-      if ($comilla === '"') {
-        $valor = str_replace(array('\\"', '\\\\'), array('"', '\\'), $valor);
-      }
-    } elseif (preg_match('/\s#/', $valor) === 1) {
-      // Comentario al final de la línea, solo si el valor venía sin comillas.
-      $valor = rtrim((string) preg_replace('/\s#.*$/', '', $valor));
-    }
-    $vals[$clave] = $valor;
-  }
-  return $vals;
+  return $vals = ceevs_db_env_parse($raw);
 }
 
 /** Ruta del .env que se acabó usando ('' si no había ninguno). */

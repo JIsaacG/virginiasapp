@@ -30,6 +30,8 @@ Configurar fuera del repositorio y por el mecanismo de secretos del hosting:
 
 No reutilizar la clave de DNI como clave HMAC. No escribir valores de estas variables en Git, HTML, JavaScript, bitácoras o tickets. Coordinar una rotación de la clave HMAC en ambos servidores.
 
+En el hosting PHP de Virginia Sapp, el endpoint y el correo del Portal de Padres leen primero las variables de entorno del proceso PHP. Si PHP-FPM/Hostinger no las expone, `api/db.php` también carga estos dos nombres desde el `.env` privado que ya usa el sitio: primero el archivo hermano de `public_html` y, como respaldo, `.env` en la raíz protegida del sitio. La publicación nunca incluye `.env`; no se deben subir credenciales dentro de `public_html`.
+
 ## Notificaciones
 
 La programación se guarda antes de intentar enviar el correo. El panel muestra si el servidor de correo aceptó el envío; eso no confirma la entrega al buzón. El enlace al Portal de Padres solo se puede notificar cuando la solicitud cumple los requisitos vigentes de matrícula.
