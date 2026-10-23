@@ -287,8 +287,9 @@
         <div class="preins-row">
           <div class="preins-field">
             <label for="pi-identidad">N° de identidad del alumno</label>
-            <input type="text" id="pi-identidad" data-pi="alumno.identidad" placeholder="0801-2018-01234" inputmode="numeric" maxlength="25">
-            <small class="preins-hint">Si aún no la tiene, déjalo en blanco.</small>
+            <input type="text" id="pi-identidad" data-pi="alumno.identidad" placeholder="0801-2018-01234" inputmode="numeric" maxlength="15" pattern="[0-9]{4}-?[0-9]{4}-?[0-9]{5}" required aria-describedby="pi-identidad-help">
+            <small id="pi-identidad-help">Ingresa los 13 dígitos del DNI hondureño; los guiones son opcionales.</small>
+            <small class="preins-hint">El DNI es necesario para validar la identidad y habilitar la matrícula en línea.</small>
           </div>
           <div class="preins-field">
             <label for="pi-nacionalidad">Nacionalidad</label>
@@ -857,7 +858,7 @@
 <script src="js/image-manager.js"></script>
 <script src="js/comunicado-popup.js?v=20260821-comunicado2"></script>
 <script src="js/solicitud-hoja.js?v=20260727-1"></script>
-<script src="js/preinscripcion.js?v=20260727-1"></script>
+<script src="js/preinscripcion.js?v=20261023-1"></script>
 <script src="js/modules/acsi-fab.js?v=20260826-acsi"></script>
 <script>App.init();</script>
 </body>

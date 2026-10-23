@@ -364,6 +364,160 @@ if ($rec === null) {
   json_fail('Solicitud no encontrada.', 404);
 }
 
+if ($action === 'gestion_admision') {
+  require_once __DIR__ . '/admission-workflow.php';
+  $adm = is_array($rec['admisiones'] ?? null) ? $rec['admisiones'] : array();
+  $actor = (string) ($_SESSION['ceevs_email'] ?? 'personal autorizado');
+  $now = gmdate('c');
+  $changes = array();
+  foreach (array('examen', 'entrevista') as $kind) {
+    if (!array_key_exists($kind, $body)) continue;
+    $appointment = $body[$kind];
+    if (!is_array($appointment)) json_fail('La programación de ' . $kind . ' no es válida.');
+    foreach ($appointment as $value) {
+      if (!is_scalar($value)) json_fail('La programación de ' . $kind . ' no es válida.');
+    }
+    $filled = count(array_filter($appointment, static function ($v) { return trim((string) $v) !== ''; })) > 0;
+    if ($filled && !ceevs_admision_cita_valida($appointment)) {
+      json_fail('Completa fecha, hora, lugar o modalidad e instrucciones de ' . $kind . '.');
+    }
+    if ($filled) {
+      $adm[$kind]['programacion'] = array(
+        'fecha' => $appointment['fecha'], 'hora' => $appointment['hora'],
+        'lugar' => ceevs_preins_txt($appointment['lugar'] ?? '', 160),
+        'modalidad' => ceevs_preins_txt($appointment['modalidad'] ?? '', 80),
+        'instrucciones' => ceevs_preins_multi($appointment['instrucciones'] ?? '', 1000),
+      );
+      $changes[] = $kind . '_programacion';
+    } elseif (isset($adm[$kind]['programacion'])) {
+      unset($adm[$kind]['programacion']);
+      $changes[] = $kind . '_programacion_eliminada';
+    }
+  }
+  if (array_key_exists('nota_examen', $body)) {
+    $rawScore = $body['nota_examen'];
+    if ($rawScore === '' || $rawScore === null) {
+      $adm['examen']['nota'] = null;
+    } elseif (!is_scalar($rawScore) || !is_numeric($rawScore)
+        || !is_finite((float) $rawScore) || (float) $rawScore < 0 || (float) $rawScore > 100) {
+      json_fail('La nota del examen debe estar entre 0 y 100.');
+    } else {
+      $adm['examen']['nota'] = round((float) $rawScore, 2);
+    }
+    $changes[] = 'examen_nota';
+  }
+  foreach (array('examen', 'entrevista') as $kind) {
+    $key = 'resultado_' . $kind;
+    if (!array_key_exists($key, $body)) continue;
+    $result = ceevs_preins_enum($body[$key], CEEVS_RESULTADOS_ADMISION);
+    if ($result === '') json_fail('Resultado de ' . $kind . ' no válido.');
+    if ($result !== 'PENDIENTE' && !ceevs_admision_fecha_valida($body['fecha_' . $kind] ?? null)) {
+      json_fail('Indica una fecha válida para el resultado de ' . $kind . '.');
+    }
+    $adm[$kind]['resultado'] = $result;
+    $adm[$kind]['fecha_resultado'] = $result === 'PENDIENTE' ? '' : $body['fecha_' . $kind];
+    $adm[$kind]['actor'] = $actor;
+    $adm[$kind]['actualizado'] = $now;
+    $changes[] = $kind . '_resultado';
+  }
+  if (array_key_exists('decision', $body)) {
+    $decision = ceevs_preins_enum($body['decision'], CEEVS_DECISION_ADMISION);
+    if ($decision === '') json_fail('Decisión de admisión no válida.');
+    $adm['decision'] = $decision;
+    $adm['decision_actor'] = $actor;
+    $adm['decision_at'] = $now;
+    $changes[] = 'decision';
+  }
+  if (array_key_exists('matricula_autorizada', $body)) {
+    $authorized = filter_var($body['matricula_autorizada'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    if ($authorized === null) json_fail('La autorización de matrícula no es válida.');
+    $approvalReady = ($adm['decision'] ?? '') === 'APROBADA'
+      && ($adm['examen']['resultado'] ?? '') === 'APROBADO'
+      && ($adm['entrevista']['resultado'] ?? '') === 'APROBADO';
+    if ($authorized && !$approvalReady) {
+      json_fail('Para autorizar matrícula deben aprobarse la solicitud, el examen y la entrevista.');
+    }
+    $adm['matricula_autorizada'] = $authorized && $approvalReady;
+    $adm['autorizacion_actor'] = $actor;
+    $adm['autorizacion_at'] = $now;
+    $changes[] = $adm['matricula_autorizada'] ? 'autorizacion_matricula' : 'autorizacion_matricula_revocada';
+  } elseif (!empty($adm['matricula_autorizada'])
+      && (($adm['decision'] ?? '') !== 'APROBADA'
+        || ($adm['examen']['resultado'] ?? '') !== 'APROBADO'
+        || ($adm['entrevista']['resultado'] ?? '') !== 'APROBADO')) {
+    $adm['matricula_autorizada'] = false;
+    $adm['autorizacion_actor'] = $actor;
+    $adm['autorizacion_at'] = $now;
+    $changes[] = 'autorizacion_matricula_revocada';
+  }
+
+  // Las notificaciones se validan contra el estado nuevo de esta misma petición.
+  $rec['admisiones'] = $adm;
+  $notificationSent = null;
+  if (!empty($body['send_email']) || !empty($body['send_portal'])) {
+    $studentName = (string) ($rec['alumno']['nombre'] ?? '');
+    $to = '';
+    $cycleYear = ceevs_admision_ciclo_anio_actual((string) ($rec['ciclo'] ?? ''));
+    foreach (array('padre', 'madre') as $guardianKey) {
+      $guardian = is_array($rec[$guardianKey] ?? null) ? $rec[$guardianKey] : array();
+      $candidateEmail = strtolower(trim((string) ($guardian['correo'] ?? '')));
+      if (empty($guardian['aplica']) || filter_var($candidateEmail, FILTER_VALIDATE_EMAIL) === false) continue;
+      if (!empty($body['send_portal'])) {
+        $eligibility = ceevs_admision_elegibilidad($rec, $candidateEmail, $cycleYear);
+        if (!$eligibility['elegible']) continue;
+      }
+      $to = $candidateEmail;
+      break;
+    }
+    if ($to === '') json_fail('La solicitud no contiene un correo válido para el padre o tutor.');
+    $text = "Buen día. Información del proceso de admisión de {$studentName}:\n\n";
+    if (!empty($body['send_email'])) {
+      foreach (array('examen' => 'Examen', 'entrevista' => 'Entrevista') as $kind => $label) {
+        if (empty($adm[$kind]['programacion']) || !ceevs_admision_cita_valida($adm[$kind]['programacion'])) {
+          json_fail('Programa examen y entrevista completos antes de notificar.');
+        }
+        $p = $adm[$kind]['programacion'];
+        $text .= $label . ': ' . $p['fecha'] . ' a las ' . $p['hora'] . "\n";
+        $text .= 'Lugar: ' . ($p['lugar'] ?: $p['modalidad']) . "\nInstrucciones: " . $p['instrucciones'] . "\n\n";
+      }
+    }
+    if (!empty($body['send_portal'])) {
+      $eligibility = ceevs_admision_elegibilidad($rec, $to, $cycleYear);
+      $portalUrl = trim((string) getenv('CEEVS_PARENT_PORTAL_URL'));
+      if (!$eligibility['elegible']) json_fail('El portal solo se notifica después de aprobar solicitud, examen, entrevista y autorización institucional.');
+      if (filter_var($portalUrl, FILTER_VALIDATE_URL) === false || strtolower((string) parse_url($portalUrl, PHP_URL_SCHEME)) !== 'https') {
+        json_fail('El enlace institucional seguro del Portal de Padres no está configurado.', 503);
+      }
+      $text .= "Tu solicitud ya está autorizada para continuar con la matrícula. Entra al Portal de Padres con tu cuenta institucional:\n{$portalUrl}\n\nNo compartas tu contraseña. Si tienes problemas de acceso, comunícate con Admisiones.";
+    }
+    // Persistir la decisión y la programación antes de cualquier envío externo.
+    $rec['admisiones'] = $adm;
+    if (!ceevs_preins_write($id, $rec) || !ceevs_preins_touch_row($rec)) {
+      json_fail('No se pudieron guardar los cambios de admisión; no se envió el correo.', 500);
+    }
+    $notificationSent = ceevs_send_mail($to, 'Proceso de admisión — solicitud #' . (int) ($rec['num'] ?? 0), $text);
+    $notificationType = !empty($body['send_portal']) ? 'portal' : 'programacion';
+    ceevs_audit('admision_notificacion_' . ($notificationSent ? 'enviada' : 'fallida'),
+      'Correo de ' . $notificationType . ' para solicitud #' . (int) ($rec['num'] ?? 0), $notificationSent);
+    $adm['notificaciones'] = is_array($adm['notificaciones'] ?? null) ? $adm['notificaciones'] : array();
+    $adm['notificaciones'][] = array('fecha' => $now, 'tipo' => $notificationType, 'canal' => 'correo',
+      'resultado' => $notificationSent ? 'enviado' : 'fallido', 'actor' => $actor);
+    $changes[] = 'notificacion_' . $notificationType . '_' . ($notificationSent ? 'enviada' : 'fallida');
+  }
+
+  $adm['historial'] = is_array($adm['historial'] ?? null) ? $adm['historial'] : array();
+  $adm['historial'][] = array('fecha' => $now, 'actor' => $actor, 'cambios' => $changes);
+  $rec['admisiones'] = $adm;
+  if (!ceevs_preins_write($id, $rec) || !ceevs_preins_touch_row($rec)) {
+    if ($notificationSent !== null) {
+      json_fail('Los cambios quedaron guardados y el correo se intentó enviar, pero no se pudo registrar su resultado. Revisa la bitácora antes de reenviar.', 500);
+    }
+    json_fail('No se pudieron guardar los cambios de admisión.', 500);
+  }
+  ceevs_audit('admision_actualizada', 'Solicitud #' . (int) ($rec['num'] ?? 0) . ' — ' . implode(', ', $changes));
+  json_out(array('ok' => true, 'rec' => $rec, 'notification_sent' => $notificationSent));
+}
+
 if ($action === 'estado') {
   $estado = ceevs_preins_enum($body['estado'] ?? '', CEEVS_PREINS_ESTADOS);
   if ($estado === '') {

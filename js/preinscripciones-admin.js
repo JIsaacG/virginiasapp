@@ -470,6 +470,25 @@
 
     el('preins-estado').value = rec.estado || 'nueva';
     el('preins-notas').value = rec.notas || '';
+    var adm = rec.admisiones || {};
+    el('preins-examen-nota').value = adm.examen && adm.examen.nota !== null && adm.examen.nota !== undefined ? adm.examen.nota : '';
+    ['examen', 'entrevista'].forEach(function (kind) {
+      var entry = adm[kind] || {}, p = entry.programacion || {};
+      el('preins-' + kind + '-fecha').value = p.fecha || '';
+      el('preins-' + kind + '-hora').value = p.hora || '';
+      el('preins-' + kind + '-lugar').value = p.lugar || '';
+      el('preins-' + kind + '-modalidad').value = p.modalidad || '';
+      el('preins-' + kind + '-instrucciones').value = p.instrucciones || '';
+      el('preins-' + kind + '-resultado').value = entry.resultado || 'PENDIENTE';
+      el('preins-' + kind + '-fecha-resultado').value = entry.fecha_resultado || '';
+    });
+    el('preins-admision-decision').value = adm.decision || 'PENDIENTE';
+    el('preins-matricula-autorizada').checked = !!adm.matricula_autorizada;
+    var notifyStatus = el('preins-admision-status');
+    var notifications = adm.notificaciones || [];
+    notifyStatus.textContent = notifications.length
+      ? 'Último correo: ' + notifications[notifications.length - 1].resultado + ' (' + notifications[notifications.length - 1].fecha + ').'
+      : '';
 
     // Atajos de contacto con la familia.
     var tel = '', correo = '';
@@ -702,6 +721,35 @@
       .catch(function (err) { toast(err.message); });
   }
 
+  function guardarAdmision(sendEmail, sendPortal) {
+    if (!state.abierta) return;
+    var body = { action: 'gestion_admision', id: state.abierta.id,
+      nota_examen: el('preins-examen-nota').value,
+      decision: el('preins-admision-decision').value,
+      matricula_autorizada: el('preins-matricula-autorizada').checked,
+      send_email: !!sendEmail, send_portal: !!sendPortal };
+    ['examen', 'entrevista'].forEach(function (kind) {
+      body[kind] = {
+        fecha: el('preins-' + kind + '-fecha').value,
+        hora: el('preins-' + kind + '-hora').value,
+        lugar: el('preins-' + kind + '-lugar').value,
+        modalidad: el('preins-' + kind + '-modalidad').value,
+        instrucciones: el('preins-' + kind + '-instrucciones').value
+      };
+      body['resultado_' + kind] = el('preins-' + kind + '-resultado').value;
+      body['fecha_' + kind] = el('preins-' + kind + '-fecha-resultado').value;
+    });
+    post(body).then(function (d) {
+      state.abierta = d.rec;
+      pintarDetalle(d.rec);
+      if (sendEmail || sendPortal) {
+        el('preins-admision-status').textContent = d.notification_sent
+          ? 'El servidor de correo aceptó el envío.'
+          : 'El correo no se pudo enviar. No se notificó como exitoso.';
+      } else toast('Evaluación de admisión guardada');
+    }).catch(function (err) { toast(err.message); });
+  }
+
   function eliminar() {
     if (!state.abierta) return;
     var rec = state.abierta;
@@ -790,6 +838,9 @@
       if (state.abierta) cambiarEstado(state.abierta.id, this.value);
     });
     el('preins-notas-save').addEventListener('click', guardarNotas);
+    el('preins-admision-save').addEventListener('click', function () { guardarAdmision(false); });
+    el('preins-admision-send').addEventListener('click', function () { guardarAdmision(true); });
+    el('preins-portal-send').addEventListener('click', function () { guardarAdmision(false, true); });
     el('preins-eliminar').addEventListener('click', eliminar);
     el('preins-copiar').addEventListener('click', copiar);
     el('preins-set-guardar').addEventListener('click', guardarAjustes);

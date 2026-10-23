@@ -587,8 +587,8 @@
   <div class="admin-tab-panel" id="panel-preinscripciones">
     <div class="admin-main">
       <div class="admin-header">
-        <h2>Pre-inscripciones</h2>
-        <p>Solicitudes de admisión que las familias envían desde <a href="preinscripcion.html" target="_blank" rel="noopener">preinscripcion.html</a>. Ábrelas para verlas completas, descargarlas en PDF con el formato oficial y llevar el control de a quién ya se contactó.</p>
+        <h2>Pre-inscripciones y admisiones</h2>
+        <p>Gestiona en esta bandeja la solicitud, el contacto con la familia, la programación y los resultados del examen y la entrevista, la decisión de admisión y la autorización para matrícula. Matrícula vuelve a comprobar esos requisitos antes de aceptar un aspirante.</p>
       </div>
 
       <div class="preins-stats" id="preins-stats"></div>
@@ -912,6 +912,21 @@
       <button type="button" class="admin-btn-secondary" id="preins-notas-save">Guardar notas</button>
     </div>
 
+    <section class="preins-modal-notas" aria-labelledby="preins-admision-title">
+      <h4 id="preins-admision-title">Evaluación y matrícula</h4>
+      <p class="admin-card-desc">La autorización solo se habilita al aprobar la solicitud, el examen y la entrevista.</p>
+      <div class="grid">
+        <div><strong>Examen</strong><label>Fecha <input type="date" id="preins-examen-fecha"></label><label>Hora <input type="time" id="preins-examen-hora"></label><label>Lugar <input id="preins-examen-lugar" maxlength="160"></label><label>Modalidad <input id="preins-examen-modalidad" maxlength="80"></label><label>Instrucciones <textarea id="preins-examen-instrucciones" maxlength="1000"></textarea></label><label>Nota (0–100) <input type="number" id="preins-examen-nota" min="0" max="100" step="0.01"></label><label>Resultado <select id="preins-examen-resultado"><option>PENDIENTE</option><option>APROBADO</option><option>REPROBADO</option></select></label><label>Fecha del resultado <input type="date" id="preins-examen-fecha-resultado"></label></div>
+        <div><strong>Entrevista</strong><label>Fecha <input type="date" id="preins-entrevista-fecha"></label><label>Hora <input type="time" id="preins-entrevista-hora"></label><label>Lugar <input id="preins-entrevista-lugar" maxlength="160"></label><label>Modalidad <input id="preins-entrevista-modalidad" maxlength="80"></label><label>Instrucciones <textarea id="preins-entrevista-instrucciones" maxlength="1000"></textarea></label><label>Resultado <select id="preins-entrevista-resultado"><option>PENDIENTE</option><option>APROBADO</option><option>REPROBADO</option></select></label><label>Fecha del resultado <input type="date" id="preins-entrevista-fecha-resultado"></label></div>
+      </div>
+      <label>Decisión de admisión <select id="preins-admision-decision"><option value="PENDIENTE">Pendiente</option><option value="APROBADA">Aprobada</option><option value="RECHAZADA">Rechazada</option></select></label>
+      <label><input type="checkbox" id="preins-matricula-autorizada"> Autorizar matrícula</label>
+      <button type="button" class="admin-btn-secondary" id="preins-admision-save">Guardar evaluación</button>
+      <button type="button" class="admin-btn-save" id="preins-admision-send">Guardar y enviar programación por correo</button>
+      <button type="button" class="admin-btn-save" id="preins-portal-send">Notificar acceso al Portal de Padres</button>
+      <p id="preins-admision-status" role="status"></p>
+    </section>
+
     <div class="preins-hoja-wrap" id="preins-hoja-wrap"></div>
   </div>
 </div>
@@ -929,7 +944,7 @@
 <script src="js/comunicado-popup.js?v=20260821-comunicado2"></script>
 <script src="js/gallery-extra.js?v=20260719-2"></script>
 <script src="js/solicitud-hoja.js?v=20260727-1"></script>
-<script src="js/preinscripciones-admin.js?v=20260727-3"></script>
+<script src="js/preinscripciones-admin.js?v=20261023-1"></script>
 <script src="js/admin.js?v=20260719-2"></script>
 </body>
 </html>

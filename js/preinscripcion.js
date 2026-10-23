@@ -606,6 +606,9 @@ const Preinscripcion = {
         return this._fallar('Escribe el nombre y los apellidos del alumno(a).', 'pi-nombre');
       }
       if (!a.fechaNac) return this._fallar('Necesitamos la fecha de nacimiento del alumno(a).', 'pi-fechanac');
+      if (!/^\d{4}-?\d{4}-?\d{5}$/.test(String(a.identidad || '').replace(/[\s-]/g, ''))) {
+        return this._fallar('Ingresa los 13 dígitos del DNI hondureño del alumno(a).', 'pi-identidad');
+      }
       if (!document.getElementById('pi-edad').value) {
         return this._fallar('La fecha de nacimiento no parece correcta. Revísala, por favor.', 'pi-fechanac');
       }

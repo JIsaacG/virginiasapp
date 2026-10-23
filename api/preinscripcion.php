@@ -13,6 +13,7 @@
 
 require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/preinscripciones-lib.php';
+require_once __DIR__ . '/admission-workflow.php';
 
 $metodo = $_SERVER['REQUEST_METHOD'] ?? '';
 $action = isset($_GET['action']) && is_string($_GET['action']) ? $_GET['action'] : '';
@@ -129,6 +130,7 @@ $a = is_array($body['alumno'] ?? null) ? $body['alumno'] : array();
 $nombre = ceevs_preins_txt($a['nombre'] ?? '', 120);
 $grado  = ceevs_preins_txt($a['grado'] ?? '', 80);
 $fechaNac = ceevs_preins_txt($a['fechaNac'] ?? '', 10);
+$identidad = ceevs_admision_identidad_normalizar($a['identidad'] ?? '');
 
 $largoNombre = function_exists('mb_strlen') ? mb_strlen($nombre) : strlen($nombre);
 if ($nombre === '' || $largoNombre < 5) {
@@ -139,6 +141,12 @@ if ($grado === '') {
 }
 if ($fechaNac !== '' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $fechaNac) !== 1) {
   json_fail('La fecha de nacimiento no tiene un formato válido.');
+}
+if (!ceevs_admision_fecha_valida($fechaNac)) {
+  json_fail('Indica una fecha de nacimiento válida.');
+}
+if ($identidad === null) {
+  json_fail('El DNI del alumno debe contener los 13 dígitos de identidad hondureña.');
 }
 
 $edad = (int) ($a['edad'] ?? 0);
@@ -151,7 +159,7 @@ $alumno = array(
   'fechaNac'     => $fechaNac,
   'edad'         => $edad,
   'sexo'         => ceevs_preins_enum($a['sexo'] ?? '', array('Femenino', 'Masculino')),
-  'identidad'    => ceevs_preins_txt($a['identidad'] ?? '', 25),
+  'identidad'    => ceevs_admision_identidad_formatear($identidad),
   'nacionalidad' => ceevs_preins_txt($a['nacionalidad'] ?? '', 40),
   'pais'         => ceevs_preins_txt($a['pais'] ?? '', 40),
   'departamento' => ceevs_preins_txt($a['departamento'] ?? '', 60),
@@ -240,8 +248,22 @@ foreach (is_array($body['motivo'] ?? null) ? $body['motivo'] : array() as $m) {
 // esto, dos envíos simultáneos leen el mismo índice y el segundo pisa al primero
 // (se pierde una solicitud y el correlativo repite número).
 $lock = ceevs_preins_lock();
+if ($lock === null) {
+  json_fail('No se pudo asegurar el registro único del aspirante. Intenta nuevamente.', 503);
+}
 
 $ix = ceevs_preins_index();
+
+foreach (($ix['items'] ?? array()) as $existingItem) {
+  $existingId = (string) ($existingItem['id'] ?? '');
+  if (!ceevs_preins_valid_id($existingId)) continue;
+  $existingRecord = ceevs_preins_read($existingId);
+  $existingIdentity = is_array($existingRecord) ? ceevs_admision_identidad_normalizar($existingRecord['alumno']['identidad'] ?? '') : null;
+  if ($existingIdentity !== null && hash_equals($existingIdentity, $identidad)) {
+    ceevs_preins_unlock($lock);
+    json_fail('Ya existe una solicitud con este DNI. Comunícate con Admisiones para verificarla.', 409);
+  }
+}
 
 // Tope de almacenamiento: cada solicitud es un archivo más (y su foto). Agotar
 // la cuota de disco o de inodos del hosting no tumbaría solo el formulario,
